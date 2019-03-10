@@ -4,7 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(ekadashi-calculator VERSION 0.1 LANGUAGES C CXX)
 
-add_executable(${PROJECT_NAME} "main.cpp")
+add_executable(${PROJECT_NAME} "main.cpp" sweph_time.cpp)
+
 add_library(sweph STATIC
     vendor/sweph/src/swecl.c
     vendor/sweph/src/swedate.c
@@ -24,3 +25,8 @@ endif()
 
 target_link_libraries(ekadashi-calculator PRIVATE sweph)
 target_include_directories(ekadashi-calculator PRIVATE vendor/sweph/src)
+
+add_executable(test-main tests/test-main.cpp tests/sweph_time_test.cpp sweph_time.cpp)
+target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR})
+target_include_directories(test-main PRIVATE vendor/sweph/src)
+target_link_libraries(test-main PRIVATE sweph)

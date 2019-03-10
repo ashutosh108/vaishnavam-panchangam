@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     std::cout << y << '-' << m << '-' << d << '\n';
     swe_set_ephe_path(nullptr);
     double jd = swe_julday(y, m, d, 0, SE_GREG_CAL);
-    std::cout << "JD     : " << std::fixed << jd << '\n';
+    std::cout << "JD     : " << std::fixed << std::setprecision(15) << jd << '\n';
     double sunrise = get_sunrise(jd, latitude, longitude);
     std::cout << "Sunrise: " << sunrise << '\n';
     int year, month, day;
