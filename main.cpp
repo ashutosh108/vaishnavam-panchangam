@@ -5,6 +5,8 @@
 #include <iomanip>
 #include "swephexp.h"
 
+#include "sweph_time.h"
+
 const double latitude=50.45, longitude=30.523333;
 
 void print_usage() {
@@ -47,10 +49,6 @@ int main(int argc, char *argv[])
     swe_set_ephe_path(nullptr);
     double jd = swe_julday(y, m, d, 0, SE_GREG_CAL);
     std::cout << "JD     : " << std::fixed << std::setprecision(15) << jd << '\n';
-    double sunrise = get_sunrise(jd, latitude, longitude);
+    auto sunrise = Sweph_Time{get_sunrise(jd, latitude, longitude)};
     std::cout << "Sunrise: " << sunrise << '\n';
-    int year, month, day;
-    double hour;
-    swe_revjul(sunrise, SE_GREG_CAL, &year, &month, &day, &hour);
-    std::cout << year << '-' << month << '-' << day << ' ' << hour << '\n';
 }

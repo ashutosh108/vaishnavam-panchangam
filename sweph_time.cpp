@@ -1,3 +1,5 @@
+#include <iomanip>
+
 #include "sweph_time.h"
 #include <swephexp.h>
 
@@ -21,7 +23,7 @@ std::ostream &operator<<(std::ostream &os, Sweph_Time const &t) {
     os.width(2);
     os << month << '-' << day << ' ';
     os.width(2);
-    os << hours << ':' << minutes << ':' << seconds;
+    os << hours << ':' << minutes << ':' << std::fixed << std::setprecision(6) << seconds << " UTC";
     os.width(1);
     return os;
 }
