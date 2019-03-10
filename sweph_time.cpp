@@ -8,6 +8,11 @@ Sweph_Time::Sweph_Time(double jd) : jd_(jd)
 
 }
 
+Sweph_Time::Sweph_Time(int year, int month, int day) {
+    jd_ = swe_julday(year, month, day, 0, SE_GREG_CAL);
+
+}
+
 std::ostream &operator<<(std::ostream &os, Sweph_Time const &t) {
     int year, month, day;
     double hours_double;
@@ -23,7 +28,8 @@ std::ostream &operator<<(std::ostream &os, Sweph_Time const &t) {
     os.width(2);
     os << month << '-' << day << ' ';
     os.width(2);
-    os << hours << ':' << minutes << ':' << std::fixed << std::setprecision(6) << seconds << " UTC";
-    os.width(1);
+    os << hours << ':';
+    os.width(2);
+    os << minutes << ':' << std::fixed << std::setprecision(6) << std::setw(9) << seconds << " UTC";
     return os;
 }

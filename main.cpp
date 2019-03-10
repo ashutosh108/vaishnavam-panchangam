@@ -45,10 +45,9 @@ int main(int argc, char *argv[])
 
     auto [y, m, d] = parse_ymd(argv[1]);
 
-    std::cout << y << '-' << m << '-' << d << '\n';
-    swe_set_ephe_path(nullptr);
-    double jd = swe_julday(y, m, d, 0, SE_GREG_CAL);
-    std::cout << "JD     : " << std::fixed << std::setprecision(15) << jd << '\n';
-    auto sunrise = Sweph_Time{get_sunrise(jd, latitude, longitude)};
+    auto midnight = Sweph_Time{y, m, d};
+
+    std::cout << "JD     : " << std::fixed << std::setprecision(15) << midnight.as_julian_days() << '\n';
+    auto sunrise = Sweph_Time{get_sunrise(midnight.as_julian_days(), latitude, longitude)};
     std::cout << "Sunrise: " << sunrise << '\n';
 }
