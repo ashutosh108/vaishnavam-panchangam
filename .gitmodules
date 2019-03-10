@@ -1,0 +1,3 @@
+[submodule "vendor/sweph"]
+	path = vendor/sweph
+	url = https://github.com/ashutosh108/sweph.git
