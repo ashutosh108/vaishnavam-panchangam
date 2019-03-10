@@ -70,5 +70,9 @@ Thumbs.db
 # --------
 *.dll
 *.exe
+
+# Qt Creator project files
 CMakeLists.txt.user*
 
+# build dir(s) within source dir
+/build*
