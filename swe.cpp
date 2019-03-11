@@ -61,3 +61,10 @@ double Swe::get_tithi(Swe_Time time)
     if (diff < 0) diff += 360.0;
     return diff / (360.0/30);
 }
+
+// TODO: implement (this function seems to be nice to have for debugging
+// but not essential for actual Ekadashi calculations
+Swe_Time Swe::find_tithi_start(Swe_Time after, double/* tithi*/)
+{
+    return after;
+}

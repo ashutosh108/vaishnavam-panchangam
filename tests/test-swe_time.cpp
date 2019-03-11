@@ -39,3 +39,9 @@ TEST_CASE("hours matter") {
     double diff = t2.as_julian_days() - t1.as_julian_days();
     REQUIRE(diff == 0.25);
 }
+
+TEST_CASE("can compare") {
+    Swe_Time t1{2019, 3, 10};
+    Swe_Time t2{2458552.5};
+    REQUIRE(t1.as_julian_days() == Approx(t2.as_julian_days()));
+}
