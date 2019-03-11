@@ -1,3 +1,6 @@
 [submodule "vendor/sweph"]
 	path = vendor/sweph
 	url = https://github.com/ashutosh108/sweph.git
+[submodule "vendor/catch2"]
+	path = vendor/catch2
+	url = https://github.com/catchorg/Catch2
