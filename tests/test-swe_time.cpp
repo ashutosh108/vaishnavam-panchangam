@@ -26,3 +26,16 @@ TEST_CASE ("construct from Y, m, d") {
     s << Swe_Time{2019, 3, 10};
     REQUIRE(s.str() == "2019-03-10 00:00:00.000000 UTC");
 }
+
+TEST_CASE ("construct from Y, m, d, hours") {
+    std::stringstream s;
+    s << Swe_Time{2019, 3, 10, 5.25};
+    REQUIRE(s.str() == "2019-03-10 05:15:00.000000 UTC");
+}
+
+TEST_CASE("hours matter") {
+    Swe_Time t1{2019, 3, 10, 0.0};
+    Swe_Time t2{2019, 3, 10, 6.0};
+    double diff = t2.as_julian_days() - t1.as_julian_days();
+    REQUIRE(diff == 0.25);
+}

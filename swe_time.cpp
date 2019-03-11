@@ -8,10 +8,10 @@ Swe_Time::Swe_Time(double jd) : jd_(jd)
     swe_revjul(jd_, SE_GREG_CAL, &year_, &month_, &day_, &hours_);
 }
 
-Swe_Time::Swe_Time(int year, int month, int day)
-    : year_(year), month_(month), day_(day), hours_(0)
+Swe_Time::Swe_Time(int year, int month, int day, double hours)
+    : year_(year), month_(month), day_(day), hours_(hours)
 {
-    jd_ = swe_julday(year, month, day, 0, SE_GREG_CAL);
+    jd_ = swe_julday(year, month, day, hours, SE_GREG_CAL);
 }
 
 int Swe_Time::year()

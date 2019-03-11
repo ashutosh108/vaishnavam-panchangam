@@ -1,3 +1,6 @@
+#include <exception>
+#include <sstream>
+
 #include "swe.h"
 
 #include "swephexp.h"
@@ -19,4 +22,42 @@ Swe_Time Swe::get_sunrise(Swe_Time after, double latitude, double longitude)
     int return_code = swe_rise_trans(after.as_julian_days(), SE_SUN, nullptr, SEFLG_SWIEPH, rsmi, geopos,
                                      atmospheric_pressure, atmospheric_temperature, &trise, serr);
     return Swe_Time{trise};
+}
+
+void Swe::do_calc_ut(double jd, int planet, int flags, double *res) {
+    char serr[AS_MAXCH];
+    int32 res_flags = swe_calc_ut(jd, planet, flags, res, serr);
+    if (res_flags != flags) {
+        if (res_flags == ERR) {
+            throw std::runtime_error(serr);
+        } else {
+            std::stringstream s;
+            s << "return flags != inpur flags (" << res_flags << "!=" << flags << ")";
+            throw std::runtime_error(s.str());
+        }
+    }
+}
+
+double Swe::get_sun_longitude(Swe_Time time)
+{
+    double res[6];
+    do_calc_ut(time.as_julian_days(), SE_SUN, SEFLG_MOSEPH, res);
+    return res[0];
+}
+
+double Swe::get_moon_longitude(Swe_Time time)
+{
+    double res[6];
+    do_calc_ut(time.as_julian_days(), SE_MOON, SEFLG_MOSEPH, res);
+    return res[0];
+}
+
+/** Get tithi as double [0..30) */
+double Swe::get_tithi(Swe_Time time)
+{
+    double sun = get_sun_longitude(time);
+    double moon = get_moon_longitude(time);
+    double diff = moon - sun;
+    if (diff < 0) diff += 360.0;
+    return diff / (360.0/30);
 }
