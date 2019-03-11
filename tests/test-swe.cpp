@@ -10,10 +10,11 @@ TEST_CASE("Swe default constructor") {
 
 TEST_CASE("get sunrise") {
     auto sunrise = Swe{}.get_sunrise(Swe_Time{2019, 3, 10}, 50.45, 30.523333);
-    REQUIRE(sunrise.year() == 2019);
-    REQUIRE(sunrise.month() == 3);
-    REQUIRE(sunrise.day() == 10);
-    REQUIRE(sunrise.hours() == Approx(4.4816697389));
+    REQUIRE(sunrise.has_value());
+    REQUIRE(sunrise->year() == 2019);
+    REQUIRE(sunrise->month() == 3);
+    REQUIRE(sunrise->day() == 10);
+    REQUIRE(sunrise->hours() == Approx(4.4816697389));
 }
 
 TEST_CASE("get sun longitude") {

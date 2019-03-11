@@ -37,5 +37,5 @@ int main(int argc, char *argv[])
 
     std::cout << "JD     : " << std::fixed << std::setprecision(15) << midnight.as_julian_days() << '\n';
     auto sunrise = Swe{}.get_sunrise(midnight, latitude, longitude);
-    std::cout << "Sunrise: " << sunrise << '\n';
+    std::cout << "Sunrise: " << *sunrise << '\n';
 }
