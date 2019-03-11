@@ -34,6 +34,15 @@ double Swe_Time::hours()
     return hours_;
 }
 
+bool Swe_Time::operator==(const Swe_Time &to) const
+{
+    const double epsilon = 1e-6;
+    return year_ == to.year_ &&
+            month_ == to.month_ &&
+            day_ == to.day_ &&
+            std::abs(hours_ - to.hours_) <= epsilon;
+}
+
 std::ostream &operator<<(std::ostream &os, Swe_Time const &t) {
     int hours = static_cast<int>(t.hours_);
     double minutes_remain = (t.hours_ - hours) * 60;

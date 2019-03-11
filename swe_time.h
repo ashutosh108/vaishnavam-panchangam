@@ -14,6 +14,7 @@ public:
     int month();
     int day();
     double hours();
+    bool operator==(Swe_Time const &to) const;
 private:
     double jd_;
     int year_, month_, day_;
