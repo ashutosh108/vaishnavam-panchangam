@@ -7,6 +7,7 @@
 TEST_CASE( "Can create Swe_Time from double" ) {
     const double arbitrary_double = 124.0;
     Swe_Time t{arbitrary_double};
+    REQUIRE(true);
 }
 
 TEST_CASE ("Pretty print Swe_Time") {

@@ -5,27 +5,46 @@
 
 Swe_Time::Swe_Time(double jd) : jd_(jd)
 {
-
+    swe_revjul(jd_, SE_GREG_CAL, &year_, &month_, &day_, &hours_);
 }
 
-Swe_Time::Swe_Time(int year, int month, int day) {
+Swe_Time::Swe_Time(int year, int month, int day)
+    : year_(year), month_(month), day_(day), hours_(0)
+{
     jd_ = swe_julday(year, month, day, 0, SE_GREG_CAL);
 }
 
+int Swe_Time::year()
+{
+    return year_;
+}
+
+int Swe_Time::month()
+{
+    return month_;
+}
+
+int Swe_Time::day()
+{
+    return day_;
+}
+
+double Swe_Time::hours()
+{
+    return hours_;
+}
+
 std::ostream &operator<<(std::ostream &os, Swe_Time const &t) {
-    int year, month, day;
-    double hours_double;
-    swe_revjul(t.jd_, SE_GREG_CAL, &year, &month, &day, &hours_double);
-    int hours = static_cast<int>(hours_double);
-    double minutes_remain = (hours_double - hours) * 60;
+    int hours = static_cast<int>(t.hours_);
+    double minutes_remain = (t.hours_ - hours) * 60;
     int minutes = static_cast<int>(minutes_remain);
     double seconds = (minutes_remain - minutes) * 60;
 
     os.width(4);
     os.fill('0');
-    os << year << '-';
+    os << t.year_ << '-';
     os.width(2);
-    os << month << '-' << day << ' ';
+    os << t.month_ << '-' << t.day_ << ' ';
     os.width(2);
     os << hours << ':';
     os.width(2);
