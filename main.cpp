@@ -5,12 +5,15 @@
 #include <iomanip>
 #include "swephexp.h"
 
-#include "sweph_time.h"
+#include "swe_time.h"
 
 const double latitude=50.45, longitude=30.523333;
 
 void print_usage() {
-    std::cout << "ekadashi-calculator YYYY-MM-DD\n";
+    std::cout << "USAGE:\n";
+    std::cout << "ekadashi-calculator YYYY-MM-DD latitude longitude\n";
+    std::cout << "\n";
+    std::cout << "    latitude and longitude are given as decimal degrees (e.g. 30.7)\n";
 }
 
 std::tuple<int, int, int> parse_ymd(const char *s) {
@@ -38,16 +41,19 @@ double get_sunrise(double jd, double latitude, double longitude) {
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2) {
+    if (argc < 1+3) {
         print_usage();
         exit(-1);
     }
 
     auto [y, m, d] = parse_ymd(argv[1]);
 
-    auto midnight = Sweph_Time{y, m, d};
+    auto midnight = Swe_Time{y, m, d};
+
+    double latitude = std::stod(argv[2]);
+    double longitude = std::stod(argv[3]);
 
     std::cout << "JD     : " << std::fixed << std::setprecision(15) << midnight.as_julian_days() << '\n';
-    auto sunrise = Sweph_Time{get_sunrise(midnight.as_julian_days(), latitude, longitude)};
+    auto sunrise = Swe_Time{get_sunrise(midnight.as_julian_days(), latitude, longitude)};
     std::cout << "Sunrise: " << sunrise << '\n';
 }

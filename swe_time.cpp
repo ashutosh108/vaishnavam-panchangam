@@ -1,19 +1,18 @@
 #include <iomanip>
 
-#include "sweph_time.h"
+#include "swe_time.h"
 #include <swephexp.h>
 
-Sweph_Time::Sweph_Time(double jd) : jd_(jd)
+Swe_Time::Swe_Time(double jd) : jd_(jd)
 {
 
 }
 
-Sweph_Time::Sweph_Time(int year, int month, int day) {
+Swe_Time::Swe_Time(int year, int month, int day) {
     jd_ = swe_julday(year, month, day, 0, SE_GREG_CAL);
-
 }
 
-std::ostream &operator<<(std::ostream &os, Sweph_Time const &t) {
+std::ostream &operator<<(std::ostream &os, Swe_Time const &t) {
     int year, month, day;
     double hours_double;
     swe_revjul(t.jd_, SE_GREG_CAL, &year, &month, &day, &hours_double);
