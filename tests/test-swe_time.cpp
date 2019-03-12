@@ -45,3 +45,9 @@ TEST_CASE("can compare") {
     Swe_Time t2{2458552.5};
     REQUIRE(t1 == t2);
 }
+
+TEST_CASE("create from Y M D h m s", "[hms]") {
+    Swe_Time t1{2019, 3, 17, 4.2267416752777778};
+    Swe_Time t2{2019, 3, 17, 4, 13, 36.270031};
+    REQUIRE(t1 == t2);
+}

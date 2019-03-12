@@ -14,6 +14,10 @@ Swe_Time::Swe_Time(int year, int month, int day, double hours)
     jd_ = swe_julday(year, month, day, hours, SE_GREG_CAL);
 }
 
+Swe_Time::Swe_Time(int year, int month, int day, int hours, int minutes, double seconds)
+    : Swe_Time(year, month, day, hours+minutes/60.0+seconds/3600.0) {
+}
+
 int Swe_Time::year()
 {
     return year_;

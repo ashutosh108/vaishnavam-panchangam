@@ -9,6 +9,8 @@ class Swe_Time
 public:
     explicit Swe_Time(double jd);
     explicit Swe_Time(int year, int month, int day, double hours=0.0);
+    explicit Swe_Time(int year, int month, int day, int hours, int minutes, double seconds);
+
     double as_julian_days() const { return jd_; }
     int year();
     int month();
