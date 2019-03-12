@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iomanip>
 
+#include "calc.h"
 #include "swe.h"
 #include "swe_time.h"
 
@@ -29,13 +30,19 @@ int main(int argc, char *argv[])
     }
 
     auto [y, m, d] = parse_ymd(argv[1]);
-
-    auto midnight = Swe_Time{y, m, d};
-
     double latitude = std::stod(argv[2]);
     double longitude = std::stod(argv[3]);
 
-    std::cout << "JD     : " << std::fixed << std::setprecision(15) << midnight.as_julian_days() << '\n';
-    auto sunrise = Swe{}.get_sunrise(midnight, latitude, longitude);
-    std::cout << "Sunrise: " << *sunrise << '\n';
+    auto midnight = Swe_Time{y, m, d};
+    std::cout << "base time: " << midnight << '\n';
+
+    auto ekadashi_sunrise = Calc{}.find_next_ekadashi_sunrise(midnight, latitude, longitude);
+    if (ekadashi_sunrise) {
+        std::cout << "Sunrise: " << *ekadashi_sunrise << '\n';
+        double tithi = Swe{}.get_tithi(*ekadashi_sunrise);
+        std::cout << "Tithi: " << tithi << '\n';
+    } else {
+        std::cout << "Can't find ekadashi sunrise\n";
+    }
+
 }

@@ -7,7 +7,7 @@ project(ekadashi-calculator VERSION 0.1 LANGUAGES C CXX)
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(ekadashi-calculator PRIVATE swe)
 
-add_library(swe STATIC swe_time.cpp swe.cpp)
+add_library(swe STATIC swe_time.cpp swe.cpp calc.cpp)
 target_include_directories(swe PRIVATE vendor/sweph/src)
 target_link_libraries(swe PRIVATE sweph)
 
@@ -28,7 +28,7 @@ if ( MSVC )
     target_compile_options(sweph PRIVATE "/wd4996")
 endif()
 
-add_executable(test-main tests/test-main.cpp tests/test-swe_time.cpp tests/test-swe.cpp)
+add_executable(test-main tests/test-main.cpp tests/test-swe_time.cpp tests/test-swe.cpp tests/test-calc.cpp)
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR})
 target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2)
 target_link_libraries(test-main PRIVATE sweph swe)
