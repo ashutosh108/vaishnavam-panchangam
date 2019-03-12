@@ -2,14 +2,9 @@
 #include <optional>
 #include <sstream>
 
-#include "swe.h"
-
 #include "swephexp.h"
 
-Swe::Swe()
-{
-
-}
+#include "swe.h"
 
 std::optional<Swe_Time> Swe::get_sunrise(Swe_Time after, double latitude, double longitude)
 {

@@ -9,7 +9,6 @@
 class Swe
 {
 public:
-    Swe();
     std::optional<Swe_Time> get_sunrise(Swe_Time after, double latitude, double longitude);
     double get_sun_longitude(Swe_Time time);
     double get_moon_longitude(Swe_Time time);
