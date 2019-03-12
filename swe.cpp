@@ -6,9 +6,8 @@
 
 #include "swe.h"
 
-std::optional<Swe_Time> Swe::get_sunrise(Swe_Time after, double latitude, double longitude)
-{
-    int rsmi = SE_CALC_RISE | SE_BIT_HINDU_RISING;
+std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after, double latitude, double longitude) {
+    int rsmi = rise_or_set | SE_BIT_HINDU_RISING;
          // or SE_CALC_RISE | SE_BIT_DISC_CENTER | SE_BIT_NO_REFRACTION | SE_BIT_GEOCTR_NO_ECL_LAT;
     double geopos[3] = {longitude, latitude, 0};
     const double atmospheric_pressure = 1013.25;
@@ -19,18 +18,27 @@ std::optional<Swe_Time> Swe::get_sunrise(Swe_Time after, double latitude, double
     int res_flag = swe_rise_trans(after.as_julian_days(), SE_SUN, nullptr, flags, rsmi, geopos,
                                      atmospheric_pressure, atmospheric_temperature, &trise, serr);
     if (res_flag == -1) {
-        check_flags(-1, flags, serr);
-    } else if (res_flag == -2) {
+        throw_on_wrong_flags(-1, flags, serr);
+    }
+
+    if (res_flag == -2) {
         return{};
     } else {
         return Swe_Time{trise};
     }
 }
 
-void Swe::check_flags(int out_flags, int in_flags, char *serr) {
-    if (out_flags == in_flags) {
-        return;
-    };
+std::optional<Swe_Time> Swe::get_sunrise(Swe_Time after, double latitude, double longitude)
+{
+    return do_rise_trans(SE_CALC_RISE, after, latitude, longitude);
+}
+
+std::optional<Swe_Time> Swe::get_sunset(Swe_Time after, double latitude, double longitude)
+{
+    return do_rise_trans(SE_CALC_SET, after, latitude, longitude);
+}
+
+[[noreturn]] void Swe::throw_on_wrong_flags(int out_flags, int in_flags, char *serr) {
     if (out_flags == ERR) {
         throw std::runtime_error(serr);
     } else {
@@ -43,7 +51,10 @@ void Swe::check_flags(int out_flags, int in_flags, char *serr) {
 void Swe::do_calc_ut(double jd, int planet, int flags, double *res) {
     char serr[AS_MAXCH];
     int32 res_flags = swe_calc_ut(jd, planet, flags, res, serr);
-    check_flags(res_flags, flags, serr);
+    if (res_flags == flags) {
+        return;
+    };
+    throw_on_wrong_flags(res_flags, flags, serr);
 }
 
 double Swe::get_sun_longitude(Swe_Time time)

@@ -4,7 +4,7 @@
 #include "swe.h"
 
 TEST_CASE("Swe default constructor") {
-    Swe s;
+    [[maybe_unused]] Swe s;
     REQUIRE(true);
 }
 
@@ -15,6 +15,12 @@ TEST_CASE("get sunrise") {
     REQUIRE(sunrise->month() == 3);
     REQUIRE(sunrise->day() == 10);
     REQUIRE(sunrise->hours() == Approx(4.4816697389));
+}
+
+TEST_CASE("get_sunset") {
+    auto sunset = Swe{}.get_sunset(Swe_Time{2019, 3, 10}, 50.45, 30.523333);
+    REQUIRE(sunset.has_value());
+    REQUIRE(*sunset == Swe_Time{2019, 3, 10, 15, 48, 33.812600});
 }
 
 TEST_CASE("get sun longitude") {
