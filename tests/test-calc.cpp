@@ -2,6 +2,7 @@
 
 #include "catch.hpp"
 
+#include "swe.h"
 #include "swe_time.h"
 #include "calc.h"
 
@@ -13,12 +14,11 @@ TEST_CASE("find_next_ekadashi_sunrise") {
     REQUIRE(*sunrise == expected);
 }
 
-// disabled until we learn to skip dashami-viddha ekadashi(?)
 TEST_CASE("Vijaya Ekadashi Kiev 2019") {
     Swe_Time start{2019, 2, 28};
     auto vrata = Calc{}.find_next_vrata(start, 50.45, 30.523333);
     REQUIRE(vrata.has_value());
-    REQUIRE(vrata->tithi_sunrise.get_paksha() == Paksha::Krishna);
+    REQUIRE(Swe{}.get_tithi(vrata->sunrise).get_paksha() == Paksha::Krishna);
     REQUIRE(vrata->type == Vrata_Type::Shuddha_Ekadashi);
     REQUIRE(vrata->sunrise.year() == 2019);
     REQUIRE(vrata->sunrise.month() == 3);

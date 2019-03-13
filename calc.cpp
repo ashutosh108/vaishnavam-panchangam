@@ -23,7 +23,6 @@ std::optional<Vrata> Calc::find_next_vrata(Swe_Time after, double latitude, doub
     Swe s;
     auto sunrise = find_next_ekadashi_sunrise(after, latitude, longitude);
     if (sunrise) {
-        auto tithi = s.get_tithi(*sunrise);
         auto arunodaya = get_arunodaya(*sunrise, latitude, longitude);
         if (!arunodaya.has_value()) { return{}; }
         auto tithi_arunodaya = s.get_tithi(*arunodaya);
@@ -31,7 +30,7 @@ std::optional<Vrata> Calc::find_next_vrata(Swe_Time after, double latitude, doub
             // purva-viddha Ekadashi, get next sunrise
             sunrise = s.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1}, latitude, longitude);
         }
-        return Vrata{Vrata_Type::Shuddha_Ekadashi, *sunrise, *arunodaya, Tithi{tithi}, Tithi{tithi_arunodaya}};
+        return Vrata{Vrata_Type::Shuddha_Ekadashi, *sunrise};
     }
     return {};
 }
