@@ -12,7 +12,6 @@ enum class Vrata_Type {
 };
 
 struct Vrata {
-    Paksha paksha;
     Vrata_Type type;
     Swe_Time sunrise;
     Swe_Time prev_sunset;

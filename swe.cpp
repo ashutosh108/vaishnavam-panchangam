@@ -72,13 +72,13 @@ double Swe::get_moon_longitude(Swe_Time time)
 }
 
 /** Get tithi as double [0..30) */
-double Swe::get_tithi(Swe_Time time)
+Tithi Swe::get_tithi(Swe_Time time)
 {
     double sun = get_sun_longitude(time);
     double moon = get_moon_longitude(time);
     double diff = moon - sun;
     if (diff < 0) diff += 360.0;
-    return diff / (360.0/30);
+    return Tithi{diff / (360.0/30)};
 }
 
 // TODO: implement (this function seems to be nice to have for debugging

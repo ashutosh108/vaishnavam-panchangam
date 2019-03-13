@@ -4,6 +4,7 @@
 #include <optional>
 
 #include "swe_time.h"
+#include "tithi.h"
 
 
 class Swe
@@ -14,7 +15,7 @@ public:
     double get_sun_longitude(Swe_Time time);
     double get_moon_longitude(Swe_Time time);
     /** Get tithi as double [0..30) */
-    double get_tithi(Swe_Time time);
+    Tithi get_tithi(Swe_Time time);
     Swe_Time find_tithi_start(Swe_Time after, double tithi);
 private:
     [[noreturn]] void throw_on_wrong_flags(int out_flags, int in_flags, char *serr);

@@ -18,7 +18,7 @@ TEST_CASE("Vijaya Ekadashi Kiev 2019") {
     Swe_Time start{2019, 2, 28};
     auto vrata = Calc{}.find_next_vrata(start, 50.45, 30.523333);
     REQUIRE(vrata.has_value());
-    REQUIRE(vrata->paksha == Paksha::Krishna);
+    REQUIRE(vrata->tithi_sunrise.get_paksha() == Paksha::Krishna);
     REQUIRE(vrata->type == Vrata_Type::Shuddha_Ekadashi);
     REQUIRE(vrata->sunrise.year() == 2019);
     REQUIRE(vrata->sunrise.month() == 3);

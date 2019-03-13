@@ -1,5 +1,6 @@
 #include <cassert>
 #include <ostream>
+#include <sstream>
 
 #include "tithi.h"
 
@@ -37,4 +38,28 @@ std::ostream &operator <<(std::ostream &o, Tithi const & t) {
     }
     o << "(" << (t.tithi - int_tithi) << ")";
     return o;
+}
+
+Tithi::Tithi(double _tithi) : tithi(_tithi)
+{
+    if (tithi < 0 || tithi >= 30) {
+        std::stringstream s;
+        s << "Wrong tithi value: " << tithi;
+        throw std::range_error(s.str());
+    }
+}
+
+Paksha Tithi::get_paksha()
+{
+    return tithi < 15 ? Paksha::Shukla : Paksha::Krishna;
+}
+
+bool Tithi::is_ekadashi()
+{
+    return (tithi >= 10 && tithi < 11) || (tithi >= 10+15 && tithi < 11+15);
+}
+
+bool Tithi::is_dashami()
+{
+    return (tithi >= 9 && tithi < 10) || (tithi >= 9+15 && tithi < 10+15);
 }

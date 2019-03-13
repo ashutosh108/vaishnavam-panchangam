@@ -35,8 +35,8 @@ TEST_CASE("get moon longitude") {
 
 TEST_CASE("get tithi") {
     Swe_Time t2{2019, 3, 21, 1.716666}; // around 1:43am (UTC time), peak of purnima
-    double tithi = Swe{}.get_tithi(t2);
-    REQUIRE(tithi == Approx(15.0001492371));
+    auto tithi = Swe{}.get_tithi(t2);
+    REQUIRE(tithi.tithi == Approx(15.0001492371));
 }
 
 // skip since find_tithi_start() is not implemented yet
