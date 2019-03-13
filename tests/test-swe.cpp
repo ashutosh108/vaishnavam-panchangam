@@ -9,7 +9,7 @@ TEST_CASE("Swe default constructor") {
 }
 
 TEST_CASE("get sunrise") {
-    auto sunrise = Swe{}.get_sunrise(Swe_Time{2019, 3, 10}, 50.45, 30.523333);
+    auto sunrise = Swe{}.get_sunrise(Swe_Time{2019, 3, 10}, Coord{50.45, 30.523333});
     REQUIRE(sunrise.has_value());
     REQUIRE(sunrise->year() == 2019);
     REQUIRE(sunrise->month() == 3);
@@ -18,7 +18,7 @@ TEST_CASE("get sunrise") {
 }
 
 TEST_CASE("get_sunset") {
-    auto sunset = Swe{}.get_sunset(Swe_Time{2019, 3, 10}, 50.45, 30.523333);
+    auto sunset = Swe{}.get_sunset(Swe_Time{2019, 3, 10}, Coord{50.45, 30.523333});
     REQUIRE(sunset.has_value());
     REQUIRE(*sunset == Swe_Time{2019, 3, 10, 15, 48, 33.812600});
 }

@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     auto midnight = Swe_Time{y, m, d};
     std::cout << "base time: " << midnight << '\n';
 
-    auto vrata = Calc{}.find_next_vrata(midnight, latitude, longitude);
+    auto vrata = Calc{}.find_next_vrata(midnight, Coord{latitude, longitude});
     if (vrata) {
         std::cout << "Sunrise:     " << vrata->sunrise << '\n';
     } else {

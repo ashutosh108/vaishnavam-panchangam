@@ -4,12 +4,13 @@
 
 #include "swephexp.h"
 
+#include "coord.h"
 #include "swe.h"
 
-std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after, double latitude, double longitude) {
+std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after, Coord coord) {
     int rsmi = rise_or_set | SE_BIT_HINDU_RISING;
          // or SE_CALC_RISE | SE_BIT_DISC_CENTER | SE_BIT_NO_REFRACTION | SE_BIT_GEOCTR_NO_ECL_LAT;
-    double geopos[3] = {longitude, latitude, 0};
+    double geopos[3] = {coord.longitude, coord.latitude, 0};
     const double atmospheric_pressure = 1013.25;
     const double atmospheric_temperature = 15;
     double trise;
@@ -28,14 +29,14 @@ std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after, doub
     }
 }
 
-std::optional<Swe_Time> Swe::get_sunrise(Swe_Time after, double latitude, double longitude)
+std::optional<Swe_Time> Swe::get_sunrise(Swe_Time after, Coord coord)
 {
-    return do_rise_trans(SE_CALC_RISE, after, latitude, longitude);
+    return do_rise_trans(SE_CALC_RISE, after, coord);
 }
 
-std::optional<Swe_Time> Swe::get_sunset(Swe_Time after, double latitude, double longitude)
+std::optional<Swe_Time> Swe::get_sunset(Swe_Time after, Coord coord)
 {
-    return do_rise_trans(SE_CALC_SET, after, latitude, longitude);
+    return do_rise_trans(SE_CALC_SET, after, coord);
 }
 
 [[noreturn]] void Swe::throw_on_wrong_flags(int out_flags, int in_flags, char *serr) {

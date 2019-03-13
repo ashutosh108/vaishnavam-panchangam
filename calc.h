@@ -3,6 +3,7 @@
 
 #include <optional>
 
+#include "coord.h"
 #include "swe_time.h"
 #include "tithi.h"
 
@@ -28,9 +29,9 @@ struct Vrata {
 class Calc
 {
 public:
-    std::optional<Swe_Time> find_next_ekadashi_sunrise(Swe_Time after, double latitude, double longitude);
-    std::optional<Vrata> find_next_vrata(Swe_Time after, double latitude, double longitude);
-    std::optional<Swe_Time> get_arunodaya(Swe_Time sunrise, double latitude, double longitude);
+    std::optional<Swe_Time> find_next_ekadashi_sunrise(Swe_Time after, Coord coord);
+    std::optional<Vrata> find_next_vrata(Swe_Time after, Coord coord);
+    std::optional<Swe_Time> get_arunodaya(Swe_Time sunrise, Coord coord);
 };
 
 #endif // CALC_H

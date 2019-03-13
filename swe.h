@@ -3,6 +3,7 @@
 
 #include <optional>
 
+#include "coord.h"
 #include "swe_time.h"
 #include "tithi.h"
 
@@ -10,8 +11,8 @@
 class Swe
 {
 public:
-    std::optional<Swe_Time> get_sunrise(Swe_Time after, double latitude, double longitude);
-    std::optional<Swe_Time> get_sunset(Swe_Time after, double latitude, double longitude);
+    std::optional<Swe_Time> get_sunrise(Swe_Time after, Coord coord);
+    std::optional<Swe_Time> get_sunset(Swe_Time after, Coord coord);
     double get_sun_longitude(Swe_Time time);
     double get_moon_longitude(Swe_Time time);
     /** Get tithi as double [0..30) */
@@ -20,7 +21,7 @@ public:
 private:
     [[noreturn]] void throw_on_wrong_flags(int out_flags, int in_flags, char *serr);
     void do_calc_ut(double jd, int planet, int flags, double *res);
-    std::optional<Swe_Time> do_rise_trans(int rise_or_set, Swe_Time after, double latitude, double longitude);
+    std::optional<Swe_Time> do_rise_trans(int rise_or_set, Swe_Time after, Coord coord);
 };
 
 #endif // SWE_H

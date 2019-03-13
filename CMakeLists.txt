@@ -12,6 +12,7 @@ add_library(swe STATIC
     swe.h swe.cpp
     calc.h calc.cpp
     tithi.h tithi.cpp
+    coord.h coord.cpp
 )
 target_include_directories(swe PRIVATE vendor/sweph/src)
 target_link_libraries(swe PRIVATE sweph)
@@ -39,6 +40,7 @@ add_executable(test-main
     tests/test-swe.cpp
     tests/test-calc.cpp
     tests/test-tithi.cpp
+    tests/test-coord.cpp
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR})
 target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2)
