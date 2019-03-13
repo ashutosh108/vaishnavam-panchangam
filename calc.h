@@ -4,23 +4,12 @@
 #include <optional>
 
 #include "swe_time.h"
-
-enum class Paksha {
-    Shukla,
-    Krishna
-};
+#include "tithi.h"
 
 enum class Vrata_Type {
     Shuddha_Ekadashi,
 //    Atirikta,
 };
-
-struct Tithi {
-    explicit Tithi(double _tithi) : tithi(_tithi){}
-    double tithi;
-};
-
-std::ostream &operator <<(std::ostream &o, Tithi const & t);
 
 struct Vrata {
     Paksha paksha;

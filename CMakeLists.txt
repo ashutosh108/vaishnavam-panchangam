@@ -7,7 +7,7 @@ project(ekadashi-calculator VERSION 0.1 LANGUAGES C CXX)
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(ekadashi-calculator PRIVATE swe)
 
-add_library(swe STATIC swe_time.cpp swe.cpp calc.cpp)
+add_library(swe STATIC swe_time.cpp swe.cpp calc.cpp tithi.cpp)
 target_include_directories(swe PRIVATE vendor/sweph/src)
 target_link_libraries(swe PRIVATE sweph)
 
