@@ -15,14 +15,21 @@ enum class Vrata_Type {
 //    Atirikta,
 };
 
+struct Tithi {
+    explicit Tithi(double _tithi) : tithi(_tithi){}
+    double tithi;
+};
+
+std::ostream &operator <<(std::ostream &o, Tithi const & t);
+
 struct Vrata {
     Paksha paksha;
     Vrata_Type type;
     Swe_Time sunrise;
     Swe_Time prev_sunset;
     Swe_Time arunodaya;
-    double tithi_sunrise;
-    double tithi_arunodaya;
+    Tithi tithi_sunrise;
+    Tithi tithi_arunodaya;
 //    Swe_Time paran_sunrise;
 //    Swe_Time paran_sunset;
 //    Tithi tithi_paran_start;

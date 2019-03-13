@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "catch.hpp"
 
 #include "swe_time.h"
@@ -21,4 +23,28 @@ TEST_CASE("Vijaya Ekadashi Kiev 2019") {
     REQUIRE(vrata->sunrise.year() == 2019);
     REQUIRE(vrata->sunrise.month() == 3);
     REQUIRE(vrata->sunrise.day() == 2);
+}
+
+TEST_CASE("Tithi pretty-printing: Shukla Dvadashi") {
+    std::stringstream s;
+    s << Tithi{11.3};
+    REQUIRE(s.str() == "Shukla Dvadashi(0.3)");
+}
+
+TEST_CASE("Tithi pretty-printing: Krishna Ekadashi") {
+    std::stringstream s;
+    s << Tithi{15+10.4};
+    REQUIRE(s.str() == "Krishna Ekadashi(0.4)");
+}
+
+TEST_CASE("Tithi pretty-printing: Purnima") {
+    std::stringstream s;
+    s << Tithi{14.7};
+    REQUIRE(s.str() == "Purnima(0.7)");
+}
+
+TEST_CASE("Tithi pretty-printing: Amavasya") {
+    std::stringstream s;
+    s << Tithi{15+14.8};
+    REQUIRE(s.str() == "Amavasya(0.8)");
 }

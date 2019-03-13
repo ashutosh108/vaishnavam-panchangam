@@ -1,7 +1,44 @@
+#include <cassert>
 #include <optional>
 
 #include "calc.h"
 #include "swe.h"
+
+std::ostream &operator <<(std::ostream &o, Tithi const & t) {
+    assert(t.tithi >= 0 && t.tithi < 30);
+    constexpr const static char *tithi_names[] = {
+        "Pratipat",
+        "Dvitiya",
+        "Tritiya",
+        "Chaturthi",
+        "Panchami",
+        "Shashthi",
+        "Saptami",
+        "Ashtami",
+        "Navami",
+        "Dashami",
+        "Ekadashi",
+        "Dvadashi",
+        "Trayodashi",
+        "Chaturdashi"
+    };
+    int int_tithi = static_cast<int>(t.tithi);
+    if (int_tithi < 15) {
+        if (int_tithi < 14) {
+            o << "Shukla " << tithi_names[int_tithi];
+        } else {
+            o << "Purnima";
+        }
+    } else {
+        if (int_tithi < 29) {
+            o << "Krishna " << tithi_names[int_tithi-15];
+        } else {
+            o << "Amavasya";
+        }
+    }
+    o << "(" << (t.tithi - int_tithi) << ")";
+    return o;
+}
 
 std::optional<Swe_Time> Calc::find_next_ekadashi_sunrise(Swe_Time after, double latitude, double longitude)
 {
@@ -38,7 +75,7 @@ std::optional<Vrata> Calc::find_next_vrata(Swe_Time after, double latitude, doub
             // purva-viddha Ekadashi, get next sunrise
             sunrise = s.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1}, latitude, longitude);
         }
-        return Vrata{paksha, Vrata_Type::Shuddha_Ekadashi, *sunrise, *prev_sunset, arunodaya, tithi, tithi_arunodaya};
+        return Vrata{paksha, Vrata_Type::Shuddha_Ekadashi, *sunrise, *prev_sunset, arunodaya, Tithi{tithi}, Tithi{tithi_arunodaya}};
     }
     return {};
 }
