@@ -12,12 +12,13 @@ TEST_CASE("find_next_ekadashi_sunrise") {
 }
 
 // disabled until we learn to skip dashami-viddha ekadashi(?)
-TEST_CASE("Vijaya Ekadashi Kiev 2019", "[.]") {
+TEST_CASE("Vijaya Ekadashi Kiev 2019") {
     Swe_Time start{2019, 2, 28};
     auto vrata = Calc{}.find_next_vrata(start, 50.45, 30.523333);
-    Vrata expected_vrata{Paksha::Krishna, Vrata_Type::Shuddha_Ekadashi, Swe_Time{2019, 3, 2, 4.05}};
     REQUIRE(vrata.has_value());
-    REQUIRE(vrata->paksha == expected_vrata.paksha);
-    REQUIRE(vrata->type == expected_vrata.type);
-    REQUIRE(vrata->sunrise == expected_vrata.sunrise);
+    REQUIRE(vrata->paksha == Paksha::Krishna);
+    REQUIRE(vrata->type == Vrata_Type::Shuddha_Ekadashi);
+    REQUIRE(vrata->sunrise.year() == 2019);
+    REQUIRE(vrata->sunrise.month() == 3);
+    REQUIRE(vrata->sunrise.day() == 2);
 }

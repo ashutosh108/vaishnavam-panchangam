@@ -36,11 +36,13 @@ int main(int argc, char *argv[])
     auto midnight = Swe_Time{y, m, d};
     std::cout << "base time: " << midnight << '\n';
 
-    auto ekadashi_sunrise = Calc{}.find_next_ekadashi_sunrise(midnight, latitude, longitude);
-    if (ekadashi_sunrise) {
-        std::cout << "Sunrise: " << *ekadashi_sunrise << '\n';
-        double tithi = Swe{}.get_tithi(*ekadashi_sunrise);
-        std::cout << "Tithi: " << tithi << '\n';
+    auto vrata = Calc{}.find_next_vrata(midnight, latitude, longitude);
+    if (vrata) {
+        std::cout << "Sunrise:     " << vrata->sunrise << '\n';
+        std::cout << "Prev sunset: " << vrata->prev_sunset << '\n';
+        std::cout << "Arunodaya:   " << vrata->arunodaya << '\n';
+        std::cout << "Tithi @sunrise:   " << vrata->tithi_sunrise << '\n';
+        std::cout << "Tithi @arunodaya: " << vrata->tithi_arunodaya << '\n';
     } else {
         std::cout << "Can't find ekadashi sunrise\n";
     }

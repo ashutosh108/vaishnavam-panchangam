@@ -18,11 +18,11 @@ enum class Vrata_Type {
 struct Vrata {
     Paksha paksha;
     Vrata_Type type;
-//    Swe_Time prev_sunrise;
-//    Tithi tithi_arunodaya;
-//    Swe_Time arunodaya;
-//    Tithi tithi_sunrise;
     Swe_Time sunrise;
+    Swe_Time prev_sunset;
+    Swe_Time arunodaya;
+    double tithi_sunrise;
+    double tithi_arunodaya;
 //    Swe_Time paran_sunrise;
 //    Swe_Time paran_sunset;
 //    Tithi tithi_paran_start;

@@ -57,7 +57,7 @@ std::ostream &operator<<(std::ostream &os, Swe_Time const &t) {
     os.fill('0');
     os << t.year_ << '-';
     os.width(2);
-    os << t.month_ << '-' << t.day_ << ' ';
+    os << t.month_ << '-' << std::setw(2) << t.day_ << ' ';
     os.width(2);
     os << hours << ':';
     os.width(2);
