@@ -39,7 +39,6 @@ int main(int argc, char *argv[])
     auto vrata = Calc{}.find_next_vrata(midnight, latitude, longitude);
     if (vrata) {
         std::cout << "Sunrise:     " << vrata->sunrise << '\n';
-        std::cout << "Prev sunset: " << vrata->prev_sunset << '\n';
         std::cout << "Arunodaya:   " << vrata->arunodaya << '\n';
         std::cout << "Tithi @sunrise:   " << vrata->tithi_sunrise << '\n';
         std::cout << "Tithi @arunodaya: " << vrata->tithi_arunodaya << '\n';
