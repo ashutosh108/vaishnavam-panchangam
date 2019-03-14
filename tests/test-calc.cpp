@@ -127,6 +127,11 @@ TEST_CASE("get_arunodaya") {
 [[maybe_unused]] constexpr Coord samara_coord{53, 11, 0, 50, 7, 0};
 [[maybe_unused]] constexpr Coord chelyabinsk_coord{55, 9, 44, 61, 24, 11}; // ru Wikipedia
 [[maybe_unused]] constexpr Coord tekeli_coord{44, 51, 47, 78, 45, 51}; // ru Wikipedia
+[[maybe_unused]] constexpr Coord volgograd_coord{48, 41, 57, 44, 28, 24}; // ru Wikipedia
+[[maybe_unused]] constexpr Coord tambov_coord{52, 43, 0, 41, 26, 0}; // ru Wikipedia
+[[maybe_unused]] constexpr Coord marsel_coord{43, 17, 47, 5, 22, 12}; // ru Wikipedia
+[[maybe_unused]] constexpr Coord madrid_coord{40, 24, 0, -3, -41, -0}; // ru Wikipedia
+[[maybe_unused]] constexpr Coord mayami_coord{25, 47, 0, -80, -13, -0}; // ru Wikipedia
 
 void test_ekadashi(Date base_date, Coord coord, Date vrata_date) {
     auto vrata = Calc{}.find_next_vrata(base_date, coord);
@@ -160,6 +165,56 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(vrata(c, base_date, novosibirsk_coord) == Vrata{Date{2019, 3, 2}});
     REQUIRE(vrata(c, base_date, barnaul_coord) == Vrata{Date{2019, 3, 2}});
     REQUIRE(vrata(c, base_date, tomsk_coord) == Vrata{Date{2019, 3, 2}});
-//    REQUIRE(vrata(c, base_date, kophangan_coord) == Vrata{Date{2019, 3, 2}});
-//    REQUIRE(vrata(c, base_date, denpasar_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, kophangan_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, denpasar_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, mirnyy_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, habarovsk_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, vladivostok_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, petropavlovskkamchatskiy_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, erevan_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, tbilisi_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, samara_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, volgograd_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, ulyanovsk_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, pyatigorsk_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, stavropol_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, semikarakorsk_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, krasnodar_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, simferopol_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, donetsk_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, staryyoskol_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, voronezh_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, tambov_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, kazan_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, kirov_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, ryazan_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, moskva_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, spb_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, murmansk_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, kostomuksha_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, smolensk_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, minsk_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, gomel_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, harkov_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, poltava_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, kremenchug_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, krivoyrog_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, kiev_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, nikolaev_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, odessa_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, kolomyya_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, kishinev_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, riga_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, yurmala_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, tallin_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, vilnyus_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, varshava_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, vena_coord) == Vrata{Date{2019, 3, 1}}); //atirikta dvadashi
+    REQUIRE(vrata(c, base_date, marsel_coord) == Vrata{Date{2019, 3, 1}}); //atirikta dvadashi
+    REQUIRE(vrata(c, base_date, madrid_coord) == Vrata{Date{2019, 3, 1}}); //atirikta dvadashi
+    REQUIRE(vrata(c, base_date, london_coord) == Vrata{Date{2019, 3, 1}}); //atirikta dvadashi
+    REQUIRE(vrata(c, base_date, frederikton_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, toronto_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, mayami_coord) == Vrata{Date{2019, 3, 1}});
+    REQUIRE(vrata(c, base_date, meadowlake_coord) == Vrata{Date{2019, 3, 1}});
 }

@@ -29,9 +29,20 @@ std::optional<Vrata> Calc::find_next_vrata(Date after, Coord coord)
         if ((tithi_arunodaya.is_dashami())) {
             // purva-viddha Ekadashi, get next sunrise
             sunrise = s.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1}, coord);
+            if (!sunrise) { return {}; }
         }
-        Date d{sunrise->as_date()};
-        return Vrata{d};
+
+        // Adjust to make sure that Vrata data is correct in local timezone
+        // (as opposed to *sunrise which is in UTC). We do this by adding an hour
+        // for every 30 degrees of eastern latitude (24 hours for 360 degrees).
+        // This could give wrong date if actual local timezone is quite
+        // different from the "natural" timezone. But until we support proper
+        // timezone, this should work for most cases.
+        double adjustment_in_days = coord.longitude * (1.0/360);
+        Swe_Time local_sunrise{sunrise->as_julian_days()+adjustment_in_days};
+
+        Date d{local_sunrise.as_date()};
+        return Vrata{d, *sunrise};
     }
     return {};
 }

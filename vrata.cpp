@@ -12,5 +12,9 @@ bool operator!=(const Vrata &v1, const Vrata &v2)
 
 std::ostream &operator<<(std::ostream &o, const Vrata &v)
 {
-    return o << "Vrata{" << v.date << "}";
+    o << "Vrata{" << v.date;
+    if (v.vrata_sunrise) {
+        o << ", vrata_sunrise=" << v.vrata_sunrise.value();
+    }
+    return o << "}";
 }
