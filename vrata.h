@@ -6,6 +6,7 @@
 
 #include "date.h"
 #include "swe_time.h"
+#include "tithi.h"
 
 enum class Vrata_Type {
     Ekadashi,
@@ -15,12 +16,21 @@ enum class Vrata_Type {
 struct Vrata {
     Vrata_Type type = Vrata_Type::Ekadashi;
     Date date;
-    std::optional<Swe_Time> vrata_sunrise;
+    std::optional<Swe_Time> sunrise;
+    std::optional<Tithi> tithi_sunrise;
+    std::optional<Swe_Time> prev_sunset;
+    std::optional<Swe_Time> arunodaya;
+    std::optional<Tithi> tithi_arunodaya;
+
     Vrata(Date _date) : date(_date){}
-    Vrata(Date _date, Swe_Time _vrata_sunrise) : date(_date), vrata_sunrise(_vrata_sunrise){}
-//    Swe_Time arunodaya;
-//    Tithi tithi_sunrise;
-//    Tithi tithi_arunodaya;
+    Vrata(Date _date, Swe_Time _vrata_sunrise, Tithi _tithi_sunrise, Swe_Time _prev_sunset, Swe_Time _arunodaya, Tithi _tithi_arunodaya)
+        : date(_date),
+          sunrise(_vrata_sunrise),
+          tithi_sunrise(_tithi_sunrise),
+          prev_sunset(_prev_sunset),
+          arunodaya(_arunodaya),
+          tithi_arunodaya(_tithi_arunodaya)
+    {}
 //    Swe_Time paran_sunrise;
 //    Swe_Time paran_sunset;
 //    Tithi tithi_paran_start;
