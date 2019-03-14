@@ -1,0 +1,22 @@
+#include "catch.hpp"
+
+#include <sstream>
+
+#include "date.h"
+#include "vrata.h"
+
+TEST_CASE("Can compare Vrata") {
+    Vrata v1{Date{2019, 3, 19}};
+    Vrata v2{Date{2019, 3, 19}};
+    Vrata v3{Date{2019, 3, 20}};
+    REQUIRE(v1 == v2);
+    REQUIRE(v2 == v1);
+    REQUIRE(v1 != v3);
+    REQUIRE(v3 != v1);
+}
+
+TEST_CASE("Can print vrata") {
+    std::stringstream s;
+    s << Vrata{Date{2019, 3, 19}};
+    REQUIRE(s.str() == "Vrata{2019-03-19}");
+}

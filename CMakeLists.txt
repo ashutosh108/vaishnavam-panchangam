@@ -14,6 +14,7 @@ add_library(swe STATIC
     tithi.h tithi.cpp
     coord.h coord.cpp
     date.h date.cpp
+    vrata.h vrata.cpp
 )
 target_include_directories(swe PRIVATE vendor/sweph/src)
 target_link_libraries(swe PRIVATE sweph)
@@ -43,6 +44,7 @@ add_executable(test-main
     tests/test-tithi.cpp
     tests/test-coord.cpp
     tests/test-date.cpp
+    tests/test-vrata.cpp
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR})
 target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2)

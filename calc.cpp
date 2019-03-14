@@ -45,13 +45,3 @@ std::optional<Swe_Time> Calc::get_arunodaya(Swe_Time sunrise, Coord coord)
     const double muhurtas_per_night = (12*60) / 48.0;
     return Swe_Time{sunrise.as_julian_days() - night_len_in_days * 2 / muhurtas_per_night};
 }
-
-bool operator==(const Vrata &v1, const Vrata &v2)
-{
-    return v1.type == v2.type && v1.date == v2.date;
-}
-
-std::ostream &operator<<(std::ostream &o, const Vrata &v)
-{
-    return o << "Vrata{" << v.date << "}";
-}

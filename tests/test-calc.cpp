@@ -21,7 +21,7 @@ TEST_CASE("Vijaya Ekadashi Kiev 2019") {
     auto vrata = Calc{}.find_next_vrata(base_date, Coord{50.45, 30.523333});
     REQUIRE(vrata.has_value());
     REQUIRE(Swe{}.get_tithi(Swe_Time{vrata->date}).get_paksha() == Paksha::Krishna);
-    REQUIRE(vrata->type == Vrata_Type::Shuddha_Ekadashi);
+    REQUIRE(vrata->type == Vrata_Type::Ekadashi);
     REQUIRE(vrata->date == Date{2019, 3, 2});
 }
 
@@ -130,7 +130,7 @@ TEST_CASE("get_arunodaya") {
 
 void test_ekadashi(Date base_date, Coord coord, Date vrata_date) {
     auto vrata = Calc{}.find_next_vrata(base_date, coord);
-    REQUIRE(vrata->type == Vrata_Type::Shuddha_Ekadashi);
+    REQUIRE(vrata->type == Vrata_Type::Ekadashi);
     REQUIRE(vrata->date == vrata_date);
 }
 
@@ -162,10 +162,4 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(vrata(c, base_date, tomsk_coord) == Vrata{Date{2019, 3, 2}});
 //    REQUIRE(vrata(c, base_date, kophangan_coord) == Vrata{Date{2019, 3, 2}});
 //    REQUIRE(vrata(c, base_date, denpasar_coord) == Vrata{Date{2019, 3, 2}});
-}
-
-TEST_CASE("Can print vrata") {
-    std::stringstream s;
-    s << Vrata{Date{2019, 3, 19}};
-    REQUIRE(s.str() == "Vrata{2019-03-19}");
 }
