@@ -47,6 +47,11 @@ bool Swe_Time::operator==(const Swe_Time &to) const
             std::abs(hours_ - to.hours_) <= epsilon;
 }
 
+Date Swe_Time::as_date()
+{
+    return Date{year_, month_, day_};
+}
+
 std::ostream &operator<<(std::ostream &os, Swe_Time const &t) {
     int hours = static_cast<int>(t.hours_);
     double minutes_remain = (t.hours_ - hours) * 60;

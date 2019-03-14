@@ -30,7 +30,8 @@ std::optional<Vrata> Calc::find_next_vrata(Date after, Coord coord)
             // purva-viddha Ekadashi, get next sunrise
             sunrise = s.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1}, coord);
         }
-        return Vrata{Vrata_Type::Shuddha_Ekadashi, *sunrise};
+        Date d{sunrise->as_date()};
+        return Vrata{Vrata_Type::Shuddha_Ekadashi, d};
     }
     return {};
 }

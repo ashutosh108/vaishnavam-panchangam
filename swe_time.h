@@ -19,6 +19,7 @@ public:
     int day();
     double hours();
     bool operator==(Swe_Time const &to) const;
+    Date as_date();
 private:
     double jd_;
     int year_, month_, day_;

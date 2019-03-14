@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     auto vrata = Calc{}.find_next_vrata(base_date, Coord{latitude, longitude});
     if (vrata) {
-        std::cout << "Sunrise:     " << vrata->sunrise << '\n';
+        std::cout << "Date:        " << vrata->date << '\n';
     } else {
         std::cout << "Can't find ekadashi sunrise\n";
     }

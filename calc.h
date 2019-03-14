@@ -15,7 +15,7 @@ enum class Vrata_Type {
 
 struct Vrata {
     Vrata_Type type;
-    Swe_Time sunrise;
+    Date date;
 //    Swe_Time arunodaya;
 //    Tithi tithi_sunrise;
 //    Tithi tithi_arunodaya;

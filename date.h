@@ -11,5 +11,7 @@ struct Date
 };
 
 std::ostream &operator <<(std::ostream &o, Date const &d);
+bool operator ==(Date const &, Date const &);
+bool operator !=(Date const &, Date const &);
 
 #endif // DATE_H

@@ -16,3 +16,11 @@ TEST_CASE("Printing date") {
     s << Date{2019, 3, 19};
     REQUIRE(s.str() == "2019-03-19");
 }
+
+TEST_CASE("Can compare Date for equality") {
+    Date d1{2019, 3, 19};
+    Date d2{2019, 3, 19};
+    Date d3{2019, 3, 20};
+    REQUIRE(d1 == d2);
+    REQUIRE(d1 != d3);
+}
