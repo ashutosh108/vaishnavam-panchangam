@@ -18,10 +18,10 @@ std::optional<Swe_Time> Calc::find_next_ekadashi_sunrise(Swe_Time after, Coord c
     return {};
 }
 
-std::optional<Vrata> Calc::find_next_vrata(Swe_Time after, Coord coord)
+std::optional<Vrata> Calc::find_next_vrata(Date after, Coord coord)
 {
     Swe s;
-    auto sunrise = find_next_ekadashi_sunrise(after, coord);
+    auto sunrise = find_next_ekadashi_sunrise(Swe_Time{after}, coord);
     if (sunrise) {
         auto arunodaya = get_arunodaya(*sunrise, coord);
         if (!arunodaya.has_value()) { return{}; }

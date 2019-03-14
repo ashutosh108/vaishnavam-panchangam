@@ -3,9 +3,10 @@
 
 #include "catch.hpp"
 
+#include "calc.h"
+#include "date.h"
 #include "swe.h"
 #include "swe_time.h"
-#include "calc.h"
 
 TEST_CASE("find_next_ekadashi_sunrise") {
     Swe_Time start{2019, 3, 9};
@@ -16,8 +17,8 @@ TEST_CASE("find_next_ekadashi_sunrise") {
 }
 
 TEST_CASE("Vijaya Ekadashi Kiev 2019") {
-    Swe_Time start{2019, 2, 28};
-    auto vrata = Calc{}.find_next_vrata(start, Coord{50.45, 30.523333});
+    Date base_date{2019, 2, 28};
+    auto vrata = Calc{}.find_next_vrata(base_date, Coord{50.45, 30.523333});
     REQUIRE(vrata.has_value());
     REQUIRE(Swe{}.get_tithi(vrata->sunrise).get_paksha() == Paksha::Krishna);
     REQUIRE(vrata->type == Vrata_Type::Shuddha_Ekadashi);
@@ -129,34 +130,41 @@ TEST_CASE("get_arunodaya") {
 [[maybe_unused]] constexpr Coord chelyabinsk_coord{55, 9, 44, 61, 24, 11}; // ru Wikipedia
 [[maybe_unused]] constexpr Coord tekeli_coord{44, 51, 47, 78, 45, 51}; // ru Wikipedia
 
-void test_ekadashi(int base_year, int base_month, int base_day, Coord coord, int vrata_year, int vrata_month, int vrata_day) {
-    auto vrata = Calc{}.find_next_vrata(Swe_Time{base_year, base_month, base_day}, coord);
+void test_ekadashi(Date base_date, Coord coord, int vrata_year, int vrata_month, int vrata_day) {
+    auto vrata = Calc{}.find_next_vrata(base_date, coord);
     REQUIRE(vrata->type == Vrata_Type::Shuddha_Ekadashi);
     REQUIRE(vrata->sunrise.year() == vrata_year);
     REQUIRE(vrata->sunrise.month() == vrata_month);
     REQUIRE(vrata->sunrise.day() == vrata_day);
 }
 
+std::optional<Vrata> vrata(Calc &c, Date base_date, Coord coord) {
+    return c.find_next_vrata(base_date, coord);
+}
+
 TEST_CASE("Ekadashi 2019-02-28") {
-    test_ekadashi(2019, 2, 28, udupi_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, gokarna_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, newdelhi_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, manali_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, kalkuta_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, aktau_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, perm_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, ufa_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, ekaterinburg_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, surgut_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, chelyabinsk_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, ekaterinburg_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, bishkek_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, almaata_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, tekeli_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, omsk_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, novosibirsk_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, barnaul_coord, 2019, 3, 2);
-    test_ekadashi(2019, 2, 28, tomsk_coord, 2019, 3, 2);
-//    test_ekadashi(2019, 2, 28, kophangan_coord, 2019, 3, 2);
-//    test_ekadashi(2019, 2, 28, denpasar_coord, 2019, 3, 2);
+    Date base_date{2019, 2, 28};
+    Calc c;
+//    REQUIRE(vrata(c, base_date, udupi_coord) == Vrata{Date{2019, 3, 2}});
+    test_ekadashi(base_date, udupi_coord, 2019, 3, 2);
+    test_ekadashi(base_date, gokarna_coord, 2019, 3, 2);
+    test_ekadashi(base_date, newdelhi_coord, 2019, 3, 2);
+    test_ekadashi(base_date, manali_coord, 2019, 3, 2);
+    test_ekadashi(base_date, kalkuta_coord, 2019, 3, 2);
+    test_ekadashi(base_date, aktau_coord, 2019, 3, 2);
+    test_ekadashi(base_date, perm_coord, 2019, 3, 2);
+    test_ekadashi(base_date, ufa_coord, 2019, 3, 2);
+    test_ekadashi(base_date, ekaterinburg_coord, 2019, 3, 2);
+    test_ekadashi(base_date, surgut_coord, 2019, 3, 2);
+    test_ekadashi(base_date, chelyabinsk_coord, 2019, 3, 2);
+    test_ekadashi(base_date, ekaterinburg_coord, 2019, 3, 2);
+    test_ekadashi(base_date, bishkek_coord, 2019, 3, 2);
+    test_ekadashi(base_date, almaata_coord, 2019, 3, 2);
+    test_ekadashi(base_date, tekeli_coord, 2019, 3, 2);
+    test_ekadashi(base_date, omsk_coord, 2019, 3, 2);
+    test_ekadashi(base_date, novosibirsk_coord, 2019, 3, 2);
+    test_ekadashi(base_date, barnaul_coord, 2019, 3, 2);
+    test_ekadashi(base_date, tomsk_coord, 2019, 3, 2);
+    test_ekadashi(base_date, kophangan_coord, 2019, 3, 2);
+    test_ekadashi(base_date, denpasar_coord, 2019, 3, 2);
 }

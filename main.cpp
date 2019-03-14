@@ -33,10 +33,10 @@ int main(int argc, char *argv[])
     double latitude = std::stod(argv[2]);
     double longitude = std::stod(argv[3]);
 
-    auto midnight = Swe_Time{y, m, d};
-    std::cout << "base time: " << midnight << '\n';
+    Date base_date{y, m, d};
+    std::cout << "base date: " << base_date << '\n';
 
-    auto vrata = Calc{}.find_next_vrata(midnight, Coord{latitude, longitude});
+    auto vrata = Calc{}.find_next_vrata(base_date, Coord{latitude, longitude});
     if (vrata) {
         std::cout << "Sunrise:     " << vrata->sunrise << '\n';
     } else {

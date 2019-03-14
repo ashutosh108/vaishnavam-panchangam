@@ -2,6 +2,7 @@
 
 #include <sstream>
 
+#include "date.h"
 #include "swe_time.h"
 
 TEST_CASE( "Can create Swe_Time from double" ) {
@@ -50,4 +51,10 @@ TEST_CASE("create from Y M D h m s", "[hms]") {
     Swe_Time t1{2019, 3, 17, 4.2267416752777778};
     Swe_Time t2{2019, 3, 17, 4, 13, 36.270031};
     REQUIRE(t1 == t2);
+}
+
+TEST_CASE("Can create from Date") {
+    Date d{2019, 3, 9};
+    Swe_Time t{d};
+    REQUIRE(t == Swe_Time{2019, 3, 9});
 }
