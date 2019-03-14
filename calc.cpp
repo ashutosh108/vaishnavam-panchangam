@@ -31,7 +31,7 @@ std::optional<Vrata> Calc::find_next_vrata(Date after, Coord coord)
             sunrise = s.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1}, coord);
         }
         Date d{sunrise->as_date()};
-        return Vrata{Vrata_Type::Shuddha_Ekadashi, d};
+        return Vrata{d};
     }
     return {};
 }
@@ -44,4 +44,14 @@ std::optional<Swe_Time> Calc::get_arunodaya(Swe_Time sunrise, Coord coord)
     double night_len_in_days = sunrise.as_julian_days() - prev_sunset->as_julian_days();
     const double muhurtas_per_night = (12*60) / 48.0;
     return Swe_Time{sunrise.as_julian_days() - night_len_in_days * 2 / muhurtas_per_night};
+}
+
+bool operator==(const Vrata &v1, const Vrata &v2)
+{
+    return v1.type == v2.type && v1.date == v2.date;
+}
+
+std::ostream &operator<<(std::ostream &o, const Vrata &v)
+{
+    return o << "Vrata{" << v.date << "}";
 }

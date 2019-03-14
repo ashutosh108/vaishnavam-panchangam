@@ -134,33 +134,38 @@ void test_ekadashi(Date base_date, Coord coord, Date vrata_date) {
     REQUIRE(vrata->date == vrata_date);
 }
 
-std::optional<Vrata> vrata(Calc &c, Date base_date, Coord coord) {
-    return c.find_next_vrata(base_date, coord);
+Vrata vrata(Calc &c, Date base_date, Coord coord) {
+    return c.find_next_vrata(base_date, coord).value();
 }
 
 TEST_CASE("Ekadashi 2019-02-28") {
     Date base_date{2019, 2, 28};
     Calc c;
-//    REQUIRE(vrata(c, base_date, udupi_coord) == Vrata{Date{2019, 3, 2}});
-    test_ekadashi(base_date, udupi_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, gokarna_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, newdelhi_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, manali_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, kalkuta_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, aktau_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, perm_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, ufa_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, ekaterinburg_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, surgut_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, chelyabinsk_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, ekaterinburg_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, bishkek_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, almaata_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, tekeli_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, omsk_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, novosibirsk_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, barnaul_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, tomsk_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, kophangan_coord, Date{2019, 3, 2});
-    test_ekadashi(base_date, denpasar_coord, Date{2019, 3, 2});
+    REQUIRE(vrata(c, base_date, udupi_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, gokarna_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, newdelhi_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, manali_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, kalkuta_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, aktau_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, perm_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, ufa_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, ekaterinburg_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, surgut_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, chelyabinsk_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, ekaterinburg_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, bishkek_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, almaata_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, tekeli_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, omsk_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, novosibirsk_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, barnaul_coord) == Vrata{Date{2019, 3, 2}});
+    REQUIRE(vrata(c, base_date, tomsk_coord) == Vrata{Date{2019, 3, 2}});
+//    REQUIRE(vrata(c, base_date, kophangan_coord) == Vrata{Date{2019, 3, 2}});
+//    REQUIRE(vrata(c, base_date, denpasar_coord) == Vrata{Date{2019, 3, 2}});
+}
+
+TEST_CASE("Can print vrata") {
+    std::stringstream s;
+    s << Vrata{Date{2019, 3, 19}};
+    REQUIRE(s.str() == "Vrata{2019-03-19}");
 }

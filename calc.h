@@ -14,8 +14,9 @@ enum class Vrata_Type {
 };
 
 struct Vrata {
-    Vrata_Type type;
+    Vrata_Type type = Vrata_Type::Shuddha_Ekadashi;
     Date date;
+    Vrata(Date _date) : date(_date){}
 //    Swe_Time arunodaya;
 //    Tithi tithi_sunrise;
 //    Tithi tithi_arunodaya;
@@ -26,6 +27,9 @@ struct Vrata {
 //    Tithi tithi_paran_end;
 //    Swe_Time paran_end;
 };
+
+bool operator==(Vrata const &, Vrata const &);
+std::ostream &operator<<(std::ostream &o, Vrata const &v);
 
 class Calc
 {
