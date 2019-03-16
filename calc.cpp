@@ -23,16 +23,27 @@ std::optional<Vrata> Calc::find_next_vrata(Date after, Coord coord)
     Swe s;
     auto sunrise = find_next_ekadashi_sunrise(Swe_Time{after}, coord);
     if (sunrise) {
-        auto arunodaya = get_arunodaya(*sunrise, coord);
-        if (!arunodaya.has_value()) { return{}; }
-        auto tithi_arunodaya = s.get_tithi(*arunodaya);
+        auto arunodaya_info = get_arunodaya(*sunrise, coord);
+        if (!arunodaya_info.has_value()) { return{}; }
+        auto [arunodaya, ardha_ghatika_before_arundaya] = *arunodaya_info;
+        auto tithi_arunodaya = s.get_tithi(arunodaya);
         Swe_Time back_24hrs{sunrise->as_julian_days()-1};
         auto prev_sunset = Swe{}.get_sunset(back_24hrs, coord);
+        Vrata_Type type = Vrata_Type::Ekadashi;
         if ((tithi_arunodaya.is_dashami())) {
             // purva-viddha Ekadashi, get next sunrise
             sunrise = s.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1}, coord);
             if (!sunrise) { return {}; }
+        } else {
+            Tithi tithi_ardha_ghatika_before_arunodaya = Swe{}.get_tithi(ardha_ghatika_before_arundaya);
+            if (tithi_ardha_ghatika_before_arunodaya.is_dashami()) {
+                type = Vrata_Type::Sandigdha_Ekadashi;
+                // Sandigdha (almost purva-viddha Ekadashi), get next sunrise
+                sunrise = s.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1}, coord);
+                if (!sunrise) { return {}; }
+            }
         }
+
 
         // Adjust to make sure that Vrata data is correct in local timezone
         // (as opposed to *sunrise which is in UTC). We do this by adding an hour
@@ -46,17 +57,31 @@ std::optional<Vrata> Calc::find_next_vrata(Date after, Coord coord)
         Tithi sunrise_tithi = s.get_tithi(*sunrise);
 
         Date d{local_sunrise.as_date()};
-        return Vrata{d, *sunrise, sunrise_tithi, *prev_sunset, *arunodaya, tithi_arunodaya};
+        return Vrata{type,
+                    d, *sunrise, sunrise_tithi, *prev_sunset, arunodaya, tithi_arunodaya};
     }
     return {};
 }
 
-std::optional<Swe_Time> Calc::get_arunodaya(Swe_Time sunrise, Coord coord)
-{
+std::optional<Swe_Time> get_prev_sunset(Swe_Time const sunrise, Coord const coord) {
     Swe_Time back_24hrs{sunrise.as_julian_days()-1};
-    auto prev_sunset = Swe{}.get_sunset(back_24hrs, coord);
+    return Swe{}.get_sunset(back_24hrs, coord);
+}
+
+Swe_Time proportional_time(Swe_Time const t1, Swe_Time const t2, double const proportion) {
+    double distance = t2.as_julian_days() - t1.as_julian_days();
+    return Swe_Time{t1.as_julian_days() + distance * proportion};
+}
+
+std::optional<std::pair<Swe_Time, Swe_Time>> Calc::get_arunodaya(Swe_Time const sunrise, Coord const coord)
+{
+    auto const prev_sunset = get_prev_sunset(sunrise, coord);
     if (!prev_sunset.has_value()) { return{}; }
-    double night_len_in_days = sunrise.as_julian_days() - prev_sunset->as_julian_days();
-    const double muhurtas_per_night = (12*60) / 48.0;
-    return Swe_Time{sunrise.as_julian_days() - night_len_in_days * 2 / muhurtas_per_night};
+    constexpr double muhurtas_per_night = (12*60) / 48.0;
+    constexpr double proportion_arunodaya = 2 / muhurtas_per_night; // 2/15 = 1/7.5
+    constexpr double proportion_ardha_ghatika_before = 2.25 / muhurtas_per_night; // 2.25/15
+    return std::pair(
+        proportional_time(sunrise, *prev_sunset, proportion_arunodaya),
+        proportional_time(sunrise, *prev_sunset, proportion_ardha_ghatika_before)
+    );
 }

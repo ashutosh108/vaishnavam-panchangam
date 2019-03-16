@@ -10,8 +10,11 @@
 
 enum class Vrata_Type {
     Ekadashi,
+    Sandigdha_Ekadashi, // when Ekadashi Tithi starts before Arunodaya, but less than 0.25 muhurtas before.
 //    Atirikta,
 };
+
+std::ostream &operator<<(std::ostream &o, Vrata_Type const &v);
 
 struct Vrata {
     Vrata_Type type = Vrata_Type::Ekadashi;
@@ -23,8 +26,12 @@ struct Vrata {
     std::optional<Tithi> tithi_arunodaya;
 
     Vrata(Date _date) : date(_date){}
-    Vrata(Date _date, Swe_Time _vrata_sunrise, Tithi _tithi_sunrise, Swe_Time _prev_sunset, Swe_Time _arunodaya, Tithi _tithi_arunodaya)
-        : date(_date),
+    Vrata(Vrata_Type _type, Date _date)
+        : type(_type),
+          date(_date){}
+    Vrata(Vrata_Type _type, Date _date, Swe_Time _vrata_sunrise, Tithi _tithi_sunrise, Swe_Time _prev_sunset, Swe_Time _arunodaya, Tithi _tithi_arunodaya)
+        : type(_type),
+          date(_date),
           sunrise(_vrata_sunrise),
           tithi_sunrise(_tithi_sunrise),
           prev_sunset(_prev_sunset),

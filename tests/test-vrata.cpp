@@ -18,5 +18,5 @@ TEST_CASE("Can compare Vrata") {
 TEST_CASE("Can print vrata") {
     std::stringstream s;
     s << Vrata{Date{2019, 3, 19}};
-    REQUIRE(s.str() == "Vrata{2019-03-19}");
+    REQUIRE(s.str() == "Ekadashi{2019-03-19}");
 }
