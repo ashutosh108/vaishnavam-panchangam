@@ -15,7 +15,7 @@ std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after, Coor
     const double atmospheric_temperature = 15;
     double trise;
     char serr[AS_MAXCH];
-    int32 flags = SEFLG_SWIEPH;
+    int32 flags = SEFLG_MOSEPH;
     int res_flag = swe_rise_trans(after.as_julian_days(), SE_SUN, nullptr, flags, rsmi, geopos,
                                      atmospheric_pressure, atmospheric_temperature, &trise, serr);
     if (res_flag == -1) {

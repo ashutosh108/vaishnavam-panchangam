@@ -9,6 +9,7 @@
 #include "calc.h"
 #include "swe.h"
 #include "swe_time.h"
+#include "vrata_detail.h"
 
 void print_usage() {
     std::cout << "USAGE:\n";
@@ -100,7 +101,8 @@ void calc_all(Date d) {
     };
     for (auto &l : locations) {
         auto vrata = Calc{}.find_next_vrata(d, l.second);
-        std::cout << l.first << '\n' << *vrata << "\n\n";
+        Vrata_Detail vd{*vrata, l.second};
+        std::cout << l.first << '\n' << vd << "\n\n";
     }
 
 }
