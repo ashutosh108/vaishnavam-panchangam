@@ -100,7 +100,7 @@ void calc_all(Date d) {
         { "meadowlake", meadowlake_coord },
     };
     for (auto &l : locations) {
-        auto vrata = Calc{}.find_next_vrata(d, l.second);
+        auto vrata = Calc{l.second}.find_next_vrata(d);
         Vrata_Detail vd{*vrata, l.second};
         std::cout << l.first << '\n' << vd << "\n\n";
     }
@@ -125,7 +125,8 @@ int main(int argc, char *argv[])
 
     std::cout << "base date: " << base_date << '\n';
 
-    auto vrata = Calc{}.find_next_vrata(base_date, Coord{latitude, longitude});
+    Coord coord{latitude, longitude};
+    auto vrata = Calc{coord}.find_next_vrata(base_date);
     if (vrata) {
         std::cout << "Date:        " << vrata->date << '\n';
     } else {

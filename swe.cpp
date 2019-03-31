@@ -7,7 +7,7 @@
 #include "coord.h"
 #include "swe.h"
 
-std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after) {
+std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after) const {
     int rsmi = rise_or_set | SE_BIT_HINDU_RISING;
          // or SE_CALC_RISE | SE_BIT_DISC_CENTER | SE_BIT_NO_REFRACTION | SE_BIT_GEOCTR_NO_ECL_LAT;
     double geopos[3] = {coord.longitude, coord.latitude, 0};
@@ -40,17 +40,17 @@ Swe::~Swe()
     swe_close();
 }
 
-std::optional<Swe_Time> Swe::get_sunrise(Swe_Time after)
+std::optional<Swe_Time> Swe::get_sunrise(Swe_Time after) const
 {
     return do_rise_trans(SE_CALC_RISE, after);
 }
 
-std::optional<Swe_Time> Swe::get_sunset(Swe_Time after)
+std::optional<Swe_Time> Swe::get_sunset(Swe_Time after) const
 {
     return do_rise_trans(SE_CALC_SET, after);
 }
 
-[[noreturn]] void Swe::throw_on_wrong_flags(int out_flags, int in_flags, char *serr) {
+[[noreturn]] void Swe::throw_on_wrong_flags(int out_flags, int in_flags, char *serr) const {
     if (out_flags == ERR) {
         throw std::runtime_error(serr);
     } else {
@@ -60,7 +60,7 @@ std::optional<Swe_Time> Swe::get_sunset(Swe_Time after)
     }
 }
 
-void Swe::do_calc_ut(double jd, int planet, int flags, double *res) {
+void Swe::do_calc_ut(double jd, int planet, int flags, double *res) const {
     char serr[AS_MAXCH];
     int32 res_flags = swe_calc_ut(jd, planet, flags, res, serr);
     if (res_flags == flags) {
@@ -69,14 +69,14 @@ void Swe::do_calc_ut(double jd, int planet, int flags, double *res) {
     throw_on_wrong_flags(res_flags, flags, serr);
 }
 
-double Swe::get_sun_longitude(Swe_Time time)
+double Swe::get_sun_longitude(Swe_Time time) const
 {
     double res[6];
     do_calc_ut(time.as_julian_days(), SE_SUN, SEFLG_MOSEPH, res);
     return res[0];
 }
 
-double Swe::get_moon_longitude(Swe_Time time)
+double Swe::get_moon_longitude(Swe_Time time) const
 {
     double res[6];
     do_calc_ut(time.as_julian_days(), SE_MOON, SEFLG_MOSEPH, res);
@@ -84,7 +84,7 @@ double Swe::get_moon_longitude(Swe_Time time)
 }
 
 /** Get tithi as double [0..30) */
-Tithi Swe::get_tithi(Swe_Time time)
+Tithi Swe::get_tithi(Swe_Time time) const
 {
     double sun = get_sun_longitude(time);
     double moon = get_moon_longitude(time);
