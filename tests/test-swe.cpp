@@ -40,9 +40,9 @@ TEST_CASE("get tithi") {
 }
 
 // skip since find_tithi_start() is not implemented yet
-TEST_CASE("find tithi start", "[.]") {
-    Swe_Time start{2019, 3, 10};
-    Swe_Time tithi_start = Swe{}.find_tithi_start(start, 11.0);
-    Swe_Time expected{2019, 3, 17, 15.35};
-    REQUIRE(tithi_start.as_julian_days() == Approx(expected.as_julian_days()).epsilon(0.00000001));
-}
+//TEST_CASE("find tithi start", "[.]") {
+//    Swe_Time start{2019, 3, 10};
+//    Swe_Time tithi_start = Swe{}.find_tithi_start(start, 11.0);
+//    Swe_Time expected{2019, 3, 17, 15.35};
+//    REQUIRE(tithi_start.as_julian_days() == Approx(expected.as_julian_days()).epsilon(0.00000001));
+//}

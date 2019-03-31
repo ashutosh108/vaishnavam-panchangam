@@ -84,7 +84,7 @@ Tithi Swe::get_tithi(Swe_Time time)
 
 // TODO: implement (this function seems to be nice to have for debugging
 // but not essential for actual Ekadashi calculations
-Swe_Time Swe::find_tithi_start(Swe_Time after, double/* tithi*/)
-{
-    return after;
-}
+//Swe_Time Swe::find_tithi_start(Swe_Time after, double/* tithi*/)
+//{
+//    return after;
+//}

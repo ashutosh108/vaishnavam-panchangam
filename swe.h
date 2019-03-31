@@ -17,7 +17,7 @@ public:
     double get_moon_longitude(Swe_Time time);
     /** Get tithi as double [0..30) */
     Tithi get_tithi(Swe_Time time);
-    Swe_Time find_tithi_start(Swe_Time after, double tithi);
+//    Swe_Time find_tithi_start(Swe_Time after, double tithi);
 private:
     [[noreturn]] void throw_on_wrong_flags(int out_flags, int in_flags, char *serr);
     void do_calc_ut(double jd, int planet, int flags, double *res);
