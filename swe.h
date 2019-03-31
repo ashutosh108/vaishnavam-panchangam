@@ -13,6 +13,10 @@ class Swe
 public:
     Swe(Coord coord_);
     ~Swe();
+    // Swe is kind of hanlde for sweph and thus we can't really copy it.
+    // Copying it would allow for muiltiple swe_close() calls.
+    Swe(const Swe &) = delete;
+    Swe& operator=(const Swe &) = delete;
     std::optional<Swe_Time> get_sunrise(Swe_Time after, Coord coord);
     std::optional<Swe_Time> get_sunset(Swe_Time after, Coord coord);
     double get_sun_longitude(Swe_Time time);
