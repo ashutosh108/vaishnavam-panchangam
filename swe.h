@@ -11,6 +11,8 @@
 class Swe
 {
 public:
+    Swe(Coord coord_);
+    ~Swe();
     std::optional<Swe_Time> get_sunrise(Swe_Time after, Coord coord);
     std::optional<Swe_Time> get_sunset(Swe_Time after, Coord coord);
     double get_sun_longitude(Swe_Time time);
@@ -19,6 +21,7 @@ public:
     Tithi get_tithi(Swe_Time time);
 //    Swe_Time find_tithi_start(Swe_Time after, double tithi);
 private:
+    Coord coord;
     [[noreturn]] void throw_on_wrong_flags(int out_flags, int in_flags, char *serr);
     void do_calc_ut(double jd, int planet, int flags, double *res);
     std::optional<Swe_Time> do_rise_trans(int rise_or_set, Swe_Time after, Coord coord);

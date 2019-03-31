@@ -18,9 +18,10 @@ TEST_CASE("find_next_ekadashi_sunrise") {
 
 TEST_CASE("Vijaya Ekadashi Kiev 2019") {
     Date base_date{2019, 2, 28};
-    auto vrata = Calc{}.find_next_vrata(base_date, Coord{50.45, 30.523333});
+    Coord kiev{50.45, 30.523333};
+    auto vrata = Calc{}.find_next_vrata(base_date, kiev);
     REQUIRE(vrata.has_value());
-    REQUIRE(Swe{}.get_tithi(Swe_Time{vrata->date}).get_paksha() == Paksha::Krishna);
+    REQUIRE(Swe{kiev}.get_tithi(Swe_Time{vrata->date}).get_paksha() == Paksha::Krishna);
     REQUIRE(vrata->type == Vrata_Type::Ekadashi);
     REQUIRE(vrata->date == Date{2019, 3, 2});
 }

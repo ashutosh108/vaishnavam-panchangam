@@ -6,7 +6,7 @@
 
 std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
 {
-    Swe swe;
+    Swe swe{vd.coord};
     s << vd.vrata;
 
 

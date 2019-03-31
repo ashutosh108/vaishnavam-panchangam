@@ -29,6 +29,17 @@ std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after, Coor
     }
 }
 
+Swe::Swe(Coord coord_):coord(coord_)
+{
+    swe_set_ephe_path(nullptr);
+    swe_set_topo(coord.longitude, coord.latitude, 0);
+}
+
+Swe::~Swe()
+{
+    swe_close();
+}
+
 std::optional<Swe_Time> Swe::get_sunrise(Swe_Time after, Coord coord)
 {
     return do_rise_trans(SE_CALC_RISE, after, coord);
