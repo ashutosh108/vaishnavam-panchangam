@@ -7,7 +7,7 @@
 #include "coord.h"
 #include "swe.h"
 
-std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after, Coord coord) {
+std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after) {
     int rsmi = rise_or_set | SE_BIT_HINDU_RISING;
          // or SE_CALC_RISE | SE_BIT_DISC_CENTER | SE_BIT_NO_REFRACTION | SE_BIT_GEOCTR_NO_ECL_LAT;
     double geopos[3] = {coord.longitude, coord.latitude, 0};
@@ -40,14 +40,14 @@ Swe::~Swe()
     swe_close();
 }
 
-std::optional<Swe_Time> Swe::get_sunrise(Swe_Time after, Coord coord)
+std::optional<Swe_Time> Swe::get_sunrise(Swe_Time after)
 {
-    return do_rise_trans(SE_CALC_RISE, after, coord);
+    return do_rise_trans(SE_CALC_RISE, after);
 }
 
-std::optional<Swe_Time> Swe::get_sunset(Swe_Time after, Coord coord)
+std::optional<Swe_Time> Swe::get_sunset(Swe_Time after)
 {
-    return do_rise_trans(SE_CALC_SET, after, coord);
+    return do_rise_trans(SE_CALC_SET, after);
 }
 
 [[noreturn]] void Swe::throw_on_wrong_flags(int out_flags, int in_flags, char *serr) {

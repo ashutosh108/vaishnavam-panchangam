@@ -9,7 +9,7 @@ std::optional<Swe_Time> Calc::find_next_ekadashi_sunrise(Swe_Time after, Coord c
     Swe s{coord};
     int max_days_left = 16;
     std::optional<Swe_Time> sunrise = after;
-    while ((sunrise = s.get_sunrise(*sunrise, coord)).has_value() && max_days_left--) {
+    while ((sunrise = s.get_sunrise(*sunrise)).has_value() && max_days_left--) {
         if (s.get_tithi(*sunrise).is_ekadashi()) {
             return sunrise;
         }
@@ -28,18 +28,18 @@ std::optional<Vrata> Calc::find_next_vrata(Date after, Coord coord)
         auto [arunodaya, ardha_ghatika_before_arundaya] = *arunodaya_info;
         auto tithi_arunodaya = s.get_tithi(arunodaya);
         Swe_Time back_24hrs{sunrise->as_julian_days()-1};
-        auto prev_sunset = s.get_sunset(back_24hrs, coord);
+        auto prev_sunset = s.get_sunset(back_24hrs);
         Vrata_Type type = Vrata_Type::Ekadashi;
         if ((tithi_arunodaya.is_dashami())) {
             // purva-viddha Ekadashi, get next sunrise
-            sunrise = s.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1}, coord);
+            sunrise = s.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1});
             if (!sunrise) { return {}; }
         } else {
             Tithi tithi_ardha_ghatika_before_arunodaya = s.get_tithi(ardha_ghatika_before_arundaya);
             if (tithi_ardha_ghatika_before_arunodaya.is_dashami()) {
                 type = Vrata_Type::Sandigdha_Ekadashi;
                 // Sandigdha (almost purva-viddha Ekadashi), get next sunrise
-                sunrise = s.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1}, coord);
+                sunrise = s.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1});
                 if (!sunrise) { return {}; }
             }
         }
@@ -65,7 +65,7 @@ std::optional<Vrata> Calc::find_next_vrata(Date after, Coord coord)
 
 std::optional<Swe_Time> get_prev_sunset(Swe_Time const sunrise, Coord const coord) {
     Swe_Time back_24hrs{sunrise.as_julian_days()-1};
-    return Swe{coord}.get_sunset(back_24hrs, coord);
+    return Swe{coord}.get_sunset(back_24hrs);
 }
 
 Swe_Time proportional_time(Swe_Time const t1, Swe_Time const t2, double const proportion) {
