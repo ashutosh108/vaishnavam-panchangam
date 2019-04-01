@@ -5,6 +5,7 @@
 
 #include "calc.h"
 #include "date.h"
+#include "paran.h"
 #include "swe.h"
 #include "swe_time.h"
 
@@ -125,6 +126,10 @@ TEST_CASE("Ekadashi 2019-02-28") {
 TEST_CASE("Ekadashi 2019-03-17") {
     Date d{2019, 3, 15};
     Vrata v17{Date{2019, 3, 17}};
+    Vrata v17_paran_before{
+        Vrata_Type::Ekadashi,
+        Date{2019, 3, 17},
+        Paran{Paran::Type::before, Swe_Time{2019, 3, 17, 11, 13, 0}}};
     Vrata sandigdha_18{Vrata_Type::Sandigdha_Ekadashi, Date{2019, 3, 18}};
     REQUIRE(v17 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v17 == vrata(Calc{gokarna_coord}, d));

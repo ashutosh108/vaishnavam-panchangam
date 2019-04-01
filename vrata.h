@@ -5,6 +5,7 @@
 #include <ostream>
 
 #include "date.h"
+#include "paran.h"
 #include "swe_time.h"
 #include "tithi.h"
 
@@ -19,6 +20,7 @@ std::ostream &operator<<(std::ostream &o, Vrata_Type const &v);
 struct Vrata {
     Vrata_Type type = Vrata_Type::Ekadashi;
     Date date;
+    Paran paran;
     std::optional<Swe_Time> sunrise;
     std::optional<Tithi> tithi_sunrise;
     std::optional<Swe_Time> prev_sunset;
@@ -29,6 +31,10 @@ struct Vrata {
     Vrata(Vrata_Type _type, Date _date)
         : type(_type),
           date(_date){}
+    Vrata(Vrata_Type _type, Date _date, Paran _paran)
+        : type(_type),
+          date(_date),
+          paran(_paran){}
     Vrata(Vrata_Type _type, Date _date, Swe_Time _vrata_sunrise, Tithi _tithi_sunrise, Swe_Time _prev_sunset, Swe_Time _arunodaya, Tithi _tithi_arunodaya)
         : type(_type),
           date(_date),

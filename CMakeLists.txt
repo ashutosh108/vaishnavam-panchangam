@@ -16,6 +16,7 @@ add_library(swe STATIC
     date.h date.cpp
     vrata.h vrata.cpp
     vrata_detail.h vrata_detail.cpp
+    paran.h paran.cpp
 )
 target_include_directories(swe PRIVATE vendor/sweph/src)
 target_link_libraries(swe PRIVATE sweph)
@@ -47,6 +48,7 @@ add_executable(test-main
     tests/test-date.cpp
     tests/test-vrata.cpp
     tests/test-vrata-detail.cpp
+    tests/test-paran.cpp
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR})
 target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2)
