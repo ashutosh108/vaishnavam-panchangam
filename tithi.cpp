@@ -77,7 +77,7 @@ double Tithi::positive_delta_until_tithi(Tithi target) const
 double Tithi::delta_to_nearest_tithi(Tithi target) const
 {
     double delta = target.tithi - this->tithi;
-    if (delta < 15.0) {
+    if (delta < -15.0) {
         delta += 30.0;
     } else if (delta > 15.0) {
         delta -= 30.0;
