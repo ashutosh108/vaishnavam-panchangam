@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 #include <ostream>
 #include <sstream>
 
@@ -62,4 +63,35 @@ bool Tithi::is_ekadashi()
 bool Tithi::is_dashami()
 {
     return (tithi >= 9 && tithi < 10) || (tithi >= 9+15 && tithi < 10+15);
+}
+
+bool operator ==(const Tithi &t1, const Tithi &t2)
+{
+    constexpr double epsilon = 1e-6;
+    return ( fabs(t1.tithi - t2.tithi) < epsilon );
+}
+
+bool operator <(const Tithi &t1, const Tithi &t2)
+{
+    return t1.tithi < t2.tithi;
+}
+
+bool operator >(const Tithi &t1, const Tithi &t2)
+{
+    return t1.tithi > t2.tithi;
+}
+
+bool operator !=(const Tithi &t1, const Tithi &t2)
+{
+    return !(t1==t2);
+}
+
+bool operator <=(const Tithi &t1, const Tithi &t2)
+{
+    return !(t1 > t2);
+}
+
+bool operator >=(const Tithi &t1, const Tithi &t2)
+{
+    return !(t1 < t2);
 }

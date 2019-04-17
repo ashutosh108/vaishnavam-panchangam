@@ -53,3 +53,22 @@ TEST_CASE("is Dashami") {
     REQUIRE(Tithi{9.99}.is_dashami());
     REQUIRE_FALSE(Tithi{10}.is_dashami());
 }
+
+TEST_CASE("can construct and compare Tithi using symbolic names") {
+    REQUIRE(Tithi{Tithi::Dashami} == Tithi{9});
+    REQUIRE(Tithi{Tithi::Dashami} != Tithi{9.1});
+    REQUIRE(Tithi{Tithi::Ekadashi} == Tithi{10});
+    REQUIRE(Tithi{Tithi::Dvadashi} == Tithi{11});
+    REQUIRE(Tithi{Tithi::Trayodashi} == Tithi{12});
+}
+
+TEST_CASE("less than and greater than works for Tithi") {
+    REQUIRE(Tithi{Tithi::Ekadashi} < Tithi{Tithi::Dvadashi});
+    REQUIRE(Tithi{Tithi::Ekadashi} <= Tithi{Tithi::Dvadashi});
+    REQUIRE(Tithi{Tithi::Ekadashi} <= Tithi{Tithi::Ekadashi});
+    REQUIRE_FALSE(Tithi{Tithi::Dvadashi} <= Tithi{Tithi::Ekadashi});
+    REQUIRE(Tithi{Tithi::Ekadashi} > Tithi{Tithi::Dashami});
+    REQUIRE(Tithi{Tithi::Ekadashi} >= Tithi{Tithi::Dashami});
+    REQUIRE(Tithi{Tithi::Ekadashi} >= Tithi{Tithi::Ekadashi});
+    REQUIRE_FALSE(Tithi{Tithi::Ekadashi} >= Tithi{Tithi::Dvadashi});
+}
