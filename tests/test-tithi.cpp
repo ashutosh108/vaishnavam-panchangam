@@ -60,6 +60,10 @@ TEST_CASE("can construct and compare Tithi using symbolic names") {
     REQUIRE(Tithi{Tithi::Ekadashi} == Tithi{10});
     REQUIRE(Tithi{Tithi::Dvadashi} == Tithi{11});
     REQUIRE(Tithi{Tithi::Trayodashi} == Tithi{12});
+
+    REQUIRE(Tithi::Dashami_End == Approx(Tithi::Ekadashi));
+    REQUIRE(Tithi::Ekadashi_End == Approx(Tithi::Dvadashi));
+    REQUIRE(Tithi::Dvadashi_End == Approx(Tithi::Trayodashi));
 }
 
 TEST_CASE("less than and greater than works for Tithi") {

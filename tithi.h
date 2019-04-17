@@ -17,8 +17,12 @@ struct Tithi {
     // Pratipat is 0.00...0.99, Dvitiya is 1.00..1.99, etc
     static constexpr double Dashami = 9.0;
     static constexpr double Ekadashi = 10.0;
+    static constexpr double Dashami_End = Ekadashi;
     static constexpr double Dvadashi = 11.0;
+    static constexpr double Ekadashi_End = Dvadashi;
     static constexpr double Trayodashi = 12.0;
+    static constexpr double Dvadashi_End = Trayodashi;
+
     friend bool operator ==(Tithi const &t1, Tithi const &t2);
     friend bool operator !=(Tithi const &t1, Tithi const &t2);
     friend bool operator <(Tithi const &t1, Tithi const &t2);
