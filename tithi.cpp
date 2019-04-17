@@ -87,7 +87,10 @@ double Tithi::delta_to_nearest_tithi(Tithi target) const
 
 bool operator ==(const Tithi &t1, const Tithi &t2)
 {
-    constexpr double epsilon = 1e-6;
+    // 2e-11 is chosen to give better than half of millionth of a second precision:
+    // ~1e5 seconds per day, 1e6 millionths per second, *2 to be better than
+    // half of millionth of digit.
+    constexpr double epsilon = 2e-11;
     return ( fabs(t1.tithi - t2.tithi) < epsilon );
 }
 

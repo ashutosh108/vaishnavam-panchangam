@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 #include <optional>
 
 #include "calc.h"
@@ -84,4 +85,24 @@ std::optional<std::pair<Swe_Time, Swe_Time>> Calc::get_arunodaya(Swe_Time const 
         proportional_time(sunrise, *prev_sunset, proportion_arunodaya),
         proportional_time(sunrise, *prev_sunset, proportion_ardha_ghatika_before)
     );
+}
+
+std::optional<Swe_Time> Calc::get_next_tithi_start(Swe_Time from, Tithi tithi)
+{
+    constexpr double average_tithi_length = 23.0/24 + 37.0/(24*60); // 23h37m
+    Tithi cur_tithi = swe.get_tithi(from);
+    double delta_tithi = cur_tithi.positive_delta_until_tithi(tithi);
+    double prev_delta_tithi = 0.0;
+    Swe_Time time{from + delta_tithi * average_tithi_length};
+    cur_tithi = swe.get_tithi(time);
+    while (cur_tithi != tithi) {
+        delta_tithi = cur_tithi.delta_to_nearest_tithi(tithi);
+        // Break if delta no longer changes. It means we can't
+        // improve precision further, so break to return the best we have so far.
+        if (fabs(delta_tithi-prev_delta_tithi) < std::numeric_limits<double>::epsilon()) break;
+        prev_delta_tithi = delta_tithi;
+        time += delta_tithi * average_tithi_length;
+        cur_tithi = swe.get_tithi(time);
+    }
+    return time;
 }

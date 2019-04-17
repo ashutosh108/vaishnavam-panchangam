@@ -197,3 +197,12 @@ TEST_CASE("Ekadashi 2019-03-17") {
     REQUIRE(v17 == vrata(Calc{mayami_coord}, d));
     REQUIRE(v17 == vrata(Calc{meadowlake_coord}, d));
 }
+
+TEST_CASE("get_next_tithi_start") {
+    Swe_Time from{2019, 3, 17};
+    Tithi tithi{Tithi::Dvadashi_End};
+    Swe_Time expected{2019, 3, 18, 12, 13, 36.459301};
+    std::optional<Swe_Time> actual = Calc{frederikton_coord}.get_next_tithi_start(from, tithi);
+    REQUIRE(actual.has_value());
+    REQUIRE(*actual == expected);
+}
