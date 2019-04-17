@@ -74,6 +74,8 @@ TEST_CASE("less than and greater than works for Tithi") {
 }
 
 TEST_CASE("delta_until_tithi") {
-    REQUIRE(Tithi{Tithi::Ekadashi}.delta_until_tithi(Tithi{Tithi::Dvadashi}) == 1.0);
-    REQUIRE(Tithi{Tithi::Dvadashi}.delta_until_tithi(Tithi{Tithi::Ekadashi}) == 29.0);
+    REQUIRE(Tithi{Tithi::Ekadashi}.positive_delta_until_tithi(Tithi{Tithi::Dvadashi}) == 1.0);
+    REQUIRE(Tithi{Tithi::Dvadashi}.positive_delta_until_tithi(Tithi{Tithi::Ekadashi}) == 29.0);
+    REQUIRE(Tithi{Tithi::Ekadashi}.delta_to_nearest_tithi(Tithi{Tithi::Dvadashi}) == 1.0);
+    REQUIRE(Tithi{Tithi::Dvadashi}.delta_to_nearest_tithi(Tithi{Tithi::Ekadashi}) == -1.0);
 }
