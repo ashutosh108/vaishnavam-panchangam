@@ -27,7 +27,7 @@ public:
     std::optional<std::pair<Swe_Time, Swe_Time>> get_arunodaya(Swe_Time sunrise) const;
 
 private:
-    Swe swe;
+    swe::Swe swe;
     std::optional<Swe_Time> get_prev_sunset(Swe_Time const sunrise) const;
 };
 

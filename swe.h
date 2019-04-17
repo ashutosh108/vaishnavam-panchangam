@@ -7,6 +7,7 @@
 #include "swe_time.h"
 #include "tithi.h"
 
+namespace swe {
 
 class Swe
 {
@@ -31,5 +32,7 @@ private:
     void do_calc_ut(double jd, int planet, int flags, double *res) const;
     std::optional<Swe_Time> do_rise_trans(int rise_or_set, Swe_Time after) const;
 };
+
+} // namespace swe
 
 #endif // SWE_H
