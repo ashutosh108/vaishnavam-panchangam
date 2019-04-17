@@ -72,3 +72,8 @@ TEST_CASE("less than and greater than works for Tithi") {
     REQUIRE(Tithi{Tithi::Ekadashi} >= Tithi{Tithi::Ekadashi});
     REQUIRE_FALSE(Tithi{Tithi::Ekadashi} >= Tithi{Tithi::Dvadashi});
 }
+
+TEST_CASE("delta_until_tithi") {
+    REQUIRE(Tithi{Tithi::Ekadashi}.delta_until_tithi(Tithi{Tithi::Dvadashi}) == 1.0);
+    REQUIRE(Tithi{Tithi::Dvadashi}.delta_until_tithi(Tithi{Tithi::Ekadashi}) == 29.0);
+}

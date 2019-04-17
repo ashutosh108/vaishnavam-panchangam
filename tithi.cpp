@@ -65,6 +65,14 @@ bool Tithi::is_dashami()
     return (tithi >= 9 && tithi < 10) || (tithi >= 9+15 && tithi < 10+15);
 }
 
+// how many tithis from us to that tithi, counting only forward
+double Tithi::delta_until_tithi(Tithi target) const
+{
+    double delta = target.tithi - this->tithi;
+    if (delta < 0) delta += 30.0;
+    return delta;
+}
+
 bool operator ==(const Tithi &t1, const Tithi &t2)
 {
     constexpr double epsilon = 1e-6;
