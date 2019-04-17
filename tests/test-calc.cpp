@@ -35,12 +35,6 @@ TEST_CASE("get_arunodaya") {
     REQUIRE(arunodaya->first == Swe_Time{2019, 3, 2, 3, 0, 17.512880});
 }
 
-void test_ekadashi(Date base_date, Coord coord, Date vrata_date) {
-    auto vrata = Calc{coord}.find_next_vrata(base_date);
-    REQUIRE(vrata->type == Vrata_Type::Ekadashi);
-    REQUIRE(vrata->date == vrata_date);
-}
-
 Vrata vrata(const Calc &c, Date base_date) {
     return c.find_next_vrata(base_date).value();
 }
