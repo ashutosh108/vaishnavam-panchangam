@@ -58,3 +58,15 @@ TEST_CASE("Can create from Date") {
     Swe_Time t{d};
     REQUIRE(t == Swe_Time{2019, 3, 9});
 }
+
+TEST_CASE("Can add double to Swe_Time") {
+    // make sure that first argument to + can be const
+    Swe_Time const t1{2019, 3, 17};
+    REQUIRE(t1+1.0 == Swe_Time{2019, 3, 18});
+
+    REQUIRE((Swe_Time{2019, 3, 17}+=1.0) == Swe_Time{2019, 3, 18});
+
+    Swe_Time t{2019, 3, 17};
+    t += 1.0;
+    REQUIRE(t == Swe_Time{2019, 3, 18});
+}

@@ -69,3 +69,14 @@ std::ostream &operator<<(std::ostream &os, Swe_Time const &t) {
     os << minutes << ':' << std::fixed << std::setprecision(6) << std::setw(9) << seconds << " UTC";
     return os;
 }
+
+Swe_Time operator +(const Swe_Time &t, double delta)
+{
+    return Swe_Time{t.as_julian_days() + delta};
+}
+
+Swe_Time Swe_Time::operator +=(double delta)
+{
+    *this = *this+delta;
+    return *this;
+}
