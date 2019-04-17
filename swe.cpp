@@ -11,25 +11,34 @@ namespace swe {
 
 namespace detail {
 constexpr int32 ephemeris_flags = SEFLG_MOSEPH;
+constexpr int32 rise_flags = SE_BIT_HINDU_RISING;
+// or SE_CALC_RISE | SE_BIT_DISC_CENTER | SE_BIT_NO_REFRACTION | SE_BIT_GEOCTR_NO_ECL_LAT;
+
+constexpr double atmospheric_pressure = 1013.25;
+constexpr double atmospheric_temperature = 15;
 }
 
 std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after) const {
-    int rsmi = rise_or_set | SE_BIT_HINDU_RISING;
-         // or SE_CALC_RISE | SE_BIT_DISC_CENTER | SE_BIT_NO_REFRACTION | SE_BIT_GEOCTR_NO_ECL_LAT;
+    int32 rsmi = rise_or_set | detail::rise_flags;
     double geopos[3] = {coord.longitude, coord.latitude, 0};
-    const double atmospheric_pressure = 1013.25;
-    const double atmospheric_temperature = 15;
     double trise;
     char serr[AS_MAXCH];
     int32 flags = detail::ephemeris_flags;
-    int res_flag = swe_rise_trans(after.as_julian_days(), SE_SUN, nullptr, flags, rsmi, geopos,
-                                     atmospheric_pressure, atmospheric_temperature, &trise, serr);
+    int res_flag = swe_rise_trans(after.as_julian_days(),
+                                  SE_SUN,
+                                  nullptr,
+                                  flags,
+                                  rsmi,
+                                  geopos,
+                                  detail::atmospheric_pressure,
+                                  detail::atmospheric_temperature,
+                                  &trise, serr);
     if (res_flag == -1) {
         throw_on_wrong_flags(-1, flags, serr);
     }
 
     if (res_flag == -2) {
-        return{};
+        return std::nullopt;
     } else {
         return Swe_Time{trise};
     }
