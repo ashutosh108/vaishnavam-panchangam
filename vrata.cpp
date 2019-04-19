@@ -13,6 +13,7 @@ bool operator!=(const Vrata &v1, const Vrata &v2)
 std::ostream &operator<<(std::ostream &o, const Vrata &v)
 {
     o << v.type << "{" << v.date;
+    o << ", " << v.paran;
     return o << "}";
 }
 
