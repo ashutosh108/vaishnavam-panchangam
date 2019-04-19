@@ -20,7 +20,6 @@ public:
         return !(*this == other);
     }
     std::ostream& operator<<(std::ostream &o) const;
-private:
     std::optional<Swe_Time> paran_start{};
     std::optional<Swe_Time> paran_end{};
 };

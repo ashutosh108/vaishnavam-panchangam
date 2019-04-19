@@ -29,5 +29,11 @@ std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
             }
         }
     }
+    if (vd.vrata.paran.paran_start) {
+        s << "    Paran start:                     " << *vd.vrata.paran.paran_start << '\n';
+    }
+    if (vd.vrata.paran.paran_end) {
+        s << "    Paran end:                       " << *vd.vrata.paran.paran_end << '\n';
+    }
     return s;
 }
