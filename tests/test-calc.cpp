@@ -123,7 +123,7 @@ TEST_CASE("Ekadashi 2019-03-17") {
     Vrata v17_paran_before{
         Vrata_Type::Ekadashi,
         Date{2019, 3, 17},
-        Paran{Paran::Type::before, Swe_Time{2019, 3, 17, 11, 13, 0}}};
+        Paran{std::nullopt, Swe_Time{2019, 3, 17, 11, 13, 0}}};
     Vrata sandigdha_18{Vrata_Type::Sandigdha_Ekadashi, Date{2019, 3, 18}};
     REQUIRE(v17 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v17 == vrata(Calc{gokarna_coord}, d));

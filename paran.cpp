@@ -3,15 +3,13 @@
 std::ostream &Paran::operator<<(std::ostream &o) const
 {
     o << "Paran{";
-    if (type == Type::before) {
-        o << "before ";
-        if (time1) {
-            o << *time1;
-        } else {
-            o << "(nullopt)";
-        }
+    if (paran_start.has_value()) {
+        o << *paran_start;
     }
-    o << '}';
+    o << "..";
+    if (paran_end.has_value()) {
+        o << *paran_end;
+    }
     return o;
 }
 
