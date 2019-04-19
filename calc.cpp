@@ -50,9 +50,13 @@ Paran Calc::get_paran(Swe_Time const &last_fasting_sunrise) const
             paran_end = proportional_time(*paran_sunrise, *paran_sunset, 0.2);
         }
     }
+
     // paran end should never be before Dvadashi's end
     auto dvadashi_end = get_next_tithi_start(last_fasting_sunrise, Tithi{Tithi::Dvadashi_End});
-    paran_end = std::min(paran_end, dvadashi_end);
+    if (dvadashi_end > paran_start) {
+        paran_end = std::min(paran_end, dvadashi_end);
+    }
+
     Paran paran{paran_start, paran_end};
     return paran;
 }

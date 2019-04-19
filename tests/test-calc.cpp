@@ -223,7 +223,10 @@ TEST_CASE("Ekadashi 2019-03-17") {
     REQUIRE(v17_paran_before == vrata(Calc{frederikton_coord}, d));
     REQUIRE(v17_paran_before == vrata(Calc{toronto_coord}, d));
     REQUIRE(v17_paran_before == vrata(Calc{mayami_coord}, d));
-    REQUIRE(v17 == vrata(Calc{meadowlake_coord}, d));
+    Vrata v_meadowlake = vrata(Calc{meadowlake_coord}, d);
+    REQUIRE(v17 == v_meadowlake);
+    REQUIRE((v_meadowlake.paran.paran_start && v_meadowlake.paran.paran_end));
+    REQUIRE(*v_meadowlake.paran.paran_start < *v_meadowlake.paran.paran_end);
 }
 
 TEST_CASE("get_next_tithi_start") {
