@@ -33,6 +33,7 @@ std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
             }
         }
     }
+    s << "    Paran type:                      " << vd.vrata.paran.type << '\n';
     if (vd.vrata.paran.paran_start) {
         s << "    Paran start:                     " << *vd.vrata.paran.paran_start << '\n';
     }

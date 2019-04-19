@@ -2,7 +2,7 @@
 
 bool operator==(const Vrata &v1, const Vrata &v2)
 {
-    return v1.type == v2.type && v1.date == v2.date;
+    return v1.type == v2.type && v1.date == v2.date && v1.paran.type == v2.paran.type;
 }
 
 bool operator!=(const Vrata &v1, const Vrata &v2)
