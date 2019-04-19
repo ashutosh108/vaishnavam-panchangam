@@ -21,6 +21,7 @@ public:
     bool operator==(Swe_Time const &to) const;
     Date as_date();
     Swe_Time operator +=(double);
+    Swe_Time operator -=(double);
 private:
     double jd_;
     int year_, month_, day_;
@@ -30,5 +31,6 @@ private:
 
 std::ostream &operator<<(std::ostream &os, Swe_Time const &t);
 Swe_Time operator +(const Swe_Time &, double);
+Swe_Time operator -(const Swe_Time &, double);
 
 #endif // SWE_TIME_H

@@ -63,10 +63,29 @@ TEST_CASE("Can add double to Swe_Time") {
     // make sure that first argument to + can be const
     Swe_Time const t1{2019, 3, 17};
     REQUIRE(t1+1.0 == Swe_Time{2019, 3, 18});
+}
 
+TEST_CASE("+= returns correct value") {
     REQUIRE((Swe_Time{2019, 3, 17}+=1.0) == Swe_Time{2019, 3, 18});
+}
 
+TEST_CASE("+= modifies Swe_Time") {
     Swe_Time t{2019, 3, 17};
     t += 1.0;
     REQUIRE(t == Swe_Time{2019, 3, 18});
+}
+
+TEST_CASE("Substracting double from Swe_Time means substracting days") {
+    Swe_Time const t1{2019, 3, 17};
+    REQUIRE(t1-1.0 == Swe_Time{2019, 3, 16});
+}
+
+TEST_CASE("-= returns correct value") {
+    REQUIRE((Swe_Time{2019, 3, 17}-=1.0) == Swe_Time{2019, 3, 16});
+}
+
+TEST_CASE("-= modifies Swe_Time") {
+    Swe_Time t{2019, 3, 17};
+    t -= 1.0;
+    REQUIRE(t == Swe_Time{2019, 3, 16});
 }

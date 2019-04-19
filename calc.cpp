@@ -82,7 +82,7 @@ std::optional<std::pair<Swe_Time, Swe_Time>> Calc::get_arunodaya(Swe_Time const 
     );
 }
 
-std::optional<Swe_Time> Calc::get_next_tithi_start(Swe_Time from, Tithi tithi)
+std::optional<Swe_Time> Calc::get_next_tithi_start(Swe_Time from, Tithi tithi) const
 {
     constexpr double average_tithi_length = 23.0/24 + 37.0/(24*60); // 23h37m
     Tithi cur_tithi = swe.get_tithi(from);

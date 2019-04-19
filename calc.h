@@ -26,10 +26,10 @@ public:
     // get arunodaya(= sunrise - night_length/8) for given sunrise
     std::optional<std::pair<Swe_Time, Swe_Time>> get_arunodaya(Swe_Time sunrise) const;
 
-    std::optional<Swe_Time> get_next_tithi_start(Swe_Time, Tithi);
+    std::optional<Swe_Time> get_next_tithi_start(Swe_Time, Tithi) const;
+    swe::Swe swe;
 
 private:
-    swe::Swe swe;
     std::optional<Swe_Time> get_prev_sunset(Swe_Time const sunrise) const;
 };
 

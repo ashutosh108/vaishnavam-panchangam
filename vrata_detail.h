@@ -6,7 +6,9 @@
 struct Vrata_Detail {
     Vrata vrata;
     Coord coord;
-    Vrata_Detail(Vrata _vrata, Coord _coord):vrata(_vrata), coord(_coord) {}
+    Calc calc;
+    Vrata_Detail(Vrata _vrata, Coord _coord):vrata(_vrata), coord(_coord), calc(_coord) {}
+    Swe_Time get_approx_local_midnight() const;
 };
 
 std::ostream &operator<<(std::ostream &s, Vrata_Detail const &vd);
