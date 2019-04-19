@@ -60,7 +60,7 @@ std::optional<Vrata> Calc::find_next_vrata(Date after) const
     if (sunrise) {
         auto arunodaya_info = get_arunodaya(*sunrise);
         if (!arunodaya_info.has_value()) { return{}; }
-        auto [arunodaya, ardha_ghatika_before_arundaya] = *arunodaya_info;
+        auto [arunodaya, ardha_ghatika_before_arunodaya] = *arunodaya_info;
         auto tithi_arunodaya = swe.get_tithi(arunodaya);
         Vrata_Type type = Vrata_Type::Ekadashi;
         if ((tithi_arunodaya.is_dashami())) {
@@ -68,7 +68,7 @@ std::optional<Vrata> Calc::find_next_vrata(Date after) const
             sunrise = swe.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1});
             if (!sunrise) { return {}; }
         } else {
-            Tithi tithi_ardha_ghatika_before_arunodaya = swe.get_tithi(ardha_ghatika_before_arundaya);
+            Tithi tithi_ardha_ghatika_before_arunodaya = swe.get_tithi(ardha_ghatika_before_arunodaya);
             if (tithi_ardha_ghatika_before_arunodaya.is_dashami()) {
                 type = Vrata_Type::Sandigdha_Ekadashi;
                 // Sandigdha (almost purva-viddha Ekadashi), get next sunrise
