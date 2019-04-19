@@ -26,6 +26,10 @@ std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
             auto dvadashi_start = vd.calc.get_next_tithi_start(*ekadashi_start, Tithi{Tithi::Dvadashi});
             if (dvadashi_start) {
                 s << "    Dvadashi start:                  " << *dvadashi_start << '\n';
+                auto dvadashi_end = vd.calc.get_next_tithi_start(*dvadashi_start, Tithi{Tithi::Dvadashi_End});
+                if (dvadashi_end) {
+                    s << "    Dvadashi end:                    " << *dvadashi_end << '\n';
+                }
             }
         }
     }
