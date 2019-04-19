@@ -2,7 +2,12 @@
 
 std::ostream &Paran::operator<<(std::ostream &o) const
 {
-    o << "Paran{";
+    switch (type) {
+        case Standard: o << "Paran"; break;
+        case Until_Dvadashi_End: o << "Paran_Until_Dvadashi_End"; break;
+        case From_Quarter_Dvadashi: o << "Paran_From_Quarter_Dvadashi"; break;
+    }
+    o << "{";
     if (paran_start.has_value()) {
         o << *paran_start;
     }
@@ -10,6 +15,7 @@ std::ostream &Paran::operator<<(std::ostream &o) const
     if (paran_end.has_value()) {
         o << *paran_end;
     }
+    o << "}";
     return o;
 }
 

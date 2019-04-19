@@ -151,7 +151,7 @@ TEST_CASE("Ekadashi 2019-03-17") {
     Expected_Vrata v17_paran_before{
         Vrata_Type::Ekadashi,
         Date{2019, 3, 17},
-        Paran{std::nullopt, Swe_Time{2019, 3, 18, 12, 13, 36.459301}}};
+        Paran{Paran::Standard, std::nullopt, Swe_Time{2019, 3, 18, 12, 13, 36.459301}}};
     Vrata sandigdha_18{Vrata_Type::Sandigdha_Ekadashi, Date{2019, 3, 18}};
     REQUIRE(v17 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v17 == vrata(Calc{gokarna_coord}, d));

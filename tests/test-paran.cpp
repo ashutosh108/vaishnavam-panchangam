@@ -10,7 +10,7 @@ TEST_CASE("Can create with default constructor") {
 
 TEST_CASE("Can create paran of \"before\" type") {
     Swe_Time arbitrary_time{2019, 3, 19, 11, 3, 0};
-    Paran p{std::nullopt, arbitrary_time};
+    Paran p{Paran::Standard, std::nullopt, arbitrary_time};
 }
 
 TEST_CASE("Default-constructed parans are equal") {
@@ -20,14 +20,14 @@ TEST_CASE("Default-constructed parans are equal") {
 
 TEST_CASE("Default-constructed and \"before\" parans are not equal") {
     Swe_Time arbitrary_time{2019, 3, 19, 11, 3, 0};
-    REQUIRE(Paran{} != Paran{std::nullopt, arbitrary_time});
+    REQUIRE(Paran{} != Paran{Paran::Standard, std::nullopt, arbitrary_time});
 }
 
 TEST_CASE("\"before\" parans with different times are not equal") {
     Swe_Time arbitrary_time1{2019, 3, 19, 11, 3, 0};
     Swe_Time arbitrary_time2{2019, 3, 19, 11, 15, 0};
-    Paran p1{std::nullopt, arbitrary_time1};
-    Paran p2{std::nullopt, arbitrary_time2};
+    Paran p1{Paran::Standard, std::nullopt, arbitrary_time1};
+    Paran p2{Paran::Standard, std::nullopt, arbitrary_time2};
     REQUIRE(p1 != p2);
 }
 
@@ -35,4 +35,9 @@ TEST_CASE("Can print paran") {
     std::ostringstream s;
     s << Paran{};
     REQUIRE(s.str() != "");
+}
+
+TEST_CASE("Can compare paran types") {
+    REQUIRE(Paran{Paran::Standard} != Paran{Paran::Until_Dvadashi_End});
+    REQUIRE(Paran{Paran::Standard} != Paran{Paran::From_Quarter_Dvadashi});
 }

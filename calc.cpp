@@ -57,7 +57,7 @@ Paran Calc::get_paran(Swe_Time const &last_fasting_sunrise) const
         paran_end = std::min(paran_end, dvadashi_end);
     }
 
-    Paran paran{paran_start, paran_end};
+    Paran paran{Paran::Standard, paran_start, paran_end};
     return paran;
 }
 
