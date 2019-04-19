@@ -22,6 +22,8 @@ public:
     Date as_date();
     Swe_Time operator +=(double);
     Swe_Time operator -=(double);
+    bool operator <(Swe_Time const &other) const;
+    bool operator >(Swe_Time const &other) const;
 private:
     double jd_;
     int year_, month_, day_;

@@ -89,3 +89,11 @@ TEST_CASE("-= modifies Swe_Time") {
     t -= 1.0;
     REQUIRE(t == Swe_Time{2019, 3, 16});
 }
+
+TEST_CASE("Can compare <") {
+    REQUIRE(Swe_Time{2019, 3, 17} < Swe_Time{2019, 3, 18});
+}
+
+TEST_CASE("Can compare >") {
+    REQUIRE(Swe_Time{2019, 3, 18} > Swe_Time{2019, 3, 17});
+}

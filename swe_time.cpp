@@ -91,3 +91,13 @@ Swe_Time Swe_Time::operator -=(double delta)
     *this = *this-delta;
     return *this;
 }
+
+bool Swe_Time::operator <(const Swe_Time &other) const
+{
+    return as_julian_days() < other.as_julian_days();
+}
+
+bool Swe_Time::operator >(const Swe_Time &other) const
+{
+    return as_julian_days() > other.as_julian_days();
+}
