@@ -31,6 +31,8 @@ public:
 
 private:
     std::optional<Swe_Time> get_prev_sunset(Swe_Time const sunrise) const;
+    Date get_vrata_date(const Swe_Time &sunrise) const;
+    Paran get_paran(Swe_Time const &last_fasting_sunrise) const;
 };
 
 #endif // CALC_H

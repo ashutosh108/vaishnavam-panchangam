@@ -25,6 +25,35 @@ Swe_Time proportional_time(Swe_Time const t1, Swe_Time const t2, double const pr
     return Swe_Time{t1.as_julian_days() + distance * proportion};
 }
 
+Date Calc::get_vrata_date(const Swe_Time &sunrise) const
+{
+    // Adjust to make sure that Vrata data is correct in local timezone
+    // (as opposed to *sunrise which is in UTC). We do this by adding an hour
+    // for every 30 degrees of eastern latitude (24 hours for 360 degrees).
+    // This could give wrong date if actual local timezone is quite
+    // different from the "natural" timezone. But until we support proper
+    // timezone, this should work for most cases.
+    double adjustment_in_days = swe.coord.longitude * (1.0/360);
+    Swe_Time local_sunrise{sunrise.as_julian_days()+adjustment_in_days};
+    Date vrata_date{local_sunrise.as_date()};
+    return vrata_date;
+}
+
+Paran Calc::get_paran(Swe_Time const &last_fasting_sunrise) const
+{
+    std::optional<Swe_Time> paran_start, paran_end;
+    auto paran_sunrise = swe.get_sunrise(last_fasting_sunrise+0.1);
+    if (paran_sunrise) {
+        auto paran_sunset = swe.get_sunset(*paran_sunrise);
+        paran_start = paran_sunrise;
+        if (paran_sunset) {
+            paran_end = proportional_time(*paran_sunrise, *paran_sunset, 0.2);
+        }
+    }
+    Paran paran{paran_start, paran_end};
+    return paran;
+}
+
 std::optional<Vrata> Calc::find_next_vrata(Date after) const
 {
     auto sunrise = find_next_ekadashi_sunrise(Swe_Time{after});
@@ -48,28 +77,10 @@ std::optional<Vrata> Calc::find_next_vrata(Date after) const
             }
         }
 
-
-        // Adjust to make sure that Vrata data is correct in local timezone
-        // (as opposed to *sunrise which is in UTC). We do this by adding an hour
-        // for every 30 degrees of eastern latitude (24 hours for 360 degrees).
-        // This could give wrong date if actual local timezone is quite
-        // different from the "natural" timezone. But until we support proper
-        // timezone, this should work for most cases.
-        double adjustment_in_days = swe.coord.longitude * (1.0/360);
-        Swe_Time local_sunrise{sunrise->as_julian_days()+adjustment_in_days};
-        Date vrata_date{local_sunrise.as_date()};
-
-        std::optional<Swe_Time> paran_start, paran_end;
-        auto paran_sunrise = swe.get_sunrise(*sunrise+0.1);
-        if (paran_sunrise) {
-            auto paran_sunset = swe.get_sunset(*paran_sunrise);
-            paran_start = paran_sunrise;
-            if (paran_sunset) {
-                paran_end = proportional_time(*paran_sunrise, *paran_sunset, 0.2);
-            }
-        }
-
-        return Vrata{type, vrata_date, Paran{paran_start, paran_end}};
+        return Vrata{
+                    type,
+                    get_vrata_date(*sunrise),
+                    get_paran(*sunrise)};
     }
     return {};
 }
