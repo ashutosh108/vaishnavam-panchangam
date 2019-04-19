@@ -20,6 +20,11 @@ std::optional<Swe_Time> Calc::find_next_ekadashi_sunrise(Swe_Time after) const
     return {};
 }
 
+Swe_Time proportional_time(Swe_Time const t1, Swe_Time const t2, double const proportion) {
+    double distance = t2.as_julian_days() - t1.as_julian_days();
+    return Swe_Time{t1.as_julian_days() + distance * proportion};
+}
+
 std::optional<Vrata> Calc::find_next_vrata(Date after) const
 {
     auto sunrise = find_next_ekadashi_sunrise(Swe_Time{after});
@@ -52,9 +57,19 @@ std::optional<Vrata> Calc::find_next_vrata(Date after) const
         // timezone, this should work for most cases.
         double adjustment_in_days = swe.coord.longitude * (1.0/360);
         Swe_Time local_sunrise{sunrise->as_julian_days()+adjustment_in_days};
+        Date vrata_date{local_sunrise.as_date()};
 
-        Date d{local_sunrise.as_date()};
-        return Vrata{type, d};
+        std::optional<Swe_Time> paran_start, paran_end;
+        auto paran_sunrise = swe.get_sunrise(*sunrise+0.1);
+        if (paran_sunrise) {
+            auto paran_sunset = swe.get_sunset(*paran_sunrise);
+            paran_start = paran_sunrise;
+            if (paran_sunset) {
+                paran_end = proportional_time(*paran_sunrise, *paran_sunset, 0.2);
+            }
+        }
+
+        return Vrata{type, vrata_date, Paran{paran_start, paran_end}};
     }
     return {};
 }
@@ -62,11 +77,6 @@ std::optional<Vrata> Calc::find_next_vrata(Date after) const
 std::optional<Swe_Time> Calc::get_prev_sunset(Swe_Time const sunrise) const {
     Swe_Time back_24hrs{sunrise.as_julian_days()-1};
     return swe.get_sunset(back_24hrs);
-}
-
-Swe_Time proportional_time(Swe_Time const t1, Swe_Time const t2, double const proportion) {
-    double distance = t2.as_julian_days() - t1.as_julian_days();
-    return Swe_Time{t1.as_julian_days() + distance * proportion};
 }
 
 std::optional<std::pair<Swe_Time, Swe_Time>> Calc::get_arunodaya(Swe_Time const sunrise) const
