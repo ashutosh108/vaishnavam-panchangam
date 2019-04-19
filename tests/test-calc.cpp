@@ -117,13 +117,41 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(v01 == vrata(Calc{meadowlake_coord}, d));
 }
 
+class Expected_Vrata {
+public:
+    Vrata_Type type;
+    Date date;
+    Paran paran;
+    Expected_Vrata(Vrata_Type _type, Date _date, Paran _paran)
+        :type(_type), date(_date), paran(_paran)
+    {}
+};
+
+std::ostream &operator <<(std::ostream &s, const Expected_Vrata &v) {
+    s << v.type;
+    {
+        s << "{" << v.date;
+        s << ", " << v.paran << "}";
+    }
+    return s;
+}
+
+bool operator==(const Expected_Vrata &e, const Vrata &v) {
+    // if "expected" paran_start/end is nullopt, then we don't care
+    // about v2's one.
+    // Otherwise, if expected paran_start/end is given, it must be equal to v2's one.
+    return e.type == v.type && e.date == v.date &&
+            (!e.paran.paran_start || e.paran.paran_start == v.paran.paran_start) &&
+            (!e.paran.paran_end || e.paran.paran_end == v.paran.paran_end);
+}
+
 TEST_CASE("Ekadashi 2019-03-17") {
     Date d{2019, 3, 15};
     Vrata v17{Date{2019, 3, 17}};
-    Vrata v17_paran_before{
+    Expected_Vrata v17_paran_before{
         Vrata_Type::Ekadashi,
         Date{2019, 3, 17},
-        Paran{std::nullopt, Swe_Time{2019, 3, 17, 11, 13, 0}}};
+        Paran{std::nullopt, Swe_Time{2019, 3, 18, 12, 13, 36.459301}}};
     Vrata sandigdha_18{Vrata_Type::Sandigdha_Ekadashi, Date{2019, 3, 18}};
     REQUIRE(v17 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v17 == vrata(Calc{gokarna_coord}, d));
@@ -192,9 +220,9 @@ TEST_CASE("Ekadashi 2019-03-17") {
     REQUIRE(v17 == vrata(Calc{marsel_coord}, d));
     REQUIRE(v17 == vrata(Calc{madrid_coord}, d));
     REQUIRE(v17 == vrata(Calc{london_coord}, d));
-    REQUIRE(v17 == vrata(Calc{frederikton_coord}, d));
-    REQUIRE(v17 == vrata(Calc{toronto_coord}, d));
-    REQUIRE(v17 == vrata(Calc{mayami_coord}, d));
+    REQUIRE(v17_paran_before == vrata(Calc{frederikton_coord}, d));
+    REQUIRE(v17_paran_before == vrata(Calc{toronto_coord}, d));
+    REQUIRE(v17_paran_before == vrata(Calc{mayami_coord}, d));
     REQUIRE(v17 == vrata(Calc{meadowlake_coord}, d));
 }
 
