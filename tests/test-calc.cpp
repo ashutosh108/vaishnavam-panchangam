@@ -102,18 +102,18 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(v02 == vrata(Calc{odessa_coord}, d));
     REQUIRE(sandigdha_mar02 == vrata(Calc{kolomyya_coord}, d)); // Sandighdha, differs from Naarasimha's calendar
     REQUIRE(v02 == vrata(Calc{kishinev_coord}, d));
-    REQUIRE(v01 == vrata(Calc{riga_coord}, d));
-    REQUIRE(v01 == vrata(Calc{yurmala_coord}, d));
-    REQUIRE(v01 == vrata(Calc{tallin_coord}, d));
-    REQUIRE(v01 == vrata(Calc{vilnyus_coord}, d));
-    REQUIRE(v01 == vrata(Calc{varshava_coord}, d));
+    REQUIRE(v01 == vrata(Calc{riga_coord}, d));     // > 14:15
+    REQUIRE(v01 == vrata(Calc{yurmala_coord}, d));  // > 14:15
+    REQUIRE(v01 == vrata(Calc{tallin_coord}, d));   // > 14:15
+    REQUIRE(v01 == vrata(Calc{vilnyus_coord}, d));  // > 14:15
+    REQUIRE(v01 == vrata(Calc{varshava_coord}, d)); // > 13:15
     REQUIRE(v01 == vrata(Calc{vena_coord}, d)); //atirikta dvadashi
-    REQUIRE(v01 == vrata(Calc{marsel_coord}, d)); //atirikta dvadashi
-    REQUIRE(v01 == vrata(Calc{madrid_coord}, d)); //atirikta dvadashi
-    REQUIRE(v01 == vrata(Calc{london_coord}, d)); //atirikta dvadashi
-    REQUIRE(v01 == vrata(Calc{frederikton_coord}, d));
-    REQUIRE(v01 == vrata(Calc{toronto_coord}, d));
-    REQUIRE(v01 == vrata(Calc{mayami_coord}, d));
+    REQUIRE(v01 == vrata(Calc{marsel_coord}, d)); //atirikta dvadashi   < 9:14
+    REQUIRE(v01 == vrata(Calc{madrid_coord}, d)); //atirikta dvadashi   < 9:14
+    REQUIRE(v01 == vrata(Calc{london_coord}, d)); //atirikta dvadashi   < 8:14
+    REQUIRE(v01 == vrata(Calc{frederikton_coord}, d));  // > 8:15
+    REQUIRE(v01 == vrata(Calc{toronto_coord}, d));      // > 7:15
+    REQUIRE(v01 == vrata(Calc{mayami_coord}, d));       // > 7:15
     REQUIRE(v01 == vrata(Calc{meadowlake_coord}, d));
 }
 
