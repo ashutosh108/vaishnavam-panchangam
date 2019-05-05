@@ -113,7 +113,7 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(v01 == vrata(Calc{london_coord}, d)); //atirikta dvadashi   < 8:14
     REQUIRE(v01 == vrata(Calc{frederikton_coord}, d));  // > 8:15
     REQUIRE(v01 == vrata(Calc{toronto_coord}, d));      // > 7:15
-    REQUIRE(v01 == vrata(Calc{mayami_coord}, d));       // > 7:15
+    REQUIRE(v01 == vrata(Calc{miami_coord}, d));       // > 7:15
     REQUIRE(v01 == vrata(Calc{meadowlake_coord}, d));
 }
 
@@ -223,7 +223,7 @@ TEST_CASE("Ekadashi 2019-03-17") {
     REQUIRE(v17 == vrata(Calc{london_coord}, d));
     REQUIRE(v17_paran_before == vrata(Calc{frederikton_coord}, d));
     REQUIRE(v17_paran_before == vrata(Calc{toronto_coord}, d));
-    REQUIRE(v17_paran_before == vrata(Calc{mayami_coord}, d));
+    REQUIRE(v17_paran_before == vrata(Calc{miami_coord}, d));
     Vrata v_meadowlake = vrata(Calc{meadowlake_coord}, d);
     REQUIRE(v17 == v_meadowlake);
     REQUIRE((v_meadowlake.paran.paran_start && v_meadowlake.paran.paran_end));

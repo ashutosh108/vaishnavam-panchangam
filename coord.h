@@ -112,6 +112,6 @@ struct Coord
 [[maybe_unused]] constexpr Coord tambov_coord{52, 43, 0, 41, 26, 0}; // ru Wikipedia
 [[maybe_unused]] constexpr Coord marsel_coord{43, 17, 47, 5, 22, 12}; // ru Wikipedia
 [[maybe_unused]] constexpr Coord madrid_coord{40, 24, 0, -3, -41, -0}; // ru Wikipedia
-[[maybe_unused]] constexpr Coord mayami_coord{25, 47, 0, -80, -13, -0}; // ru Wikipedia
+[[maybe_unused]] constexpr Coord miami_coord{25, 47, 0, -80, -13, -0}; // ru Wikipedia
 
 #endif // COORD_H

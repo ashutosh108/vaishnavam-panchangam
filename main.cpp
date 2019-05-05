@@ -28,7 +28,12 @@ std::tuple<int, int, int> parse_ymd(const char *s) {
     return std::tuple<int, int, int>{tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday};
 }
 
-static std::vector<std::pair<std::string, Coord>> locations {
+struct NamedCoord {
+    const char *name;
+    Coord coord;
+};
+
+static std::vector<NamedCoord> locations {
     { "udupi", udupi_coord },
     { "gokarna", gokarna_coord },
     { "newdelhi", newdelhi_coord },
@@ -98,29 +103,41 @@ static std::vector<std::pair<std::string, Coord>> locations {
     { "london", london_coord },
     { "frederikton", frederikton_coord },
     { "toronto", toronto_coord },
-    { "mayami", mayami_coord },
+    { "miami", miami_coord },
     { "meadowlake", meadowlake_coord },
 };
-
-void calc_all(Date d) {
-    for (auto &l : locations) {
-        auto vrata = Calc{l.second}.find_next_vrata(d);
-        Vrata_Detail vd{*vrata, l.second};
-        std::cout << l.first << '\n' << vd << "\n\n";
-    }
-
-}
 
 std::optional<Coord> find_coord(const char *location_name) {
     auto found = std::find_if(
                 std::begin(locations),
                 std::end(locations),
-                [=](auto pair){
-                    return pair.first == location_name;
+                [=](auto named_coord){
+                    return stricmp(named_coord.name, location_name) == 0;
                 }
     );
     if (found == std::end(locations)) return std::nullopt;
-    return found->second;
+    return found->coord;
+}
+
+void calc_one(Date base_date, const char *location_name, Coord coord) {
+    auto vrata = Calc{coord}.find_next_vrata(base_date);
+    Vrata_Detail vd{*vrata, coord};
+    std::cout << location_name << '\n' << vd << "\n\n";
+}
+
+void calc_one(Date base_date, const char * location_name) {
+    std::optional<Coord> coord = find_coord(location_name);
+    if (!coord) {
+        std::cerr << "Location not found: '" << location_name << "'\n";
+        return;
+    }
+    calc_one(base_date, location_name, *coord);
+}
+
+void calc_all(Date d) {
+    for (auto &l : locations) {
+        calc_one(d, l.name, l.coord);
+    }
 }
 
 int main(int argc, char *argv[])
@@ -134,31 +151,12 @@ int main(int argc, char *argv[])
     Date base_date{y, m, d};
     if (argc-1 <= 1) {
         calc_all(base_date);
-        return 0;
-    }
-    double latitude;
-    double longitude;
-
-    if (argc-1 == 2) {
-        std::optional<Coord> coord = find_coord(argv[2]);
-        if (!coord) {
-            std::cerr << "Location not found: '" << argv[2] << "'\n";
-            return 1;
-        }
-        latitude = coord->latitude;
-        longitude = coord->longitude;
+    } else if (argc-1 == 2) {
+        const char * const location_name = argv[2];
+        calc_one(base_date, location_name);
     } else {
-        latitude = std::stod(argv[2]);
-        longitude = std::stod(argv[3]);
-    }
-
-    std::cout << "base date: " << base_date << '\n';
-
-    Coord coord{latitude, longitude};
-    auto vrata = Calc{coord}.find_next_vrata(base_date);
-    if (vrata) {
-        std::cout << "Date:        " << vrata->date << '\n';
-    } else {
-        std::cout << "Can't find ekadashi sunrise\n";
+        double latitude = std::stod(argv[2]);
+        double longitude = std::stod(argv[3]);
+        calc_one(base_date, "<custom location>", Coord{latitude, longitude});
     }
 }
