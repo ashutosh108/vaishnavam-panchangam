@@ -112,7 +112,7 @@ std::optional<Coord> find_coord(const char *location_name) {
                 std::begin(locations),
                 std::end(locations),
                 [=](auto named_coord){
-                    return stricmp(named_coord.name, location_name) == 0;
+                    return strcmp(named_coord.name, location_name) == 0;
                 }
     );
     if (found == std::end(locations)) return std::nullopt;
