@@ -1,5 +1,7 @@
 #include <chrono>
+#include <condition_variable>
 #include <sstream>
+#include <thread>
 
 #include "catch.hpp"
 
@@ -235,6 +237,35 @@ TEST_CASE("get_next_tithi_start") {
     Tithi tithi{Tithi::Dvadashi_End};
     Swe_Time expected{2019, 3, 18, 12, 13, 36.459301};
     std::optional<Swe_Time> actual = Calc{frederikton_coord}.get_next_tithi_start(from, tithi);
+    REQUIRE(actual.has_value());
+    REQUIRE(*actual == expected);
+}
+
+auto get_next_tithi_wrapper(Coord coord, Swe_Time from, Tithi tithi) {
+    std::optional<Swe_Time> retval;
+    std::condition_variable cv;
+    std::mutex cv_m;
+
+    std::thread thread([&](){
+        retval = Calc{coord}.get_next_tithi_start(from, tithi);
+    });
+    thread.detach();
+
+    {
+        using namespace std::chrono_literals;
+        std::unique_lock<std::mutex> l{cv_m};
+        if (cv.wait_for(l, 10ms) == std::cv_status::timeout) {
+            throw std::runtime_error("Timeout");
+        }
+    }
+    return retval;
+}
+
+TEST_CASE("get_next_tithi_start breaks out from eternal loop") {
+    Swe_Time from{2019, 4, 29, 2.0411111153662205};
+    Tithi tithi{Tithi::Ekadashi};
+    Swe_Time expected{2019, 4, 30, 5.5}; // TODO
+    auto actual = get_next_tithi_wrapper(london_coord, from, tithi);
     REQUIRE(actual.has_value());
     REQUIRE(*actual == expected);
 }
