@@ -241,13 +241,13 @@ TEST_CASE("get_next_tithi_start") {
     REQUIRE(*actual == expected);
 }
 
-auto get_next_tithi_wrapper(Coord coord, Swe_Time from, Tithi tithi) {
+auto get_next_tithi_wrapper(Calc const &calc, Swe_Time from, Tithi tithi) {
     std::optional<Swe_Time> retval;
     std::condition_variable cv;
     std::mutex cv_m;
 
     std::thread thread([&](){
-        auto local_retval = Calc{coord}.get_next_tithi_start(from, tithi);
+        auto local_retval = calc.get_next_tithi_start(from, tithi);
         {
             std::lock_guard<std::mutex> l{cv_m};
             retval = std::move(local_retval);
@@ -266,9 +266,36 @@ auto get_next_tithi_wrapper(Coord coord, Swe_Time from, Tithi tithi) {
     return retval;
 }
 
+auto get_next_tithi_wrapper(Coord coord, Swe_Time from, Tithi tithi) {
+    Calc calc{coord};
+    return get_next_tithi_wrapper(calc, from, tithi);
+}
+
 TEST_CASE("get_next_tithi_start breaks out from eternal loop") {
     Swe_Time from{2019, 4, 29, 2.0411111153662205};
     Tithi tithi{Tithi::Ekadashi};
     auto actual = get_next_tithi_wrapper(london_coord, from, tithi);
     REQUIRE(actual.has_value());
+}
+
+TEST_CASE("get_next_tithi() returns Shukla Ekadashi after Shukla something tithi") {
+    Calc const calc{london_coord};
+    Swe_Time const from{2019, 5, 12};
+    Tithi const tithi{Tithi::Ekadashi};
+    auto actual_time = get_next_tithi_wrapper(calc, from, tithi);
+    REQUIRE(actual_time.has_value());
+    auto actual_tithi = calc.swe.get_tithi(*actual_time);
+    REQUIRE(actual_tithi.tithi == Approx(Tithi{Tithi::Ekadashi}.tithi));
+    REQUIRE((*actual_time - from) <= 14);
+}
+
+TEST_CASE("get_next_tithi() returns Krishna Ekadashi after Krishna something tithi") {
+    Calc const calc{london_coord};
+    Swe_Time const from{2019, 4, 25};
+    Tithi const tithi{Tithi::Ekadashi};
+    auto actual_time = get_next_tithi_wrapper(calc, from, tithi);
+    REQUIRE(actual_time.has_value());
+    auto actual_tithi = calc.swe.get_tithi(*actual_time);
+    REQUIRE(actual_tithi.tithi-15.0 == Approx(Tithi{Tithi::Ekadashi}.tithi));
+    REQUIRE((*actual_time - from) <= 14);
 }

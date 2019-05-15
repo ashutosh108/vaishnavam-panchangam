@@ -116,18 +116,31 @@ std::optional<std::pair<Swe_Time, Swe_Time>> Calc::get_arunodaya(Swe_Time const 
     );
 }
 
-std::optional<Swe_Time> Calc::get_next_tithi_start(Swe_Time from, Tithi tithi) const
+std::optional<Swe_Time> Calc::get_next_tithi_start(Swe_Time const from, Tithi const tithi) const
 {
     constexpr double average_tithi_length = 23.0/24 + 37.0/(24*60); // 23h37m
     Tithi cur_tithi = swe.get_tithi(from);
-    double delta_tithi = cur_tithi.positive_delta_until_tithi(tithi);
-    Swe_Time time{from + delta_tithi * average_tithi_length};
+
+    double initial_delta_tithi = cur_tithi.positive_delta_until_tithi(tithi);
+    // If delta_tithi >= 15 then actually there is
+    // another target tithi before the presumably target one
+    // (which we would miss with such a larget delta_tithi).
+    // Since target tithi is always < 15.0, just increase it
+    // by 15.0 because this function is supposed to find
+    // next nearest Tithi, whether it's Shukla or Krishna.
+    Tithi target_tithi = tithi;
+    if (initial_delta_tithi >= 15.0) {
+        target_tithi += 15.0;
+        initial_delta_tithi -= 15.0;
+    }
+
+    Swe_Time time{from + initial_delta_tithi * average_tithi_length};
     cur_tithi = swe.get_tithi(time);
 
     double prev_abs_delta_tithi = std::numeric_limits<double>::max();
 
-    while (cur_tithi != tithi) {
-        delta_tithi = cur_tithi.delta_to_nearest_tithi(tithi);
+    while (cur_tithi != target_tithi) {
+        double const delta_tithi = cur_tithi.delta_to_nearest_tithi(target_tithi);
         time += delta_tithi * average_tithi_length;
         cur_tithi = swe.get_tithi(time);
 
