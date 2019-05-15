@@ -65,6 +65,12 @@ bool Tithi::is_dashami()
     return (tithi >= 9 && tithi < 10) || (tithi >= 9+15 && tithi < 10+15);
 }
 
+Tithi &Tithi::operator +=(const double delta)
+{
+    tithi += delta;
+    return *this;
+}
+
 // how many tithis from us to that tithi, counting only forward
 double Tithi::positive_delta_until_tithi(Tithi target) const
 {
@@ -127,4 +133,9 @@ Tithi operator +(const Tithi &t, double delta)
 double operator -(const Tithi &t1, const Tithi &t2)
 {
     return t1.tithi - t2.tithi;
+}
+
+Tithi operator -(const Tithi &t, double delta)
+{
+    return Tithi{t.tithi - delta};
 }

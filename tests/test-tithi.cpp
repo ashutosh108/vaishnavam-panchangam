@@ -91,3 +91,13 @@ TEST_CASE("Can substract Tithis") {
 TEST_CASE("Can add double to Tithi") {
     REQUIRE(Tithi{Tithi::Dashami} + 2.0 == Tithi{Tithi::Dvadashi});
 }
+
+TEST_CASE("Can substract double from Tithi") {
+    REQUIRE(Tithi{Tithi::Dvadashi} - 2.0 == Tithi{Tithi::Dashami});
+}
+
+TEST_CASE("Tithi += double should work") {
+    Tithi t{Tithi::Ekadashi};
+    t += 1.0;
+    REQUIRE(t == Tithi{Tithi::Dvadashi});
+}

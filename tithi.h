@@ -29,6 +29,7 @@ struct Tithi {
     friend bool operator <=(Tithi const &t1, Tithi const &t2);
     friend bool operator >(Tithi const &t1, Tithi const &t2);
     friend bool operator >=(Tithi const &t1, Tithi const &t2);
+    Tithi &operator +=(double const);
     double positive_delta_until_tithi(Tithi) const;
     double delta_to_nearest_tithi(Tithi) const;
 };
@@ -36,5 +37,6 @@ struct Tithi {
 std::ostream &operator <<(std::ostream &o, Tithi const & t);
 double operator -(Tithi const &, Tithi const &);
 Tithi operator +(Tithi const &, double);
+Tithi operator -(Tithi const &, double);
 
 #endif // TITHI_H
