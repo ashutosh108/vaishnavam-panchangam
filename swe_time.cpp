@@ -101,3 +101,8 @@ bool Swe_Time::operator >(const Swe_Time &other) const
 {
     return as_julian_days() > other.as_julian_days();
 }
+
+double operator -(const Swe_Time &t1, const Swe_Time &t2)
+{
+    return t1.as_julian_days() - t2.as_julian_days();
+}

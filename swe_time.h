@@ -35,4 +35,7 @@ std::ostream &operator<<(std::ostream &os, Swe_Time const &t);
 Swe_Time operator +(const Swe_Time &, double);
 Swe_Time operator -(const Swe_Time &, double);
 
+// returns number of days between two Swe_Time-s (like as_julian_days())
+double operator -(const Swe_Time &, const Swe_Time &);
+
 #endif // SWE_TIME_H

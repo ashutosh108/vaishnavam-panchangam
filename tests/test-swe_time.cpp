@@ -97,3 +97,7 @@ TEST_CASE("Can compare <") {
 TEST_CASE("Can compare >") {
     REQUIRE(Swe_Time{2019, 3, 18} > Swe_Time{2019, 3, 17});
 }
+
+TEST_CASE("Can substract Swe_Time from Swe_Time") {
+    REQUIRE((Swe_Time{2019, 4, 16} - Swe_Time{2019, 4, 10}) == 6.0);
+}
