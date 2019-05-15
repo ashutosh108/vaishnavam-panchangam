@@ -118,3 +118,13 @@ bool operator >=(const Tithi &t1, const Tithi &t2)
 {
     return !(t1 < t2);
 }
+
+Tithi operator +(const Tithi &t, double delta)
+{
+    return Tithi{t.tithi+delta};
+}
+
+double operator -(const Tithi &t1, const Tithi &t2)
+{
+    return t1.tithi - t2.tithi;
+}

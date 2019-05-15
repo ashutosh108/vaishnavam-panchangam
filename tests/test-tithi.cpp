@@ -83,3 +83,11 @@ TEST_CASE("delta_until_tithi") {
     REQUIRE(Tithi{Tithi::Ekadashi}.delta_to_nearest_tithi(Tithi{Tithi::Dvadashi}) == 1.0);
     REQUIRE(Tithi{Tithi::Dvadashi}.delta_to_nearest_tithi(Tithi{Tithi::Ekadashi}) == Approx(-1.0));
 }
+
+TEST_CASE("Can substract Tithis") {
+    REQUIRE(Tithi{Tithi::Dvadashi} - Tithi{Tithi::Dashami} == 2.0);
+}
+
+TEST_CASE("Can add double to Tithi") {
+    REQUIRE(Tithi{Tithi::Dashami} + 2.0 == Tithi{Tithi::Dvadashi});
+}

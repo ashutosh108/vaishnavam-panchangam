@@ -34,5 +34,7 @@ struct Tithi {
 };
 
 std::ostream &operator <<(std::ostream &o, Tithi const & t);
+double operator -(Tithi const &, Tithi const &);
+Tithi operator +(Tithi const &, double);
 
 #endif // TITHI_H
