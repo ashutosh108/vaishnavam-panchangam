@@ -53,3 +53,6 @@ add_executable(test-main
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR})
 target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2)
 target_link_libraries(test-main PRIVATE sweph swe)
+
+enable_testing()
+add_test(test-main test-main)
