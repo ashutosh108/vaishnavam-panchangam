@@ -1,0 +1,69 @@
+class Single_Ekadashi_Dvadashi_Calculator {
+        std::chrono::time_point calc_start_date;
+};
+
+class Sun {
+        std::optional<std::chrono::time_point> first_sunrise_after(std::chrono::time_point t);
+        std::optional<std::chrono::time_point> first_sunset_after(std::chrono::time_point t);
+};
+
+v pre-alpha MVP: 
+        command line utility:
+                input:
+                        none
+                output:
+                        next sunrise for current time and fixed coordinates
+
+v refactor:
+        Sweph_Time class
+                explicit constructor from double
+                explicit constructor from Y, m, d, h
+                cout
+
+
+v alpha MVP: 
+        command line utility:
+                input:
+                        base time point
+                        coordinates
+                output:
+                        next sunrise
+
+
+v get_sun_longitude()
+v get_moon_longitude()
+v get_tithi()
+
+v find_next_ekadashi_sunrise(after)
+v       - for both Sukla-paksha and Krishna-paksha
+v       - purva-viddha Ekadashi
+v       - 2019-03-17/18 for Petropavlovsk-Kamchatskiy etc
+v       - Calc::get_next_tithi_start(Tithi)
+v       - paran: return standard interval (sunrise+day*1/5)
+v       - paran: detect dvadashi start
+v       - 2019-03-17/18 paran_before:
+v               GMT-3 (-4 DST)   Канада  Фредериктон     <8:13
+v               GMT-4 (-5 DST)           Торонто         <7:13   
+v               GMT-4 (-5 DST)   США     Майами          <7:13
+v       - add paran type: Standard, Until_Trayodashi, From_Quarter_Dvadashi
+        - check all tests for 2019-March-1,2
+        - find good test case for "paran not before the first quarter of Dvadashi"
+        - atirikta ekadashi
+        - kshaya ekadashi: find good example
+
+  test cases from past Narasimha's calendars (all?)
+
+  MVP:
+        command line utility:
+                given base time point, calculate next ekadashi:
+                        input:
+                                - base time point (UTC)
+                                - coordinates
+                        output
+                                - date(s) of fasting
+                                - type
+                                        shuddha
+                                        mishra
+                                        atirikta Ekadashi
+                                        suddha Dvadashi (?)
+                                - paran time interval
