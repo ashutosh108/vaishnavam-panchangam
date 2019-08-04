@@ -76,3 +76,5 @@ CMakeLists.txt.user*
 
 # build dir(s) within source dir
 /build*
+
+.vs/
