@@ -1,3 +1,10 @@
+﻿Font sample generator:
+- list valid chars for each embedded font
+- get last used Object id
+- find old manually created table
+- generate simple page source
+
+
 class Single_Ekadashi_Dvadashi_Calculator {
         std::chrono::time_point calc_start_date;
 };
