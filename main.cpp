@@ -134,6 +134,33 @@ void calc_one(Date base_date, const char * location_name) {
     calc_one(base_date, location_name, *coord);
 }
 
+void print_detail_one(Date base_date, const char *location_name, Coord coord) {
+    std::cout << location_name << ' ' << base_date << '\n';
+    std::cout << "<to be implemented>\n";
+    Calc calc{coord};
+    auto sunrise = calc.swe.get_sunrise(Swe_Time{base_date});
+    if (sunrise) {
+        auto arunodaya_info = calc.get_arunodaya(*sunrise);
+        if (arunodaya_info) {
+            auto [arunodaya, arunodaya_half_ghatika_before] = *arunodaya_info;
+            std::cout << "arunodaya-1/2ghatika: " << arunodaya_half_ghatika_before
+                    << ' ' << calc.swe.get_tithi(arunodaya_half_ghatika_before) << '\n';
+            std::cout << "arunodaya: " << arunodaya
+                    << ' ' << calc.swe.get_tithi(arunodaya) << '\n';
+        }
+        std::cout << "sunrise: " << *sunrise << ' ' << calc.swe.get_tithi(*sunrise) << '\n';
+    }
+}
+
+void print_detail_one(Date base_date, const char * location_name) {
+    std::optional<Coord> coord = find_coord(location_name);
+    if (!coord) {
+        std::cerr << "Location not found: '" << location_name << "'\n";
+        return;
+    }
+    print_detail_one(base_date, location_name, *coord);
+}
+
 void calc_all(Date d) {
     for (auto &l : locations) {
         calc_one(d, l.name, l.coord);
@@ -142,21 +169,32 @@ void calc_all(Date d) {
 
 int main(int argc, char *argv[])
 {
-    if (argc-1 != 1 && argc-1 != 2 && argc-1 != 3) {
-        print_usage();
-        exit(-1);
-    }
-
-    auto [y, m, d] = parse_ymd(argv[1]);
-    Date base_date{y, m, d};
-    if (argc-1 <= 1) {
-        calc_all(base_date);
-    } else if (argc-1 == 2) {
-        const char * const location_name = argv[2];
-        calc_one(base_date, location_name);
+    if (argc-1 >= 1 && strcmp(argv[1], "-d") == 0) {
+        if (argc-1 != 3) {
+            print_usage();
+            exit(-1);
+        }
+        auto [y, m, d] = parse_ymd(argv[2]);
+        Date base_date{y, m, d};
+        const char * const location_name = argv[3];
+        print_detail_one(base_date, location_name);
     } else {
-        double latitude = std::stod(argv[2]);
-        double longitude = std::stod(argv[3]);
-        calc_one(base_date, "<custom location>", Coord{latitude, longitude});
+        if (argc-1 != 1 && argc-1 != 2 && argc-1 != 3) {
+            print_usage();
+            exit(-1);
+        }
+
+        auto [y, m, d] = parse_ymd(argv[1]);
+        Date base_date{y, m, d};
+        if (argc-1 <= 1) {
+            calc_all(base_date);
+        } else if (argc-1 == 2) {
+            const char * const location_name = argv[2];
+            calc_one(base_date, location_name);
+        } else {
+            double latitude = std::stod(argv[2]);
+            double longitude = std::stod(argv[3]);
+            calc_one(base_date, "<custom location>", Coord{latitude, longitude});
+        }
     }
 }

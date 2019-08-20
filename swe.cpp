@@ -12,6 +12,7 @@ namespace swe {
 namespace detail {
 constexpr int32 ephemeris_flags = SEFLG_MOSEPH;
 constexpr int32 rise_flags = SE_BIT_HINDU_RISING;
+//constexpr int32 rise_flags = SE_CALC_RISE;
 // or SE_CALC_RISE | SE_BIT_DISC_CENTER | SE_BIT_NO_REFRACTION | SE_BIT_GEOCTR_NO_ECL_LAT;
 
 constexpr double atmospheric_pressure = 1013.25;
