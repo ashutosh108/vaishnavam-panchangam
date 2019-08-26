@@ -104,18 +104,20 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(v02 == vrata(Calc{odessa_coord}, d));
     REQUIRE(sandigdha_mar02 == vrata(Calc{kolomyya_coord}, d)); // Sandighdha, differs from Naarasimha's calendar
     REQUIRE(v02 == vrata(Calc{kishinev_coord}, d));
-    REQUIRE(v01 == vrata(Calc{riga_coord}, d));     // > 14:15
-    REQUIRE(v01 == vrata(Calc{yurmala_coord}, d));  // > 14:15
-    REQUIRE(v01 == vrata(Calc{tallin_coord}, d));   // > 14:15
-    REQUIRE(v01 == vrata(Calc{vilnyus_coord}, d));  // > 14:15
-    REQUIRE(v01 == vrata(Calc{varshava_coord}, d)); // > 13:15
-    REQUIRE(v01 == vrata(Calc{vena_coord}, d)); //atirikta dvadashi
-    REQUIRE(v01 == vrata(Calc{marsel_coord}, d)); //atirikta dvadashi   < 9:14
-    REQUIRE(v01 == vrata(Calc{madrid_coord}, d)); //atirikta dvadashi   < 9:14
-    REQUIRE(v01 == vrata(Calc{london_coord}, d)); //atirikta dvadashi   < 8:14
-    REQUIRE(v01 == vrata(Calc{frederikton_coord}, d));  // > 8:15
-    REQUIRE(v01 == vrata(Calc{toronto_coord}, d));      // > 7:15
-    REQUIRE(v01 == vrata(Calc{miami_coord}, d));       // > 7:15
+    Paran paran1415{Paran::Type::From_Quarter_Dvadashi, Swe_Time{2019, 3, 2, 12, 14, 40.513510}};
+    Vrata v01_paran_after_quarter{Vrata_Type::Ekadashi, Date{2019, 3, 1}, paran1415};
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{riga_coord}, d));     // > 14:15
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{yurmala_coord}, d));  // > 14:15
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{tallin_coord}, d));   // > 14:15
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{vilnyus_coord}, d));  // > 14:15
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{varshava_coord}, d)); // > 13:15
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{vena_coord}, d)); //atirikta dvadashi
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{marsel_coord}, d)); //atirikta dvadashi   < 9:14
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{madrid_coord}, d)); //atirikta dvadashi   < 9:14
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{london_coord}, d)); //atirikta dvadashi   < 8:14
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{frederikton_coord}, d));  // > 8:15
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{toronto_coord}, d));      // > 7:15
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{miami_coord}, d));       // > 7:15
     REQUIRE(v01 == vrata(Calc{meadowlake_coord}, d));
 }
 
@@ -298,4 +300,29 @@ TEST_CASE("get_next_tithi() returns Krishna Ekadashi after Krishna something tit
     auto actual_tithi = calc.swe.get_tithi(*actual_time);
     REQUIRE(actual_tithi.tithi-15.0 == Approx(Tithi{Tithi::Ekadashi}.tithi));
     REQUIRE((*actual_time - from) <= 14);
+}
+
+TEST_CASE("get_next_tithi() gives closest Ekadashi tithi for petropavlovsk after 2019-03-15") {
+    Calc const calc{petropavlovskkamchatskiy_coord};
+    Swe_Time const from{2019, 3, 15};
+    Tithi const tithi{Tithi::Ekadashi};
+    auto actual_time = get_next_tithi_wrapper(calc, from, tithi);
+    REQUIRE(actual_time.has_value());
+    auto actual_tithi = calc.swe.get_tithi(*actual_time);
+    REQUIRE(actual_tithi.tithi == Approx(Tithi{Tithi::Ekadashi}.tithi));
+    REQUIRE((*actual_time - from) <= 14);
+}
+
+TEST_CASE("paran not earlier than quarter of Dvadashi tithi") {
+    Calc const calc{kiev_coord};
+    Date const from{2019, 8, 24};
+    auto vrata = calc.find_next_vrata(from);
+    REQUIRE(vrata.has_value());
+    REQUIRE(vrata->paran.type == Paran::Type::From_Quarter_Dvadashi);
+    REQUIRE(vrata->paran.paran_start.has_value());
+    Swe_Time paran_start = vrata->paran.paran_start.value();
+    Swe_Time paran_start_not_before{2019, 8, 27, 5.0};
+    Swe_Time paran_start_not_after{2019, 8, 27, 5.2};
+    REQUIRE(paran_start > paran_start_not_before);
+    REQUIRE(paran_start < paran_start_not_after);
 }

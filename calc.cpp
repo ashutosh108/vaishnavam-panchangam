@@ -56,12 +56,29 @@ Paran Calc::get_paran(Swe_Time const &last_fasting_sunrise) const
 
     Paran::Type type{Paran::Type::Standard};
 
-    // paran end should never be before Dvadashi's end
-    auto dvadashi_end = get_next_tithi_start(last_fasting_sunrise, Tithi{Tithi::Dvadashi_End});
-    if (dvadashi_end > paran_start && dvadashi_end < paran_end) {
-        paran_end = std::min(paran_end, dvadashi_end);
-        type = Paran::Type::Until_Dvadashi_End;
+    auto dvadashi_start = get_next_tithi_start(last_fasting_sunrise-1.0, Tithi{Tithi::Dvadashi});
+    if (dvadashi_start) {
+        auto dvadashi_end = get_next_tithi_start(*dvadashi_start, Tithi{Tithi::Dvadashi_End});
+        if (dvadashi_end) {
+            // paran start should never be before the end of Dvadashi's first quarter
+            if (paran_start) {
+                auto dvadashi_quarter = proportional_time(*dvadashi_start, *dvadashi_end, 0.25);
+                if (paran_start < dvadashi_quarter) {
+                    paran_start = dvadashi_quarter;
+                    type = Paran::Type::From_Quarter_Dvadashi;
+                }
+            }
+
+            if (paran_start && paran_end) {
+                // paran end should never be before Dvadashi's end
+                if (dvadashi_end > paran_start && dvadashi_end < paran_end) {
+                    paran_end = std::min(paran_end, dvadashi_end);
+                    type = Paran::Type::Until_Dvadashi_End;
+                }
+            }
+        }
     }
+
 
     Paran paran{type, paran_start, paran_end};
     return paran;

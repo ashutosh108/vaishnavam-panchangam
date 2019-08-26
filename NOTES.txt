@@ -53,8 +53,9 @@ v               GMT-3 (-4 DST)   Канада  Фредериктон     <8:13
 v               GMT-4 (-5 DST)           Торонто         <7:13   
 v               GMT-4 (-5 DST)   США     Майами          <7:13
 v       - add paran type: Standard, Until_Trayodashi, From_Quarter_Dvadashi
+v       - find good test case for "paran not before the first quarter of Dvadashi"
+v       - implement "paran not before the first quarter of Dvadashi", test for Kiev 2019-06-26/27
         - check all tests for 2019-March-1,2
-        - find good test case for "paran not before the first quarter of Dvadashi"
         - atirikta ekadashi
         - kshaya ekadashi: find good example
 

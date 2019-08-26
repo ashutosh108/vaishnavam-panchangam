@@ -2,7 +2,18 @@
 
 bool operator==(const Vrata &v1, const Vrata &v2)
 {
-    return v1.type == v2.type && v1.date == v2.date && v1.paran.type == v2.paran.type;
+    // non-symmetrical compare for more elegant tests:
+    // if v1's paran_start/end is nullopt, then v2's paran_start_end can be anything.
+    // But if v1's paran_start/end is set, then v2's one must match.
+    return v1.type == v2.type && v1.date == v2.date && v1.paran.type == v2.paran.type &&
+            (
+                (!v1.paran.paran_start.has_value()) ||
+                (v1.paran.paran_start == v2.paran.paran_start)
+            ) &&
+            (
+                (!v1.paran.paran_end.has_value()) ||
+                (v1.paran.paran_end == v2.paran.paran_end)
+            );
 }
 
 bool operator!=(const Vrata &v1, const Vrata &v2)
