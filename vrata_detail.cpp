@@ -4,7 +4,7 @@
 
 Swe_Time Vrata_Detail::get_approx_local_midnight() const {
     double adjustment = coord.longitude * (1.0/360.0);
-    return Swe_Time{Swe_Time{vrata.date} + adjustment};
+    return Swe_Time{Swe_Time{vrata.date} - adjustment};
 }
 
 
