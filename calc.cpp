@@ -23,7 +23,7 @@ std::optional<Swe_Time> Calc::find_next_ekadashi_sunrise(Swe_Time after) const
     return {};
 }
 
-Swe_Time proportional_time(Swe_Time const t1, Swe_Time const t2, double const proportion) {
+Swe_Time Calc::proportional_time(Swe_Time const t1, Swe_Time const t2, double const proportion) {
     double distance = t2.as_julian_days() - t1.as_julian_days();
     return Swe_Time{t1.as_julian_days() + distance * proportion};
 }

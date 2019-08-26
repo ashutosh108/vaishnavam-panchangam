@@ -24,3 +24,12 @@ TEST_CASE("get_approx_local_midnight() adjusts to the right side") {
     REQUIRE(local_midnight > local_midnight_in_utc_earliest);
     REQUIRE(local_midnight < local_midnight_in_utc_latest);
 }
+
+TEST_CASE("we get nearest next ekadashi start for petropavlovsk 2019-03-18") {
+    Vrata v{Date{2019, 3, 18}};
+    Vrata_Detail vd{v, petropavlovskkamchatskiy_coord};
+    Swe_Time ekadashi_earliest{2019, 3, 16};
+    Swe_Time ekadashi_latest{2019, 3, 17};
+    REQUIRE(*vd.ekadashi_start > ekadashi_earliest);
+    REQUIRE(*vd.ekadashi_start < ekadashi_latest);
+}

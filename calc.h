@@ -27,6 +27,9 @@ public:
     std::optional<std::pair<Swe_Time, Swe_Time>> get_arunodaya(Swe_Time sunrise) const;
 
     std::optional<Swe_Time> get_next_tithi_start(Swe_Time, Tithi) const;
+
+    static Swe_Time proportional_time(Swe_Time const t1, Swe_Time const t2, double const proportion);
+
     swe::Swe swe;
 
 private:
