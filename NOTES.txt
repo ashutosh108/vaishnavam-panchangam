@@ -55,6 +55,9 @@ v               GMT-4 (-5 DST)   США     Майами          <7:13
 v       - add paran type: Standard, Until_Trayodashi, From_Quarter_Dvadashi
 v       - find good test case for "paran not before the first quarter of Dvadashi"
 v       - implement "paran not before the first quarter of Dvadashi", test for Kiev 2019-06-26/27
+v       - remove duplicate "ekaterinburg" from default locations list.
+        - resolve the "bug of -1st year ekadashi" for 2019-08-20:
+            udupi, gokarna, newdelhi, manali, kalkuta, perm, ufa, surgut, chelyabinsk, ekaterinburg, bishkek, almaata, tekeli, omsk, kirov
         - check all tests for 2019-March-1,2
         - atirikta ekadashi
         - kshaya ekadashi: find good example
