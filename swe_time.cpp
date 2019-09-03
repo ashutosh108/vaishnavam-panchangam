@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iomanip>
 
 #include "swe_time.h"
@@ -44,7 +45,7 @@ bool Swe_Time::operator==(const Swe_Time &to) const
     return year_ == to.year_ &&
             month_ == to.month_ &&
             day_ == to.day_ &&
-            std::abs(hours_ - to.hours_) <= epsilon;
+            std::fabs(hours_ - to.hours_) <= epsilon;
 }
 
 Date Swe_Time::as_date()
