@@ -245,9 +245,14 @@ TEST_CASE("get_next_tithi_start") {
 
 auto get_next_tithi_wrapper(Calc const &calc, Swe_Time from, Tithi tithi) {
     std::optional<Swe_Time> retval;
+
+#ifndef HAS_THREADS
+#define HAS_THREADS 1
+#endif
+
+#if HAS_THREADS
     std::condition_variable cv;
     std::mutex cv_m;
-
     std::thread thread([&](){
         auto local_retval = calc.get_next_tithi_start(from, tithi);
         {
@@ -265,6 +270,9 @@ auto get_next_tithi_wrapper(Calc const &calc, Swe_Time from, Tithi tithi) {
             throw std::runtime_error("Timeout");
         }
     }
+#else
+    retval = calc.get_next_tithi_start(from, tithi);
+#endif
     return retval;
 }
 

@@ -1,18 +1,9 @@
-﻿Font sample generator:
-- list valid chars for each embedded font
-- get last used Object id
-- find old manually created table
-- generate simple page source
-
-
-class Single_Ekadashi_Dvadashi_Calculator {
-        std::chrono::time_point calc_start_date;
-};
-
-class Sun {
-        std::optional<std::chrono::time_point> first_sunrise_after(std::chrono::time_point t);
-        std::optional<std::chrono::time_point> first_sunset_after(std::chrono::time_point t);
-};
+﻿How to run tests in node/webassembly:
+$ mkdir build
+$ cd build
+$ emcmake cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-s ASSERTIONS=1 -s DEMANGLE_SUPPORT=1 -D HAS_THREADS=0 -s DISABLE_EXCEPTION_CATCHING=0" ..
+$ cmake --build .
+$ node test-main.js
 
 v pre-alpha MVP: 
         command line utility:
@@ -60,6 +51,7 @@ v       - remove duplicate "ekaterinburg" from default locations list.
             udupi, gokarna, newdelhi, manali, kalkuta, perm, ufa, surgut, chelyabinsk, ekaterinburg, bishkek, almaata, tekeli, omsk, kirov
         - check all tests for 2019-March-1,2
         - atirikta ekadashi
+        - atirikta dvadashi
         - kshaya ekadashi: find good example
 
   test cases from past Narasimha's calendars (all?)
@@ -76,5 +68,6 @@ v       - remove duplicate "ekaterinburg" from default locations list.
                                         shuddha
                                         mishra
                                         atirikta Ekadashi
+                                        atirikta Dvadashi
                                         suddha Dvadashi (?)
                                 - paran time interval
