@@ -57,3 +57,12 @@ target_link_libraries(test-main PRIVATE sweph swe)
 
 enable_testing()
 add_test(test-main test-main)
+
+add_custom_target(
+	wasmdeploy
+	COMMAND
+	${CMAKE_COMMAND} --build . --target ekadashi-calculator
+	COMMAND
+	# "$<TARGET_FILE_DIR:ekadashi-calculator>/ekadashi-calculator.{js,wasm}"
+	rsync ekadashi-calculator.js ekadashi-calculator.wasm ../public_html/index.html 192.168.88.172:public_html/ekadashi-calculator/
+)
