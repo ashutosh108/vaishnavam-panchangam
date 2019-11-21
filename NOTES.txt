@@ -1,4 +1,5 @@
-﻿[ ] direct qwe (tz exploratory coding executable) to always use proper tzdata directory without trying to download tzdata
+﻿[ ] make simple tz test (print given fixed date (jd) in given timezone)
+[X] direct qwe (tz exploratory coding executable) to always use proper tzdata directory without trying to download tzdata
 [X] add UpdateTzdata.cmake scipt: update both tzdata and windowsZones.xml to latest available versions. Useage: cmake -P UpdateTzdata.cmake
 
 How to run tests in node/webassembly:

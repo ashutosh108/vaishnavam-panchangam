@@ -66,3 +66,9 @@ add_custom_target(
 	# "$<TARGET_FILE_DIR:ekadashi-calculator>/ekadashi-calculator.{js,wasm}"
 	rsync ekadashi-calculator.js ekadashi-calculator.wasm ../public_html/index.html 192.168.88.172:public_html/ekadashi-calculator/
 )
+
+set(BUILD_TZ_LIB ON CACHE BOOL "we need this lib to print paran times etc in proper timezone" FORCE)
+set(USE_SYSTEM_TZ_DB ON CACHE BOOL "to avoid downloading fresh tzdata at runtime" FORCE)
+add_subdirectory(vendor/date)
+add_executable(qwe qwe.cpp)
+target_link_libraries(qwe PRIVATE date::tz)
