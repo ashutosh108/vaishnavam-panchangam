@@ -1,4 +1,7 @@
-﻿How to run tests in node/webassembly:
+﻿[ ] direct qwe (tz exploratory coding executable) to always use proper tzdata directory without trying to download tzdata
+[X] add UpdateTzdata.cmake scipt: update both tzdata and windowsZones.xml to latest available versions. Useage: cmake -P UpdateTzdata.cmake
+
+How to run tests in node/webassembly:
 $ mkdir build
 $ cd build
 $ emcmake cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-s ASSERTIONS=1 -s DEMANGLE_SUPPORT=1 -D HAS_THREADS=0 -s DISABLE_EXCEPTION_CATCHING=0" ..
