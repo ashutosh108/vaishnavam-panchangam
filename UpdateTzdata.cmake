@@ -39,13 +39,11 @@ execute_process(
 	COMMAND ${CMAKE_COMMAND} -E tar xzf ${TOP_DIR}/vendor/tzdata/tzdata-latest.tar.gz
 	WORKING_DIRECTORY ${TOP_DIR}/vendor/tzdata
 )
-execute_process(
-	COMMAND ${CMAKE_COMMAND} -E remove ${TOP_DIR}/vendor/tzdata/tzdata-latest.tar.gz
-)
+FILE(REMOVE ${TOP_DIR}/vendor/tzdata/tzdata-latest.tar.gz)
 execute_process(
 	COMMAND ${CMAKE_COMMAND} -E echo " done"
 )
 FILE(STRINGS ${TOP_DIR}/vendor/tzdata/version TZ_VERSION LIMIT_COUNT 1)
 MESSAGE(STATUS "tzdata version: ${TZ_VERSION}")
-FILE(STRINGS ${TOP_DIR}/vendor/tzdata/windowsZones.xml WZ_VERSION_LINE REGEX typeVersion=\"[0-9a-zA-Z]+\")
+FILE(STRINGS ${TOP_DIR}/vendor/tzdata/windowsZones.xml WZ_VERSION_LINE REGEX "typeVersion=")
 MESSAGE(STATUS "windowsZones version: ${WZ_VERSION_LINE}")
