@@ -3,7 +3,7 @@
 
 #include <optional>
 
-#include "coord.h"
+#include "location.h"
 #include "swe_time.h"
 #include "tithi.h"
 
@@ -12,9 +12,9 @@ namespace swe {
 class Swe
 {
 public:
-    Coord coord;
+    Location coord;
 
-    Swe(Coord coord_);
+    Swe(Location coord_);
     ~Swe();
     // Swe is kind of hanlde for sweph and thus we can't really copy it.
     // Copying it would allow for muiltiple swe_close() calls.

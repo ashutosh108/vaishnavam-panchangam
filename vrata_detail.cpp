@@ -2,7 +2,7 @@
 
 #include "calc.h"
 
-Vrata_Detail::Vrata_Detail(Vrata _vrata, Coord _coord):vrata(_vrata), coord(_coord), calc(_coord) {
+Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _coord):vrata(_vrata), coord(_coord), calc(_coord) {
     Swe_Time local_midnight = get_approx_local_midnight();
     sunrise = calc.swe.get_sunrise(local_midnight);
     if (sunrise) {

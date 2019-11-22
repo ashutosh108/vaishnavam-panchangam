@@ -8,7 +8,7 @@
 #include "calc.h"
 #include "swe.h"
 
-Calc::Calc(Coord coord):swe{coord} {}
+Calc::Calc(Location coord):swe{coord} {}
 
 std::optional<Swe_Time> Calc::find_next_ekadashi_sunrise(Swe_Time after) const
 {

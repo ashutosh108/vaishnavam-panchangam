@@ -3,7 +3,7 @@
 
 #include "swe.h"
 
-[[maybe_unused]] constexpr Coord arbitrary_coord{50.0, 60.0};
+[[maybe_unused]] constexpr Location arbitrary_coord{50.0, 60.0, "UTC"};
 
 TEST_CASE("Swe default constructor") {
     [[maybe_unused]] swe::Swe s{arbitrary_coord};
@@ -11,7 +11,7 @@ TEST_CASE("Swe default constructor") {
 }
 
 TEST_CASE("get sunrise") {
-    Coord c{50.45, 30.523333};
+    Location c{50.45, 30.523333};
     auto sunrise = swe::Swe{c}.get_sunrise(Swe_Time{2019, 3, 10});
     REQUIRE(sunrise.has_value());
     REQUIRE(sunrise->year() == 2019);
@@ -21,7 +21,7 @@ TEST_CASE("get sunrise") {
 }
 
 TEST_CASE("get_sunset") {
-    Coord c{50.45, 30.523333};
+    Location c{50.45, 30.523333};
     auto sunset = swe::Swe{c}.get_sunset(Swe_Time{2019, 3, 10});
     REQUIRE(sunset.has_value());
     REQUIRE(*sunset == Swe_Time{2019, 3, 10, 15, 48, 33.812600});

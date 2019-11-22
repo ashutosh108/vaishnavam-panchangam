@@ -13,7 +13,7 @@ add_library(swe STATIC
     swe.h swe.cpp
     calc.h calc.cpp
     tithi.h tithi.cpp
-    coord.h coord.cpp
+    location.h location.cpp
     date.h date.cpp
     vrata.h vrata.cpp
     vrata_detail.h vrata_detail.cpp
@@ -45,7 +45,7 @@ add_executable(test-main
     tests/test-swe.cpp
     tests/test-calc.cpp
     tests/test-tithi.cpp
-    tests/test-coord.cpp
+    tests/test-location.cpp
     tests/test-date.cpp
     tests/test-vrata.cpp
     tests/test-vrata-detail.cpp

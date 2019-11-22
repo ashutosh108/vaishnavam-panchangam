@@ -13,7 +13,7 @@
 
 TEST_CASE("find_next_ekadashi_sunrise") {
     Swe_Time start{2019, 3, 9};
-    Coord coord{50.45, 30.523333};
+    Location coord{50.45, 30.523333};
     auto sunrise = Calc{coord}.find_next_ekadashi_sunrise(start);
     Swe_Time expected{2019, 3, 17, 4, 13, 36.270031};
     REQUIRE(sunrise.has_value());
@@ -22,7 +22,7 @@ TEST_CASE("find_next_ekadashi_sunrise") {
 
 TEST_CASE("Vijaya Ekadashi Kiev 2019") {
     Date base_date{2019, 2, 28};
-    Coord kiev{50.45, 30.523333};
+    Location kiev{50.45, 30.523333};
     auto vrata = Calc{kiev}.find_next_vrata(base_date);
     REQUIRE(vrata.has_value());
     REQUIRE(swe::Swe{kiev}.get_tithi(Swe_Time{vrata->date}).get_paksha() == Paksha::Krishna);
@@ -31,7 +31,7 @@ TEST_CASE("Vijaya Ekadashi Kiev 2019") {
 }
 
 TEST_CASE("get_arunodaya") {
-    Coord kiev{50.45, 30.523333};
+    Location kiev{50.45, 30.523333};
     auto arunodaya = Calc{kiev}.get_arunodaya(Swe_Time{2019, 3, 2, 4, 45, 58.052015});
     REQUIRE(arunodaya.has_value());
     REQUIRE(arunodaya->first == Swe_Time{2019, 3, 2, 3, 0, 17.512880});
@@ -276,7 +276,7 @@ auto get_next_tithi_wrapper(Calc const &calc, Swe_Time from, Tithi tithi) {
     return retval;
 }
 
-auto get_next_tithi_wrapper(Coord coord, Swe_Time from, Tithi tithi) {
+auto get_next_tithi_wrapper(Location coord, Swe_Time from, Tithi tithi) {
     Calc calc{coord};
     return get_next_tithi_wrapper(calc, from, tithi);
 }

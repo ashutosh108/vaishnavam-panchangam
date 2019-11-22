@@ -4,7 +4,7 @@
 
 #include "swephexp.h"
 
-#include "coord.h"
+#include "location.h"
 #include "swe.h"
 
 namespace swe {
@@ -45,7 +45,7 @@ std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after) cons
     }
 }
 
-Swe::Swe(Coord coord_):coord(coord_)
+Swe::Swe(Location coord_):coord(coord_)
 {
     swe_set_ephe_path(nullptr);
     swe_set_topo(coord.longitude, coord.latitude, 0);

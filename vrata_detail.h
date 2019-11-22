@@ -5,9 +5,9 @@
 
 struct Vrata_Detail {
     Vrata vrata;
-    Coord coord;
+    Location coord;
     Calc calc;
-    Vrata_Detail(Vrata _vrata, Coord _coord);
+    Vrata_Detail(Vrata _vrata, Location _coord);
     Swe_Time get_approx_local_midnight() const;
     std::optional<Swe_Time> arddha_ghatika_before_arunodaya;
     std::optional<Swe_Time> arunodaya;

@@ -3,7 +3,7 @@
 
 #include <optional>
 
-#include "coord.h"
+#include "location.h"
 #include "date.h"
 #include "swe.h"
 #include "swe_time.h"
@@ -13,7 +13,7 @@
 class Calc
 {
 public:
-    Calc(Coord coord);
+    Calc(Location coord);
     // main interface: get info for nearest future Vrata after given date
     std::optional<Vrata> find_next_vrata(Date after) const;
 
