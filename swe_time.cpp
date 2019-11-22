@@ -29,22 +29,22 @@ Swe_Time::Swe_Time(date::year year, date::month month, date::day day, int hours,
     : Swe_Time(year, month, day, hours+minutes/60.0+seconds/3600.0) {
 }
 
-date::year Swe_Time::year()
+date::year Swe_Time::year() const
 {
     return year_;
 }
 
-date::month Swe_Time::month()
+date::month Swe_Time::month() const
 {
     return month_;
 }
 
-date::day Swe_Time::day()
+date::day Swe_Time::day() const
 {
     return day_;
 }
 
-double Swe_Time::hours()
+double Swe_Time::hours() const
 {
     return hours_;
 }
@@ -58,7 +58,7 @@ bool Swe_Time::operator==(const Swe_Time &to) const
             std::fabs(hours_ - to.hours_) <= epsilon;
 }
 
-date::year_month_day Swe_Time::as_date()
+date::year_month_day Swe_Time::as_date() const
 {
     return date::year_month_day{year_, month_, day_};
 }
@@ -79,7 +79,20 @@ std::ostream &operator<<(std::ostream &os, Swe_Time const &t) {
 }
 
 std::ostream &operator<<(std::ostream &os, Swe_Zoned_Time const &t) {
-    return os << t.t;
+    using namespace date;
+    using namespace std::chrono_literals;
+    int hours = static_cast<int>(t.t.hours());
+    double minutes_remain = (t.t.hours() - hours) * 60;
+    int minutes = static_cast<int>(minutes_remain);
+    double seconds = (minutes_remain - minutes) * 60;
+    int seconds_int = static_cast<int>(seconds);
+    int microseconds = static_cast<int>((seconds-seconds_int)*1'000'000);
+    date::local_days l{t.t.as_date()};
+    auto utc = make_zoned("UTC",
+                          l + std::chrono::hours{hours} + std::chrono::minutes{minutes} +
+                          std::chrono::seconds{seconds_int} + std::chrono::microseconds{microseconds});
+    auto z = make_zoned(t.timezone_name, utc);
+    return os << z;
 }
 
 Swe_Time operator +(const Swe_Time &t, double delta)

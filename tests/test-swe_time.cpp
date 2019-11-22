@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "date/date.h"
+#include "date/tz.h"
 #include "swe_time.h"
 
 using namespace date;
@@ -104,8 +105,8 @@ TEST_CASE("Can substract Swe_Time from Swe_Time") {
     REQUIRE((Swe_Time{2019_y, April, 16_d} - Swe_Time{2019_y, April, 10_d}) == 6.0);
 }
 
-TEST_CASE("Pretty-print zoned time", "[.]") {
+TEST_CASE("Pretty-print zoned time") {
     std::stringstream s;
     s << Swe_Zoned_Time{"Europe/Kiev", 2019_y/March/10, 4.5};
-    REQUIRE(s.str() == "2019-03-10 04:30:00.000000 EET");
+    REQUIRE(s.str() == "2019-03-10 06:30:00.000000 EET");
 }

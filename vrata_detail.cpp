@@ -32,43 +32,46 @@ Swe_Time Vrata_Detail::get_approx_local_midnight() const {
 
 std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
 {
+    auto z = [&vd](Swe_Time t) {
+        return Swe_Zoned_Time{vd.coord.timezone_name, t};
+    };
     s << vd.vrata << ":\n";
     if (vd.arddha_ghatika_before_arunodaya) {
-        s << "    Arddha-ghatika before arunodaya: " << *vd.arddha_ghatika_before_arunodaya << '\n';
+        s << "    Arddha-ghatika before arunodaya: " << z(*vd.arddha_ghatika_before_arunodaya) << '\n';
     }
 
     if (vd.arunodaya) {
-        s << "    Arunodaya:                       " << *vd.arunodaya << '\n';
+        s << "    Arunodaya:                       " << z(*vd.arunodaya) << '\n';
     }
 
     if (vd.sunrise) {
-        s << "    Sunrise:                         " << *vd.sunrise << '\n';
+        s << "    Sunrise:                         " << z(*vd.sunrise) << '\n';
     }
 
     if (vd.ekadashi_start) {
-        s << "    Ekadashi start:                  " << *vd.ekadashi_start << '\n';
+        s << "    Ekadashi start:                  " << z(*vd.ekadashi_start) << '\n';
     }
 
     if (vd.dvadashi_start) {
-        s << "    Dvadashi start:                  " << *vd.dvadashi_start << '\n';
+        s << "    Dvadashi start:                  " << z(*vd.dvadashi_start) << '\n';
     }
 
     if (vd.dvadashi_quarter) {
-        s << "    Dvadashi quarter:                " << *vd.dvadashi_quarter << '\n';
+        s << "    Dvadashi quarter:                " << z(*vd.dvadashi_quarter) << '\n';
     }
 
     if (vd.dvadashi_end) {
-        s << "    Dvadashi end:                    " << *vd.dvadashi_end << '\n';
+        s << "    Dvadashi end:                    " << z(*vd.dvadashi_end) << '\n';
     }
 
     s << "    Paran type:                      " << vd.vrata.paran.type << '\n';
 
     if (vd.vrata.paran.paran_start) {
-        s << "    Paran start:                     " << *vd.vrata.paran.paran_start << '\n';
+        s << "    Paran start:                     " << z(*vd.vrata.paran.paran_start) << '\n';
     }
 
     if (vd.vrata.paran.paran_end) {
-        s << "    Paran end:                       " << *vd.vrata.paran.paran_end << '\n';
+        s << "    Paran end:                       " << z(*vd.vrata.paran.paran_end) << '\n';
     }
 
     return s;
