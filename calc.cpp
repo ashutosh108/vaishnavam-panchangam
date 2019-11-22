@@ -28,7 +28,7 @@ Swe_Time Calc::proportional_time(Swe_Time const t1, Swe_Time const t2, double co
     return Swe_Time{t1.as_julian_days() + distance * proportion};
 }
 
-Date Calc::get_vrata_date(const Swe_Time &sunrise) const
+date::year_month_day Calc::get_vrata_date(const Swe_Time &sunrise) const
 {
     // Adjust to make sure that Vrata data is correct in local timezone
     // (as opposed to *sunrise which is in UTC). We do this by adding an hour
@@ -38,7 +38,7 @@ Date Calc::get_vrata_date(const Swe_Time &sunrise) const
     // timezone, this should work for most cases.
     double adjustment_in_days = swe.coord.longitude * (1.0/360);
     Swe_Time local_sunrise{sunrise.as_julian_days()+adjustment_in_days};
-    Date vrata_date{local_sunrise.as_date()};
+    date::year_month_day vrata_date{local_sunrise.as_date()};
     return vrata_date;
 }
 
@@ -84,7 +84,7 @@ Paran Calc::get_paran(Swe_Time const &last_fasting_sunrise) const
     return paran;
 }
 
-std::optional<Vrata> Calc::find_next_vrata(Date after) const
+std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
 {
     auto sunrise = find_next_ekadashi_sunrise(Swe_Time{after});
     if (sunrise) {

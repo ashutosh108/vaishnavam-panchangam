@@ -3,35 +3,47 @@
 
 #include <ostream>
 
-#include "date.h"
+#include "date/date.h"
 
 class Swe_Time
 {
 public:
     explicit Swe_Time(double jd);
-    explicit Swe_Time(int year, int month, int day, double hours=0.0);
-    explicit Swe_Time(int year, int month, int day, int hours, int minutes, double seconds);
-    explicit Swe_Time(Date d) : Swe_Time(d.year, d.month, d.day) {}
+    explicit Swe_Time(date::year year, date::month month, date::day day, double hours=0.0);
+    explicit Swe_Time(date::year year, date::month month, date::day day, int hours, int minutes, double seconds);
+    explicit Swe_Time(date::year_month_day d) : Swe_Time(d.year(), d.month(), d.day()) {}
 
     double as_julian_days() const { return jd_; }
-    int year();
-    int month();
-    int day();
+    date::year year();
+    date::month month();
+    date::day day();
     double hours();
     bool operator==(Swe_Time const &to) const;
-    Date as_date();
+    date::year_month_day as_date();
     Swe_Time operator +=(double);
     Swe_Time operator -=(double);
     bool operator <(Swe_Time const &other) const;
     bool operator >(Swe_Time const &other) const;
 private:
     double jd_;
-    int year_, month_, day_;
+    date::year year_;
+    date::month month_;
+    date::day day_;
     double hours_;
     friend std::ostream &operator<<(std::ostream &os, Swe_Time const &t);
 };
 
+class Swe_Zoned_Time {
+public:
+    Swe_Time t;
+    const char *timezone_name;
+    Swe_Zoned_Time(const char *timezone_name, date::year_month_day d, double hours=0.0) :
+        t(d.year(), d.month(), d.day(), hours),
+        timezone_name(timezone_name){}
+};
+
 std::ostream &operator<<(std::ostream &os, Swe_Time const &t);
+std::ostream &operator<<(std::ostream &os, Swe_Zoned_Time const &t);
 Swe_Time operator +(const Swe_Time &, double);
 Swe_Time operator -(const Swe_Time &, double);
 

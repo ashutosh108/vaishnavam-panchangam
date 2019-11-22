@@ -9,6 +9,7 @@
 #include <iomanip>
 
 #include "calc.h"
+#include "date/date.h"
 #include "swe.h"
 #include "swe_time.h"
 #include "vrata_detail.h"
@@ -21,16 +22,16 @@ void print_usage() {
     std::cout << "    latitude and longitude are given as decimal degrees (e.g. 30.7)\n";
 }
 
-std::tuple<int, int, int> parse_ymd(const char *s) {
+date::year_month_day parse_ymd(const char *s) {
     std::tm tm{};
     std::istringstream stream{s};
     stream >> std::get_time(&tm, "%Y-%m-%d");
-    return std::tuple<int, int, int>{tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday};
+    return date::year_month_day{date::year{tm.tm_year+1900}, date::month{static_cast<unsigned int>(tm.tm_mon+1)}, date::day{static_cast<unsigned int>(tm.tm_mday)}};
 }
 
 struct NamedCoord {
     const char *name;
-    Coord coord;
+    Location coord;
 };
 
 static std::vector<NamedCoord> locations {
@@ -106,7 +107,7 @@ static std::vector<NamedCoord> locations {
     { "meadowlake", meadowlake_coord },
 };
 
-std::optional<Coord> find_coord(const char *location_name) {
+std::optional<Location> find_coord(const char *location_name) {
     auto found = std::find_if(
                 std::begin(locations),
                 std::end(locations),
@@ -118,14 +119,14 @@ std::optional<Coord> find_coord(const char *location_name) {
     return found->coord;
 }
 
-void calc_one(Date base_date, const char *location_name, Coord coord) {
+void calc_one(date::year_month_day base_date, const char *location_name, Location coord) {
     auto vrata = Calc{coord}.find_next_vrata(base_date);
     Vrata_Detail vd{*vrata, coord};
     std::cout << location_name << '\n' << vd << "\n\n";
 }
 
-void calc_one(Date base_date, const char * location_name) {
-    std::optional<Coord> coord = find_coord(location_name);
+void calc_one(date::year_month_day base_date, const char * location_name) {
+    std::optional<Location> coord = find_coord(location_name);
     if (!coord) {
         std::cerr << "Location not found: '" << location_name << "'\n";
         return;
@@ -133,7 +134,7 @@ void calc_one(Date base_date, const char * location_name) {
     calc_one(base_date, location_name, *coord);
 }
 
-void print_detail_one(Date base_date, const char *location_name, Coord coord) {
+void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord) {
     std::cout << location_name << ' ' << base_date << '\n';
     std::cout << "<to be implemented>\n";
     Calc calc{coord};
@@ -151,8 +152,8 @@ void print_detail_one(Date base_date, const char *location_name, Coord coord) {
     }
 }
 
-void print_detail_one(Date base_date, const char * location_name) {
-    std::optional<Coord> coord = find_coord(location_name);
+void print_detail_one(date::year_month_day base_date, const char * location_name) {
+    std::optional<Location> coord = find_coord(location_name);
     if (!coord) {
         std::cerr << "Location not found: '" << location_name << "'\n";
         return;
@@ -160,7 +161,7 @@ void print_detail_one(Date base_date, const char * location_name) {
     print_detail_one(base_date, location_name, *coord);
 }
 
-void calc_all(Date d) {
+void calc_all(date::year_month_day d) {
     for (auto &l : locations) {
         calc_one(d, l.name, l.coord);
     }
@@ -173,8 +174,7 @@ int main(int argc, char *argv[])
             print_usage();
             exit(-1);
         }
-        auto [y, m, d] = parse_ymd(argv[2]);
-        Date base_date{y, m, d};
+        auto base_date = parse_ymd(argv[2]);
         const char * const location_name = argv[3];
         print_detail_one(base_date, location_name);
     } else {
@@ -183,8 +183,7 @@ int main(int argc, char *argv[])
             exit(-1);
         }
 
-        auto [y, m, d] = parse_ymd(argv[1]);
-        Date base_date{y, m, d};
+        auto base_date = parse_ymd(argv[1]);
         if (argc-1 <= 1) {
             calc_all(base_date);
         } else if (argc-1 == 2) {
@@ -193,7 +192,7 @@ int main(int argc, char *argv[])
         } else {
             double latitude = std::stod(argv[2]);
             double longitude = std::stod(argv[3]);
-            calc_one(base_date, "<custom location>", Coord{latitude, longitude});
+            calc_one(base_date, "<custom location>", Location{latitude, longitude});
         }
     }
 }

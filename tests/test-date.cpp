@@ -2,25 +2,27 @@
 
 #include <sstream>
 
-#include "date.h"
+#include "date/date.h"
+
+using namespace date;
 
 TEST_CASE("Date keeps year, month and day") {
-    Date d{2019, 3, 19};
-    REQUIRE(d.year == 2019);
-    REQUIRE(d.month == 3);
-    REQUIRE(d.day == 19);
+    date::year_month_day d{date::year{2019}, date::month{3}, date::day{19}};
+    REQUIRE(d.year() == 2019_y);
+    REQUIRE(d.month() == March);
+    REQUIRE(d.day() == date::day{19});
 }
 
 TEST_CASE("Printing date") {
     std::stringstream s;
-    s << Date{2019, 3, 19};
+    s << date::year_month_day{2019_y/March/19};
     REQUIRE(s.str() == "2019-03-19");
 }
 
 TEST_CASE("Can compare Date for equality") {
-    Date d1{2019, 3, 19};
-    Date d2{2019, 3, 19};
-    Date d3{2019, 3, 20};
+    date::year_month_day d1{2019_y/March/19};
+    date::year_month_day d2{2019_y/March/19};
+    date::year_month_day d3{2019_y/March/20};
     REQUIRE(d1 == d2);
     REQUIRE(d1 != d3);
 }

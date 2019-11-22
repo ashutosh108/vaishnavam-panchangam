@@ -2,13 +2,15 @@
 
 #include <sstream>
 
-#include "date.h"
+#include "date/date.h"
 #include "vrata.h"
 
+using namespace date;
+
 TEST_CASE("Can compare Vrata") {
-    Vrata v1{Date{2019, 3, 19}};
-    Vrata v2{Date{2019, 3, 19}};
-    Vrata v3{Date{2019, 3, 20}};
+    Vrata v1{2019_y/March/19};
+    Vrata v2{2019_y/March/19};
+    Vrata v3{2019_y/March/20};
     REQUIRE(v1 == v2);
     REQUIRE(v2 == v1);
     REQUIRE(v1 != v3);
@@ -17,12 +19,12 @@ TEST_CASE("Can compare Vrata") {
 
 TEST_CASE("Can print vrata") {
     std::stringstream s;
-    s << Vrata{Date{2019, 3, 19}};
+    s << Vrata{2019_y/March/19};
     REQUIRE_FALSE(s.str().empty());
 }
 
 TEST_CASE("Can create with \"before this time\" paran") {
     Vrata v{Vrata_Type::Ekadashi,
-            Date{2019, 3, 19},
-            Paran{Paran::Type::Standard, std::nullopt, Swe_Time{2019, 3, 19, 11, 13, 0}}};
+            2019_y/March/19,
+            Paran{Paran::Type::Standard, std::nullopt, Swe_Time{2019_y, March, 19_d, 11, 13, 0}}};
 }

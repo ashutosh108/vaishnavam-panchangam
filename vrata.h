@@ -4,7 +4,7 @@
 #include <optional>
 #include <ostream>
 
-#include "date.h"
+#include "date/date.h"
 #include "paran.h"
 #include "swe_time.h"
 #include "tithi.h"
@@ -19,14 +19,14 @@ std::ostream &operator<<(std::ostream &o, Vrata_Type const &v);
 
 struct Vrata {
     Vrata_Type type = Vrata_Type::Ekadashi;
-    Date date;
+    date::year_month_day date;
     Paran paran;
 
-    Vrata(Date _date) : date(_date){}
-    Vrata(Vrata_Type _type, Date _date)
+    Vrata(date::year_month_day _date) : date(_date){}
+    Vrata(Vrata_Type _type, date::year_month_day _date)
         : type(_type),
           date(_date){}
-    Vrata(Vrata_Type _type, Date _date, Paran _paran)
+    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran)
         : type(_type),
           date(_date),
           paran(_paran){}

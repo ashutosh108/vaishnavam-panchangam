@@ -1,35 +1,45 @@
 #include <cmath>
 #include <iomanip>
 
+#include "date/tz.h"
+#include "date/date.h"
 #include "swe_time.h"
 #include <swephexp.h>
 
 Swe_Time::Swe_Time(double jd) : jd_(jd)
 {
-    swe_revjul(jd_, SE_GREG_CAL, &year_, &month_, &day_, &hours_);
+    int year, month, day;
+    swe_revjul(jd_, SE_GREG_CAL, &year, &month, &day, &hours_);
+    year_ = date::year{year};
+    month_ = date::month{static_cast<unsigned int>(month)};
+    day_ = date::day{static_cast<unsigned int>(day)};
+
 }
 
-Swe_Time::Swe_Time(int year, int month, int day, double hours)
+Swe_Time::Swe_Time(date::year year, date::month month, date::day day, double hours)
     : year_(year), month_(month), day_(day), hours_(hours)
 {
-    jd_ = swe_julday(year, month, day, hours, SE_GREG_CAL);
+    jd_ = swe_julday(static_cast<int>(year),
+                     static_cast<int>(static_cast<unsigned>(month)),
+                     static_cast<int>(static_cast<unsigned>(day)),
+                     hours, SE_GREG_CAL);
 }
 
-Swe_Time::Swe_Time(int year, int month, int day, int hours, int minutes, double seconds)
+Swe_Time::Swe_Time(date::year year, date::month month, date::day day, int hours, int minutes, double seconds)
     : Swe_Time(year, month, day, hours+minutes/60.0+seconds/3600.0) {
 }
 
-int Swe_Time::year()
+date::year Swe_Time::year()
 {
     return year_;
 }
 
-int Swe_Time::month()
+date::month Swe_Time::month()
 {
     return month_;
 }
 
-int Swe_Time::day()
+date::day Swe_Time::day()
 {
     return day_;
 }
@@ -48,9 +58,9 @@ bool Swe_Time::operator==(const Swe_Time &to) const
             std::fabs(hours_ - to.hours_) <= epsilon;
 }
 
-Date Swe_Time::as_date()
+date::year_month_day Swe_Time::as_date()
 {
-    return Date{year_, month_, day_};
+    return date::year_month_day{year_, month_, day_};
 }
 
 std::ostream &operator<<(std::ostream &os, Swe_Time const &t) {
@@ -59,16 +69,17 @@ std::ostream &operator<<(std::ostream &os, Swe_Time const &t) {
     int minutes = static_cast<int>(minutes_remain);
     double seconds = (minutes_remain - minutes) * 60;
 
-    os.width(4);
+    os << date::year_month_day{t.year_, t.month_, t.day_} << ' ';
     os.fill('0');
-    os << t.year_ << '-';
-    os.width(2);
-    os << t.month_ << '-' << std::setw(2) << t.day_ << ' ';
     os.width(2);
     os << hours << ':';
     os.width(2);
     os << minutes << ':' << std::fixed << std::setprecision(6) << std::setw(9) << seconds << " UTC";
     return os;
+}
+
+std::ostream &operator<<(std::ostream &os, Swe_Zoned_Time const &t) {
+    return os << t.t;
 }
 
 Swe_Time operator +(const Swe_Time &t, double delta)

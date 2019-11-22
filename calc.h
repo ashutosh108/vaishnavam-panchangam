@@ -4,7 +4,7 @@
 #include <optional>
 
 #include "location.h"
-#include "date.h"
+#include "date/date.h"
 #include "swe.h"
 #include "swe_time.h"
 #include "tithi.h"
@@ -15,7 +15,7 @@ class Calc
 public:
     Calc(Location coord);
     // main interface: get info for nearest future Vrata after given date
-    std::optional<Vrata> find_next_vrata(Date after) const;
+    std::optional<Vrata> find_next_vrata(date::year_month_day after) const;
 
     // Helper functions. They are public for easier testing,
     // but should be considered private otherwise.
@@ -34,7 +34,7 @@ public:
 
 private:
     std::optional<Swe_Time> get_prev_sunset(Swe_Time const sunrise) const;
-    Date get_vrata_date(const Swe_Time &sunrise) const;
+    date::year_month_day get_vrata_date(const Swe_Time &sunrise) const;
     Paran get_paran(Swe_Time const &last_fasting_sunrise) const;
 };
 

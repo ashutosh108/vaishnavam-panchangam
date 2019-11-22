@@ -1,7 +1,10 @@
 #include "catch.hpp"
 #include <sstream>
 
+#include "date/date.h"
 #include "swe.h"
+
+using namespace date;
 
 [[maybe_unused]] constexpr Location arbitrary_coord{50.0, 60.0, "UTC"};
 
@@ -12,33 +15,33 @@ TEST_CASE("Swe default constructor") {
 
 TEST_CASE("get sunrise") {
     Location c{50.45, 30.523333};
-    auto sunrise = swe::Swe{c}.get_sunrise(Swe_Time{2019, 3, 10});
+    auto sunrise = swe::Swe{c}.get_sunrise(Swe_Time{2019_y, March, 10_d});
     REQUIRE(sunrise.has_value());
-    REQUIRE(sunrise->year() == 2019);
-    REQUIRE(sunrise->month() == 3);
-    REQUIRE(sunrise->day() == 10);
+    REQUIRE(sunrise->year() == 2019_y);
+    REQUIRE(sunrise->month() == March);
+    REQUIRE(sunrise->day() == 10_d);
     REQUIRE(sunrise->hours() == Approx(4.4816697389));
 }
 
 TEST_CASE("get_sunset") {
     Location c{50.45, 30.523333};
-    auto sunset = swe::Swe{c}.get_sunset(Swe_Time{2019, 3, 10});
+    auto sunset = swe::Swe{c}.get_sunset(Swe_Time{2019_y, March, 10_d});
     REQUIRE(sunset.has_value());
-    REQUIRE(*sunset == Swe_Time{2019, 3, 10, 15, 48, 33.812600});
+    REQUIRE(*sunset == Swe_Time{2019_y, March, 10_d, 15, 48, 33.812600});
 }
 
 TEST_CASE("get sun longitude") {
-    double sun_longitude = swe::Swe{arbitrary_coord}.get_sun_longitude(Swe_Time{2019, 3, 10});
+    double sun_longitude = swe::Swe{arbitrary_coord}.get_sun_longitude(Swe_Time{2019_y, March, 10_d});
     REQUIRE(sun_longitude == Approx(349.1222311334));
 }
 
 TEST_CASE("get moon longitude") {
-    double moon_longitude = swe::Swe{arbitrary_coord}.get_moon_longitude(Swe_Time{2019, 3, 10});
+    double moon_longitude = swe::Swe{arbitrary_coord}.get_moon_longitude(Swe_Time{2019_y, March, 10_d});
     REQUIRE(moon_longitude == Approx(26.2874840949));
 }
 
 TEST_CASE("get tithi") {
-    Swe_Time t2{2019, 3, 21, 1.716666}; // around 1:43am (UTC time), peak of purnima
+    Swe_Time t2{2019_y, March, 21_d, 1.716666}; // around 1:43am (UTC time), peak of purnima
     auto tithi = swe::Swe{arbitrary_coord}.get_tithi(t2);
     REQUIRE(tithi.tithi == Approx(15.0001492371));
 }

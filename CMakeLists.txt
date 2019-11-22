@@ -14,13 +14,12 @@ add_library(swe STATIC
     calc.h calc.cpp
     tithi.h tithi.cpp
     location.h location.cpp
-    date.h date.cpp
     vrata.h vrata.cpp
     vrata_detail.h vrata_detail.cpp
     paran.h paran.cpp
 )
 target_include_directories(swe PRIVATE vendor/sweph/src)
-target_link_libraries(swe PRIVATE sweph)
+target_link_libraries(swe PRIVATE sweph PUBLIC date::tz)
 
 add_library(sweph STATIC
     vendor/sweph/src/swecl.c
@@ -53,7 +52,7 @@ add_executable(test-main
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR})
 target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2)
-target_link_libraries(test-main PRIVATE sweph swe)
+target_link_libraries(test-main PRIVATE sweph swe date::date)
 
 enable_testing()
 add_test(test-main test-main)
@@ -70,5 +69,8 @@ add_custom_target(
 set(BUILD_TZ_LIB ON CACHE BOOL "we need this lib to print paran times etc in proper timezone" FORCE)
 set(USE_SYSTEM_TZ_DB ON CACHE BOOL "to avoid downloading fresh tzdata at runtime" FORCE)
 add_subdirectory(vendor/date)
+# Set HAS_UNCAUGHT_EXCEPTIONS=1 to avoid lota of warnings on gcc-9.2 (and, presumably,
+# on other modern C++17 compilers)
+target_compile_definitions(date INTERFACE HAS_UNCAUGHT_EXCEPTIONS=1)
 add_executable(qwe qwe.cpp)
 target_link_libraries(qwe PRIVATE date::tz)
