@@ -37,11 +37,11 @@ class Swe_Zoned_Time {
 public:
     Swe_Time t;
     const char *timezone_name;
-    Swe_Zoned_Time(const char *timezone_name, date::year_month_day d, double hours=0.0) :
+    Swe_Zoned_Time(const char *_timezone_name, date::year_month_day d, double hours=0.0) :
         t(d.year(), d.month(), d.day(), hours),
-        timezone_name(timezone_name){}
-    Swe_Zoned_Time(const char *timezone_name, Swe_Time t) :
-        t(t), timezone_name(timezone_name) {}
+        timezone_name(_timezone_name){}
+    Swe_Zoned_Time(const char *_timezone_name, Swe_Time _t) :
+        t(_t), timezone_name(_timezone_name) {}
 };
 
 std::ostream &operator<<(std::ostream &os, Swe_Time const &t);

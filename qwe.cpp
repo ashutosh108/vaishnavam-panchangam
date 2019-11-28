@@ -1,5 +1,10 @@
 #include "date/date.h"
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
 #include "date/tz.h"
+#pragma GCC diagnostic pop
+
 #include <iostream>
 
 int main() {

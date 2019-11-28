@@ -1,7 +1,11 @@
 #include <cmath>
 #include <iomanip>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
 #include "date/tz.h"
+#pragma GCC diagnostic pop
+
 #include "date/date.h"
 #include "swe_time.h"
 #include <swephexp.h>

@@ -10,7 +10,12 @@
 
 #include "calc.h"
 #include "date/date.h"
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
 #include "date/tz.h"
+#pragma GCC diagnostic pop
+
 #include "swe.h"
 #include "swe_time.h"
 #include "vrata_detail.h"
