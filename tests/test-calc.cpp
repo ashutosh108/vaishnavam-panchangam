@@ -268,7 +268,7 @@ auto get_next_tithi_wrapper(Calc const &calc, Swe_Time from, Tithi tithi) {
     {
         using namespace std::chrono_literals;
         std::unique_lock<std::mutex> l{cv_m};
-        if (cv.wait_for(l, 100ms) == std::cv_status::timeout) {
+        if (cv.wait_for(l, 200ms) == std::cv_status::timeout) {
             throw std::runtime_error("Timeout");
         }
     }
@@ -337,7 +337,7 @@ TEST_CASE("paran not earlier than quarter of Dvadashi tithi") {
     REQUIRE(paran_start < paran_start_not_after);
 }
 
-TEST_CASE("Udupi after 2019-11-20 returns actual date", "[.]") {
+TEST_CASE("Udupi after 2019-11-20 returns an actual date") {
     Calc const calc{udupi_coord};
     date::year_month_day const from{2019_y/November/20};
     auto vrata = calc.find_next_vrata(from);

@@ -15,10 +15,12 @@ std::optional<Swe_Time> Calc::find_next_ekadashi_sunrise(Swe_Time after) const
     int max_days_left = 16;
     std::optional<Swe_Time> sunrise = after;
     while ((sunrise = swe.get_sunrise(*sunrise)).has_value() && max_days_left--) {
-        if (swe.get_tithi(*sunrise).is_ekadashi()) {
+        auto tithi = swe.get_tithi(*sunrise);
+        if (tithi.is_ekadashi() || tithi.is_dvadashi()) {
             return sunrise;
         }
         sunrise = Swe_Time{sunrise->as_julian_days()+0.1};
+        if (!sunrise) break;
     }
     return {};
 }
