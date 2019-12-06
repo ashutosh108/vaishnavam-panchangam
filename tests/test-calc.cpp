@@ -336,3 +336,10 @@ TEST_CASE("paran not earlier than quarter of Dvadashi tithi") {
     REQUIRE(paran_start > paran_start_not_before);
     REQUIRE(paran_start < paran_start_not_after);
 }
+
+TEST_CASE("Udupi after 2019-11-20 returns actual date", "[.]") {
+    Calc const calc{udupi_coord};
+    date::year_month_day const from{2019_y/November/20};
+    auto vrata = calc.find_next_vrata(from);
+    REQUIRE(vrata.has_value());
+}

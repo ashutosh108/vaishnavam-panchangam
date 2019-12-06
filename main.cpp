@@ -127,8 +127,12 @@ std::optional<Location> find_coord(const char *location_name) {
 
 void calc_one(date::year_month_day base_date, const char *location_name, Location coord) {
     auto vrata = Calc{coord}.find_next_vrata(base_date);
-    Vrata_Detail vd{*vrata, coord};
-    std::cout << location_name << '\n' << vd << "\n\n";
+    if (!vrata.has_value()) {
+        std::cout << location_name << ": calculation error, can't find next Ekadashi. Sorry.\n";
+    } else {
+        Vrata_Detail vd{*vrata, coord};
+        std::cout << location_name << '\n' << vd << "\n\n";
+    }
 }
 
 void calc_one(date::year_month_day base_date, const char * location_name) {
