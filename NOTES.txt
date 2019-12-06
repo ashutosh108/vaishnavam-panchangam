@@ -1,6 +1,9 @@
-﻿[ ] make simple tz test (print given fixed date (jd) in given timezone)
-[X] direct qwe (tz exploratory coding executable) to always use proper tzdata directory without trying to download tzdata
-[X] add UpdateTzdata.cmake scipt: update both tzdata and windowsZones.xml to latest available versions. Useage: cmake -P UpdateTzdata.cmake
+﻿[ ] encapsulate tzdata (so we can run bare executable, wihout any tzdata files at all)
+[ ] encapsulate swe's ephemeris database (so we can run with higher precision while having no data files at hand)
+[ ] check all tests for 2019-March-1,2
+[ ] atirikta ekadashi
+[ ] atirikta dvadashi
+[ ] test cases from past Narasimha's calendars (all?)
 
 How to run tests in node/webassembly:
 $ mkdir build
@@ -51,14 +54,9 @@ v       - add paran type: Standard, Until_Trayodashi, From_Quarter_Dvadashi
 v       - find good test case for "paran not before the first quarter of Dvadashi"
 v       - implement "paran not before the first quarter of Dvadashi", test for Kiev 2019-06-26/27
 v       - remove duplicate "ekaterinburg" from default locations list.
-        - resolve the "bug of -1st year ekadashi" for 2019-08-20:
-            udupi, gokarna, newdelhi, manali, kalkuta, perm, ufa, surgut, chelyabinsk, ekaterinburg, bishkek, almaata, tekeli, omsk, kirov
-        - check all tests for 2019-March-1,2
-        - atirikta ekadashi
-        - atirikta dvadashi
-        - kshaya ekadashi: find good example
-
-  test cases from past Narasimha's calendars (all?)
+v        - resolve the "bug of -1st year ekadashi" for 2019-08-20:
+v            udupi, gokarna, newdelhi, manali, kalkuta, perm, ufa, surgut, chelyabinsk, ekaterinburg, bishkek, almaata, tekeli, omsk, kirov
+v        - kshaya ekadashi: find good example [it was e.g. Udupi after 2019-11-20]
 
   MVP:
         command line utility:
