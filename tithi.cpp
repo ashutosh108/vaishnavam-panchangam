@@ -55,6 +55,11 @@ Paksha Tithi::get_paksha()
     return tithi < 15 ? Paksha::Shukla : Paksha::Krishna;
 }
 
+bool Tithi::is_dvadashi()
+{
+    return (tithi >= 11 && tithi < 12) || (tithi >= 11+15 && tithi < 12+15);
+}
+
 bool Tithi::is_ekadashi()
 {
     return (tithi >= 10 && tithi < 11) || (tithi >= 10+15 && tithi < 11+15);

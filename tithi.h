@@ -12,6 +12,7 @@ struct Tithi {
     explicit Tithi(double _tithi);
     double tithi;
     Paksha get_paksha();
+    bool is_dvadashi();
     bool is_ekadashi();
     bool is_dashami();
     // Pratipat is 0.00...0.99, Dvitiya is 1.00..1.99, etc

@@ -41,6 +41,12 @@ TEST_CASE("throws on values of 30 or above") {
     REQUIRE_THROWS_AS(Tithi{30}, std::range_error);
 }
 
+TEST_CASE("is Dvadashi") {
+    REQUIRE(Tithi{11}.is_dvadashi());
+    REQUIRE(Tithi{11.5}.is_dvadashi());
+    REQUIRE_FALSE(Tithi{12}.is_dvadashi());
+}
+
 TEST_CASE("is Ekadashi") {
     REQUIRE(Tithi{10}.is_ekadashi());
     REQUIRE(Tithi{10.5}.is_ekadashi());
