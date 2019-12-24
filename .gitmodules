@@ -6,4 +6,4 @@
 	url = https://github.com/catchorg/Catch2
 [submodule "vendor/date"]
 	path = vendor/date
-	url = https://github.com/HowardHinnant/date
+	url = https://github.com/ashutosh108/date.git
