@@ -5,6 +5,12 @@
 [ ] atirikta dvadashi
 [ ] test cases from past Narasimha's calendars (all?)
 
+== When compiling with gcc from msys2/mingw32, the .exe depends on
+- libwinpthread-1.dll
+- libstdc++-6.dll
+- libgcc_s_dw2-1.dll
+About 2MB total (counting only .dll-s).
+
 How to run tests in node/webassembly:
 $ mkdir build
 $ cd build
