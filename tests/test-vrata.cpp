@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "date/date.h"
+#include "date-fixed.h"
 #include "vrata.h"
 
 using namespace date;

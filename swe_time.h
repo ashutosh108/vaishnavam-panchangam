@@ -3,7 +3,7 @@
 
 #include <ostream>
 
-#include "date/date.h"
+#include "date-fixed.h"
 
 class Swe_Time
 {

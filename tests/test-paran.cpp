@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "date/date.h"
+#include "date-fixed.h"
 #include "paran.h"
 
 using namespace date;

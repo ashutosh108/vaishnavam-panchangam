@@ -1,4 +1,5 @@
-﻿[ ] encapsulate tzdata (so we can run bare executable, wihout any tzdata files at all)
+﻿[ ] expect ./tzdata dir to be in the executable's directory, copy tzdata dir during build (add_custom_command, -E copy_if_different, $<TARGET_FILE_DIR:MyExe>)
+[ ] encapsulate tzdata (so we can run bare executable, wihout any tzdata files at all)
 [ ] encapsulate swe's ephemeris database (so we can run with higher precision while having no data files at hand)
 [ ] check all tests for 2019-March-1,2
 [ ] atirikta ekadashi

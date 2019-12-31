@@ -6,7 +6,7 @@
 #include "catch.hpp"
 
 #include "calc.h"
-#include "date/date.h"
+#include "date-fixed.h"
 #include "paran.h"
 #include "swe.h"
 #include "swe_time.h"

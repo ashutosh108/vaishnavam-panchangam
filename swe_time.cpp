@@ -1,12 +1,8 @@
 #include <cmath>
 #include <iomanip>
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshadow"
-#include "date/tz.h"
-#pragma GCC diagnostic pop
+#include "tz-fixed.h"
 
-#include "date/date.h"
 #include "swe_time.h"
 #include <swephexp.h>
 
@@ -92,10 +88,12 @@ std::ostream &operator<<(std::ostream &os, Swe_Zoned_Time const &t) {
     int seconds_int = static_cast<int>(seconds);
     int microseconds = static_cast<int>((seconds-seconds_int)*1'000'000);
     date::local_days l{t.t.as_date()};
-    auto utc = make_zoned("UTC",
+    auto utc_timezone = locate_zone("UTC");
+    auto utc = make_zoned(utc_timezone,
                           l + std::chrono::hours{hours} + std::chrono::minutes{minutes} +
                           std::chrono::seconds{seconds_int} + std::chrono::microseconds{microseconds});
-    auto z = make_zoned(t.timezone_name, utc);
+    auto timezone = locate_zone(t.timezone_name);
+    auto z = make_zoned(timezone, utc);
     return os << z;
 }
 

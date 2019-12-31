@@ -2,12 +2,9 @@
 
 #include <sstream>
 
-#include "date/date.h"
+#include "disable-warning.h"
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshadow"
-#include "date/tz.h"
-#pragma GCC diagnostic pop
+#include "tz-fixed.h"
 
 #include "swe_time.h"
 

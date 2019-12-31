@@ -4,7 +4,7 @@
 #include <optional>
 
 #include "location.h"
-#include "date/date.h"
+#include "date-fixed.h"
 #include "swe.h"
 #include "swe_time.h"
 #include "tithi.h"
