@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(ekadashi-calculator VERSION 0.1 LANGUAGES C CXX)
 
 add_executable(${PROJECT_NAME} main.cpp)
+target_sources(${PROJECT_NAME} PRIVATE NOTES.txt)
 target_link_libraries(ekadashi-calculator PRIVATE swe)
 
 add_library(swe STATIC
@@ -76,11 +77,11 @@ add_executable(qwe qwe.cpp)
 target_link_libraries(qwe PRIVATE date::tz)
 
 if(MSVC)
-    set(WARN_FLAGS ${WARN_FLAGS} /permissive- /W4
-        /WX
+    set(WARN_FLAGS_NO_WX ${WARN_FLAGS} /permissive- /W4
         /w14242 /w14254 /w14263 /w14265 /w14287 /we4289 /w14296 /w14311
         /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826
         /w14905 /w14906 /w14928)
+    set(WARN_FLAGS ${WARN_FLAGS_NO_WX} /WX)
 else()
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         # GCC >= 4.3
@@ -134,7 +135,18 @@ else()
             -Wconversion
             -Wformat=2)
     endif()
+    SET(WARN_FLAGS_NO_WX ${WARN_FLAGS})
 endif()
-target_compile_options(test-main PRIVATE ${WARN_FLAGS})
+
+# [1910..1919] is VS2017. Avoid /WX for catch2 because catch2
+# emits "no '4800' warning" warnings in MSVC2017 and the maintainer refuses to fix that.
+# Reference: https://github.com/catchorg/Catch2/issues/1787
+# For other MSVC versions it's OK to keep the /WX flag.
+if (MSVC AND (MSVC_VERSION GREATER 1909) AND (MSVC_VERSION LESS 1920))
+    target_compile_options(test-main PRIVATE ${WARN_FLAGS_NO_WX})
+else()
+    target_compile_options(test-main PRIVATE ${WARN_FLAGS})
+endif()
+
 target_compile_options(ekadashi-calculator PRIVATE ${WARN_FLAGS})
 target_compile_options(qwe PRIVATE ${WARN_FLAGS})
