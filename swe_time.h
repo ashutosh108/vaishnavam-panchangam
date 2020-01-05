@@ -14,9 +14,6 @@ public:
     explicit Swe_Time(date::year_month_day d) : Swe_Time(d.year(), d.month(), d.day()) {}
 
     double as_julian_days() const { return jd_; }
-    date::year year() const;
-    date::month month() const;
-    date::day day() const;
     double hours() const;
     bool operator==(Swe_Time const &to) const;
     date::year_month_day as_date() const;

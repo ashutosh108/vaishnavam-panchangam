@@ -29,21 +29,6 @@ Swe_Time::Swe_Time(date::year year, date::month month, date::day day, int hours,
     : Swe_Time(year, month, day, hours+minutes/60.0+seconds/3600.0) {
 }
 
-date::year Swe_Time::year() const
-{
-    return year_;
-}
-
-date::month Swe_Time::month() const
-{
-    return month_;
-}
-
-date::day Swe_Time::day() const
-{
-    return day_;
-}
-
 double Swe_Time::hours() const
 {
     return hours_;

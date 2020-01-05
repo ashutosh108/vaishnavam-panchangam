@@ -17,9 +17,7 @@ TEST_CASE("get sunrise") {
     Location c{50.45, 30.523333};
     auto sunrise = swe::Swe{c}.get_sunrise(Swe_Time{2019_y, March, 10_d});
     REQUIRE(sunrise.has_value());
-    REQUIRE(sunrise->year() == 2019_y);
-    REQUIRE(sunrise->month() == March);
-    REQUIRE(sunrise->day() == 10_d);
+    REQUIRE(sunrise->as_date() == 2019_y/March/10);
     REQUIRE(sunrise->hours() == Approx(4.4816697389));
 }
 
