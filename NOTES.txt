@@ -1,4 +1,17 @@
-﻿[ ] expect ./tzdata dir to be in the executable's directory, copy tzdata dir during build (add_custom_command, -E copy_if_different, $<TARGET_FILE_DIR:MyExe>)
+﻿[+] ensure that sweph repo actually corresponds to 2.07.01 (bar Perl archives)
+[+] tag sweph repo as v2.07.01 (or otherwise accordingly)
+[ ] reimplement Swe_Time as std::chrono's timepoint type based on double days
+[ ] introduce exceptions in calculations: cant_find_sunrise, cant_find_tithi (any other?)
+[ ] remove the usage of std::optional from Swe_Time users
+[ ] add Approx_Swe_Time for approximate comparisons
+[ ] fix vrata tests to accept time within 5 seconds range to pass (otherwise half-seconds differences on upgrade to sweph 2.08 break some tests)
+    "Ekadashi 2019-02-28"/riga
+    "Ekadashi 2019-03-17"/frederikton
+    "get_next_tithi_start"
+[ ] upgrade sweph to 2.08, tag it
+[ ] replace thread amx-execution-time tricks with limiting the max number of loops and throwing (in debug builds only?)
+[ ] fix date/tz for webassembly build
+[ ] expect ./tzdata dir to be in the executable's directory, copy tzdata dir during build (add_custom_command, -E copy_if_different, $<TARGET_FILE_DIR:MyExe>)
 [ ] encapsulate tzdata (so we can run bare executable, wihout any tzdata files at all)
 [ ] encapsulate swe's ephemeris database (so we can run with higher precision while having no data files at hand)
 [ ] check all tests for 2019-March-1,2
@@ -18,52 +31,6 @@ $ cd build
 $ emcmake cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-s ASSERTIONS=1 -s DEMANGLE_SUPPORT=1 -D HAS_THREADS=0 -s DISABLE_EXCEPTION_CATCHING=0" ..
 $ cmake --build .
 $ node test-main.js
-
-v pre-alpha MVP: 
-        command line utility:
-                input:
-                        none
-                output:
-                        next sunrise for current time and fixed coordinates
-
-v refactor:
-        Sweph_Time class
-                explicit constructor from double
-                explicit constructor from Y, m, d, h
-                cout
-
-
-v alpha MVP: 
-        command line utility:
-                input:
-                        base time point
-                        coordinates
-                output:
-                        next sunrise
-
-
-v get_sun_longitude()
-v get_moon_longitude()
-v get_tithi()
-
-v find_next_ekadashi_sunrise(after)
-v       - for both Sukla-paksha and Krishna-paksha
-v       - purva-viddha Ekadashi
-v       - 2019-03-17/18 for Petropavlovsk-Kamchatskiy etc
-v       - Calc::get_next_tithi_start(Tithi)
-v       - paran: return standard interval (sunrise+day*1/5)
-v       - paran: detect dvadashi start
-v       - 2019-03-17/18 paran_before:
-v               GMT-3 (-4 DST)   Канада  Фредериктон     <8:13
-v               GMT-4 (-5 DST)           Торонто         <7:13   
-v               GMT-4 (-5 DST)   США     Майами          <7:13
-v       - add paran type: Standard, Until_Trayodashi, From_Quarter_Dvadashi
-v       - find good test case for "paran not before the first quarter of Dvadashi"
-v       - implement "paran not before the first quarter of Dvadashi", test for Kiev 2019-06-26/27
-v       - remove duplicate "ekaterinburg" from default locations list.
-v        - resolve the "bug of -1st year ekadashi" for 2019-08-20:
-v            udupi, gokarna, newdelhi, manali, kalkuta, perm, ufa, surgut, chelyabinsk, ekaterinburg, bishkek, almaata, tekeli, omsk, kirov
-v        - kshaya ekadashi: find good example [it was e.g. Udupi after 2019-11-20]
 
   MVP:
         command line utility:

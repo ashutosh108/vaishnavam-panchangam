@@ -25,7 +25,7 @@ std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after) cons
     double trise;
     char serr[AS_MAXCH];
     int32 flags = detail::ephemeris_flags;
-    int res_flag = swe_rise_trans(after.as_julian_days(),
+    int res_flag = swe_rise_trans(after.as_julian_days().count(),
                                   SE_SUN,
                                   nullptr,
                                   flags,
@@ -41,7 +41,7 @@ std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after) cons
     if (res_flag == -2) {
         return std::nullopt;
     } else {
-        return Swe_Time{trise};
+        return Swe_Time{double_days{trise}};
     }
 }
 
@@ -81,21 +81,21 @@ void Swe::do_calc_ut(double jd, int planet, int flags, double *res) const {
     int32 res_flags = swe_calc_ut(jd, planet, flags, res, serr);
     if (res_flags == flags) {
         return;
-    };
+    }
     throw_on_wrong_flags(res_flags, flags, serr);
 }
 
 double Swe::get_sun_longitude(Swe_Time time) const
 {
     double res[6];
-    do_calc_ut(time.as_julian_days(), SE_SUN, detail::ephemeris_flags, res);
+    do_calc_ut(time.as_julian_days().count(), SE_SUN, detail::ephemeris_flags, res);
     return res[0];
 }
 
 double Swe::get_moon_longitude(Swe_Time time) const
 {
     double res[6];
-    do_calc_ut(time.as_julian_days(), SE_MOON, detail::ephemeris_flags, res);
+    do_calc_ut(time.as_julian_days().count(), SE_MOON, detail::ephemeris_flags, res);
     return res[0];
 }
 

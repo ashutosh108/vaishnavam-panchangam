@@ -13,7 +13,7 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _coord):vrata(_vrata), coord(_
         }
         // -1.0 to ensure we actually select start time before Ekadashi.
         // Not 100% sure it's enought, but it's working for all test cases so far.
-        ekadashi_start = calc.get_next_tithi_start(local_midnight-1.0, Tithi{Tithi::Ekadashi});
+        ekadashi_start = calc.get_next_tithi_start(local_midnight-double_days{1.0}, Tithi{Tithi::Ekadashi});
         if (ekadashi_start) {
             dvadashi_start = calc.get_next_tithi_start(*ekadashi_start, Tithi{Tithi::Dvadashi});
             if (dvadashi_start) {
@@ -25,7 +25,7 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _coord):vrata(_vrata), coord(_
 }
 
 Swe_Time Vrata_Detail::get_approx_local_midnight() const {
-    double adjustment = coord.longitude * (1.0/360.0);
+    double_days adjustment{coord.longitude * (1.0/360.0)};
     return Swe_Time{Swe_Time{vrata.date} - adjustment};
 }
 

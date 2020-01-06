@@ -284,7 +284,7 @@ auto get_next_tithi_wrapper(Location coord, Swe_Time from, Tithi tithi) {
 }
 
 TEST_CASE("get_next_tithi_start breaks out from eternal loop") {
-    Swe_Time from{2019_y, April, 29_d, 2.0411111153662205};
+    Swe_Time from{2019_y, April, 29_d, double_hours{2.0411111153662205}};
     Tithi tithi{Tithi::Ekadashi};
     auto actual = get_next_tithi_wrapper(london_coord, from, tithi);
     REQUIRE(actual.has_value());
@@ -298,7 +298,7 @@ TEST_CASE("get_next_tithi() returns Shukla Ekadashi after Shukla something tithi
     REQUIRE(actual_time.has_value());
     auto actual_tithi = calc.swe.get_tithi(*actual_time);
     REQUIRE(actual_tithi.tithi == Approx(Tithi{Tithi::Ekadashi}.tithi));
-    REQUIRE((*actual_time - from) <= 14);
+    REQUIRE((*actual_time - from) <= double_days{14});
 }
 
 TEST_CASE("get_next_tithi() returns Krishna Ekadashi after Krishna something tithi") {
@@ -309,7 +309,7 @@ TEST_CASE("get_next_tithi() returns Krishna Ekadashi after Krishna something tit
     REQUIRE(actual_time.has_value());
     auto actual_tithi = calc.swe.get_tithi(*actual_time);
     REQUIRE(actual_tithi.tithi-15.0 == Approx(Tithi{Tithi::Ekadashi}.tithi));
-    REQUIRE((*actual_time - from) <= 14);
+    REQUIRE((*actual_time - from) <= double_days{14});
 }
 
 TEST_CASE("get_next_tithi() gives closest Ekadashi tithi for petropavlovsk after 2019-03-15") {
@@ -320,7 +320,7 @@ TEST_CASE("get_next_tithi() gives closest Ekadashi tithi for petropavlovsk after
     REQUIRE(actual_time.has_value());
     auto actual_tithi = calc.swe.get_tithi(*actual_time);
     REQUIRE(actual_tithi.tithi == Approx(Tithi{Tithi::Ekadashi}.tithi));
-    REQUIRE((*actual_time - from) <= 14);
+    REQUIRE((*actual_time - from) <= double_days{14});
 }
 
 TEST_CASE("paran not earlier than quarter of Dvadashi tithi") {
@@ -331,8 +331,8 @@ TEST_CASE("paran not earlier than quarter of Dvadashi tithi") {
     REQUIRE(vrata->paran.type == Paran::Type::From_Quarter_Dvadashi);
     REQUIRE(vrata->paran.paran_start.has_value());
     Swe_Time paran_start = vrata->paran.paran_start.value();
-    Swe_Time paran_start_not_before{2019_y, August, 27_d, 5.0};
-    Swe_Time paran_start_not_after{2019_y, August, 27_d, 5.2};
+    Swe_Time paran_start_not_before{2019_y, August, 27_d, double_hours{5.0}};
+    Swe_Time paran_start_not_after{2019_y, August, 27_d, double_hours{5.2}};
     REQUIRE(paran_start > paran_start_not_before);
     REQUIRE(paran_start < paran_start_not_after);
 }

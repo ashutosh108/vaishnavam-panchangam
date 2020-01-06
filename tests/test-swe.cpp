@@ -18,7 +18,7 @@ TEST_CASE("get sunrise") {
     auto sunrise = swe::Swe{c}.get_sunrise(Swe_Time{2019_y, March, 10_d});
     REQUIRE(sunrise.has_value());
     REQUIRE(sunrise->as_date() == 2019_y/March/10);
-    REQUIRE(sunrise->hours() == Approx(4.4816697389));
+    REQUIRE(sunrise->hours().count() == Approx(4.4816697389));
 }
 
 TEST_CASE("get_sunset") {
@@ -39,7 +39,7 @@ TEST_CASE("get moon longitude") {
 }
 
 TEST_CASE("get tithi") {
-    Swe_Time t2{2019_y, March, 21_d, 1.716666}; // around 1:43am (UTC time), peak of purnima
+    Swe_Time t2{2019_y, March, 21_d, double_hours{1.716666}}; // around 1:43am (UTC time), peak of purnima
     auto tithi = swe::Swe{arbitrary_coord}.get_tithi(t2);
     REQUIRE(tithi.tithi == Approx(15.0001492371));
 }

@@ -19,14 +19,13 @@ std::optional<Swe_Time> Calc::find_next_ekadashi_sunrise(Swe_Time after) const
         if (tithi.is_ekadashi() || tithi.is_dvadashi()) {
             return sunrise;
         }
-        sunrise = Swe_Time{sunrise->as_julian_days()+0.1};
-        if (!sunrise) break;
+        *sunrise += double_days{0.1};
     }
     return {};
 }
 
 Swe_Time Calc::proportional_time(Swe_Time const t1, Swe_Time const t2, double const proportion) {
-    double distance = t2.as_julian_days() - t1.as_julian_days();
+    double_days distance = t2.as_julian_days() - t1.as_julian_days();
     return Swe_Time{t1.as_julian_days() + distance * proportion};
 }
 
@@ -38,7 +37,7 @@ date::year_month_day Calc::get_vrata_date(const Swe_Time &sunrise) const
     // This could give wrong date if actual local timezone is quite
     // different from the "natural" timezone. But until we support proper
     // timezone, this should work for most cases.
-    double adjustment_in_days = swe.coord.longitude * (1.0/360);
+    double_days adjustment_in_days{swe.coord.longitude * (1.0/360)};
     Swe_Time local_sunrise{sunrise.as_julian_days()+adjustment_in_days};
     date::year_month_day vrata_date{local_sunrise.as_date()};
     return vrata_date;
@@ -47,7 +46,7 @@ date::year_month_day Calc::get_vrata_date(const Swe_Time &sunrise) const
 Paran Calc::get_paran(Swe_Time const &last_fasting_sunrise) const
 {
     std::optional<Swe_Time> paran_start, paran_end;
-    auto paran_sunrise = swe.get_sunrise(last_fasting_sunrise+0.1);
+    auto paran_sunrise = swe.get_sunrise(last_fasting_sunrise+double_days{0.1});
     if (paran_sunrise) {
         auto paran_sunset = swe.get_sunset(*paran_sunrise);
         paran_start = paran_sunrise;
@@ -58,7 +57,7 @@ Paran Calc::get_paran(Swe_Time const &last_fasting_sunrise) const
 
     Paran::Type type{Paran::Type::Standard};
 
-    auto dvadashi_start = get_next_tithi_start(last_fasting_sunrise-1.0, Tithi{Tithi::Dvadashi});
+    auto dvadashi_start = get_next_tithi_start(last_fasting_sunrise-double_days{1.0}, Tithi{Tithi::Dvadashi});
     if (dvadashi_start) {
         auto dvadashi_end = get_next_tithi_start(*dvadashi_start, Tithi{Tithi::Dvadashi_End});
         if (dvadashi_end) {
@@ -97,14 +96,14 @@ std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
         Vrata_Type type = Vrata_Type::Ekadashi;
         if ((tithi_arunodaya.is_dashami())) {
             // purva-viddha Ekadashi, get next sunrise
-            sunrise = swe.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1});
+            sunrise = swe.get_sunrise(*sunrise + double_days{0.1});
             if (!sunrise) { return {}; }
         } else {
             Tithi tithi_ardha_ghatika_before_arunodaya = swe.get_tithi(ardha_ghatika_before_arunodaya);
             if (tithi_ardha_ghatika_before_arunodaya.is_dashami()) {
                 type = Vrata_Type::Sandigdha_Ekadashi;
                 // Sandigdha (almost purva-viddha Ekadashi), get next sunrise
-                sunrise = swe.get_sunrise(Swe_Time{sunrise->as_julian_days()+0.1});
+                sunrise = swe.get_sunrise(*sunrise + double_days{0.1});
                 if (!sunrise) { return {}; }
             }
         }
@@ -118,7 +117,7 @@ std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
 }
 
 std::optional<Swe_Time> Calc::get_prev_sunset(Swe_Time const sunrise) const {
-    Swe_Time back_24hrs{sunrise.as_julian_days()-1};
+    Swe_Time back_24hrs{sunrise - double_days{1.0}};
     return swe.get_sunset(back_24hrs);
 }
 
@@ -153,14 +152,14 @@ std::optional<Swe_Time> Calc::get_next_tithi_start(Swe_Time const from, Tithi co
         initial_delta_tithi -= 15.0;
     }
 
-    Swe_Time time{from + initial_delta_tithi * average_tithi_length};
+    Swe_Time time{from + double_days{initial_delta_tithi * average_tithi_length}};
     cur_tithi = swe.get_tithi(time);
 
     double prev_abs_delta_tithi = std::numeric_limits<double>::max();
 
     while (cur_tithi != target_tithi) {
         double const delta_tithi = cur_tithi.delta_to_nearest_tithi(target_tithi);
-        time += delta_tithi * average_tithi_length;
+        time += double_days{delta_tithi * average_tithi_length};
         cur_tithi = swe.get_tithi(time);
 
         double const abs_delta_tithi = fabs(delta_tithi);
