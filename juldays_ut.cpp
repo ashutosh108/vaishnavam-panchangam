@@ -11,17 +11,13 @@ JulDays_UT::JulDays_UT(double_days juldays_ut) : juldays_ut_(juldays_ut)
 {
 }
 
-JulDays_UT::JulDays_UT(date::year year, date::month month, date::day day, double_hours hours)
+JulDays_UT::JulDays_UT(date::year_month_day d, double_hours hours)
 {
-    juldays_ut_ = double_days{swe_julday(static_cast<int>(year),
-                                 static_cast<int>(static_cast<unsigned>(month)),
-                                 static_cast<int>(static_cast<unsigned>(day)),
+    juldays_ut_ = double_days{swe_julday(static_cast<int>(d.year()),
+                                 static_cast<int>(static_cast<unsigned>(d.month())),
+                                 static_cast<int>(static_cast<unsigned>(d.day())),
                                  hours.count(),
                                  SE_GREG_CAL)};
-}
-
-JulDays_UT::JulDays_UT(date::year year, date::month month, date::day day, int hours, int minutes, double seconds)
-    : JulDays_UT(year, month, day, double_hours{hours+minutes/60.0+seconds/3600.0}) {
 }
 
 bool JulDays_UT::operator==(const JulDays_UT &to) const

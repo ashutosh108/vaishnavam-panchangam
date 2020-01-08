@@ -1,4 +1,4 @@
-﻿[ ] cleanup JulDays_UT constructors to get rid of type-dangerous int year etc (use std::chrono-related types).
+﻿[ ] rename Swe_Zoned_Time to something like JulDays_Zoned, fix constructors
 [ ] introduce exceptions in calculations: cant_find_sunrise, cant_find_tithi (any other?)
 [ ] remove the usage of std::optional from Swe_Time users
 [ ] add Approx_Swe_Time for approximate comparisons
@@ -51,4 +51,5 @@ done:
 [+] tag sweph repo as v2.07.01 (or otherwise accordingly)
 [+] reimplement Swe_Time as std::chrono's timepoint type based on double days
 [+] move everything to vp namespace (for VaishnavaM Panchangam) [2020-01-08]
-[+] rename Swe_Time to juldays_ut or something
+[+] rename Swe_Time to juldays_ut or something [2020-01-08]
+[+] cleanup JulDays_UT constructors to get rid of type-dangerous int year etc (use std::chrono-related types). [2020-01-09]

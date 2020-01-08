@@ -25,9 +25,7 @@ class JulDays_UT
 {
 public:
     explicit JulDays_UT(double_days juldays_ut);
-    explicit JulDays_UT(date::year year, date::month month, date::day day, double_hours hours=double_hours{});
-    explicit JulDays_UT(date::year year, date::month month, date::day day, int hours, int minutes, double seconds);
-    explicit JulDays_UT(date::year_month_day d) : JulDays_UT(d.year(), d.month(), d.day()) {}
+    explicit JulDays_UT(date::year_month_day d, double_hours hours=double_hours{});
 
     double_days raw_julian_days_ut() const { return juldays_ut_; }
     bool operator==(JulDays_UT const &to) const;
@@ -48,7 +46,7 @@ public:
     JulDays_UT t;
     const char *timezone_name;
     Swe_Zoned_Time(const char *_timezone_name, date::year_month_day d, double_hours hours=double_hours{}) :
-        t(d.year(), d.month(), d.day(), hours),
+        t(d, hours),
         timezone_name(_timezone_name){}
     Swe_Zoned_Time(const char *_timezone_name, JulDays_UT _t) :
         t(_t), timezone_name(_timezone_name) {}

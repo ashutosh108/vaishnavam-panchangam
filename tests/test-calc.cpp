@@ -13,12 +13,13 @@
 
 using namespace date;
 using namespace vp;
+using namespace std::literals::chrono_literals;
 
 TEST_CASE("find_next_ekadashi_sunrise") {
-    JulDays_UT start{2019_y, March, 9_d};
+    JulDays_UT start{2019_y/March/9};
     Location coord{50.45, 30.523333};
     auto sunrise = Calc{coord}.find_next_ekadashi_sunrise(start);
-    JulDays_UT expected{2019_y, March, 17_d, 4, 13, 36.270031};
+    JulDays_UT expected{2019_y/March/17, 4h + 13min + 36.270031s};
     REQUIRE(sunrise.has_value());
     REQUIRE(*sunrise == expected);
 }
@@ -35,9 +36,9 @@ TEST_CASE("Vijaya Ekadashi Kiev 2019") {
 
 TEST_CASE("get_arunodaya") {
     Location kiev{50.45, 30.523333};
-    auto arunodaya = Calc{kiev}.get_arunodaya(JulDays_UT{2019_y, March, 2_d, 4, 45, 58.052015});
+    auto arunodaya = Calc{kiev}.get_arunodaya(JulDays_UT{2019_y/March/2, 4h + 45min + 58.052015s});
     REQUIRE(arunodaya.has_value());
-    REQUIRE(arunodaya->first == JulDays_UT{2019_y, March, 2_d, 3, 0, 17.512880});
+    REQUIRE(arunodaya->first == JulDays_UT{2019_y/March/2, 3h + 0min + 17.512880s});
 }
 
 Vrata vrata(const Calc &c, date::year_month_day base_date) {
@@ -107,7 +108,7 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(v02 == vrata(Calc{odessa_coord}, d));
     REQUIRE(sandigdha_mar02 == vrata(Calc{kolomyya_coord}, d)); // Sandighdha, differs from Naarasimha's calendar
     REQUIRE(v02 == vrata(Calc{kishinev_coord}, d));
-    Paran paran1415{Paran::Type::From_Quarter_Dvadashi, JulDays_UT{2019_y, March, 2_d, 12, 14, 40.513510}};
+    Paran paran1415{Paran::Type::From_Quarter_Dvadashi, JulDays_UT{2019_y/March/2, 12h + 14min + 40.513510s}};
     Vrata v01_paran_after_quarter{Vrata_Type::Ekadashi, 2019_y/March/1, paran1415};
     REQUIRE(v01_paran_after_quarter == vrata(Calc{riga_coord}, d));     // > 14:15
     REQUIRE(v01_paran_after_quarter == vrata(Calc{yurmala_coord}, d));  // > 14:15
@@ -159,7 +160,7 @@ TEST_CASE("Ekadashi 2019-03-17") {
     Expected_Vrata v17_paran_before{
         Vrata_Type::Ekadashi,
         2019_y/March/17,
-        Paran{Paran::Type::Until_Dvadashi_End, std::nullopt, JulDays_UT{2019_y, March, 18_d, 12, 13, 36.459301}}};
+        Paran{Paran::Type::Until_Dvadashi_End, std::nullopt, JulDays_UT{2019_y/March/18, 12h + 13min + 36.459301s}}};
     Vrata sandigdha_18{Vrata_Type::Sandigdha_Ekadashi, 2019_y/March/18};
     REQUIRE(v17 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v17 == vrata(Calc{gokarna_coord}, d));
@@ -238,9 +239,9 @@ TEST_CASE("Ekadashi 2019-03-17") {
 }
 
 TEST_CASE("get_next_tithi_start") {
-    JulDays_UT from{2019_y, March, 17_d};
+    JulDays_UT from{2019_y/March/17};
     Tithi tithi{Tithi::Dvadashi_End};
-    JulDays_UT expected{2019_y, March, 18_d, 12, 13, 36.459301};
+    JulDays_UT expected{2019_y/March/18, 12h + 13min + 36.459301s};
     std::optional<JulDays_UT> actual = Calc{frederikton_coord}.get_next_tithi_start(from, tithi);
     REQUIRE(actual.has_value());
     REQUIRE(*actual == expected);
@@ -285,7 +286,7 @@ auto get_next_tithi_wrapper(Location coord, JulDays_UT from, Tithi tithi) {
 }
 
 TEST_CASE("get_next_tithi_start breaks out from eternal loop") {
-    JulDays_UT from{2019_y, April, 29_d, double_hours{2.0411111153662205}};
+    JulDays_UT from{2019_y/April/29, double_hours{2.0411111153662205}};
     Tithi tithi{Tithi::Ekadashi};
     auto actual = get_next_tithi_wrapper(london_coord, from, tithi);
     REQUIRE(actual.has_value());
@@ -293,7 +294,7 @@ TEST_CASE("get_next_tithi_start breaks out from eternal loop") {
 
 TEST_CASE("get_next_tithi() returns Shukla Ekadashi after Shukla something tithi") {
     Calc const calc{london_coord};
-    JulDays_UT const from{2019_y, May, 12_d};
+    JulDays_UT const from{2019_y/May/12};
     Tithi const tithi{Tithi::Ekadashi};
     auto actual_time = get_next_tithi_wrapper(calc, from, tithi);
     REQUIRE(actual_time.has_value());
@@ -304,7 +305,7 @@ TEST_CASE("get_next_tithi() returns Shukla Ekadashi after Shukla something tithi
 
 TEST_CASE("get_next_tithi() returns Krishna Ekadashi after Krishna something tithi") {
     Calc const calc{london_coord};
-    JulDays_UT const from{2019_y, April, 25_d};
+    JulDays_UT const from{2019_y/April/25};
     Tithi const tithi{Tithi::Ekadashi};
     auto actual_time = get_next_tithi_wrapper(calc, from, tithi);
     REQUIRE(actual_time.has_value());
@@ -315,7 +316,7 @@ TEST_CASE("get_next_tithi() returns Krishna Ekadashi after Krishna something tit
 
 TEST_CASE("get_next_tithi() gives closest Ekadashi tithi for petropavlovsk after 2019-03-15") {
     Calc const calc{petropavlovskkamchatskiy_coord};
-    JulDays_UT const from{2019_y, March, 15_d};
+    JulDays_UT const from{2019_y/March/15};
     Tithi const tithi{Tithi::Ekadashi};
     auto actual_time = get_next_tithi_wrapper(calc, from, tithi);
     REQUIRE(actual_time.has_value());
@@ -332,8 +333,8 @@ TEST_CASE("paran not earlier than quarter of Dvadashi tithi") {
     REQUIRE(vrata->paran.type == Paran::Type::From_Quarter_Dvadashi);
     REQUIRE(vrata->paran.paran_start.has_value());
     JulDays_UT paran_start = vrata->paran.paran_start.value();
-    JulDays_UT paran_start_not_before{2019_y, August, 27_d, double_hours{5.0}};
-    JulDays_UT paran_start_not_after{2019_y, August, 27_d, double_hours{5.2}};
+    JulDays_UT paran_start_not_before{2019_y/August/27, double_hours{5.0}};
+    JulDays_UT paran_start_not_after{2019_y/August/27, double_hours{5.2}};
     REQUIRE(paran_start > paran_start_not_before);
     REQUIRE(paran_start < paran_start_not_after);
 }
