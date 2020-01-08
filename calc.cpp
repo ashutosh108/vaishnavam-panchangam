@@ -27,8 +27,8 @@ std::optional<Swe_Time> Calc::find_next_ekadashi_sunrise(Swe_Time after) const
 }
 
 Swe_Time Calc::proportional_time(Swe_Time const t1, Swe_Time const t2, double const proportion) {
-    double_days distance = t2.as_julian_days() - t1.as_julian_days();
-    return Swe_Time{t1.as_julian_days() + distance * proportion};
+    double_days distance = t2 - t1;
+    return t1 + distance * proportion;
 }
 
 date::year_month_day Calc::get_vrata_date(const Swe_Time &sunrise) const
@@ -40,7 +40,7 @@ date::year_month_day Calc::get_vrata_date(const Swe_Time &sunrise) const
     // different from the "natural" timezone. But until we support proper
     // timezone, this should work for most cases.
     double_days adjustment_in_days{swe.coord.longitude * (1.0/360)};
-    Swe_Time local_sunrise{sunrise.as_julian_days()+adjustment_in_days};
+    Swe_Time local_sunrise = sunrise + adjustment_in_days;
     date::year_month_day vrata_date{local_sunrise.as_date()};
     return vrata_date;
 }
