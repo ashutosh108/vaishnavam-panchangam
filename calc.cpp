@@ -41,7 +41,7 @@ date::year_month_day Calc::get_vrata_date(const JulDays_UT &sunrise) const
     // timezone, this should work for most cases.
     double_days adjustment_in_days{swe.coord.longitude * (1.0/360)};
     JulDays_UT local_sunrise = sunrise + adjustment_in_days;
-    date::year_month_day vrata_date{local_sunrise.as_date()};
+    date::year_month_day vrata_date{local_sunrise.year_month_day()};
     return vrata_date;
 }
 

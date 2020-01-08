@@ -20,7 +20,7 @@ TEST_CASE("get sunrise") {
     Location c{50.45, 30.523333};
     auto sunrise = Swe{c}.get_sunrise(JulDays_UT{2019_y/March/10});
     REQUIRE(sunrise.has_value());
-    REQUIRE(sunrise->as_date() == 2019_y/March/10);
+    REQUIRE(sunrise->year_month_day() == 2019_y/March/10);
     REQUIRE(sunrise->hours().count() == Approx(4.4816697389));
 }
 

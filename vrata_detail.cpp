@@ -35,7 +35,7 @@ JulDays_UT Vrata_Detail::get_approx_local_midnight() const {
 std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
 {
     auto z = [&vd](JulDays_UT t) {
-        return Swe_Zoned_Time{vd.coord.timezone_name, t};
+        return JulDays_Zoned{vd.coord.timezone_name, t};
     };
     s << vd.vrata << ":\n";
     if (vd.arddha_ghatika_before_arunodaya) {

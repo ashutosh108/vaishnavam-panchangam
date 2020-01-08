@@ -1,6 +1,7 @@
 #include "juldays_ut.h"
 
 #include <cmath>
+#include <chrono>
 #include <iomanip>
 #include "swephexp.h"
 #include "tz-fixed.h"
@@ -26,7 +27,7 @@ bool JulDays_UT::operator==(const JulDays_UT &to) const
     return std::fabs(juldays_ut_.count() - to.juldays_ut_.count()) <= epsilon;
 }
 
-date::year_month_day JulDays_UT::as_date() const
+date::year_month_day JulDays_UT::year_month_day() const
 {
     int year, month, day;
     double hours;
@@ -42,17 +43,23 @@ double_hours JulDays_UT::hours() const
     return double_hours{hours};
 }
 
+date::sys_time<double_hours> JulDays_UT::as_sys_time() const
+{
+    int year, month, day;
+    double hours;
+    swe_revjul(juldays_ut_.count(), SE_GREG_CAL, &year, &month, &day, &hours);
+    return date::sys_days{date::year{year}/month/day} + double_hours{hours};
+}
+
 std::ostream &operator<<(std::ostream &os, JulDays_UT const &t) {
-    os << t.as_date() << ' ';
+    os << t.year_month_day() << ' ';
     os << date::hh_mm_ss(t.hours()) << " UTC";
     return os;
 }
 
-std::ostream &operator<<(std::ostream &os, Swe_Zoned_Time const &t) {
-    date::sys_days utc_days{t.t.as_date()};
-    auto utc = utc_days + t.t.hours();
-    auto timezone = date::locate_zone(t.timezone_name);
-    auto z = date::make_zoned(timezone, utc);
+std::ostream &operator<<(std::ostream &os, JulDays_Zoned const &t) {
+    auto timezone = date::locate_zone(t.timezone_name_);
+    auto z = date::make_zoned(timezone, t.t_.as_sys_time());
     return os << z;
 }
 

@@ -110,6 +110,6 @@ TEST_CASE("Can substract JulDays_UT from JulDays_UT") {
 
 TEST_CASE("Pretty-print zoned time") {
     std::stringstream s;
-    s << Swe_Zoned_Time{"Europe/Kiev", 2019_y/March/10, double_hours{4.5}};
+    s << JulDays_Zoned{"Europe/Kiev", JulDays_UT{2019_y/March/10, double_hours{4.5}}};
     REQUIRE(s.str() == "2019-03-10 06:30:00.000000 EET");
 }

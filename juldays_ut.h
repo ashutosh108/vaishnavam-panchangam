@@ -10,9 +10,8 @@ namespace vp {
 
 using double_hours = std::chrono::duration<double, std::ratio<3600>>;
 using double_days = std::chrono::duration<double, std::ratio<86400>>;
-using double_utc = date::utc_time<double_hours>;
 
-class Swe_Zoned_Time;
+class JulDays_Zoned;
 
 /* Wrapper class for jd (julian days) as it is understood in the swiss ephemeris library.
  * Very compact class: only one double in size, no virtual functions.
@@ -29,31 +28,27 @@ public:
 
     double_days raw_julian_days_ut() const { return juldays_ut_; }
     bool operator==(JulDays_UT const &to) const;
-    date::year_month_day as_date() const;
+    date::year_month_day year_month_day() const;
     double_hours hours() const;
+    date::sys_time<double_hours> as_sys_time() const;
     JulDays_UT operator +=(double_days);
     JulDays_UT operator -=(double_days);
     bool operator <(JulDays_UT const &other) const;
     bool operator >(JulDays_UT const &other) const;
 private:
     double_days juldays_ut_;
-    friend std::ostream &operator<<(std::ostream &os, JulDays_UT const &t);
-    friend std::ostream &operator<<(std::ostream &os, Swe_Zoned_Time const &t);
 };
 
-class Swe_Zoned_Time {
+class JulDays_Zoned {
 public:
-    JulDays_UT t;
-    const char *timezone_name;
-    Swe_Zoned_Time(const char *_timezone_name, date::year_month_day d, double_hours hours=double_hours{}) :
-        t(d, hours),
-        timezone_name(_timezone_name){}
-    Swe_Zoned_Time(const char *_timezone_name, JulDays_UT _t) :
-        t(_t), timezone_name(_timezone_name) {}
+    JulDays_UT t_;
+    const char *timezone_name_;
+    JulDays_Zoned(const char *timezone_name, JulDays_UT t) :
+        t_(t), timezone_name_(timezone_name) {}
 };
 
 std::ostream &operator<<(std::ostream &os, JulDays_UT const &t);
-std::ostream &operator<<(std::ostream &os, Swe_Zoned_Time const &t);
+std::ostream &operator<<(std::ostream &os, JulDays_Zoned const &t);
 JulDays_UT operator +(const JulDays_UT &, double_days);
 JulDays_UT operator -(const JulDays_UT &, double_days);
 
