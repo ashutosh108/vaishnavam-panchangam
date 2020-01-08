@@ -1,6 +1,8 @@
+#include "location.h"
+
 #include "catch.hpp"
 
-#include "location.h"
+using namespace vp;
 
 TEST_CASE("Location") {
     REQUIRE(Location{123, 45}.latitude == 123.0);

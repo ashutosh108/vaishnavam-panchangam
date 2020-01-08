@@ -1,9 +1,11 @@
+#include "tithi.h"
+
 #include <cassert>
 #include <cmath>
 #include <ostream>
 #include <sstream>
 
-#include "tithi.h"
+namespace vp {
 
 std::ostream &operator <<(std::ostream &o, Tithi const & t) {
     assert(t.tithi >= 0 && t.tithi < 30);
@@ -144,3 +146,5 @@ Tithi operator -(const Tithi &t, double delta)
 {
     return Tithi{t.tithi - delta};
 }
+
+} // namespace vp

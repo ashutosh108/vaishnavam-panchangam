@@ -1,6 +1,4 @@
-﻿[+] ensure that sweph repo actually corresponds to 2.07.01 (bar Perl archives)
-[+] tag sweph repo as v2.07.01 (or otherwise accordingly)
-[ ] reimplement Swe_Time as std::chrono's timepoint type based on double days
+﻿[ ] rename Swe_Time to juldays_ut or something
 [ ] introduce exceptions in calculations: cant_find_sunrise, cant_find_tithi (any other?)
 [ ] remove the usage of std::optional from Swe_Time users
 [ ] add Approx_Swe_Time for approximate comparisons
@@ -47,3 +45,9 @@ $ node test-main.js
                                         atirikta Dvadashi
                                         suddha Dvadashi (?)
                                 - paran time interval
+
+done:
+[+] ensure that sweph repo actually corresponds to 2.07.01 (bar Perl archives)
+[+] tag sweph repo as v2.07.01 (or otherwise accordingly)
+[+] reimplement Swe_Time as std::chrono's timepoint type based on double days
+[+] move everything to vp namespace (for VaishnavaM Panchangam) [2020-01-08]

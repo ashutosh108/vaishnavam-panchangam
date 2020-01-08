@@ -7,7 +7,7 @@
 #include "swe_time.h"
 #include "tithi.h"
 
-namespace swe {
+namespace vp {
 
 class Swe
 {
@@ -33,6 +33,6 @@ private:
     std::optional<Swe_Time> do_rise_trans(int rise_or_set, Swe_Time after) const;
 };
 
-} // namespace swe
+} // namespace vp
 
 #endif // SWE_H

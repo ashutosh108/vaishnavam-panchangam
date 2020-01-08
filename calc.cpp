@@ -8,6 +8,8 @@
 #include "calc.h"
 #include "swe.h"
 
+namespace vp {
+
 Calc::Calc(Location coord):swe{coord} {}
 
 std::optional<Swe_Time> Calc::find_next_ekadashi_sunrise(Swe_Time after) const
@@ -171,3 +173,5 @@ std::optional<Swe_Time> Calc::get_next_tithi_start(Swe_Time const from, Tithi co
     }
     return time;
 }
+
+} // namespace vp

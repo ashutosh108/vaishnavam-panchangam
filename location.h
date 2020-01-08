@@ -1,6 +1,7 @@
 #ifndef LOCATION_H
 #define LOCATION_H
 
+namespace vp {
 
 struct Location
 {
@@ -124,5 +125,7 @@ struct Location
 [[maybe_unused]] constexpr Location marsel_coord{43, 17, 47, 5, 22, 12, "Europe/Paris"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location madrid_coord{40, 24, 0, -3, -41, -0, "Europe/Madrid"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location miami_coord{25, 47, 0, -80, -13, -0, "America/New_York"}; // ru Wikipedia
+
+} // namespace vp
 
 #endif // LOCATION_H

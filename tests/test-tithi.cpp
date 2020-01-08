@@ -1,8 +1,9 @@
-#include <sstream>
+#include "tithi.h"
 
 #include "catch.hpp"
+#include <sstream>
 
-#include "tithi.h"
+using namespace vp;
 
 TEST_CASE("Paksha") {
     REQUIRE(Tithi{11.3}.get_paksha() == Paksha::Shukla);

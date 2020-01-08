@@ -3,6 +3,8 @@
 
 #include <ostream>
 
+namespace vp {
+
 enum class Paksha {
     Shukla,
     Krishna
@@ -39,5 +41,7 @@ std::ostream &operator <<(std::ostream &o, Tithi const & t);
 double operator -(Tithi const &, Tithi const &);
 Tithi operator +(Tithi const &, double);
 Tithi operator -(Tithi const &, double);
+
+} // namespace vp
 
 #endif // TITHI_H

@@ -1,11 +1,11 @@
-#include "catch.hpp"
-
-#include <sstream>
-
-#include "date-fixed.h"
 #include "vrata.h"
 
+#include "catch.hpp"
+#include "date-fixed.h"
+#include <sstream>
+
 using namespace date;
+using namespace vp;
 
 TEST_CASE("Can compare Vrata") {
     Vrata v1{2019_y/March/19};

@@ -1,13 +1,15 @@
 #ifndef VRATA_H
 #define VRATA_H
 
-#include <optional>
-#include <ostream>
-
 #include "date-fixed.h"
 #include "paran.h"
 #include "swe_time.h"
 #include "tithi.h"
+
+#include <optional>
+#include <ostream>
+
+namespace vp {
 
 enum class Vrata_Type {
     Ekadashi,
@@ -35,5 +37,7 @@ struct Vrata {
 bool operator==(Vrata const &, Vrata const &);
 bool operator!=(Vrata const &, Vrata const &);
 std::ostream &operator<<(std::ostream &o, Vrata const &v);
+
+} // namespace vp
 
 #endif // VRATA_H

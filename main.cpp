@@ -16,6 +16,8 @@
 #include "swe_time.h"
 #include "vrata_detail.h"
 
+using namespace vp;
+
 void print_usage() {
     std::cout << "USAGE:\n";
     std::cout << "ekadashi-calculator YYYY-MM-DD latitude longitude\n";

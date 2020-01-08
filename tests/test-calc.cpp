@@ -1,17 +1,18 @@
-#include <chrono>
-#include <condition_variable>
-#include <sstream>
-#include <thread>
-
-#include "catch.hpp"
-
 #include "calc.h"
-#include "date-fixed.h"
+
 #include "paran.h"
 #include "swe.h"
 #include "swe_time.h"
 
+#include "catch.hpp"
+#include <chrono>
+#include <condition_variable>
+#include "date-fixed.h"
+#include <sstream>
+#include <thread>
+
 using namespace date;
+using namespace vp;
 
 TEST_CASE("find_next_ekadashi_sunrise") {
     Swe_Time start{2019_y, March, 9_d};
@@ -27,7 +28,7 @@ TEST_CASE("Vijaya Ekadashi Kiev 2019") {
     Location kiev{50.45, 30.523333};
     auto vrata = Calc{kiev}.find_next_vrata(base_date);
     REQUIRE(vrata.has_value());
-    REQUIRE(swe::Swe{kiev}.get_tithi(Swe_Time{vrata->date}).get_paksha() == Paksha::Krishna);
+    REQUIRE(vp::Swe{kiev}.get_tithi(Swe_Time{vrata->date}).get_paksha() == Paksha::Krishna);
     REQUIRE(vrata->type == Vrata_Type::Ekadashi);
     REQUIRE(vrata->date == 2019_y/March/2);
 }

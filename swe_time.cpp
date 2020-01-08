@@ -1,10 +1,11 @@
+#include "swe_time.h"
+
 #include <cmath>
 #include <iomanip>
-
+#include "swephexp.h"
 #include "tz-fixed.h"
 
-#include "swe_time.h"
-#include <swephexp.h>
+namespace vp {
 
 Swe_Time::Swe_Time(double_days jd) : jd_(jd)
 {
@@ -95,3 +96,5 @@ double_days operator -(const Swe_Time &t1, const Swe_Time &t2)
 {
     return t1.as_julian_days() - t2.as_julian_days();
 }
+
+} // namespace vp

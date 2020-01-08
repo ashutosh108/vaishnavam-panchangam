@@ -3,6 +3,8 @@
 
 #include "calc.h"
 
+namespace vp {
+
 struct Vrata_Detail {
     Vrata vrata;
     Location coord;
@@ -19,5 +21,7 @@ struct Vrata_Detail {
 };
 
 std::ostream &operator<<(std::ostream &s, Vrata_Detail const &vd);
+
+} // namespace vp
 
 #endif // VRATA_DETAIL_H

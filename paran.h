@@ -1,11 +1,13 @@
 #ifndef PARAN_H
 #define PARAN_H
 
+#include "swe_time.h"
+
 #include <optional>
 #include <ostream>
 #include <tuple>
 
-#include "swe_time.h"
+namespace vp {
 
 class Paran
 {
@@ -31,5 +33,6 @@ public:
 std::ostream & operator<<(std::ostream &o, Paran const &p);
 std::ostream & operator<<(std::ostream &o, Paran::Type const &t);
 
+} // namespace vp
 
 #endif // PARAN_H

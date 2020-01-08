@@ -1,14 +1,16 @@
 #ifndef CALC_H
 #define CALC_H
 
-#include <optional>
-
 #include "location.h"
 #include "date-fixed.h"
 #include "swe.h"
 #include "swe_time.h"
 #include "tithi.h"
 #include "vrata.h"
+
+#include <optional>
+
+namespace vp {
 
 class Calc
 {
@@ -30,12 +32,14 @@ public:
 
     static Swe_Time proportional_time(Swe_Time const t1, Swe_Time const t2, double const proportion);
 
-    swe::Swe swe;
+    vp::Swe swe;
 
 private:
     std::optional<Swe_Time> get_prev_sunset(Swe_Time const sunrise) const;
     date::year_month_day get_vrata_date(const Swe_Time &sunrise) const;
     Paran get_paran(Swe_Time const &last_fasting_sunrise) const;
 };
+
+} // namespace vp
 
 #endif // CALC_H

@@ -1,10 +1,12 @@
 #ifndef SWE_TIME_H
 #define SWE_TIME_H
 
-#include <ostream>
-
 #include "date-fixed.h"
 #include "tz-fixed.h"
+
+#include <ostream>
+
+namespace vp {
 
 using double_hours = std::chrono::duration<double, std::ratio<3600>>;
 using double_days = std::chrono::duration<double, std::ratio<86400>>;
@@ -52,5 +54,7 @@ Swe_Time operator -(const Swe_Time &, double_days);
 
 // returns number of days between two Swe_Time-s (like as_julian_days())
 double_days operator -(const Swe_Time &, const Swe_Time &);
+
+} // namespace vp
 
 #endif // SWE_TIME_H

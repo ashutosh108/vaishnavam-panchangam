@@ -1,13 +1,14 @@
-#include "catch.hpp"
-
-#include <sstream>
-
 #include "date-fixed.h"
 #include "location.h"
 #include "vrata.h"
 #include "vrata_detail.h"
 
+#include "catch.hpp"
+#include <sstream>
+
+
 using namespace date;
+using namespace vp;
 
 TEST_CASE("Print result is not empty") {
     std::stringstream s;

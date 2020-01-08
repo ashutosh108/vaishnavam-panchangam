@@ -1,11 +1,11 @@
-#include "catch.hpp"
-
-#include <sstream>
-
-#include "date-fixed.h"
 #include "paran.h"
 
+#include "catch.hpp"
+#include "date-fixed.h"
+#include <sstream>
+
 using namespace date;
+using namespace vp;
 
 TEST_CASE("Can create with default constructor") {
     [[maybe_unused]] Paran p{};

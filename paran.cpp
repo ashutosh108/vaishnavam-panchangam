@@ -1,5 +1,7 @@
 #include "paran.h"
 
+namespace vp {
+
 std::ostream &Paran::operator<<(std::ostream &o) const
 {
     o << type;
@@ -32,3 +34,5 @@ std::ostream &operator<<(std::ostream &s, const Paran::Type &t)
     }
     return s;
 }
+
+} // namespace vp

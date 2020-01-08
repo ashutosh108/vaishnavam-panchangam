@@ -1,13 +1,13 @@
+#include "swe.h"
+
+#include "location.h"
+
 #include <exception>
 #include <optional>
 #include <sstream>
-
 #include "swephexp.h"
 
-#include "location.h"
-#include "swe.h"
-
-namespace swe {
+namespace vp {
 
 namespace detail {
 constexpr int32 ephemeris_flags = SEFLG_MOSEPH;

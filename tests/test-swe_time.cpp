@@ -1,14 +1,11 @@
-#include "catch.hpp"
-
-#include <sstream>
-
-#include "disable-warning.h"
-
-#include "tz-fixed.h"
-
 #include "swe_time.h"
 
+#include "catch.hpp"
+#include <sstream>
+#include "tz-fixed.h"
+
 using namespace date;
+using namespace vp;
 
 TEST_CASE( "Can create Swe_Time from double_days" ) {
     const double_days arbitrary_double_days{124.0};

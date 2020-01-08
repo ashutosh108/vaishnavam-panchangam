@@ -1,5 +1,7 @@
 #include "vrata.h"
 
+namespace vp {
+
 bool operator==(const Vrata &v1, const Vrata &v2)
 {
     // non-symmetrical compare for more elegant tests:
@@ -40,3 +42,5 @@ std::ostream &operator<<(std::ostream &o, const Vrata_Type &v)
     }
     return o;
 }
+
+} // namespace vp
