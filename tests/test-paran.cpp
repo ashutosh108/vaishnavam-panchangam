@@ -12,7 +12,7 @@ TEST_CASE("Can create with default constructor") {
 }
 
 TEST_CASE("Can create paran of \"before\" type") {
-    Swe_Time arbitrary_time{2019_y, March, 19_d, 11, 3, 0};
+    JulDays_UT arbitrary_time{2019_y, March, 19_d, 11, 3, 0};
     Paran p{Paran::Type::Standard, std::nullopt, arbitrary_time};
 }
 
@@ -22,13 +22,13 @@ TEST_CASE("Default-constructed parans are equal") {
 }
 
 TEST_CASE("Default-constructed and \"before\" parans are not equal") {
-    Swe_Time arbitrary_time{2019_y, March, 19_d, 11, 3, 0};
+    JulDays_UT arbitrary_time{2019_y, March, 19_d, 11, 3, 0};
     REQUIRE(Paran{} != Paran{Paran::Type::Standard, std::nullopt, arbitrary_time});
 }
 
 TEST_CASE("\"before\" parans with different times are not equal") {
-    Swe_Time arbitrary_time1{2019_y, March, 19_d, 11, 3, 0};
-    Swe_Time arbitrary_time2{2019_y, March, 19_d, 11, 15, 0};
+    JulDays_UT arbitrary_time1{2019_y, March, 19_d, 11, 3, 0};
+    JulDays_UT arbitrary_time2{2019_y, March, 19_d, 11, 15, 0};
     Paran p1{Paran::Type::Standard, std::nullopt, arbitrary_time1};
     Paran p2{Paran::Type::Standard, std::nullopt, arbitrary_time2};
     REQUIRE(p1 != p2);

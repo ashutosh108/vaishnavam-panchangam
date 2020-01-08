@@ -10,7 +10,7 @@ target_sources(${PROJECT_NAME} PRIVATE NOTES.txt)
 target_link_libraries(ekadashi-calculator PRIVATE swe)
 
 add_library(swe STATIC
-    swe_time.h swe_time.cpp
+    juldays_ut.h juldays_ut.cpp
     swe.h swe.cpp
     calc.h calc.cpp
     tithi.h tithi.cpp
@@ -41,7 +41,7 @@ endif()
 
 add_executable(test-main
     tests/test-main.cpp
-    tests/test-swe_time.cpp
+    tests/test-juldays_ut.cpp
     tests/test-swe.cpp
     tests/test-calc.cpp
     tests/test-tithi.cpp

@@ -26,5 +26,5 @@ TEST_CASE("Can print vrata") {
 TEST_CASE("Can create with \"before this time\" paran") {
     Vrata v{Vrata_Type::Ekadashi,
             2019_y/March/19,
-            Paran{Paran::Type::Standard, std::nullopt, Swe_Time{2019_y, March, 19_d, 11, 13, 0}}};
+            Paran{Paran::Type::Standard, std::nullopt, JulDays_UT{2019_y, March, 19_d, 11, 13, 0}}};
 }

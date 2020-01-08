@@ -4,7 +4,7 @@
 #include "location.h"
 #include "date-fixed.h"
 #include "swe.h"
-#include "swe_time.h"
+#include "juldays_ut.h"
 #include "tithi.h"
 #include "vrata.h"
 
@@ -23,21 +23,21 @@ public:
     // but should be considered private otherwise.
 
     // find next sunrise which happens to be within Ekadashi tithi
-    std::optional<Swe_Time> find_next_ekadashi_sunrise(Swe_Time after) const;
+    std::optional<JulDays_UT> find_next_ekadashi_sunrise(JulDays_UT after) const;
 
     // get arunodaya(= sunrise - night_length/8) for given sunrise
-    std::optional<std::pair<Swe_Time, Swe_Time>> get_arunodaya(Swe_Time sunrise) const;
+    std::optional<std::pair<JulDays_UT, JulDays_UT>> get_arunodaya(JulDays_UT sunrise) const;
 
-    std::optional<Swe_Time> get_next_tithi_start(Swe_Time, Tithi) const;
+    std::optional<JulDays_UT> get_next_tithi_start(JulDays_UT, Tithi) const;
 
-    static Swe_Time proportional_time(Swe_Time const t1, Swe_Time const t2, double const proportion);
+    static JulDays_UT proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion);
 
     vp::Swe swe;
 
 private:
-    std::optional<Swe_Time> get_prev_sunset(Swe_Time const sunrise) const;
-    date::year_month_day get_vrata_date(const Swe_Time &sunrise) const;
-    Paran get_paran(Swe_Time const &last_fasting_sunrise) const;
+    std::optional<JulDays_UT> get_prev_sunset(JulDays_UT const sunrise) const;
+    date::year_month_day get_vrata_date(const JulDays_UT &sunrise) const;
+    Paran get_paran(JulDays_UT const &last_fasting_sunrise) const;
 };
 
 } // namespace vp

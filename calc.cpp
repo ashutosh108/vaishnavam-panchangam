@@ -12,10 +12,10 @@ namespace vp {
 
 Calc::Calc(Location coord):swe{coord} {}
 
-std::optional<Swe_Time> Calc::find_next_ekadashi_sunrise(Swe_Time after) const
+std::optional<JulDays_UT> Calc::find_next_ekadashi_sunrise(JulDays_UT after) const
 {
     int max_days_left = 16;
-    std::optional<Swe_Time> sunrise = after;
+    std::optional<JulDays_UT> sunrise = after;
     while ((sunrise = swe.get_sunrise(*sunrise)).has_value() && max_days_left--) {
         auto tithi = swe.get_tithi(*sunrise);
         if (tithi.is_ekadashi() || tithi.is_dvadashi()) {
@@ -26,12 +26,12 @@ std::optional<Swe_Time> Calc::find_next_ekadashi_sunrise(Swe_Time after) const
     return {};
 }
 
-Swe_Time Calc::proportional_time(Swe_Time const t1, Swe_Time const t2, double const proportion) {
+JulDays_UT Calc::proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion) {
     double_days distance = t2 - t1;
     return t1 + distance * proportion;
 }
 
-date::year_month_day Calc::get_vrata_date(const Swe_Time &sunrise) const
+date::year_month_day Calc::get_vrata_date(const JulDays_UT &sunrise) const
 {
     // Adjust to make sure that Vrata data is correct in local timezone
     // (as opposed to *sunrise which is in UTC). We do this by adding an hour
@@ -40,14 +40,14 @@ date::year_month_day Calc::get_vrata_date(const Swe_Time &sunrise) const
     // different from the "natural" timezone. But until we support proper
     // timezone, this should work for most cases.
     double_days adjustment_in_days{swe.coord.longitude * (1.0/360)};
-    Swe_Time local_sunrise = sunrise + adjustment_in_days;
+    JulDays_UT local_sunrise = sunrise + adjustment_in_days;
     date::year_month_day vrata_date{local_sunrise.as_date()};
     return vrata_date;
 }
 
-Paran Calc::get_paran(Swe_Time const &last_fasting_sunrise) const
+Paran Calc::get_paran(JulDays_UT const &last_fasting_sunrise) const
 {
-    std::optional<Swe_Time> paran_start, paran_end;
+    std::optional<JulDays_UT> paran_start, paran_end;
     auto paran_sunrise = swe.get_sunrise(last_fasting_sunrise+double_days{0.1});
     if (paran_sunrise) {
         auto paran_sunset = swe.get_sunset(*paran_sunrise);
@@ -89,7 +89,7 @@ Paran Calc::get_paran(Swe_Time const &last_fasting_sunrise) const
 
 std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
 {
-    auto sunrise = find_next_ekadashi_sunrise(Swe_Time{after});
+    auto sunrise = find_next_ekadashi_sunrise(JulDays_UT{after});
     if (sunrise) {
         auto arunodaya_info = get_arunodaya(*sunrise);
         if (!arunodaya_info.has_value()) { return{}; }
@@ -118,12 +118,12 @@ std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
     return {};
 }
 
-std::optional<Swe_Time> Calc::get_prev_sunset(Swe_Time const sunrise) const {
-    Swe_Time back_24hrs{sunrise - double_days{1.0}};
+std::optional<JulDays_UT> Calc::get_prev_sunset(JulDays_UT const sunrise) const {
+    JulDays_UT back_24hrs{sunrise - double_days{1.0}};
     return swe.get_sunset(back_24hrs);
 }
 
-std::optional<std::pair<Swe_Time, Swe_Time>> Calc::get_arunodaya(Swe_Time const sunrise) const
+std::optional<std::pair<JulDays_UT, JulDays_UT>> Calc::get_arunodaya(JulDays_UT const sunrise) const
 {
     auto const prev_sunset = get_prev_sunset(sunrise);
     if (!prev_sunset.has_value()) { return{}; }
@@ -136,7 +136,7 @@ std::optional<std::pair<Swe_Time, Swe_Time>> Calc::get_arunodaya(Swe_Time const 
     );
 }
 
-std::optional<Swe_Time> Calc::get_next_tithi_start(Swe_Time const from, Tithi const tithi) const
+std::optional<JulDays_UT> Calc::get_next_tithi_start(JulDays_UT const from, Tithi const tithi) const
 {
     constexpr double average_tithi_length = 23.0/24 + 37.0/(24*60); // 23h37m
     Tithi cur_tithi = swe.get_tithi(from);
@@ -154,7 +154,7 @@ std::optional<Swe_Time> Calc::get_next_tithi_start(Swe_Time const from, Tithi co
         initial_delta_tithi -= 15.0;
     }
 
-    Swe_Time time{from + double_days{initial_delta_tithi * average_tithi_length}};
+    JulDays_UT time{from + double_days{initial_delta_tithi * average_tithi_length}};
     cur_tithi = swe.get_tithi(time);
 
     double prev_abs_delta_tithi = std::numeric_limits<double>::max();

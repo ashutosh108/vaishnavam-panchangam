@@ -13,7 +13,7 @@
 #include "tz-fixed.h"
 
 #include "swe.h"
-#include "swe_time.h"
+#include "juldays_ut.h"
 #include "vrata_detail.h"
 
 using namespace vp;
@@ -146,7 +146,7 @@ void print_detail_one(date::year_month_day base_date, const char *location_name,
     std::cout << location_name << ' ' << base_date << '\n';
     std::cout << "<to be implemented>\n";
     Calc calc{coord};
-    auto sunrise = calc.swe.get_sunrise(Swe_Time{base_date});
+    auto sunrise = calc.swe.get_sunrise(JulDays_UT{base_date});
     if (sunrise) {
         auto arunodaya_info = calc.get_arunodaya(*sunrise);
         if (arunodaya_info) {

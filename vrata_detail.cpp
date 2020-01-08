@@ -5,7 +5,7 @@
 namespace vp {
 
 Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _coord):vrata(_vrata), coord(_coord), calc(_coord) {
-    Swe_Time local_midnight = get_approx_local_midnight();
+    JulDays_UT local_midnight = get_approx_local_midnight();
     sunrise = calc.swe.get_sunrise(local_midnight);
     if (sunrise) {
         auto arunodaya_pair = calc.get_arunodaya(*sunrise);
@@ -26,15 +26,15 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _coord):vrata(_vrata), coord(_
     }
 }
 
-Swe_Time Vrata_Detail::get_approx_local_midnight() const {
+JulDays_UT Vrata_Detail::get_approx_local_midnight() const {
     double_days adjustment{coord.longitude * (1.0/360.0)};
-    return Swe_Time{Swe_Time{vrata.date} - adjustment};
+    return JulDays_UT{JulDays_UT{vrata.date} - adjustment};
 }
 
 
 std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
 {
-    auto z = [&vd](Swe_Time t) {
+    auto z = [&vd](JulDays_UT t) {
         return Swe_Zoned_Time{vd.coord.timezone_name, t};
     };
     s << vd.vrata << ":\n";

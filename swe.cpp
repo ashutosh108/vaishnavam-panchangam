@@ -19,13 +19,13 @@ constexpr double atmospheric_pressure = 1013.25;
 constexpr double atmospheric_temperature = 15;
 }
 
-std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after) const {
+std::optional<JulDays_UT> Swe::do_rise_trans(int rise_or_set, JulDays_UT after) const {
     int32 rsmi = rise_or_set | detail::rise_flags;
     double geopos[3] = {coord.longitude, coord.latitude, 0};
     double trise;
     char serr[AS_MAXCH];
     int32 flags = detail::ephemeris_flags;
-    int res_flag = swe_rise_trans(after.as_julian_days().count(),
+    int res_flag = swe_rise_trans(after.raw_julian_days_ut().count(),
                                   SE_SUN,
                                   nullptr,
                                   flags,
@@ -41,7 +41,7 @@ std::optional<Swe_Time> Swe::do_rise_trans(int rise_or_set, Swe_Time after) cons
     if (res_flag == -2) {
         return std::nullopt;
     } else {
-        return Swe_Time{double_days{trise}};
+        return JulDays_UT{double_days{trise}};
     }
 }
 
@@ -56,12 +56,12 @@ Swe::~Swe()
     swe_close();
 }
 
-std::optional<Swe_Time> Swe::get_sunrise(Swe_Time after) const
+std::optional<JulDays_UT> Swe::get_sunrise(JulDays_UT after) const
 {
     return do_rise_trans(SE_CALC_RISE, after);
 }
 
-std::optional<Swe_Time> Swe::get_sunset(Swe_Time after) const
+std::optional<JulDays_UT> Swe::get_sunset(JulDays_UT after) const
 {
     return do_rise_trans(SE_CALC_SET, after);
 }
@@ -85,22 +85,22 @@ void Swe::do_calc_ut(double jd, int planet, int flags, double *res) const {
     throw_on_wrong_flags(res_flags, flags, serr);
 }
 
-double Swe::get_sun_longitude(Swe_Time time) const
+double Swe::get_sun_longitude(JulDays_UT time) const
 {
     double res[6];
-    do_calc_ut(time.as_julian_days().count(), SE_SUN, detail::ephemeris_flags, res);
+    do_calc_ut(time.raw_julian_days_ut().count(), SE_SUN, detail::ephemeris_flags, res);
     return res[0];
 }
 
-double Swe::get_moon_longitude(Swe_Time time) const
+double Swe::get_moon_longitude(JulDays_UT time) const
 {
     double res[6];
-    do_calc_ut(time.as_julian_days().count(), SE_MOON, detail::ephemeris_flags, res);
+    do_calc_ut(time.raw_julian_days_ut().count(), SE_MOON, detail::ephemeris_flags, res);
     return res[0];
 }
 
 /** Get tithi as double [0..30) */
-Tithi Swe::get_tithi(Swe_Time time) const
+Tithi Swe::get_tithi(JulDays_UT time) const
 {
     double sun = get_sun_longitude(time);
     double moon = get_moon_longitude(time);
