@@ -41,8 +41,7 @@ date::year_month_day Calc::get_vrata_date(const JulDays_UT &sunrise) const
     // timezone, this should work for most cases.
     double_days adjustment_in_days{swe.coord.longitude * (1.0/360)};
     JulDays_UT local_sunrise = sunrise + adjustment_in_days;
-    date::year_month_day vrata_date{local_sunrise.year_month_day()};
-    return vrata_date;
+    return local_sunrise.year_month_day();
 }
 
 Paran Calc::get_paran(JulDays_UT const &last_fasting_sunrise) const
@@ -138,7 +137,8 @@ std::optional<std::pair<JulDays_UT, JulDays_UT>> Calc::get_arunodaya(JulDays_UT 
 
 std::optional<JulDays_UT> Calc::get_next_tithi_start(JulDays_UT const from, Tithi const tithi) const
 {
-    constexpr double average_tithi_length = 23.0/24 + 37.0/(24*60); // 23h37m
+    using namespace std::literals::chrono_literals;
+    constexpr double_hours average_tithi_length = 23h + 37min;
     Tithi cur_tithi = swe.get_tithi(from);
 
     double initial_delta_tithi = cur_tithi.positive_delta_until_tithi(tithi);
@@ -154,14 +154,14 @@ std::optional<JulDays_UT> Calc::get_next_tithi_start(JulDays_UT const from, Tith
         initial_delta_tithi -= 15.0;
     }
 
-    JulDays_UT time{from + double_days{initial_delta_tithi * average_tithi_length}};
+    JulDays_UT time{from + initial_delta_tithi * average_tithi_length};
     cur_tithi = swe.get_tithi(time);
 
     double prev_abs_delta_tithi = std::numeric_limits<double>::max();
 
     while (cur_tithi != target_tithi) {
         double const delta_tithi = cur_tithi.delta_to_nearest_tithi(target_tithi);
-        time += double_days{delta_tithi * average_tithi_length};
+        time += delta_tithi * average_tithi_length;
         cur_tithi = swe.get_tithi(time);
 
         double const abs_delta_tithi = fabs(delta_tithi);

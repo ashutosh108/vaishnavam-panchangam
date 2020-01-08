@@ -1,6 +1,4 @@
-﻿[ ] introduce exceptions in calculations: cant_find_sunrise, cant_find_tithi (any other?)
-[ ] remove the usage of std::optional from Swe_Time users
-[ ] add Approx_Swe_Time for approximate comparisons
+﻿[ ] add Approx_Swe_Time for approximate comparisons
 [ ] fix vrata tests to accept time within 5 seconds range to pass (otherwise half-seconds differences on upgrade to sweph 2.08 break some tests)
     "Ekadashi 2019-02-28"/riga
     "Ekadashi 2019-03-17"/frederikton
