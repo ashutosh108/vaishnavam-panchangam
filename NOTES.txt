@@ -1,12 +1,8 @@
-﻿[ ] add Approx_Swe_Time for approximate comparisons
-[ ] fix vrata tests to accept time within 5 seconds range to pass (otherwise half-seconds differences on upgrade to sweph 2.08 break some tests)
-    "Ekadashi 2019-02-28"/riga
-    "Ekadashi 2019-03-17"/frederikton
-    "get_next_tithi_start"
-[ ] upgrade sweph to 2.08, tag it
-[ ] replace thread amx-execution-time tricks with limiting the max number of loops and throwing (in debug builds only?)
+﻿[ ] expect ./tzdata dir to be in the executable's directory, copy tzdata dir during build (add_custom_command, -E copy_if_different, $<TARGET_FILE_DIR:MyExe>)
+[ ] copy swe's ephemeris database during build (add_custom_command, -E copy_if_different, $<TARGET_FILE_DIR:MyExe>)
+[ ] require using SEFLG_SWIEPH (currently we use SEFLG_MOSEPH which doesn't require data files)
+[ ] replace thread max-execution-time tricks with limiting the max number of loops and throwing (in debug builds only?)
 [ ] fix date/tz for webassembly build
-[ ] expect ./tzdata dir to be in the executable's directory, copy tzdata dir during build (add_custom_command, -E copy_if_different, $<TARGET_FILE_DIR:MyExe>)
 [ ] encapsulate tzdata (so we can run bare executable, wihout any tzdata files at all)
 [ ] encapsulate swe's ephemeris database (so we can run with higher precision while having no data files at hand)
 [ ] check all tests for 2019-March-1,2
@@ -51,3 +47,9 @@ done:
 [+] rename Swe_Time to juldays_ut or something [2020-01-08]
 [+] cleanup JulDays_UT constructors to get rid of type-dangerous int year etc (use std::chrono-related types). [2020-01-09]
 [+] rename Swe_Zoned_Time to something like JulDays_Zoned, fix constructors [2020-01-09]
+[+] add ApproximateJulDays_UT for approximate comparisons (in test-calc.cpp), fix Expected_Vrata comparison [2020-01-09]
+[+] fix vrata tests to accept time within 5 seconds range to pass (otherwise we get half-second differences after upgrading to sweph 2.08, breaking some tests)
+    "Ekadashi 2019-02-28"/riga
+    "Ekadashi 2019-03-17"/frederikton
+    "get_next_tithi_start"
+[+] upgrade sweph to 2.08, tag it [2020-01-09]

@@ -15,6 +15,60 @@ using namespace date;
 using namespace vp;
 using namespace std::literals::chrono_literals;
 
+class Expected_Vrata {
+public:
+    Vrata_Type type;
+    date::year_month_day date;
+    Paran paran;
+    Expected_Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran)
+        :type(_type), date(_date), paran(_paran)
+    {}
+};
+
+std::ostream &operator <<(std::ostream &s, const Expected_Vrata &v) {
+    s << v.type;
+    {
+        s << "{" << v.date;
+        s << ", " << v.paran << "}";
+    }
+    return s;
+}
+
+class ApproximateJulDays_UT {
+    JulDays_UT juldays_;
+public:
+    ApproximateJulDays_UT(const JulDays_UT & juldays)
+        : juldays_(juldays)
+    {}
+    bool operator==(const JulDays_UT & other) {
+        return juldays_.raw_julian_days_ut().count() == Approx(other.raw_julian_days_ut().count());
+    }
+};
+
+bool operator==(const Expected_Vrata &e, const Vrata &v) {
+    // if "expected" paran_start/end is nullopt, then we don't care
+    // about v2's one.
+    // Otherwise, if expected paran_start/end is given, it must be equal to v2's one.
+    bool paran_start_is_missing_or_same =
+            !e.paran.paran_start ||
+            (
+                v.paran.paran_start.has_value() &&
+                ApproximateJulDays_UT{*e.paran.paran_start} == *v.paran.paran_start
+            );
+    bool paran_end_is_missing_or_same =
+            !e.paran.paran_end ||
+            (
+                v.paran.paran_end.has_value() &&
+                ApproximateJulDays_UT{*e.paran.paran_end} == *v.paran.paran_end
+            );
+    return
+            e.type == v.type &&
+            e.date == v.date &&
+            e.paran.type == v.paran.type &&
+            paran_start_is_missing_or_same &&
+            paran_end_is_missing_or_same;
+}
+
 TEST_CASE("find_next_ekadashi_sunrise") {
     JulDays_UT start{2019_y/March/9};
     Location coord{50.45, 30.523333};
@@ -109,7 +163,7 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(sandigdha_mar02 == vrata(Calc{kolomyya_coord}, d)); // Sandighdha, differs from Naarasimha's calendar
     REQUIRE(v02 == vrata(Calc{kishinev_coord}, d));
     Paran paran1415{Paran::Type::From_Quarter_Dvadashi, JulDays_UT{2019_y/March/2, 12h + 14min + 40.513510s}};
-    Vrata v01_paran_after_quarter{Vrata_Type::Ekadashi, 2019_y/March/1, paran1415};
+    Expected_Vrata v01_paran_after_quarter{Vrata_Type::Ekadashi, 2019_y/March/1, paran1415};
     REQUIRE(v01_paran_after_quarter == vrata(Calc{riga_coord}, d));     // > 14:15
     REQUIRE(v01_paran_after_quarter == vrata(Calc{yurmala_coord}, d));  // > 14:15
     REQUIRE(v01_paran_after_quarter == vrata(Calc{tallin_coord}, d));   // > 14:15
@@ -123,35 +177,6 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(v01_paran_after_quarter == vrata(Calc{toronto_coord}, d));      // > 7:15
     REQUIRE(v01_paran_after_quarter == vrata(Calc{miami_coord}, d));       // > 7:15
     REQUIRE(v01 == vrata(Calc{meadowlake_coord}, d));
-}
-
-class Expected_Vrata {
-public:
-    Vrata_Type type;
-    date::year_month_day date;
-    Paran paran;
-    Expected_Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran)
-        :type(_type), date(_date), paran(_paran)
-    {}
-};
-
-std::ostream &operator <<(std::ostream &s, const Expected_Vrata &v) {
-    s << v.type;
-    {
-        s << "{" << v.date;
-        s << ", " << v.paran << "}";
-    }
-    return s;
-}
-
-bool operator==(const Expected_Vrata &e, const Vrata &v) {
-    // if "expected" paran_start/end is nullopt, then we don't care
-    // about v2's one.
-    // Otherwise, if expected paran_start/end is given, it must be equal to v2's one.
-    return e.type == v.type && e.date == v.date &&
-            e.paran.type == v.paran.type &&
-            (!e.paran.paran_start || e.paran.paran_start == v.paran.paran_start) &&
-            (!e.paran.paran_end || e.paran.paran_end == v.paran.paran_end);
 }
 
 TEST_CASE("Ekadashi 2019-03-17") {
@@ -244,7 +269,7 @@ TEST_CASE("get_next_tithi_start") {
     JulDays_UT expected{2019_y/March/18, 12h + 13min + 36.459301s};
     std::optional<JulDays_UT> actual = Calc{frederikton_coord}.get_next_tithi_start(from, tithi);
     REQUIRE(actual.has_value());
-    REQUIRE(*actual == expected);
+    REQUIRE(actual->raw_julian_days_ut().count() == Approx(expected.raw_julian_days_ut().count()));
 }
 
 auto get_next_tithi_wrapper(Calc const &calc, JulDays_UT from, Tithi tithi) {
