@@ -1,5 +1,4 @@
-﻿[ ] expect ./tzdata dir to be in the executable's directory, copy tzdata dir during build (add_custom_command, -E copy_if_different, $<TARGET_FILE_DIR:MyExe>)
-[ ] copy swe's ephemeris database during build (add_custom_command, -E copy_if_different, $<TARGET_FILE_DIR:MyExe>)
+﻿[ ] copy swe's ephemeris database during build (download from github?)
 [ ] require using SEFLG_SWIEPH (currently we use SEFLG_MOSEPH which doesn't require data files)
 [ ] replace thread max-execution-time tricks with limiting the max number of loops and throwing (in debug builds only?)
 [ ] fix date/tz for webassembly build
@@ -53,3 +52,4 @@ done:
     "Ekadashi 2019-03-17"/frederikton
     "get_next_tithi_start"
 [+] upgrade sweph to 2.08, tag it [2020-01-09]
+[+] expect ./tzdata dir to be in the current directory, copy tzdata dir during build (add_custom_command, -E copy_directory, $<TARGET_FILE_DIR:MyExe>) [2020-01-09]

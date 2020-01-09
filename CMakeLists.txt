@@ -60,12 +60,12 @@ enable_testing()
 add_test(test-main test-main)
 
 add_custom_target(
-	wasmdeploy
-	COMMAND
-	${CMAKE_COMMAND} --build . --target ekadashi-calculator
-	COMMAND
-	# "$<TARGET_FILE_DIR:ekadashi-calculator>/ekadashi-calculator.{js,wasm}"
-	rsync ekadashi-calculator.js ekadashi-calculator.wasm ../public_html/index.html 192.168.88.172:public_html/ekadashi-calculator/
+    wasmdeploy
+    COMMAND
+    ${CMAKE_COMMAND} --build . --target ekadashi-calculator
+    COMMAND
+    # "$<TARGET_FILE_DIR:ekadashi-calculator>/ekadashi-calculator.{js,wasm}"
+    rsync ekadashi-calculator.js ekadashi-calculator.wasm ../public_html/index.html 192.168.88.172:public_html/ekadashi-calculator/
 )
 
 set(BUILD_TZ_LIB ON CACHE BOOL "we need this lib to print paran times etc in proper timezone" FORCE)
@@ -151,3 +151,8 @@ endif()
 
 target_compile_options(ekadashi-calculator PRIVATE ${WARN_FLAGS})
 target_compile_options(qwe PRIVATE ${WARN_FLAGS})
+
+add_custom_command(TARGET ekadashi-calculator POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tzdata $<TARGET_FILE_DIR:ekadashi-calculator>/tzdata)
+add_custom_command(TARGET test-main POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tzdata $<TARGET_FILE_DIR:test-main>/tzdata)

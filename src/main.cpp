@@ -177,7 +177,7 @@ void calc_all(date::year_month_day d) {
 
 int main(int argc, char *argv[])
 {
-    date::set_install("../vendor/tzdata");
+    date::set_install("tzdata");
     if (argc-1 >= 1 && strcmp(argv[1], "-d") == 0) {
         if (argc-1 != 3) {
             print_usage();

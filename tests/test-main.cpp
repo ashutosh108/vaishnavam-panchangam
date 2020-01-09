@@ -4,6 +4,6 @@
 #include "tz-fixed.h"
 
 int main(int argc, char* argv[]) {
-    date::set_install("../vendor/tzdata");
+    date::set_install("tzdata");
     return Catch::Session().run(argc, argv);
 }
