@@ -263,13 +263,16 @@ TEST_CASE("Ekadashi 2019-03-17") {
     REQUIRE(*v_meadowlake.paran.paran_start < *v_meadowlake.paran.paran_end);
 }
 
-TEST_CASE("get_next_tithi_start") {
+TEST_CASE("get_next_tithi_start gives what we expect (close to the target tithi)") {
     JulDays_UT from{2019_y/March/17};
-    Tithi tithi{Tithi::Dvadashi_End};
-    JulDays_UT expected{2019_y/March/18, 12h + 13min + 36.459301s};
-    std::optional<JulDays_UT> actual = Calc{frederikton_coord}.get_next_tithi_start(from, tithi);
-    REQUIRE(actual.has_value());
-    REQUIRE(actual->raw_julian_days_ut().count() == Approx(expected.raw_julian_days_ut().count()));
+    Tithi expected_tithi{Tithi::Dvadashi_End};
+    Calc calc{frederikton_coord};
+
+    std::optional<JulDays_UT> actual_time = calc.get_next_tithi_start(from, expected_tithi);
+
+    REQUIRE(actual_time.has_value());
+    Tithi actual_tithi = calc.swe.get_tithi(*actual_time);
+    REQUIRE(expected_tithi == actual_tithi);
 }
 
 auto get_next_tithi_wrapper(Calc const &calc, JulDays_UT from, Tithi tithi) {
