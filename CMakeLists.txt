@@ -153,6 +153,14 @@ target_compile_options(ekadashi-calculator PRIVATE ${WARN_FLAGS})
 target_compile_options(qwe PRIVATE ${WARN_FLAGS})
 
 add_custom_command(TARGET ekadashi-calculator POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tzdata $<TARGET_FILE_DIR:ekadashi-calculator>/tzdata)
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tzdata ${CMAKE_BINARY_DIR}/tzdata)
 add_custom_command(TARGET test-main POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tzdata $<TARGET_FILE_DIR:test-main>/tzdata)
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tzdata ${CMAKE_BINARY_DIR}/tzdata)
+
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/eph)
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/eph/sepl_18.se1)
+    file(DOWNLOAD https://github.com/ashutosh108/eph/raw/master/sepl_18.se1 ${CMAKE_BINARY_DIR}/eph/sepl_18.se1 EXPECTED_HASH MD5=76235ef7e2365da3e1e4492d5c3f7801)
+endif()
+if (NOT EXISTS ${CMAKE_BINARY_DIR}/eph/semo_18.se1)
+    file(DOWNLOAD https://github.com/ashutosh108/eph/raw/master/semo_18.se1 ${CMAKE_BINARY_DIR}/eph/semo_18.se1 EXPECTED_HASH MD5=7d67f3203b5277865235529ed26eaf19)
+endif()

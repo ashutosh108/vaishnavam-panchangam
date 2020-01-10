@@ -1,6 +1,4 @@
-﻿[ ] copy swe's ephemeris database during build (download from github?)
-[ ] require using SEFLG_SWIEPH (currently we use SEFLG_MOSEPH which doesn't require data files)
-[ ] replace thread max-execution-time tricks with limiting the max number of loops and throwing (in debug builds only?)
+﻿[ ] replace thread max-execution-time tricks with limiting the max number of loops and throwing (in debug builds only? find_next_tithi_start() only?)
 [ ] fix date/tz for webassembly build
 [ ] encapsulate tzdata (so we can run bare executable, wihout any tzdata files at all)
 [ ] encapsulate swe's ephemeris database (so we can run with higher precision while having no data files at hand)
@@ -8,6 +6,7 @@
 [ ] atirikta ekadashi
 [ ] atirikta dvadashi
 [ ] test cases from past Narasimha's calendars (all?)
+[ ] fix the case when the date given is dvadashi but actual vrata day was yesterday. E.g. 2020-01-20 kiev gives proper 2020-01-20 as vrata date, but 2020-01-21 kiev gives wrong 2020-01-21 as vrata date.
 
 == When compiling with gcc from msys2/mingw32, the .exe depends on
 - libwinpthread-1.dll
@@ -53,3 +52,5 @@ done:
     "get_next_tithi_start"
 [+] upgrade sweph to 2.08, tag it [2020-01-09]
 [+] expect ./tzdata dir to be in the current directory, copy tzdata dir during build (add_custom_command, -E copy_directory, $<TARGET_FILE_DIR:MyExe>) [2020-01-09]
+[+] copy swe's ephemeris database during build (file(DOWNLOAD ...) from github) [2020-01-10]
+[+] require using SEFLG_SWIEPH (currently we use SEFLG_MOSEPH which doesn't require data files) [2020-01-10]

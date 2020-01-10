@@ -10,7 +10,7 @@
 namespace vp {
 
 namespace detail {
-constexpr int32 ephemeris_flags = SEFLG_MOSEPH;
+constexpr int32 ephemeris_flags = SEFLG_SWIEPH;
 constexpr int32 rise_flags = SE_BIT_HINDU_RISING;
 //constexpr int32 rise_flags = SE_CALC_RISE;
 // or SE_CALC_RISE | SE_BIT_DISC_CENTER | SE_BIT_NO_REFRACTION | SE_BIT_GEOCTR_NO_ECL_LAT;
@@ -47,7 +47,9 @@ std::optional<JulDays_UT> Swe::do_rise_trans(int rise_or_set, JulDays_UT after) 
 
 Swe::Swe(Location coord_):coord(coord_)
 {
-    swe_set_ephe_path(nullptr);
+    // have to use (non-const) char array due to swe_set_ephe_path() strang signature: char * instead of const char *.
+    char ephepath[] = "eph";
+    swe_set_ephe_path(ephepath);
     swe_set_topo(coord.longitude, coord.latitude, 0);
 }
 
@@ -108,12 +110,5 @@ Tithi Swe::get_tithi(JulDays_UT time) const
     if (diff < 0) diff += 360.0;
     return Tithi{diff / (360.0/30)};
 }
-
-// TODO: implement (this function seems to be nice to have for debugging
-// but not essential for actual Ekadashi calculations
-//Swe_Time Swe::find_tithi_start(Swe_Time after, double/* tithi*/)
-//{
-//    return after;
-//}
 
 } // namespace swe
