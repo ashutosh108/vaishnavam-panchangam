@@ -1,4 +1,5 @@
-﻿[ ] replace thread max-execution-time tricks with limiting the max number of loops and throwing (in debug builds only? find_next_tithi_start() only?)
+﻿[ ] add test for calc::get_next_tithi_start(): ensure that get_tithi actulaly returns value close enough to target tithi.
+[ ] replace thread max-execution-time tricks with limiting the max number of loops and throwing (in debug builds only? Calc::get_next_tithi_start only?)
 [ ] fix date/tz for webassembly build
 [ ] encapsulate tzdata (so we can run bare executable, wihout any tzdata files at all)
 [ ] encapsulate swe's ephemeris database (so we can run with higher precision while having no data files at hand)
@@ -54,3 +55,4 @@ done:
 [+] expect ./tzdata dir to be in the current directory, copy tzdata dir during build (add_custom_command, -E copy_directory, $<TARGET_FILE_DIR:MyExe>) [2020-01-09]
 [+] copy swe's ephemeris database during build (file(DOWNLOAD ...) from github) [2020-01-10]
 [+] require using SEFLG_SWIEPH (currently we use SEFLG_MOSEPH which doesn't require data files) [2020-01-10]
+[+] check downloaded ephemeris files' hash each time ("if exists" tricked me: I've somehow got zero-length semo_18.se1 and got crash inside sweph) [2020-01-10]
