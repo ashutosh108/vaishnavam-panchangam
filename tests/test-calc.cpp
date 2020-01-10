@@ -9,7 +9,6 @@
 #include <condition_variable>
 #include "date-fixed.h"
 #include <sstream>
-#include <thread>
 
 using namespace date;
 using namespace vp;
@@ -278,33 +277,7 @@ TEST_CASE("get_next_tithi_start gives what we expect (close to the target tithi)
 auto get_next_tithi_wrapper(Calc const &calc, JulDays_UT from, Tithi tithi) {
     std::optional<JulDays_UT> retval;
 
-#ifndef HAS_THREADS
-#define HAS_THREADS 1
-#endif
-
-#if HAS_THREADS
-    std::condition_variable cv;
-    std::mutex cv_m;
-    std::thread thread([&](){
-        auto local_retval = calc.get_next_tithi_start(from, tithi);
-        {
-            std::lock_guard<std::mutex> l{cv_m};
-            retval = std::move(local_retval);
-            cv.notify_one();
-        }
-    });
-    thread.detach();
-
-    {
-        using namespace std::chrono_literals;
-        std::unique_lock<std::mutex> l{cv_m};
-        if (cv.wait_for(l, 200ms) == std::cv_status::timeout) {
-            throw std::runtime_error("Timeout");
-        }
-    }
-#else
     retval = calc.get_next_tithi_start(from, tithi);
-#endif
     return retval;
 }
 

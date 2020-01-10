@@ -159,6 +159,9 @@ std::optional<JulDays_UT> Calc::get_next_tithi_start(JulDays_UT const from, Tith
 
     double prev_abs_delta_tithi = std::numeric_limits<double>::max();
 
+    constexpr int max_iterations = 1'000;
+    int iteration = 0;
+
     while (cur_tithi != target_tithi) {
         double const delta_tithi = cur_tithi.delta_to_nearest_tithi(target_tithi);
         time += delta_tithi * average_tithi_length;
@@ -170,6 +173,9 @@ std::optional<JulDays_UT> Calc::get_next_tithi_start(JulDays_UT const from, Tith
             break;
         }
         prev_abs_delta_tithi = abs_delta_tithi;
+        if (++iteration >= max_iterations) {
+            return {};
+        }
     }
     return time;
 }
