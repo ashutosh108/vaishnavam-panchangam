@@ -1,4 +1,9 @@
-﻿[ ] fix date/tz for webassembly build
+﻿[ ] make sure we get reasonable error message when eph folder not found (add overall exception handler? add test?)
+[ ] when eph files not found and the SWE_SWIEPH was supposed to be used: use SWE_MOSEPH but print large warning
+[ ] make sure we get reasonable error message when tzdata folder is missing (add test?)
+[ ] then tzdata folder not found: still run but print all times as UTC
+[ ] allow running with SWE_MOSEPH as an option (do not require eph files)
+[ ] fix date/tz for linux and webassembly build (fix tz's cmake)
 [ ] encapsulate tzdata (so we can run bare executable, wihout any tzdata files at all)
 [ ] encapsulate swe's ephemeris database (so we can run with higher precision while having no data files at hand)
 [ ] check all tests for 2019-March-1,2
@@ -56,3 +61,5 @@ done:
 [+] check downloaded ephemeris files' hash each time ("if exists" tricked me: I've somehow got zero-length semo_18.se1 and got crash inside sweph) [2020-01-10]
 [+] add test for calc::get_next_tithi_start(): ensure that get_tithi actulaly returns value close enough to target tithi. [2020-01-10]
 [+] Calc::get_next_tithi_start(): limit max number of loops and return empty optional if looping. Remove thread max-execution-time tricks in testing. [2020-01-10]
+[+] create basic travis-ci integration (windows builds) [2020-01-13]
+[+] make main executable statically linked by default [2020-01-13]
