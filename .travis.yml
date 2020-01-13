@@ -1,5 +1,5 @@
 os: windows
-language: c++
+language: cpp
 
 script:
   - mkdir build
