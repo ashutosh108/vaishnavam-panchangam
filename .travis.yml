@@ -3,4 +3,4 @@ language: cpp
 
 script:
   - mkdir build
-  - cd build && cmake .. -G Ninja && cmake --build . && ./test-main.exe
+  - cd build && cmake .. && cmake --build . && ./Debug/test-main.exe
