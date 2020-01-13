@@ -1,0 +1,6 @@
+os: windows
+language: c++
+
+script:
+  - mkdir build
+  - cd build && cmake .. -G Ninja && cmake --build . && ./test-main.exe
