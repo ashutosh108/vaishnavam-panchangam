@@ -4,8 +4,31 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(ekadashi-calculator VERSION 0.1 LANGUAGES C CXX)
+option(VP_BUILD_STATIC_EXECUTABLE "build static executable (no .dll or .so dependencies like MSVCRT or libc++)" ON)
+
+# static build options should be on the top of CMakeLists.txt file because
+# we use add_compile_options which modifies COMPILE_OPTIONS
+# which in turn affect default target compile options *when the target is declared*.
+# So we better do it before we declare any targets.
+# TODO: gcc/clang support
+if (VP_BUILD_STATIC_EXECUTABLE)
+    if (MSVC)
+        # /MT means include msvcrt as static library in the .exe
+        add_compile_options(/MT)
+    endif()
+endif()
 
 add_executable(${PROJECT_NAME} src/main.cpp)
+
+if (VP_BUILD_STATIC_EXECUTABLE)
+    if (MSVC)
+        target_link_options(ekadashi-calculator PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
+    else()
+        # this works for gcc/clang. Other compilers might need other options.
+        target_link_options(ekadashi-calculator PRIVATE -static)
+    endif()
+endif()
+
 target_sources(${PROJECT_NAME} PRIVATE NOTES.txt)
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 target_link_libraries(${PROJECT_NAME} PRIVATE swe)
