@@ -1,4 +1,5 @@
-﻿[ ] make sure we get reasonable error message when eph folder not found (add overall exception handler? add test?)
+[ ] cmake: turn off c++ compiler-specific extensions (strict ISO standard)
+[ ] make sure we get reasonable error message when eph folder not found (add overall exception handler? add test?)
 [ ] when eph files not found and the SWE_SWIEPH was supposed to be used: use SWE_MOSEPH but print large warning
 [ ] make sure we get reasonable error message when tzdata folder is missing (add test?)
 [ ] then tzdata folder not found: still run but print all times as UTC
@@ -65,4 +66,5 @@ done:
 [+] make main executable statically linked by default [2020-01-13]
 [+] replace date::date's cmake files with our own (suggested official way did not work and old naive "include_subdirectory" way caused problems by installing unneeded files) [2020-01-14]
 [+] setup install in cmake: copy .exe, tzdata/ and eph/ [2020-01-14]
-[+] add cmake zip target -- create .zip file with minimally required files: statically linked).exe, eph/ and tzdata/.
+[+] add cmake zip target -- create .zip file with minimally required files: statically linked).exe, eph/ and tzdata/. [2020-01-14]
+[+] fix compilation for linux-gcc (pthread was required) [2020-01-14]

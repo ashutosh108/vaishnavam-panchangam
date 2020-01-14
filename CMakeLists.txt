@@ -25,8 +25,12 @@ if (VP_BUILD_STATIC_EXECUTABLE)
     if (MSVC)
         target_link_options(ekadashi-calculator PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
     else()
-        # this works for gcc/clang. Other compilers might need other options.
-        target_link_options(ekadashi-calculator PRIVATE -static)
+        # Add "-static" option only for win32 because in linux glibc -pthread
+        # (required for std::call_once used by tz) and -static are incompatible.
+        # It works fine for gcc in Windows, though.
+        if (WIN32)
+            target_link_options(ekadashi-calculator PRIVATE -static)
+        endif()
     endif()
 endif()
 
@@ -41,6 +45,12 @@ target_compile_definitions(date INTERFACE HAS_UNCAUGHT_EXCEPTIONS=1)
 add_library(tz STATIC vendor/date/src/tz.cpp)
 add_library(date::tz ALIAS tz)
 target_link_libraries( tz PUBLIC date::date)
+target_compile_definitions(tz PRIVATE HAS_REMOTE_API=0)
+# glibc on linux seem to require -pthread for std::call_once. Approximate that with "not win32".
+if (NOT WIN32)
+    find_package(Threads)
+    target_link_libraries(tz PRIVATE Threads::Threads)
+endif()
 
 
 add_library(swe STATIC
