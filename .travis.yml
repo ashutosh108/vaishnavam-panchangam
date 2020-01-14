@@ -1,6 +1,10 @@
 os: windows
 language: cpp
 
+branches:
+  only:
+  - master
+
 script:
   - mkdir build
   - cd build && cmake .. && cmake --build . && ./Debug/test-main.exe
