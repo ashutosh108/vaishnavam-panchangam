@@ -10,7 +10,6 @@ option(VP_BUILD_STATIC_EXECUTABLE "build static executable (no .dll or .so depen
 # we use add_compile_options which modifies COMPILE_OPTIONS
 # which in turn affect default target compile options *when the target is declared*.
 # So we better do it before we declare any targets.
-# TODO: gcc/clang support
 if (VP_BUILD_STATIC_EXECUTABLE)
     if (MSVC)
         # /MT means include msvcrt as static library in the .exe
@@ -19,7 +18,9 @@ if (VP_BUILD_STATIC_EXECUTABLE)
 endif()
 
 add_executable(${PROJECT_NAME} src/main.cpp)
-
+target_sources(${PROJECT_NAME} PRIVATE NOTES.txt)
+target_include_directories(${PROJECT_NAME} PRIVATE src)
+target_link_libraries(${PROJECT_NAME} PRIVATE swe)
 if (VP_BUILD_STATIC_EXECUTABLE)
     if (MSVC)
         target_link_options(ekadashi-calculator PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
@@ -29,9 +30,18 @@ if (VP_BUILD_STATIC_EXECUTABLE)
     endif()
 endif()
 
-target_sources(${PROJECT_NAME} PRIVATE NOTES.txt)
-target_include_directories(${PROJECT_NAME} PRIVATE src)
-target_link_libraries(${PROJECT_NAME} PRIVATE swe)
+
+add_library(date INTERFACE)
+add_library(date::date ALIAS date)
+target_include_directories(date INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/vendor/date/include)
+# Set HAS_UNCAUGHT_EXCEPTIONS=1 to avoid lots of warnings on gcc-9.2 (and, presumably,
+# on other modern C++17 compilers)
+target_compile_definitions(date INTERFACE HAS_UNCAUGHT_EXCEPTIONS=1)
+
+add_library(tz STATIC vendor/date/src/tz.cpp)
+add_library(date::tz ALIAS tz)
+target_link_libraries( tz PUBLIC date::date)
+
 
 add_library(swe STATIC
     src/juldays_ut.h src/juldays_ut.cpp
@@ -91,12 +101,6 @@ add_custom_target(
     rsync ekadashi-calculator.js ekadashi-calculator.wasm ../public_html/index.html 192.168.88.172:public_html/ekadashi-calculator/
 )
 
-set(BUILD_TZ_LIB ON CACHE BOOL "we need this lib to print paran times etc in proper timezone" FORCE)
-set(USE_SYSTEM_TZ_DB ON CACHE BOOL "to avoid downloading fresh tzdata at runtime" FORCE)
-add_subdirectory(vendor/date)
-# Set HAS_UNCAUGHT_EXCEPTIONS=1 to avoid lota of warnings on gcc-9.2 (and, presumably,
-# on other modern C++17 compilers)
-target_compile_definitions(date INTERFACE HAS_UNCAUGHT_EXCEPTIONS=1)
 add_executable(qwe src/qwe.cpp)
 target_link_libraries(qwe PRIVATE date::tz)
 
