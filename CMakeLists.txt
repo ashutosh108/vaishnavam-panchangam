@@ -195,7 +195,7 @@ add_custom_target(
     COMMAND
     ${CMAKE_COMMAND} --build . --target ekadashi-calculator
     COMMAND
-    ${CMAKE_COMMAND} --install . --prefix ${PROJECT_NAME}
+    ${CMAKE_COMMAND} --install . --prefix ${PROJECT_NAME} --config Debug
     COMMAND
     ${CMAKE_COMMAND} -E tar cvf ${PROJECT_NAME}.zip --format=zip ${PROJECT_NAME}
 )
