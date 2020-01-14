@@ -1,5 +1,4 @@
-﻿[ ] setup install in cmake: copy .exe, tzdata/ and eph/ [2020-01-14]
-[ ] make sure we get reasonable error message when eph folder not found (add overall exception handler? add test?)
+﻿[ ] make sure we get reasonable error message when eph folder not found (add overall exception handler? add test?)
 [ ] when eph files not found and the SWE_SWIEPH was supposed to be used: use SWE_MOSEPH but print large warning
 [ ] make sure we get reasonable error message when tzdata folder is missing (add test?)
 [ ] then tzdata folder not found: still run but print all times as UTC
@@ -65,3 +64,4 @@ done:
 [+] create basic travis-ci integration (windows builds) [2020-01-13]
 [+] make main executable statically linked by default [2020-01-13]
 [+] replace date::date's cmake files with our own (suggested official way did not work and old naive "include_subdirectory" way caused problems by installing unneeded files) [2020-01-14]
+[+] setup install in cmake: copy .exe, tzdata/ and eph/ [2020-01-14]
