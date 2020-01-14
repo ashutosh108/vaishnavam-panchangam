@@ -65,3 +65,4 @@ done:
 [+] make main executable statically linked by default [2020-01-13]
 [+] replace date::date's cmake files with our own (suggested official way did not work and old naive "include_subdirectory" way caused problems by installing unneeded files) [2020-01-14]
 [+] setup install in cmake: copy .exe, tzdata/ and eph/ [2020-01-14]
+[+] add cmake zip target -- create .zip file with minimally required files: statically linked).exe, eph/ and tzdata/.

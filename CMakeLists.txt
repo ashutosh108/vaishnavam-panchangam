@@ -190,3 +190,12 @@ file(DOWNLOAD https://github.com/ashutosh108/eph/raw/master/semo_18.se1 ${CMAKE_
 
 install(TARGETS ekadashi-calculator DESTINATION .)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/eph ${CMAKE_BINARY_DIR}/tzdata DESTINATION .)
+add_custom_target(
+    zip
+    COMMAND
+    ${CMAKE_COMMAND} --build . --target ekadashi-calculator
+    COMMAND
+    ${CMAKE_COMMAND} --install . --prefix ${PROJECT_NAME}
+    COMMAND
+    ${CMAKE_COMMAND} -E tar cvf ${PROJECT_NAME}.zip --format=zip ${PROJECT_NAME}
+)
