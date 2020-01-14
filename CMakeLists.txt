@@ -6,6 +6,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(ekadashi-calculator VERSION 0.1 LANGUAGES C CXX)
 option(VP_BUILD_STATIC_EXECUTABLE "build static executable (no .dll or .so dependencies like MSVCRT or libc++)" ON)
 
+# Explicitly set build type to "Debug" by default.
+# In this way linux builds (having empty type by default) will be consistent
+# with windows builds (having "Debug" by default).
+set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type")
+
 # static build options should be on the top of CMakeLists.txt file because
 # we use add_compile_options which modifies COMPILE_OPTIONS
 # which in turn affect default target compile options *when the target is declared*.
