@@ -215,3 +215,5 @@ add_custom_target(
     COMMAND
     ${CMAKE_COMMAND} -E tar cvf ${PROJECT_NAME}.zip --format=zip ${PROJECT_NAME}
 )
+
+include(CPack)
