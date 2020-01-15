@@ -24,5 +24,6 @@ deploy:
   file: vaishnavam-panchangam.zip
   skip_cleanup: true
   overwrite: true
+  prerelease: true
   on:
     repo: ashutosh108/vaishnavam-panchangam
