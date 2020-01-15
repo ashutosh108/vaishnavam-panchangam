@@ -11,7 +11,7 @@ script:
   - cmake --build . --target zip
 
 before_deploy:
-  # Set up git user name and tag this commit
+  # Set  up git user name and tag this commit
   - git config --local user.name "Anton Voloshin"
   - git config --local user.email "ashutosh108@gmail.com"
   - export TRAVIS_TAG=${TRAVIS_TAG:-preview-$(date +'%Y-%m-%d')}
