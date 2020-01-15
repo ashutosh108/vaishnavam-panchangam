@@ -1,6 +1,4 @@
-[ ] github: add social preview image for vaishnavam-panchangam
 [ ] add raw Qt version (date input, calculate button, text area output)
-[ ] cmake: turn off c++ compiler-specific extensions (strict ISO standard)
 [ ] make sure we get reasonable error message when eph folder not found (add overall exception handler? add test?)
 [ ] when eph files not found and the SWE_SWIEPH was supposed to be used: use SWE_MOSEPH but print large warning
 [ ] make sure we get reasonable error message when tzdata folder is missing (add test?)
@@ -71,3 +69,5 @@ done:
 [+] add cmake zip target -- create .zip file with minimally required files: statically linked).exe, eph/ and tzdata/. [2020-01-14]
 [+] fix compilation for linux-gcc (pthread was required) [2020-01-14]
 [+] rename project from ekadashi-calculator to vaishnavam-panchangam [2020-01-15]
+[+] github: add social preview image for vaishnavam-panchangam [2020-01-15]
+[+] cmake: turn off c++ compiler-specific extensions (prefer strict ISO C++17 standard) [2020-01-15]
