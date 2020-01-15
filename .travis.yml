@@ -16,6 +16,10 @@ before_deploy:
   - git config --local user.email "ashutosh108@gmail.com"
   - export TRAVIS_TAG=${TRAVIS_TAG:-preview-$(date +'%Y-%m-%d')}
   - git tag -f $TRAVIS_TAG
+  - echo "TRAVIS_TAG: ${TRAVIS_TAG}"
+  - echo "TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}"
+  - echo "TRAVIS_REPO_SLUG_1: ${TRAVIS_REPO_SLUG%/*}"
+  - echo -n "GUTHUB_API_KEY: " && [ -z "${GITHUB_API_KEY}" ] && echo "EMPTY" || echo "NOT empty"
   - git remote add gh https://${TRAVIS_REPO_SLUG%/*}:${GITHUB_API_KEY}@github.com/${TRAVIS_REPO_SLUG}.git
   - git push -f gh $TRAVIS_TAG
   - git remote remove gh
