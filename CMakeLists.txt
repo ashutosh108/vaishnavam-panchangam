@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(ekadashi-calculator VERSION 0.1 LANGUAGES C CXX)
+project(vaishnavam-panchangam VERSION 0.1 LANGUAGES C CXX)
 option(VP_BUILD_STATIC_EXECUTABLE "build static executable (no .dll or .so dependencies like MSVCRT or libc++)" ON)
 
 # Explicitly set build type to "Debug" by default.
@@ -28,13 +28,13 @@ target_include_directories(${PROJECT_NAME} PRIVATE src)
 target_link_libraries(${PROJECT_NAME} PRIVATE swe)
 if (VP_BUILD_STATIC_EXECUTABLE)
     if (MSVC)
-        target_link_options(ekadashi-calculator PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
+        target_link_options(${PROJECT_NAME} PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
     else()
         # Add "-static" option only for win32 because in linux glibc -pthread
         # (required for std::call_once used by tz) and -static are incompatible.
         # It works fine for gcc in Windows, though.
         if (WIN32)
-            target_link_options(ekadashi-calculator PRIVATE -static)
+            target_link_options(${PROJECT_NAME} PRIVATE -static)
         endif()
     endif()
 endif()
@@ -110,10 +110,10 @@ add_test(test-main test-main)
 add_custom_target(
     wasmdeploy
     COMMAND
-    ${CMAKE_COMMAND} --build . --target ekadashi-calculator
+    ${CMAKE_COMMAND} --build . --target ${PROJECT_NAME}
     COMMAND
-    # "$<TARGET_FILE_DIR:ekadashi-calculator>/ekadashi-calculator.{js,wasm}"
-    rsync ekadashi-calculator.js ekadashi-calculator.wasm ../public_html/index.html 192.168.88.172:public_html/ekadashi-calculator/
+    # "$<TARGET_FILE_DIR:vaishnavam-panchangam>/vaishnavam-panchangam.{js,wasm}"
+    rsync vaishnavam-panchangam.js vaishnavam-panchangam.wasm ../public_html/index.html 192.168.88.172:public_html/vaishnavam-panchangam/
 )
 
 add_executable(qwe src/qwe.cpp)
@@ -191,10 +191,10 @@ else()
     target_compile_options(test-main PRIVATE ${WARN_FLAGS})
 endif()
 
-target_compile_options(ekadashi-calculator PRIVATE ${WARN_FLAGS})
+target_compile_options(${PROJECT_NAME} PRIVATE ${WARN_FLAGS})
 target_compile_options(qwe PRIVATE ${WARN_FLAGS})
 
-add_custom_command(TARGET ekadashi-calculator POST_BUILD
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tzdata ${CMAKE_BINARY_DIR}/tzdata)
 add_custom_command(TARGET test-main POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tzdata ${CMAKE_BINARY_DIR}/tzdata)
@@ -203,12 +203,12 @@ file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/eph)
 file(DOWNLOAD https://github.com/ashutosh108/eph/raw/master/sepl_18.se1 ${CMAKE_BINARY_DIR}/eph/sepl_18.se1 EXPECTED_HASH MD5=76235ef7e2365da3e1e4492d5c3f7801)
 file(DOWNLOAD https://github.com/ashutosh108/eph/raw/master/semo_18.se1 ${CMAKE_BINARY_DIR}/eph/semo_18.se1 EXPECTED_HASH MD5=7d67f3203b5277865235529ed26eaf19)
 
-install(TARGETS ekadashi-calculator DESTINATION .)
+install(TARGETS ${PROJECT_NAME} DESTINATION .)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/eph ${CMAKE_BINARY_DIR}/tzdata DESTINATION .)
 add_custom_target(
     zip
     COMMAND
-    ${CMAKE_COMMAND} --build . --target ekadashi-calculator
+    ${CMAKE_COMMAND} --build . --target ${PROJECT_NAME}
     COMMAND
     ${CMAKE_COMMAND} --install . --prefix ${PROJECT_NAME} --config Debug
     COMMAND

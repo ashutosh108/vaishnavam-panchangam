@@ -20,8 +20,8 @@ using namespace vp;
 
 void print_usage() {
     std::cout << "USAGE:\n";
-    std::cout << "ekadashi-calculator YYYY-MM-DD latitude longitude\n";
-    std::cout << "ekadashi-calculator YYYY-MM-DD location-name\n";
+    std::cout << "vaishnavam-panchangam YYYY-MM-DD latitude longitude\n";
+    std::cout << "vaishnavam-panchangam YYYY-MM-DD location-name\n";
     std::cout << "\n";
     std::cout << "    latitude and longitude are given as decimal degrees (e.g. 30.7)\n";
 }
