@@ -10,16 +10,19 @@ script:
   - cd build && cmake .. && cmake --build . && ./Debug/test-main.exe
   - cmake --build . --target zip
 
+# note: some lines have to be quoted because otherwise ": " in those lines
+# makes yaml interpret them not as strings but as conditional trinary operator:
+#  ? "echo \"TRAVIS_TAG" : "${TRAVIS_TAG}\"" (yes, with empty conditional part)
+
 before_deploy:
-  # Set  up git user name and tag this commit
   - git config --local user.name "Anton Voloshin"
   - git config --local user.email "ashutosh108@gmail.com"
   - export TRAVIS_TAG=${TRAVIS_TAG:-preview-$(date +'%Y-%m-%d')}
   - git tag -f $TRAVIS_TAG
-  - echo "TRAVIS_TAG: ${TRAVIS_TAG}"
-  - echo "TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}"
-  - echo "TRAVIS_REPO_SLUG_1: ${TRAVIS_REPO_SLUG%/*}"
-  - echo -n "GUTHUB_API_KEY: " && [ -z "${GITHUB_API_KEY}" ] && echo "EMPTY" || echo "NOT empty"
+  - "echo \"TRAVIS_TAG: ${TRAVIS_TAG}\""
+  - "echo \"TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}\""
+  - "echo \"TRAVIS_REPO_SLUG_1: ${TRAVIS_REPO_SLUG%/*}\""
+  - "echo -n \"GITHUB_API_KEY: \" && [ -z \"${GITHUB_API_KEY}\" ] && echo EMPTY || echo NOT empty"
   - git remote add gh https://${TRAVIS_REPO_SLUG%/*}:${GITHUB_API_KEY}@github.com/${TRAVIS_REPO_SLUG}.git
   - git push -f gh $TRAVIS_TAG
   - git remote remove gh
