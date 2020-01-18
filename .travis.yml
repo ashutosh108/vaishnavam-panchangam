@@ -26,8 +26,8 @@ before_deploy:
 - "echo \"TRAVIS_TAG: ${TRAVIS_TAG}\""
 - "echo \"TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}\""
 - "echo \"TRAVIS_REPO_SLUG_1: ${TRAVIS_REPO_SLUG%/*}\""
-- "echo -n \"GITHUB_TOKEN: \" && [ -z \"${GITHUB_API_KEY}\" ] && echo EMPTY || echo NOT empty"
-- git remote add gh https://${TRAVIS_REPO_SLUG%/*}:${GITHUB_API_KEY}@github.com/${TRAVIS_REPO_SLUG}.git
+- "echo -n \"GITHUB_TOKEN: \" && [ -z \"${GITHUB_TOKEN}\" ] && echo EMPTY || echo NOT empty"
+- git remote add gh https://${TRAVIS_REPO_SLUG%/*}:${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git
 - git push -f gh $TRAVIS_TAG
 - git remote remove gh
 
