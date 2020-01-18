@@ -1,7 +1,7 @@
 env:
   global:
-  # this defines GITHUB_API_KEY, updated 2020-01-16
-  - secure: hE+0Its8IiMToQpUswoxW/bcfeQgBbVW09+2FqSjYDs6dxTem+Z63Qx6VOfe/9bniqaYXAr95JB/jIHJbYTj3htJyj4BPzVeE5MWWCimuw8Li8aze8K+IskaKuJ1UJSXIzbhvd8XoQlTeKJr2ZEzKLTF2WkyvTgIIcwQiiEK1AVhZbTdwnMznId1lc4f18gb5agRduZOjfQtrz8WzRpQfWj1r7sbtQlFudee2MSSLG3f/n+sGGz57+vZkVaGQiDGwHLeIqSbkF84IXzg+PD9BGgx4sR8NUXHio7wyO2lf41xtfC2bnafn+PLg07d/5N/nYsQ6nPIlqI+l5fQUd2dGrOtwSpdqZXCogVnSB5Dub/E/MA9FtqKnUdExzr5hFlzc9qtZ+tn5XTFHC+tI+bAcPablByTrbme5MaC4EeDQSOEx+DUcDU8lDiOr1JHPiO0/zCOV+uYGhwvTvpPyfNoTFcxJAskbvZTzJpvu8Fp0dFLDaMFjY3QxBMibbPn9f+CBo4nawuWatW3sUtq6wp9ZF7/8A0/2XATPI3M6lZDGU0yicFBdPRbYWFwWNOBVWvGMVab0iqW5XAxTfHx151hM2ExQUU8mzeOZ8+/MLWrKRi3yBvNaLwqiOX7AiLaT05fS89PznAYKZyVhN9zltlPzrAjJrM6ZhM0tK/H4ULNjp4=
+  # this defines GITHUB_TOKEN, updated 2020-01-18
+  - secure: fbY6aN7FAP6dhoKfpB6SN+Gx/sENuT6GzbTRvqFX95c8bGT0ry6INRrgTo4yxaHL8RYXWW4a51zbvi4V7UfLWV91NKJkT27zn7gM3J4C0YPBRAsGjBRqsOtjLFGQSx0G2aFerZ1wNcYpbqtt3e1qahoKZefjuSwTYkdwzNQhoE4BESx7AvnL1ERkAYoaRmRQ5RYRrYFkNjPMj2ujtPEOCdknWySGXIEc9XOBrsLl971MKxdOKDbqpvhoSlSEo+UDa5NS23SXuDz3h/Lt5t/FRUKKmi3j6cQSVCHE3Dgbt4KLZrwWILk4JsLITE4KeUoXvbmiL+YHFhgKjrhgqNto/Bd3SMhU+2mez5QqV4rxkyQGWNk4C9Ra+Gqzf/CM74w4rBInfKVQk8InRT7hG7GjWaXaeF/IqYaIymRAW4vCjCfcRrzgrS/e2ILfXxK91rhh5nqXp8xQNX93QZ8as764ilfmssomFH8e4KwfCCTuLb6AV7EQ+uWqVLY5mwCrYEsmLfaRbEgVPSRvwQMxLy8Sp5IuYl9neaPBmV0lgqjvf7zH21X9JyqFv48d8ZH3md+pKQxf0B41LH7qMJsWqdM/Xl4juPO/qMTWKTGdxs7HHQI41DItQct4byBbrkc9f/g14o1s1pgWkw+yhNEfBETf2uZMgc8DHFjr5qxMfMlatm0=
 
 os: windows
 language: cpp
@@ -26,14 +26,14 @@ before_deploy:
 - "echo \"TRAVIS_TAG: ${TRAVIS_TAG}\""
 - "echo \"TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}\""
 - "echo \"TRAVIS_REPO_SLUG_1: ${TRAVIS_REPO_SLUG%/*}\""
-- "echo -n \"GITHUB_API_KEY: \" && [ -z \"${GITHUB_API_KEY}\" ] && echo EMPTY || echo NOT empty"
+- "echo -n \"GITHUB_TOKEN: \" && [ -z \"${GITHUB_API_KEY}\" ] && echo EMPTY || echo NOT empty"
 - git remote add gh https://${TRAVIS_REPO_SLUG%/*}:${GITHUB_API_KEY}@github.com/${TRAVIS_REPO_SLUG}.git
 - git push -f gh $TRAVIS_TAG
 - git remote remove gh
 
 deploy:
   provider: releases
-  api_key: ${GITHUB_API_KEY}
+  api_key: ${GITHUB_TOKEN}
   file:
   - vaishnavam-panchangam.zip
   skip_cleanup: true
