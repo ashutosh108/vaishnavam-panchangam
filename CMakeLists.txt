@@ -217,3 +217,5 @@ add_custom_target(
 )
 
 include(CPack)
+
+add_subdirectory(gui-qt)
