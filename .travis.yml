@@ -13,7 +13,7 @@ branches:
 script:
 - wget https://github.com/ashutosh108/qt-static-msvc/releases/download/build-2020-01-30/qt5.14-static-msvc2017-minimal.zip
 - mkdir -p C:/Qt && 7z x qt5.14-static-msvc2017-minimal.zip -oC:/Qt/
-- export PATH=/c/Qt/5.14-static-msvc/bin;$PATH
+- export PATH=/c/Qt/5.14-static-msvc/bin:$PATH
 - mkdir build
 - cd build && cmake .. && cmake --build . && ./Debug/test-main.exe
 - cmake --build . --target zip
