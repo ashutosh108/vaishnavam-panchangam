@@ -23,7 +23,7 @@ if (VP_BUILD_STATIC_EXECUTABLE)
     endif()
 endif()
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/text-interface.cpp)
 target_sources(${PROJECT_NAME} PRIVATE NOTES.txt)
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 target_link_libraries(${PROJECT_NAME} PRIVATE swe)
