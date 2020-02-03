@@ -23,7 +23,7 @@ if (VP_BUILD_STATIC_EXECUTABLE)
     endif()
 endif()
 
-add_executable(${PROJECT_NAME} src/main.cpp src/text-interface.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp)
 target_sources(${PROJECT_NAME} PRIVATE NOTES.txt)
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 target_link_libraries(${PROJECT_NAME} PRIVATE swe)
@@ -68,6 +68,7 @@ add_library(swe STATIC
     src/vrata.h src/vrata.cpp
     src/vrata_detail.h src/vrata_detail.cpp
     src/paran.h src/paran.cpp
+    src/text-interface.cpp
 )
 target_include_directories(swe PRIVATE vendor/sweph/src src)
 target_link_libraries(swe PRIVATE sweph PUBLIC date::tz)
