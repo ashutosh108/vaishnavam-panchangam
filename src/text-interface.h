@@ -11,6 +11,18 @@
 
 namespace vp::text_ui {
 
+/* Change dir to the directory with eph and tzdata data files (usually it's .exe dir) */
+void change_to_data_dir(const char* argv0);
+
+date::year_month_day parse_ymd(const char *s);
+void calc_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o=std::cout);
+void calc_one(date::year_month_day base_date, const char * location_name, std::ostream &o=std::cout);
+void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o=std::cout);
+void print_detail_one(date::year_month_day base_date, const char * location_name, std::ostream &o=std::cout);
+void calc_all(date::year_month_day d);
+
+namespace detail {
+
 struct NamedCoord {
     const char *name;
     Location coord;
@@ -89,23 +101,11 @@ static std::vector<NamedCoord> locations {
     { "meadowlake", meadowlake_coord },
 };
 
-namespace detail {
-
 std::filesystem::path determine_exe_dir(const char* argv0);
 std::filesystem::path determine_working_dir(const char* argv0);
 
-}
+} // namespace detail
 
-/* Change dir to the directory with eph and tzdata data files (usually it's .exe dir) */
-void change_to_data_dir(const char* argv0);
-
-date::year_month_day parse_ymd(const char *s);
-void calc_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o=std::cout);
-void calc_one(date::year_month_day base_date, const char * location_name, std::ostream &o=std::cout);
-void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o=std::cout);
-void print_detail_one(date::year_month_day base_date, const char * location_name, std::ostream &o=std::cout);
-void calc_all(date::year_month_day d);
-    
-} // namespace vp::text
+} // namespace vp::text_ui
 
 #endif // VP_SRC_TEXT_INTERFACE_H

@@ -1,3 +1,4 @@
+[ ] gui-qt: choose location via dropdown, not text input
 [ ] make sure we get reasonable error message when eph folder not found (add overall exception handler? add test?)
 [ ] when eph files not found and the SWE_SWIEPH was supposed to be used: use SWE_MOSEPH but print large warning
 [ ] make sure we get reasonable error message when tzdata folder is missing (add test?)
