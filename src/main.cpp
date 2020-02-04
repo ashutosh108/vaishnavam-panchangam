@@ -16,6 +16,7 @@ void print_usage() {
 
 int main(int argc, char *argv[])
 {
+    vp::text_ui::change_to_data_dir(argv[0]);
     date::set_install("tzdata");
     if (argc-1 >= 1 && strcmp(argv[1], "-d") == 0) {
         if (argc-1 != 3) {

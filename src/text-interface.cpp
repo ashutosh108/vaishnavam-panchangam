@@ -1,6 +1,7 @@
 #include "text-interface.h"
 
 #include <cstring>
+#include <filesystem>
 #include <iomanip>
 #include <iostream>
 
@@ -80,6 +81,42 @@ void calc_all(date::year_month_day d) {
     for (auto &l : locations) {
         calc_one(d, l.name, l.coord);
     }
+}
+
+namespace detail {
+
+std::filesystem::path determine_exe_dir(const char* argv0) {
+    namespace fs = std::filesystem;
+    return fs::absolute(fs::path{argv0}).parent_path();
+}
+
+std::filesystem::path determine_working_dir(const char* argv0) {
+    namespace fs = std::filesystem;
+    auto exe_dir = detail::determine_exe_dir(argv0);
+
+    constexpr int max_steps_up = 2;
+
+    for (int step=0; step < max_steps_up; ++step) {
+        // Most common case: "eph" and "tzdata" directories exist in the same directory as .exe
+        if (fs::exists(exe_dir / "eph")) {
+            return exe_dir;
+        }
+
+        // But when running exes from Debug/ or Release/ subdirectories, we need to make one step up.
+        // But only make one step up: if the data dir still doesn't exist there either, too bad...
+        exe_dir = exe_dir.parent_path();
+    }
+    // fallback: return whatever we got, even if we couldn't find proper working dir.
+    return exe_dir;
+}
+
+}
+
+/* Change dir to the directory with eph and tzdata data files (usually it's .exe dir or the one above) */
+void change_to_data_dir(const char* argv0)
+{
+    auto working_dir = detail::determine_working_dir(argv0);
+    std::filesystem::current_path(working_dir);
 }
 
 } // namespace vp::text_ui

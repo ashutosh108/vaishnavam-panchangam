@@ -1,4 +1,5 @@
-[ ] add raw Qt version (date input, calculate button, text area output)
+[ ] ensure we never pass exceptions from on_button_click
+[ ] rename .EXEs: vaishnavam_panchangam.exe (Qt) and vaishnavam_panchangam_cli.exe (command line)
 [ ] make sure we get reasonable error message when eph folder not found (add overall exception handler? add test?)
 [ ] when eph files not found and the SWE_SWIEPH was supposed to be used: use SWE_MOSEPH but print large warning
 [ ] make sure we get reasonable error message when tzdata folder is missing (add test?)
@@ -72,3 +73,6 @@ done:
 [+] github: add social preview image for vaishnavam-panchangam [2020-01-15]
 [+] cmake: turn off c++ compiler-specific extensions (prefer strict ISO C++17 standard) [2020-01-15]
 [+] improve travis-ci deployment: only keep one latest release per day, overwrite it [2020-01-16]
+[+] add raw Qt version (date input, calculate button, text area output) [2020-02-03]
+[+] chdir to .exe dir or to parent directory (if eph dir not found). Thus .exe will work both from build dir or Debug/Release subdir. [2020-02-04]
+[+] get .exe dir and chdir() without Qt (to make sure CLI also finds data files) [2020-02-04]

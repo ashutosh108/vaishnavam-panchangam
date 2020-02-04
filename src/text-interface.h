@@ -2,6 +2,7 @@
 #define VP_SRC_TEXT_INTERFACE_H
 
 #include <chrono>
+#include <filesystem>
 #include <iostream>
 #include <optional>
 
@@ -87,6 +88,16 @@ static std::vector<NamedCoord> locations {
     { "miami", miami_coord },
     { "meadowlake", meadowlake_coord },
 };
+
+namespace detail {
+
+std::filesystem::path determine_exe_dir(const char* argv0);
+std::filesystem::path determine_working_dir(const char* argv0);
+
+}
+
+/* Change dir to the directory with eph and tzdata data files (usually it's .exe dir) */
+void change_to_data_dir(const char* argv0);
 
 date::year_month_day parse_ymd(const char *s);
 void calc_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o=std::cout);
