@@ -118,9 +118,6 @@ add_custom_target(
     rsync vaishnavam-panchangam.js vaishnavam-panchangam.wasm ../public_html/index.html 192.168.88.172:public_html/vaishnavam-panchangam/
 )
 
-add_executable(qwe src/qwe.cpp)
-target_link_libraries(qwe PRIVATE date::tz)
-
 if(MSVC)
     set(WARN_FLAGS_NO_WX ${WARN_FLAGS} /permissive- /W4
         /w14242 /w14254 /w14263 /w14265 /w14287 /we4289 /w14296 /w14311
@@ -194,7 +191,6 @@ else()
 endif()
 
 target_compile_options(${PROJECT_NAME} PRIVATE ${WARN_FLAGS})
-target_compile_options(qwe PRIVATE ${WARN_FLAGS})
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tzdata ${CMAKE_BINARY_DIR}/tzdata)
