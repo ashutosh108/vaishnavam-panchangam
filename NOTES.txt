@@ -1,4 +1,3 @@
-[ ] ensure we never pass exceptions from on_button_click
 [ ] make sure we get reasonable error message when eph folder not found (add overall exception handler? add test?)
 [ ] when eph files not found and the SWE_SWIEPH was supposed to be used: use SWE_MOSEPH but print large warning
 [ ] make sure we get reasonable error message when tzdata folder is missing (add test?)
@@ -76,3 +75,4 @@ done:
 [+] chdir to .exe dir or to parent directory (if eph dir not found). Thus .exe will work both from build dir or Debug/Release subdir. [2020-02-04]
 [+] get .exe dir and chdir() without Qt (to make sure CLI also finds data files) [2020-02-04]
 [+] rename .EXEs: vaishnavam-panchangam.exe (Qt) and vaishnavam-panchangam-cli.exe (command line) [2020-02-04]
+[+] ensure we never pass exceptions from on_button_click [2020-02-04]
