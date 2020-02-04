@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(VP_QT_GUI_EXE vaishnavam-panchangam)
+
 project(gui-qt LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -36,7 +38,7 @@ find_package(Qt5 COMPONENTS Widgets Core REQUIRED)
 set(TS_FILES gui-qt_en_US.ts)
 
 if(ANDROID)
-  add_library(gui-qt SHARED
+  add_library(${VP_QT_GUI_EXE} SHARED
     main.cpp
     mainwindow.cpp
     mainwindow.h
@@ -44,7 +46,7 @@ if(ANDROID)
 #    ${TS_FILES}
   )
 else()
-  add_executable(gui-qt
+  add_executable(${VP_QT_GUI_EXE}
     main.cpp
     mainwindow.cpp
     mainwindow.h
@@ -54,20 +56,20 @@ else()
 endif()
 
 #add_definitions(-DQT_STATICPLUGIN)
-target_link_libraries(gui-qt PRIVATE
+target_link_libraries(${VP_QT_GUI_EXE} PRIVATE
     Qt5::Widgets
     swe
 )
-target_include_directories(gui-qt PRIVATE ../src)
+target_include_directories(${VP_QT_GUI_EXE} PRIVATE ../src)
 
 #qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-install(TARGETS ${PROJECT_NAME} DESTINATION .)
-set_target_properties(gui-qt PROPERTIES WIN32_EXECUTABLE YES)
+install(TARGETS ${VP_QT_GUI_EXE} DESTINATION .)
+set_target_properties(${VP_QT_GUI_EXE} PROPERTIES WIN32_EXECUTABLE YES)
 
 if (MSVC)
-	target_link_options(${PROJECT_NAME} PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
+        target_link_options(${VP_QT_GUI_EXE} PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 else()
     if (WIN32)
-        target_link_options(${PROJECT_NAME} PRIVATE -static)
+        target_link_options(${VP_QT_GUI_EXE} PRIVATE -static)
     endif()
 endif()

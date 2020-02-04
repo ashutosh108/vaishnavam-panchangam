@@ -23,19 +23,21 @@ if (VP_BUILD_STATIC_EXECUTABLE)
     endif()
 endif()
 
-add_executable(${PROJECT_NAME} src/main.cpp)
-target_sources(${PROJECT_NAME} PRIVATE NOTES.txt)
-target_include_directories(${PROJECT_NAME} PRIVATE src)
-target_link_libraries(${PROJECT_NAME} PRIVATE swe)
+set(VP_CLI_EXE ${PROJECT_NAME}-cli)
+
+add_executable(${VP_CLI_EXE} src/main.cpp)
+target_sources(${VP_CLI_EXE} PRIVATE NOTES.txt)
+target_include_directories(${VP_CLI_EXE} PRIVATE src)
+target_link_libraries(${VP_CLI_EXE} PRIVATE swe)
 if (VP_BUILD_STATIC_EXECUTABLE)
     if (MSVC)
-        target_link_options(${PROJECT_NAME} PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
+        target_link_options(${VP_CLI_EXE} PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
     else()
         # Add "-static" option only for win32 because in linux glibc -pthread
         # (required for std::call_once used by tz) and -static are incompatible.
         # It works fine for gcc in Windows, though.
         if (WIN32)
-            target_link_options(${PROJECT_NAME} PRIVATE -static)
+            target_link_options(${VP_CLI_EXE} PRIVATE -static)
         endif()
     endif()
 endif()
@@ -113,7 +115,7 @@ add_test(test-main test-main)
 add_custom_target(
     wasmdeploy
     COMMAND
-    ${CMAKE_COMMAND} --build . --target ${PROJECT_NAME}
+    ${CMAKE_COMMAND} --build . --target ${VP_CLI_EXE}
     COMMAND
     # "$<TARGET_FILE_DIR:vaishnavam-panchangam>/vaishnavam-panchangam.{js,wasm}"
     rsync vaishnavam-panchangam.js vaishnavam-panchangam.wasm ../public_html/index.html 192.168.88.172:public_html/vaishnavam-panchangam/
@@ -191,9 +193,9 @@ else()
     target_compile_options(test-main PRIVATE ${WARN_FLAGS})
 endif()
 
-target_compile_options(${PROJECT_NAME} PRIVATE ${WARN_FLAGS})
+target_compile_options(${VP_CLI_EXE} PRIVATE ${WARN_FLAGS})
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+add_custom_command(TARGET ${VP_CLI_EXE} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tzdata ${CMAKE_BINARY_DIR}/tzdata)
 add_custom_command(TARGET test-main POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/vendor/tzdata ${CMAKE_BINARY_DIR}/tzdata)
@@ -202,12 +204,12 @@ file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/eph)
 file(DOWNLOAD https://github.com/ashutosh108/eph/raw/master/sepl_18.se1 ${CMAKE_BINARY_DIR}/eph/sepl_18.se1 EXPECTED_HASH MD5=76235ef7e2365da3e1e4492d5c3f7801)
 file(DOWNLOAD https://github.com/ashutosh108/eph/raw/master/semo_18.se1 ${CMAKE_BINARY_DIR}/eph/semo_18.se1 EXPECTED_HASH MD5=7d67f3203b5277865235529ed26eaf19)
 
-install(TARGETS ${PROJECT_NAME} DESTINATION .)
+install(TARGETS ${VP_CLI_EXE} DESTINATION .)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/eph ${CMAKE_BINARY_DIR}/tzdata DESTINATION .)
 add_custom_target(
     zip
     COMMAND
-    ${CMAKE_COMMAND} --build . --target ${PROJECT_NAME}
+    ${CMAKE_COMMAND} --build . --target ${VP_CLI_EXE}
     COMMAND
     ${CMAKE_COMMAND} --install . --prefix ${PROJECT_NAME} --config Debug
     COMMAND
