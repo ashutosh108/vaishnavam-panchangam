@@ -21,13 +21,13 @@ date::year_month_day parse_ymd(const char *s) {
 
 std::optional<Location> find_coord(const char *location_name) {
     auto found = std::find_if(
-                std::begin(detail::locations),
-                std::end(detail::locations),
+                std::begin(detail::LocationDb::locations()),
+                std::end(detail::LocationDb::locations()),
                 [=](auto named_coord){
                     return strcmp(named_coord.name, location_name) == 0;
                 }
     );
-    if (found == std::end(detail::locations)) return std::nullopt;
+    if (found == std::end(detail::LocationDb::locations())) return std::nullopt;
     return found->coord;
 }
 
@@ -78,7 +78,7 @@ void print_detail_one(date::year_month_day base_date, const char * location_name
 }
 
 void calc_all(date::year_month_day d, std::ostream &o) {
-    for (auto &l : detail::locations) {
+    for (auto &l : detail::LocationDb::locations()) {
         calc_one(d, l.name, l.coord, o);
     }
 }
