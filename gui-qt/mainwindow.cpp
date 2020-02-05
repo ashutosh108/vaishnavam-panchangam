@@ -26,13 +26,18 @@ void MainWindow::on_FindNextEkadashi_clicked()
         QByteArray date_as_bytearray = date_string.toLocal8Bit();
         auto base_date = vp::text_ui::parse_ymd(date_as_bytearray.data());
 
-        auto location_string = ui->LocationLineEdit->text();
-        QByteArray location_as_bytearray = location_string.toLocal8Bit();
-        char * location_as_cstr = location_as_bytearray.data();
+        auto location_string = ui->LocationLineEdit->text().trimmed();
 
         std::stringstream s;
-        vp::text_ui::calc_one(
-                    base_date, location_as_cstr, s);
+        if (location_string.isEmpty()) {
+            vp::text_ui::calc_all(base_date, s);
+        } else {
+            QByteArray location_as_bytearray = location_string.toLocal8Bit();
+            char * location_as_cstr = location_as_bytearray.data();
+
+            vp::text_ui::calc_one(
+                        base_date, location_as_cstr, s);
+        }
 
         ui->calcResult->setText(QString::fromStdString(s.str()));
     } catch (std::exception &e) {

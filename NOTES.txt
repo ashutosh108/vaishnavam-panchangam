@@ -77,3 +77,4 @@ done:
 [+] get .exe dir and chdir() without Qt (to make sure CLI also finds data files) [2020-02-04]
 [+] rename .EXEs: vaishnavam-panchangam.exe (Qt) and vaishnavam-panchangam-cli.exe (command line) [2020-02-04]
 [+] ensure we never pass exceptions from on_button_click [2020-02-04]
+[+] gui-qt: calculate for all locations when no location given [2020-02-05]

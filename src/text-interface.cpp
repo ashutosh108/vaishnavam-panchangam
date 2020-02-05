@@ -77,9 +77,9 @@ void print_detail_one(date::year_month_day base_date, const char * location_name
     print_detail_one(base_date, location_name, *coord, o);
 }
 
-void calc_all(date::year_month_day d) {
+void calc_all(date::year_month_day d, std::ostream &o) {
     for (auto &l : detail::locations) {
-        calc_one(d, l.name, l.coord);
+        calc_one(d, l.name, l.coord, o);
     }
 }
 

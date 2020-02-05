@@ -19,7 +19,7 @@ void calc_one(date::year_month_day base_date, const char *location_name, Locatio
 void calc_one(date::year_month_day base_date, const char * location_name, std::ostream &o=std::cout);
 void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o=std::cout);
 void print_detail_one(date::year_month_day base_date, const char * location_name, std::ostream &o=std::cout);
-void calc_all(date::year_month_day d);
+void calc_all(date::year_month_day d, std::ostream &o=std::cout);
 
 namespace detail {
 
