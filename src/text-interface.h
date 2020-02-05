@@ -28,8 +28,12 @@ public:
         Location coord;
     };
 
-    static const std::vector<NamedCoord> & locations();
+    auto begin() { return locations().cbegin(); }
+    auto end() { return locations().cend(); }
     static std::optional<Location> find_coord(const char *location_name);
+
+private:
+    static const std::vector<NamedCoord> & locations();
 };
 
 namespace detail {

@@ -154,7 +154,7 @@ void print_detail_one(date::year_month_day base_date, const char *location_name,
             }
 
             void calc_all(date::year_month_day d, std::ostream &o) {
-                for (auto &l : LocationDb::locations()) {
+                for (auto &l : LocationDb()) {
                     calc_one(d, l.name, l.coord, o);
                 }
             }
