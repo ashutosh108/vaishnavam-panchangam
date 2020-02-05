@@ -105,6 +105,7 @@ public:
         };
         return locations_;
     }
+    static std::optional<Location> find_coord(const char *location_name);
 };
 
 std::filesystem::path determine_exe_dir(const char* argv0);
