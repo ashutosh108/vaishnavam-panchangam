@@ -211,7 +211,7 @@ add_custom_target(
     COMMAND
     ${CMAKE_COMMAND} --build . --target ${VP_CLI_EXE}
     COMMAND
-    ${CMAKE_COMMAND} --install . --prefix ${PROJECT_NAME} --config Debug
+    ${CMAKE_COMMAND} --install . --prefix ${PROJECT_NAME} --config ${CMAKE_BUILD_TYPE}
     COMMAND
     ${CMAKE_COMMAND} -E tar cvf ${PROJECT_NAME}.zip --format=zip ${PROJECT_NAME}
 )
