@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "date-fixed.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -21,5 +22,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     void setupLocationsComboBox();
+    void calcAll(date::year_month_day base_date, std::ostream & o);
+    void calcOne(date::year_month_day base_date, QString location, std::ostream & o);
 };
 #endif // MAINWINDOW_H

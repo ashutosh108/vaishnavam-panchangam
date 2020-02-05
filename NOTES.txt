@@ -1,3 +1,6 @@
+[ ] determine current nakshatra
+[ ] determine current masa (from nakshatra on Pūrṇimā)
+[ ] determine ekadāśī names
 [ ] make sure we get reasonable error message when eph folder not found (add overall exception handler? add test?)
 [ ] when eph files not found and the SWE_SWIEPH was supposed to be used: use SWE_MOSEPH but print large warning
 [ ] make sure we get reasonable error message when tzdata folder is missing (add test?)
@@ -78,3 +81,5 @@ done:
 [+] ensure we never pass exceptions from on_button_click [2020-02-04]
 [+] gui-qt: calculate for all locations when no location given [2020-02-05]
 [+] gui-qt: choose location via combo box, not text input [2020-02-05]
+[+] better GUI: use two tabs for brief report and detailed report (move current one to detailed) [2020-02-05]
+[+] better GUI: show simplified result in first tab (vrata date, paran time) [2020-02-05]
