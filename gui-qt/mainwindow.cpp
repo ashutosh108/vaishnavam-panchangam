@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setupLocationsComboBox();
 }
 
 MainWindow::~MainWindow()
@@ -26,10 +27,10 @@ void MainWindow::on_FindNextEkadashi_clicked()
         QByteArray date_as_bytearray = date_string.toLocal8Bit();
         auto base_date = vp::text_ui::parse_ymd(date_as_bytearray.data());
 
-        auto location_string = ui->LocationLineEdit->text().trimmed();
+        auto location_string = ui->locationComboBox->currentText();
 
         std::stringstream s;
-        if (location_string.isEmpty()) {
+        if (location_string == "all") {
             vp::text_ui::calc_all(base_date, s);
         } else {
             QByteArray location_as_bytearray = location_string.toLocal8Bit();
@@ -44,5 +45,13 @@ void MainWindow::on_FindNextEkadashi_clicked()
         QMessageBox::warning(this, "error", e.what());
     } catch (...) {
         QMessageBox::warning(this, "internal error", "unexpected exception thrown");
+    }
+}
+
+void MainWindow::setupLocationsComboBox()
+{
+    ui->locationComboBox->addItem("all");
+    for (const auto &l : vp::text_ui::LocationDb()) {
+        ui->locationComboBox->addItem(l.name);
     }
 }

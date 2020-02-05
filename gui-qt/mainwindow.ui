@@ -59,7 +59,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="LocationLineEdit"/>
+            <widget class="QComboBox" name="locationComboBox"/>
            </item>
           </layout>
          </item>

@@ -20,5 +20,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    void setupLocationsComboBox();
 };
 #endif // MAINWINDOW_H
