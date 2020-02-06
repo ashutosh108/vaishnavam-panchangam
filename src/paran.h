@@ -33,6 +33,18 @@ public:
 std::ostream & operator<<(std::ostream &o, Paran const &p);
 std::ostream & operator<<(std::ostream &o, Paran::Type const &t);
 
+class ParanFormatter {
+public:
+    static std::string format(
+            const Paran &paran,
+            const char * timezone_name,
+            const char * paran_start_format = "%H:%M:%S",
+            const char * separator = "-",
+            const char * paran_end_format = "%H:%M:%S",
+            const char * paran_type_separator = nullptr
+            );
+};
+
 } // namespace vp
 
 #endif // PARAN_H

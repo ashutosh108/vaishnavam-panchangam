@@ -67,6 +67,9 @@ Paran Calc::get_paran(JulDays_UT const &last_fasting_sunrise) const
                 auto dvadashi_quarter = proportional_time(*dvadashi_start, *dvadashi_end, 0.25);
                 if (paran_start < dvadashi_quarter) {
                     paran_start = dvadashi_quarter;
+                    if (paran_end <= paran_start) {
+                        paran_end = std::nullopt;
+                    }
                     type = Paran::Type::From_Quarter_Dvadashi;
                 }
             }

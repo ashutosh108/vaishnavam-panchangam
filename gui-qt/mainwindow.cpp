@@ -80,7 +80,7 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
     if (!vrata.has_value()) {
         o << location_name << ": calculation error, can't find next Ekadashi. Sorry.\n";
     } else {
-        ui->locationName->setText(location_name);
+        ui->locationName->setText(location_string);
 
         std::stringstream vrata_type_s;
         vrata_type_s << vrata->type;
@@ -90,24 +90,15 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
         vrata_date_s << vrata->date;
         ui->vrataDate->setText(QString::fromStdString(vrata_date_s.str()));
 
-        auto timezone = date::locate_zone(coord->timezone_name);
-        std::stringstream paran_s;
-        if (vrata->paran.paran_start.has_value()) {
-            auto rounded_up = date::ceil<std::chrono::seconds>(vrata->paran.paran_start->as_sys_time());
-            auto zoned = date::make_zoned(timezone, rounded_up);
-            paran_s << date::format("%H:%M<span style=\"color:darkgray; font-size:small;\">:%S</span>", zoned);
-        } else {
-            paran_s << '?';
-        }
-        paran_s << "–";
-        if (vrata->paran.paran_end.has_value()) {
-            auto rounded_down = date::floor<std::chrono::seconds>(vrata->paran.paran_end->as_sys_time());
-            auto zoned = date::make_zoned(timezone, rounded_down);
-            paran_s << date::format("%H:%M<span style=\"color:darkgray; font-size:small;\">:%S</span>", zoned);
-        } else {
-            paran_s << '?';
-        }
-        ui->paranTime->setText(QString::fromStdString(paran_s.str()));
+        std::string paranTime = vp::ParanFormatter::format(
+                    vrata->paran,
+                    coord->timezone_name,
+                    "%H:%M<span style=\"color:darkgray; font-size:small;\">:%S</span>",
+                    "–",
+                    "%H:%M<span style=\"color:darkgray; font-size:small;\">:%S</span>",
+                    "<sup>*</sup><br><small><sup>*</sup>");
+        paranTime += "</small>";
+        ui->paranTime->setText(QString::fromStdString(paranTime));
 
         vp::Vrata_Detail vd{*vrata, *coord};
         o << location_name << '\n' << vd << "\n\n";

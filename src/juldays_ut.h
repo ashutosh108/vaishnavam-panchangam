@@ -34,7 +34,10 @@ public:
     JulDays_UT operator +=(double_days);
     JulDays_UT operator -=(double_days);
     bool operator <(JulDays_UT const &other) const;
+    bool operator <=(JulDays_UT const &other) const;
     bool operator >(JulDays_UT const &other) const;
+    bool operator >=(JulDays_UT const &other) const;
+    bool operator !=(JulDays_UT const &other) const;
 private:
     double_days juldays_ut_;
 };

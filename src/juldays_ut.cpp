@@ -90,9 +90,24 @@ bool JulDays_UT::operator <(const JulDays_UT &other) const
     return raw_julian_days_ut() < other.raw_julian_days_ut();
 }
 
+bool JulDays_UT::operator <=(const JulDays_UT &other) const
+{
+    return raw_julian_days_ut() <= other.raw_julian_days_ut();
+}
+
 bool JulDays_UT::operator >(const JulDays_UT &other) const
 {
     return raw_julian_days_ut() > other.raw_julian_days_ut();
+}
+
+bool JulDays_UT::operator >=(const JulDays_UT &other) const
+{
+    return raw_julian_days_ut() >= other.raw_julian_days_ut();
+}
+
+bool JulDays_UT::operator !=(const JulDays_UT &other) const
+{
+    return raw_julian_days_ut() != other.raw_julian_days_ut();
 }
 
 double_days operator -(const JulDays_UT &t1, const JulDays_UT &t2)

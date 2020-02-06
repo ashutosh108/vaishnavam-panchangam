@@ -83,3 +83,5 @@ done:
 [+] gui-qt: choose location via combo box, not text input [2020-02-05]
 [+] better GUI: use two tabs for brief report and detailed report (move current one to detailed) [2020-02-05]
 [+] better GUI: show simplified result in first tab (vrata date, paran time) [2020-02-05]
+[+] show pAraNam type (standard, after 1/4 dvAdashI, before end of dvAdashI) in summary UI [2020-02-06]
+[+] pAraNam after 1/4 dvAdashI: do not show paran end time when it's before paran start time [2020-02-06]
