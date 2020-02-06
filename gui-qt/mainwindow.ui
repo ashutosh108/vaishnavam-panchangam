@@ -187,7 +187,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Pāraṇ &lt;small&gt;(next day)&lt;/small&gt;:</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pāraṇam &lt;span style=&quot; font-size:small;&quot;&gt;(next day)&lt;/span&gt;:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
