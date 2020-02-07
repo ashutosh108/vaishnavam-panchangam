@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setupLocationsComboBox();
+    setDateToToday();
 }
 
 MainWindow::~MainWindow()
@@ -55,6 +56,13 @@ void MainWindow::setupLocationsComboBox()
     for (const auto &l : vp::text_ui::LocationDb()) {
         ui->locationComboBox->addItem(l.name);
     }
+}
+
+void MainWindow::setDateToToday()
+{
+    auto now = std::chrono::system_clock::now();
+    auto now_str = date::format("%Y-%m-%d", now);
+    ui->dateLineEdit->setText(QString::fromStdString(now_str));
 }
 
 void MainWindow::calcAll(date::year_month_day base_date, std::ostream &o)

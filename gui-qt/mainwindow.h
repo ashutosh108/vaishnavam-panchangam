@@ -22,6 +22,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     void setupLocationsComboBox();
+    void setDateToToday();
     void calcAll(date::year_month_day base_date, std::ostream & o);
     void calcOne(date::year_month_day base_date, QString location, std::ostream & o);
 };
