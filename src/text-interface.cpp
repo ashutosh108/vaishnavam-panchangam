@@ -79,7 +79,7 @@ const std::vector<LocationDb::NamedCoord> &LocationDb::locations() {
         { "Kolomyia", kolomyya_coord },
         { "Kishinev", kishinev_coord },
         { "Riga", riga_coord },
-        { "Jūrmala", yurmala_coord },
+        { "Jurmala", yurmala_coord },
         { "Tallinn", tallin_coord },
         { "Vilnius", vilnyus_coord },
         { "Warsaw", varshava_coord },

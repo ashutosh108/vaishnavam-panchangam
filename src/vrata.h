@@ -14,7 +14,8 @@ namespace vp {
 enum class Vrata_Type {
     Ekadashi,
     Sandigdha_Ekadashi, // when Ekadashi Tithi starts before Arunodaya, but less than 0.25 muhurtas before.
-//    Atirikta,
+    With_Atirikta_Dvadashi,
+    Sandigdha_With_Atirikta_Dvadashi
 };
 
 std::ostream &operator<<(std::ostream &o, Vrata_Type const &v);

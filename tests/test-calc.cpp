@@ -9,6 +9,7 @@
 #include <condition_variable>
 #include "date-fixed.h"
 #include <sstream>
+#include "tz-fixed.h"
 
 using namespace date;
 using namespace vp;
@@ -99,10 +100,12 @@ Vrata vrata(const Calc &c, date::year_month_day base_date) {
 }
 
 TEST_CASE("Ekadashi 2019-02-28") {
+    // https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-02-28/
     date::year_month_day d{2019_y/February/28};
     Vrata v01{2019_y/March/1};
     Vrata v02{2019_y/March/2};
     Vrata sandigdha_mar02{Vrata_Type::Sandigdha_Ekadashi, 2019_y/March/2};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}};
     REQUIRE(v02 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v02 == vrata(Calc{gokarna_coord}, d));
     REQUIRE(v02 == vrata(Calc{newdelhi_coord}, d));
@@ -168,14 +171,47 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(v01_paran_after_quarter == vrata(Calc{tallin_coord}, d));   // > 14:15
     REQUIRE(v01_paran_after_quarter == vrata(Calc{vilnyus_coord}, d));  // > 14:15
     REQUIRE(v01_paran_after_quarter == vrata(Calc{varshava_coord}, d)); // > 13:15
-    REQUIRE(v01_paran_after_quarter == vrata(Calc{vena_coord}, d)); //atirikta dvadashi
-    REQUIRE(v01_paran_after_quarter == vrata(Calc{marsel_coord}, d)); //atirikta dvadashi   < 9:14
-    REQUIRE(v01_paran_after_quarter == vrata(Calc{madrid_coord}, d)); //atirikta dvadashi   < 9:14
-    REQUIRE(v01_paran_after_quarter == vrata(Calc{london_coord}, d)); //atirikta dvadashi   < 8:14
+    REQUIRE(v01_atirikta_dvadashi == vrata(Calc{vena_coord}, d)); //atirikta dvadashi
+    REQUIRE(v01_atirikta_dvadashi == vrata(Calc{marsel_coord}, d)); //atirikta dvadashi   < 9:14
+    REQUIRE(v01_atirikta_dvadashi == vrata(Calc{madrid_coord}, d)); //atirikta dvadashi   < 9:14
+    REQUIRE(v01_atirikta_dvadashi == vrata(Calc{london_coord}, d)); //atirikta dvadashi   < 8:14
     REQUIRE(v01_paran_after_quarter == vrata(Calc{frederikton_coord}, d));  // > 8:15
     REQUIRE(v01_paran_after_quarter == vrata(Calc{toronto_coord}, d));      // > 7:15
     REQUIRE(v01_paran_after_quarter == vrata(Calc{miami_coord}, d));       // > 7:15
     REQUIRE(v01 == vrata(Calc{meadowlake_coord}, d));
+}
+
+void check_atirikta_at_location(const Location & location, const Vrata & expected_vrata, date::year_month_day date) {
+    auto actual_vrata = vrata(Calc{location}, date);
+    REQUIRE(expected_vrata == actual_vrata);
+
+    // 1. Paran start and end should exist.
+    REQUIRE(actual_vrata.paran.paran_start.has_value());
+    REQUIRE(actual_vrata.paran.paran_end.has_value());
+
+    // 2. Paran *date* must be two days after vrata date.
+    auto timezone = date::locate_zone(location.timezone_name);
+
+    auto zoned_paran_start = date::make_zoned(timezone, actual_vrata.paran.paran_start->as_sys_time());
+    auto local_days_paran_start = date::floor<date::days>(zoned_paran_start.get_local_time());
+    REQUIRE(date::local_days{actual_vrata.date} + date::days{2} == local_days_paran_start);
+
+    auto zoned_paran_end = date::make_zoned(timezone, actual_vrata.paran.paran_end->as_sys_time());
+    auto local_days_paran_end = date::floor<date::days>(zoned_paran_end.get_local_time());
+    REQUIRE(date::local_days{actual_vrata.date} + date::days{2} == local_days_paran_end);
+
+    // 3. TODO: Paran_start must match sunrise
+    // 4. TODO: Paran_end must match dvadashi_end
+}
+
+TEST_CASE("Atirikta Dvadashi mass test") {
+    date::year_month_day d{2019_y/February/28};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}};
+
+    check_atirikta_at_location(vena_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location(marsel_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location(madrid_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location(london_coord, v01_atirikta_dvadashi, d);
 }
 
 TEST_CASE("Ekadashi 2019-03-17") {

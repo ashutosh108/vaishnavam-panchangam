@@ -37,6 +37,10 @@ std::ostream &operator<<(std::ostream &o, const Vrata_Type &v)
         o << "Ekadashi"; break;
     case Vrata_Type::Sandigdha_Ekadashi:
         o << "Sandigdha_Ekadashi"; break;
+    case Vrata_Type::With_Atirikta_Dvadashi:
+        o << "With_Atirikta_Dvadashi"; break;
+    case Vrata_Type::Sandigdha_With_Atirikta_Dvadashi:
+        o << "Sandigdha_With_Atirikta_Dvadashi"; break;
 //    default:
 //        o << "Vrata#" << static_cast<int>(v);
     }

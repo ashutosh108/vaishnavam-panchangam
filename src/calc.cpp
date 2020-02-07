@@ -12,6 +12,8 @@ namespace vp {
 
 Calc::Calc(Location coord):swe{coord} {}
 
+/* Key function: find sunrise during next ekadashi tithi or right after it.
+ */
 std::optional<JulDays_UT> Calc::find_next_ekadashi_sunrise(JulDays_UT after) const
 {
     std::optional<JulDays_UT> ekadashi = get_next_tithi_start(after, Tithi{Tithi::Ekadashi});
@@ -83,6 +85,41 @@ Paran Calc::get_paran(JulDays_UT const &last_fasting_sunrise) const
     return paran;
 }
 
+Paran Calc::atirikta_dvadashi_paran(const JulDays_UT &first_fasting_sunrise) const
+{
+    auto second_fasting_sunrise = next_sunrise(first_fasting_sunrise);
+    auto paran_sunrise = next_sunrise(second_fasting_sunrise.value());
+    auto dvadashi_end = get_next_tithi_start(paran_sunrise.value(), Tithi{Tithi::Dvadashi_End});
+    return {Paran::Type::Puccha_Dvadashi, paran_sunrise, dvadashi_end};
+}
+
+std::optional<JulDays_UT> Calc::next_sunrise(JulDays_UT sunrise) const {
+    return swe.get_sunrise(sunrise + double_days{0.1});
+}
+
+/* Find out if we have "shuddha dvAdashI" situation.
+ * If yes, then adjust the sunrise to be next day's sunrise
+ * (because it has to be the sunrise of last fastiung day).
+ */
+bool Calc::got_atirikta_dvadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const
+{
+    auto second_sunrise = next_sunrise(sunrise_on_shuddha_ekadashi_or_next_one);
+    if (!second_sunrise.has_value()) return false;
+    auto third_sunrise = next_sunrise(*second_sunrise);
+    if (!second_sunrise.has_value()) return false;
+
+    Tithi tithi_on_second_sunrise = swe.get_tithi(*second_sunrise);
+    Tithi tithi_on_third_sunrise = swe.get_tithi(*third_sunrise);
+    return tithi_on_second_sunrise.is_dvadashi() && tithi_on_third_sunrise.is_dvadashi();
+}
+
+/* Main calculation: return next vrata on a given date or after.
+ * Determine type of vrata (Ekadashi, either of two Atiriktas, Sandigdha),
+ * paran time.
+ *
+ * TODO: Sometimes we miss ekadashi when it falls on the starting day.
+ *       Should probably adjust "after" for local midnight before going on.
+ *       Need to find an example and add test.*/
 std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
 {
     auto sunrise = find_next_ekadashi_sunrise(JulDays_UT{after});
@@ -106,6 +143,19 @@ std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
             sunrise = swe.get_sunrise(*sunrise + double_days{0.1});
             if (!sunrise) { return {}; }
         }
+    }
+
+    if (got_atirikta_dvadashi(*sunrise)) {
+        if (type == Vrata_Type::Sandigdha_Ekadashi) {
+            type = Vrata_Type::Sandigdha_With_Atirikta_Dvadashi;
+        } else {
+            type = Vrata_Type::With_Atirikta_Dvadashi;
+        }
+
+        return Vrata{
+                    type,
+                    get_vrata_date(*sunrise),
+                    atirikta_dvadashi_paran(*sunrise)};
     }
 
     return Vrata{

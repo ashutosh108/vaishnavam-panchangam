@@ -10,8 +10,40 @@
 [ ] encapsulate tzdata (so we can run bare executable, wihout any tzdata files at all)
 [ ] encapsulate swe's ephemeris database (so we can run with higher precision while having no data files at hand)
 [ ] check all tests for 2019-March-1,2
-[ ] atirikta ekadashi
-[ ] atirikta dvadashi
+[ ] atiriktA ekAdashI:
+- london 2019-11-07-8
+- toronto 2019-10-08-9
+- ppk 2019-09-09-10
+- ppk 2019-04-30-01
+- {Kolkata,Tekeli,nov,barn,tomsk} 2019-03-31-01
+- ppk 2018-09-20-21
+- {aktau,samara,ulyanovsk,kazan,kirov,murmansk} 2018-08-21-22
+- {kostomuksha} 2018-04-11-12
+- {frederikton} 2018-02-10-11
+День, когда за чистой (щуддӿā) экāдащью сразу слѣдует другая чистая экāдащӣ, называется Атириктā экāдащӣ. В таких случаях пост соблюдается два дня подряд, а пāран̣іе (завершеніе поста) принимается на третій день.
+[ ] atiriktA dvAdashI:
+- {aktau, surgut, chelyabinsk, yerevan, tbilisi} 2019-12-07-8 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-12-01/
+- {marsel,london} 2019-11-07-8
+- meadowlake 2019-10-08-9
+- {hab,vlad} 2019-09-09-10
+- {mirny,hav,vlad} 2019-04-30-01
+- {udupi,gokarna,newdelhi,manali,aktau,perm,ufa,ekb,surgut,chel,bishkek,omsk,erevam,tbilisi,samara,volg,ulya,pyati,stav,semik,krasnodar,star oskol,voronezh,tambov,kazan,kirov,ryazan,moscow,murmansk} 2019-03-31-01
++ {vena,marsel,madrid,london} 2019-03-01-2 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-02-28/
+- {federikton,toronto,miami} 2019-01-30-31
+- {erevan,tbilisi,pyati,stav,semi,krasnodar,simf,donetsk,staryoskol,voronezh,ryazan,moscow,spb,kostomuksha,smolensk,minsk,gomel,harkov,poltava,kremenchug,krivoyrog,kiev,nikolaev,odessa,kolomya,kishinev,riga,jurmala,tallin,vilnuys,varshava,vena} 2018-08-21-22
+- {perm,ekb,almaata,murmansk} 2018-06-23-24
+- {simferopol,spb,smolensk,minsk,gomel,poltava,kremenchug,krivoyrog,kiev,nikolaev,odessa,kishinev,riga,jurmala,tallin,vilnyus} 2018-04-11-12
+- {toronto} 2018-02-10-11
+- {kophangan+kosamui} 2017-12-13-14
+[ ] shravaNA dvAdashI: {fred,tor,meadowlake} 2019-09-09-10
+Двāдащӣ-титӿи в сопряженіи со Щраван̣ā-накшатром от восхода Сӯрьи до полудня дают Щраван̣ā двāдащӣ, день таких же обѣтов, как и в щуддӿā экāдащӣ. Двāдащӣ является Хари-вāсаром, а Щраван̣ā является Хари-накшатром, поэтому их соединеніе особо чтимо вәишн̣авами. Если такое сочетаніе приходится на слѣдующій день после чистой экāдащӣ, то пост надлежит соблюдать два дня подряд.
+द्वादशीं श्रवणोपेतां यो नोपोष्यात्स मूढधीः ।
+पञ्चसंवत्सरकृतं पुण्यं तस्य विनश्यति ॥
+двāдащӣм̇ щраван̣опетāм̇ йо нопошйāт суманда-дӿӣх̤ •
+пањча-сам̇ватсара-крьтам̇ пун̣йам̇ тасйа винащйати ••
+«У того недоумка, что не постится на сопряженную со Щраван̣ой двāдащӣ, пун̣ье, пріобретенное за пять лѣт, будет уничтожено» (Крьшн̣āмрьта-махāрн̣авам, 160).
+[ ] two-days ekAdashI
+- {kophangan+kosamui,denpasar,mirny,hab,vlad,ppk} 2019-03-31-01
 [ ] test cases from past Narasimha's calendars (all?)
 
 == When compiling with gcc from msys2/mingw32, the .exe depends on

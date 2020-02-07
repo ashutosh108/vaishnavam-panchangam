@@ -13,7 +13,7 @@ class Paran
 {
 public:
     enum class Type {
-        Standard, Until_Dvadashi_End, From_Quarter_Dvadashi
+        Standard, Until_Dvadashi_End, From_Quarter_Dvadashi, Puccha_Dvadashi
     };
     Paran(Type _type = Type::Standard, std::optional<JulDays_UT> _paran_start = std::nullopt, std::optional<JulDays_UT> _paran_end = std::nullopt):
         type(_type), paran_start(_paran_start), paran_end(_paran_end){}
