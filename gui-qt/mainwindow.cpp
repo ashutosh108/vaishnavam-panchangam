@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include <QDate>
 #include <QMessageBox>
 #include <sstream>
 
@@ -25,21 +26,25 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+date::sys_days to_sys_days(QDate qd)
+{
+    using namespace date;
+    return sys_days{days{qd.toJulianDay()} -
+        (sys_days{1970_y/January/1} - sys_days{year{-4713}/November/24})};
+}
 
 void MainWindow::on_FindNextEkadashi_clicked()
 {
     try {
-        auto date_string = ui->dateLineEdit->text();
-        QByteArray date_as_bytearray = date_string.toLocal8Bit();
-        auto base_date = vp::text_ui::parse_ymd(date_as_bytearray.data());
+        date::year_month_day date = to_sys_days(ui->dateEdit->date());
 
         auto location_string = ui->locationComboBox->currentText();
 
         std::stringstream s;
         if (location_string == "all") {
-            calcAll(base_date, s);
+            calcAll(date, s);
         } else {
-            calcOne(base_date, location_string, s);
+            calcOne(date, location_string, s);
         }
 
         ui->calcResult->setText(QString::fromStdString(s.str()));
@@ -60,9 +65,7 @@ void MainWindow::setupLocationsComboBox()
 
 void MainWindow::setDateToToday()
 {
-    auto now = std::chrono::system_clock::now();
-    auto now_str = date::format("%Y-%m-%d", now);
-    ui->dateLineEdit->setText(QString::fromStdString(now_str));
+    ui->dateEdit->setDate(QDate::currentDate());
 }
 
 void MainWindow::calcAll(date::year_month_day base_date, std::ostream &o)

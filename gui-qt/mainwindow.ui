@@ -42,7 +42,27 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="dateLineEdit"/>
+            <widget class="QDateEdit" name="dateEdit">
+             <property name="dateTime">
+              <datetime>
+               <hour>0</hour>
+               <minute>0</minute>
+               <second>0</second>
+               <year>2020</year>
+               <month>1</month>
+               <day>1</day>
+              </datetime>
+             </property>
+             <property name="displayFormat">
+              <string extracomment="qwe">yyyy-MM-dd</string>
+             </property>
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+             <property name="timeSpec">
+              <enum>Qt::LocalTime</enum>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>

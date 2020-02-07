@@ -86,3 +86,4 @@ done:
 [+] pAraNam after 1/4 dvAdashI: do not show paran end time when it's before paran start time [2020-02-06]
 [+] fix the case when the date given is dvadashi but actual vrata day was yesterday (2020-01-21 kiev gives -21 instead of correct -20; 2020-02-06 udupi gives 2020-02-06 instead of correct -05) [2020-02-07]
 [+] gui: use today as default date [2020-02-07]
+[+] gui: use proper date selection widget (QDateEdit) [2020-02-07]
