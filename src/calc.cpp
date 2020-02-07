@@ -14,16 +14,10 @@ Calc::Calc(Location coord):swe{coord} {}
 
 std::optional<JulDays_UT> Calc::find_next_ekadashi_sunrise(JulDays_UT after) const
 {
-    int max_days_left = 16;
-    std::optional<JulDays_UT> sunrise = after;
-    while ((sunrise = swe.get_sunrise(*sunrise)).has_value() && max_days_left--) {
-        auto tithi = swe.get_tithi(*sunrise);
-        if (tithi.is_ekadashi() || tithi.is_dvadashi()) {
-            return sunrise;
-        }
-        *sunrise += double_days{0.1};
-    }
-    return {};
+    std::optional<JulDays_UT> ekadashi = get_next_tithi_start(after, Tithi{Tithi::Ekadashi});
+    if (!ekadashi.has_value()) return std::nullopt;
+
+    return swe.get_sunrise(*ekadashi);
 }
 
 JulDays_UT Calc::proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion) {
@@ -92,32 +86,32 @@ Paran Calc::get_paran(JulDays_UT const &last_fasting_sunrise) const
 std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
 {
     auto sunrise = find_next_ekadashi_sunrise(JulDays_UT{after});
-    if (sunrise) {
-        auto arunodaya_info = get_arunodaya(*sunrise);
-        if (!arunodaya_info.has_value()) { return{}; }
-        auto [arunodaya, ardha_ghatika_before_arunodaya] = *arunodaya_info;
-        auto tithi_arunodaya = swe.get_tithi(arunodaya);
-        Vrata_Type type = Vrata_Type::Ekadashi;
-        if ((tithi_arunodaya.is_dashami())) {
-            // purva-viddha Ekadashi, get next sunrise
+    if (!sunrise) return std::nullopt;
+
+    auto arunodaya_info = get_arunodaya(*sunrise);
+    if (!arunodaya_info.has_value()) { return{}; }
+
+    auto [arunodaya, ardha_ghatika_before_arunodaya] = *arunodaya_info;
+    auto tithi_arunodaya = swe.get_tithi(arunodaya);
+    Vrata_Type type = Vrata_Type::Ekadashi;
+    if ((tithi_arunodaya.is_dashami())) {
+        // purva-viddha Ekadashi, get next sunrise
+        sunrise = swe.get_sunrise(*sunrise + double_days{0.1});
+        if (!sunrise) { return {}; }
+    } else {
+        Tithi tithi_ardha_ghatika_before_arunodaya = swe.get_tithi(ardha_ghatika_before_arunodaya);
+        if (tithi_ardha_ghatika_before_arunodaya.is_dashami()) {
+            type = Vrata_Type::Sandigdha_Ekadashi;
+            // Sandigdha (almost purva-viddha Ekadashi), get next sunrise
             sunrise = swe.get_sunrise(*sunrise + double_days{0.1});
             if (!sunrise) { return {}; }
-        } else {
-            Tithi tithi_ardha_ghatika_before_arunodaya = swe.get_tithi(ardha_ghatika_before_arunodaya);
-            if (tithi_ardha_ghatika_before_arunodaya.is_dashami()) {
-                type = Vrata_Type::Sandigdha_Ekadashi;
-                // Sandigdha (almost purva-viddha Ekadashi), get next sunrise
-                sunrise = swe.get_sunrise(*sunrise + double_days{0.1});
-                if (!sunrise) { return {}; }
-            }
         }
-
-        return Vrata{
-                    type,
-                    get_vrata_date(*sunrise),
-                    get_paran(*sunrise)};
     }
-    return {};
+
+    return Vrata{
+                type,
+                get_vrata_date(*sunrise),
+                get_paran(*sunrise)};
 }
 
 std::optional<JulDays_UT> Calc::get_prev_sunset(JulDays_UT const sunrise) const {

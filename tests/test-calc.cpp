@@ -346,3 +346,17 @@ TEST_CASE("Udupi after 2019-11-20 returns an actual date") {
     auto vrata = calc.find_next_vrata(from);
     REQUIRE(vrata.has_value());
 }
+
+TEST_CASE("Udupi after 2020-02-06 does NOT return 2020-02-06") {
+    Calc const calc{udupi_coord};
+    date::year_month_day const from{2020_y/February/6};
+    auto vrata = calc.find_next_vrata(from);
+    REQUIRE(vrata->date != from);
+}
+
+TEST_CASE("Kiev after 2020-01-21 does NOT return 2020-01-21") {
+    Calc const calc{kiev_coord};
+    date::year_month_day const from{2020_y/January/21};
+    auto vrata = calc.find_next_vrata(from);
+    REQUIRE(vrata->date != from);
+}

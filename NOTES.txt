@@ -13,7 +13,6 @@
 [ ] atirikta ekadashi
 [ ] atirikta dvadashi
 [ ] test cases from past Narasimha's calendars (all?)
-[ ] fix the case when the date given is dvadashi but actual vrata day was yesterday. E.g. 2020-01-20 kiev gives proper 2020-01-20 as vrata date, but 2020-01-21 kiev gives wrong 2020-01-21 as vrata date.
 
 == When compiling with gcc from msys2/mingw32, the .exe depends on
 - libwinpthread-1.dll
@@ -85,3 +84,4 @@ done:
 [+] better GUI: show simplified result in first tab (vrata date, paran time) [2020-02-05]
 [+] show pAraNam type (standard, after 1/4 dvAdashI, before end of dvAdashI) in summary UI [2020-02-06]
 [+] pAraNam after 1/4 dvAdashI: do not show paran end time when it's before paran start time [2020-02-06]
+[+] fix the case when the date given is dvadashi but actual vrata day was yesterday (2020-01-21 kiev gives -21 instead of correct -20; 2020-02-06 udupi gives 2020-02-06 instead of correct -05) [2020-02-07]
