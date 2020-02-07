@@ -24,7 +24,8 @@ script:
 before_deploy:
 - git config --local user.name "Anton Voloshin"
 - git config --local user.email "ashutosh108@gmail.com"
-- export TRAVIS_TAG=${TRAVIS_TAG:-preview-$(date +'%Y-%m-%d')}
+- export DATE=$(date +'%Y-%m-%d')
+- export TRAVIS_TAG=${TRAVIS_TAG:-preview-${DATE}}
 - git tag -f $TRAVIS_TAG
 - "echo \"TRAVIS_TAG: ${TRAVIS_TAG}\""
 - "echo \"TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}\""
@@ -33,6 +34,7 @@ before_deploy:
 - git remote add gh https://${TRAVIS_REPO_SLUG%/*}:${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git
 - git push -f gh $TRAVIS_TAG
 - git remote remove gh
+- mv vaishnavam-panchangam.zip vaishnavam-panchangam-${DATE}.zip
 
 deploy:
   provider: releases
