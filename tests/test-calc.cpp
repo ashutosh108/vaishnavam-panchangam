@@ -181,9 +181,26 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(v01 == vrata(Calc{meadowlake_coord}, d));
 }
 
-void check_atirikta_at_location(const Location & location, const Vrata & expected_vrata, date::year_month_day date) {
+struct NamedVrata {
+    const char *name;
+    const Vrata & vrata;
+    NamedVrata(const char * name_, const Vrata & vrata_)
+        :name(name_), vrata(vrata_)
+    {}
+};
+
+bool operator==(const NamedVrata &expected, const Vrata & actual) {
+    return expected.vrata == actual;
+}
+
+std::ostream & operator<<(std::ostream & s, const NamedVrata &nv) {
+    return s << nv.name << ": " << nv.vrata;
+}
+
+void check_atirikta_at_location(const char * name, const Location & location, const Vrata & expected_vrata, date::year_month_day date) {
     auto actual_vrata = vrata(Calc{location}, date);
-    REQUIRE(expected_vrata == actual_vrata);
+    NamedVrata expected_named_vrata{name, expected_vrata};
+    CHECK(expected_named_vrata == actual_vrata);
 
     // 1. Paran start and end should exist.
     REQUIRE(actual_vrata.paran.paran_start.has_value());
@@ -194,24 +211,44 @@ void check_atirikta_at_location(const Location & location, const Vrata & expecte
 
     auto zoned_paran_start = date::make_zoned(timezone, actual_vrata.paran.paran_start->as_sys_time());
     auto local_days_paran_start = date::floor<date::days>(zoned_paran_start.get_local_time());
-    REQUIRE(date::local_days{actual_vrata.date} + date::days{2} == local_days_paran_start);
+    CHECK(date::local_days{actual_vrata.date} + date::days{2} == local_days_paran_start);
 
     auto zoned_paran_end = date::make_zoned(timezone, actual_vrata.paran.paran_end->as_sys_time());
     auto local_days_paran_end = date::floor<date::days>(zoned_paran_end.get_local_time());
-    REQUIRE(date::local_days{actual_vrata.date} + date::days{2} == local_days_paran_end);
+    CHECK(date::local_days{actual_vrata.date} + date::days{2} == local_days_paran_end);
 
     // 3. TODO: Paran_start must match sunrise
     // 4. TODO: Paran_end must match dvadashi_end
 }
 
-TEST_CASE("Atirikta Dvadashi mass test") {
+TEST_CASE("atiriktA-dvadashI {vena,marsel,madrid,london} 2019-03-01-2 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-02-28/") {
     date::year_month_day d{2019_y/February/28};
     Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}};
 
-    check_atirikta_at_location(vena_coord, v01_atirikta_dvadashi, d);
-    check_atirikta_at_location(marsel_coord, v01_atirikta_dvadashi, d);
-    check_atirikta_at_location(madrid_coord, v01_atirikta_dvadashi, d);
-    check_atirikta_at_location(london_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location("vena", vena_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location("marsel", marsel_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location("madrid", madrid_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location("london", london_coord, v01_atirikta_dvadashi, d);
+}
+
+TEST_CASE("atiriktA-dvadashI {aktau, surgut, chelyabinsk, yerevan, tbilisi} 2019-12-07-8 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-12-01/") {
+    date::year_month_day d{2019_y/December/6};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/December/7, Paran{Paran::Type::Puccha_Dvadashi}};
+
+    check_atirikta_at_location("aktau", aktau_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location("surgut", surgut_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location("chelyabinsk", chelyabinsk_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location("erevan", erevan_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location("tbilisi", tbilisi_coord, v01_atirikta_dvadashi, d);
+}
+
+
+TEST_CASE("atiriktA-dvadashI {madrid,london} 2019-11-07-8 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-11-05/") {
+    date::year_month_day d{2019_y/November/6};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/November/7, Paran{Paran::Type::Puccha_Dvadashi}};
+
+    check_atirikta_at_location("madrid", madrid_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location("london", london_coord, v01_atirikta_dvadashi, d);
 }
 
 TEST_CASE("Ekadashi 2019-03-17") {

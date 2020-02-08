@@ -11,8 +11,6 @@ namespace vp {
 using double_hours = std::chrono::duration<double, std::ratio<3600>>;
 using double_days = std::chrono::duration<double, std::ratio<86400>>;
 
-class JulDays_Zoned;
-
 /* Wrapper class for jd (julian days) as it is understood in the swiss ephemeris library.
  * Very compact class: only one double in size, no virtual functions.
  * Provides value semantics, though maybe not all operations implemented for the lack of necessity.
