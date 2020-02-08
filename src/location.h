@@ -123,6 +123,7 @@ struct Location
 [[maybe_unused]] constexpr Location volgograd_coord{48, 41, 57, 44, 28, 24, "Europe/Volgograd"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location tambov_coord{52, 43, 0, 41, 26, 0, "Europe/Moscow"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location marsel_coord{43, 17, 47, 5, 22, 12, "Europe/Paris"}; // ru Wikipedia
+[[maybe_unused]] constexpr Location barcelona_coord{41, 23, 00, 2, 11, 00, "Europe/Madrid"}; // en Wikipedia
 [[maybe_unused]] constexpr Location madrid_coord{40, 24, 0, -3, -41, -0, "Europe/Madrid"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location miami_coord{25, 47, 0, -80, -13, -0, "America/New_York"}; // ru Wikipedia
 

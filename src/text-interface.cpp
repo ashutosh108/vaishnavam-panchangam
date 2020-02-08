@@ -85,6 +85,7 @@ const std::vector<LocationDb::NamedCoord> &LocationDb::locations() {
         { "Warsaw", varshava_coord },
         { "Vienna", vena_coord },
         { "Marseille", marsel_coord },
+        { "Barcelona", barcelona_coord },
         { "Madrid", madrid_coord },
         { "London", london_coord },
         { "Fredericton", frederikton_coord },
