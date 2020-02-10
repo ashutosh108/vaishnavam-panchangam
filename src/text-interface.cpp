@@ -108,13 +108,13 @@ std::optional<Location> LocationDb::find_coord(const char *location_name) {
     return found->coord;
 }
 
-void calc_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o) {
-    auto vrata = Calc{coord}.find_next_vrata(base_date);
+void calc_one(date::year_month_day base_date, const char *location_name, Location location, std::ostream &o) {
+    auto vrata = Calc{location}.find_next_vrata(base_date);
     if (!vrata.has_value()) {
         o << location_name << ": calculation error, can't find next Ekadashi. Sorry.\n";
     } else {
-        Vrata_Detail vd{*vrata, coord};
-        o << location_name << '\n' << vd << "\n\n";
+        Vrata_Detail vd{*vrata, location};
+        o << vd << "\n\n";
     }
 }
 

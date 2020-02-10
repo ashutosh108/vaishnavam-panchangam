@@ -81,13 +81,13 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
     QByteArray location_as_bytearray = location_string.toLocal8Bit();
     char * location_name = location_as_bytearray.data();
 
-    std::optional<vp::Location> coord = vp::text_ui::LocationDb::find_coord(location_name);
-    if (!coord) {
+    std::optional<vp::Location> location = vp::text_ui::LocationDb::find_coord(location_name);
+    if (!location) {
         o << "Location not found: '" << location_name << "'\n";
         return;
     }
 
-    auto vrata = vp::Calc{*coord}.find_next_vrata(base_date);
+    auto vrata = vp::Calc{*location}.find_next_vrata(base_date);
     if (!vrata.has_value()) {
         o << location_name << ": calculation error, can't find next Ekadashi. Sorry.\n";
     } else {
@@ -103,7 +103,7 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
 
         std::string paranTime = vp::ParanFormatter::format(
                     vrata->paran,
-                    coord->timezone_name,
+                    location->timezone_name,
                     "%H:%M<span style=\"color:darkgray; font-size:small;\">:%S</span>",
                     "–",
                     "%H:%M<span style=\"color:darkgray; font-size:small;\">:%S</span>",
@@ -111,7 +111,7 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
         paranTime += "</small>";
         ui->paranTime->setText(QString::fromStdString(paranTime));
 
-        vp::Vrata_Detail vd{*vrata, *coord};
-        o << location_name << '\n' << vd << "\n\n";
+        vp::Vrata_Detail vd{*vrata, *location};
+        o << vd << "\n\n";
     }
 }

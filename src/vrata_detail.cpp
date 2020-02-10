@@ -71,6 +71,7 @@ JulDays_UT Vrata_Detail::get_approx_local_midnight() const {
 
 std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
 {
+    s << "# " << vd.location.name << "\n";
     s << vd.vrata << ":\n";
     s << "Paran type: " << vd.vrata.paran.type << '\n';
     auto events = vd.events;

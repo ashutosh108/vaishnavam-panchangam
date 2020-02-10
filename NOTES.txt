@@ -1,4 +1,3 @@
-[ ] Vrata_Detail: print location name
 [ ] generic test for pre-calculated ekadashi:
     - print all relevant data on mismatch (Vrata_Detail)
 [ ] generate tests based on existing html tables
@@ -134,3 +133,4 @@ done:
 [+] make location names closer to English grammar [2020-02-07]
 [+] Location: include location name (use names from text-interface.cpp) [2020-02-10]
 [+] Vrata_Detail: sort all printed timepoints by time, add more timepoints [2020-02-10]
+[+] Vrata_Detail: print location name [2020-02-10]
