@@ -1,3 +1,7 @@
+[ ] Vrata_Detail: sort all printed timepoints by time
+[ ] Vrata_Detail: print location name
+[ ] generic test for pre-calculated ekadashi:
+    - print all relevant data on mismatch (Vrata_Detail)
 [ ] generate tests based on existing html tables
 [ ] omit pāraṇam end time when it's less than one muhūrta (≈48min) long. We should only use strict (very short) pāraṇam interval for cases like sAdhana-dvAdashI when it's really justified.
 [ ] determine current nakshatra
@@ -129,3 +133,4 @@ done:
 [+] gui: use today as default date [2020-02-07]
 [+] gui: use proper date selection widget (QDateEdit) [2020-02-07]
 [+] make location names closer to English grammar [2020-02-07]
+[+] Location: include location name (use names from text-interface.cpp) [2020-02-10]

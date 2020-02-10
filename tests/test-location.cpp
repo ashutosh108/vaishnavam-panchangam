@@ -10,7 +10,7 @@ TEST_CASE("Location") {
 }
 
 TEST_CASE("Location degrees, minutes, seconds constructor") {
-    Location l{10, 30, 36, 20, 45, 36};
+    Location l{"Custom location", 10, 30, 36, 20, 45, 36};
     REQUIRE(l.latitude == Approx(10.51)); // 10 + 30/60 + 36/3600
     REQUIRE(l.longitude == Approx(20.76)); // 20 + 45/60 + 36/3600
 }
