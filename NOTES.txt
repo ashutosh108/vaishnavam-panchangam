@@ -1,3 +1,4 @@
+[ ] generate tests based on existing html tables
 [ ] omit pāraṇam end time when it's less than one muhūrta (≈48min) long. We should only use strict (very short) pāraṇam interval for cases like sAdhana-dvAdashI when it's really justified.
 [ ] determine current nakshatra
 [ ] determine current masa (from nakshatra on Pūrṇimā)
@@ -25,8 +26,8 @@
 [ ] atiriktA dvAdashI:
 + {aktau, surgut, chelyabinsk, yerevan, tbilisi} 2019-12-07-8 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-12-01/
 + {madrid,london} (nA: marseille,london) 2019-11-07-8 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-11-05/
-- meadowlake 2019-10-08-9
-- {hab,vlad} 2019-09-09-10
++ meadowlake 2019-10-08-9
++ {hab,vlad} 2019-09-09-10
 - {mirny,hav,vlad} 2019-04-30-01
 - {udupi,gokarna,newdelhi,manali,aktau,perm,ufa,ekb,surgut,chel,bishkek,omsk,erevam,tbilisi,samara,volg,ulya,pyati,stav,semik,krasnodar,star oskol,voronezh,tambov,kazan,kirov,ryazan,moscow,murmansk} 2019-03-31-01
 + {vena,marsel,madrid,london} 2019-03-01-2 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-02-28/
