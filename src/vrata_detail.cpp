@@ -4,78 +4,86 @@
 
 namespace vp {
 
-Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _coord):vrata(_vrata), coord(_coord), calc(_coord) {
+Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _location):vrata(_vrata), location(_location), calc(_location) {
+    events.push_back({"pAraNam start", vrata.paran.paran_start});
+    events.push_back({"pAraNam end", vrata.paran.paran_end});
+
     JulDays_UT local_midnight = get_approx_local_midnight();
-    sunrise = calc.swe.get_sunrise(local_midnight);
+    auto sunrise = calc.swe.get_sunrise(local_midnight);
+    events.push_back({"sunrise1", sunrise});
     if (sunrise) {
         auto arunodaya_pair = calc.get_arunodaya(*sunrise);
         if (arunodaya_pair) {
-            arddha_ghatika_before_arunodaya = arunodaya_pair->second;
-            arunodaya = arunodaya_pair->first;
+            events.push_back({"aruNodaya", arunodaya_pair->first});
+            events.push_back({"arddha-ghaTika before aruNodaya", arunodaya_pair->second});
         }
-        // -1.0 to ensure we actually select start time before Ekadashi.
-        // Not 100% sure it's enought, but it's working for all test cases so far.
-        ekadashi_start = calc.get_next_tithi_start(local_midnight-double_days{1.0}, Tithi{Tithi::Ekadashi});
-        if (ekadashi_start) {
-            dvadashi_start = calc.get_next_tithi_start(*ekadashi_start, Tithi{Tithi::Dvadashi});
-            if (dvadashi_start) {
-                dvadashi_end = calc.get_next_tithi_start(*dvadashi_start, Tithi{Tithi::Dvadashi_End});
-                dvadashi_quarter = Calc::proportional_time(*dvadashi_start, *dvadashi_end, 0.25);
+
+        auto sunset = calc.swe.get_sunset(*sunrise);
+        events.push_back({"sunset1", sunset});
+        if (sunset) {
+            auto sunrise2 = calc.swe.get_sunrise(*sunset);
+            events.push_back({"sunrise2", sunrise2});
+            if (sunrise2) {
+                auto sunset2 = calc.swe.get_sunset(*sunrise2);
+                events.push_back({"sunset2", sunset2});
+                if (sunset2) {
+                    auto fifth_of_day2 = calc.proportional_time(*sunrise2, *sunset2, 0.2);
+                    events.push_back({"1/5 of day2", fifth_of_day2});
+                    if (vrata.type == Vrata_Type::With_Atirikta_Dvadashi || vrata.type == Vrata_Type::Sandigdha_With_Atirikta_Dvadashi) {
+                        auto sunrise3 = calc.swe.get_sunrise(*sunset2);
+                        events.push_back({"sunrise3", sunrise3});
+                        if (sunrise3) {
+                            auto sunset3 = calc.swe.get_sunset(*sunrise3);
+                            events.push_back({"sunset3", sunset3});
+                            if (sunset3) {
+                                auto fifth_of_day3 = calc.proportional_time(*sunrise3, *sunset3, 0.2);
+                                events.push_back({"1/5 of day3", fifth_of_day3});
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // -1.0 to ensure we actually select start time before Ekadashi.
+    // Not 100% sure it's enough, but it's working for all test cases so far.
+    ekadashi_start = calc.get_next_tithi_start(local_midnight-double_days{1.0}, Tithi{Tithi::Ekadashi});
+    events.push_back({"ekAdashI start", ekadashi_start});
+    if (ekadashi_start) {
+        auto dvadashi_start = calc.get_next_tithi_start(*ekadashi_start, Tithi{Tithi::Dvadashi});
+        events.push_back({"dvAdashI start", dvadashi_start});
+        if (dvadashi_start) {
+            auto dvadashi_end = calc.get_next_tithi_start(*dvadashi_start, Tithi{Tithi::Dvadashi_End});
+            events.push_back({"dvAdashI end", dvadashi_end});
+            if (dvadashi_end) {
+                events.push_back({"dvAdashI quarter", Calc::proportional_time(*dvadashi_start, *dvadashi_end, 0.25)});
             }
         }
     }
 }
 
 JulDays_UT Vrata_Detail::get_approx_local_midnight() const {
-    double_days adjustment{coord.longitude * (1.0/360.0)};
+    double_days adjustment{location.longitude * (1.0/360.0)};
     return JulDays_UT{JulDays_UT{vrata.date} - adjustment};
 }
 
 
 std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
 {
-    auto z = [&vd](JulDays_UT t) {
-        return JulDays_Zoned{vd.coord.timezone_name, t};
-    };
     s << vd.vrata << ":\n";
-    if (vd.arddha_ghatika_before_arunodaya) {
-        s << "    Arddha-ghatika before arunodaya: " << z(*vd.arddha_ghatika_before_arunodaya) << '\n';
+    s << "Paran type: " << vd.vrata.paran.type << '\n';
+    auto events = vd.events;
+    std::sort(events.begin(), events.end(), [](const Vrata_Detail::NamedTimePoint & left, const Vrata_Detail::NamedTimePoint & right) {
+        return left.time_point < right.time_point;
+    });
+    for (const auto & e : events) {
+        if (e.time_point.has_value()) {
+            s << JulDays_Zoned{vd.location.timezone_name, *e.time_point} << ' ' << e.name << '\n';
+        } else {
+            s << "(unknown time)" << ' ' << e.name << '\n';
+        }
     }
-
-    if (vd.arunodaya) {
-        s << "    Arunodaya:                       " << z(*vd.arunodaya) << '\n';
-    }
-
-    if (vd.sunrise) {
-        s << "    Sunrise:                         " << z(*vd.sunrise) << '\n';
-    }
-
-    if (vd.ekadashi_start) {
-        s << "    Ekadashi start:                  " << z(*vd.ekadashi_start) << '\n';
-    }
-
-    if (vd.dvadashi_start) {
-        s << "    Dvadashi start:                  " << z(*vd.dvadashi_start) << '\n';
-    }
-
-    if (vd.dvadashi_quarter) {
-        s << "    Dvadashi quarter:                " << z(*vd.dvadashi_quarter) << '\n';
-    }
-
-    if (vd.dvadashi_end) {
-        s << "    Dvadashi end:                    " << z(*vd.dvadashi_end) << '\n';
-    }
-
-    s << "    Paran type:                      " << vd.vrata.paran.type << '\n';
-
-    if (vd.vrata.paran.paran_start) {
-        s << "    Paran start:                     " << z(*vd.vrata.paran.paran_start) << '\n';
-    }
-
-    if (vd.vrata.paran.paran_end) {
-        s << "    Paran end:                       " << z(*vd.vrata.paran.paran_end) << '\n';
-    }
-
     return s;
 }
 

@@ -7,17 +7,17 @@ namespace vp {
 
 struct Vrata_Detail {
     Vrata vrata;
-    Location coord;
+    Location location;
     Calc calc;
-    Vrata_Detail(Vrata _vrata, Location _coord);
+    Vrata_Detail(Vrata _vrata, Location _location);
     JulDays_UT get_approx_local_midnight() const;
-    std::optional<JulDays_UT> arddha_ghatika_before_arunodaya;
-    std::optional<JulDays_UT> arunodaya;
-    std::optional<JulDays_UT> sunrise;
+    struct NamedTimePoint {
+        const char *name;
+        std::optional<JulDays_UT> time_point;
+    };
+
     std::optional<JulDays_UT> ekadashi_start;
-    std::optional<JulDays_UT> dvadashi_start;
-    std::optional<JulDays_UT> dvadashi_end;
-    std::optional<JulDays_UT> dvadashi_quarter;
+    std::vector<NamedTimePoint> events;
 };
 
 std::ostream &operator<<(std::ostream &s, Vrata_Detail const &vd);
