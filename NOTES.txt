@@ -134,3 +134,4 @@ done:
 [+] Location: include location name (use names from text-interface.cpp) [2020-02-10]
 [+] Vrata_Detail: sort all printed timepoints by time, add more timepoints [2020-02-10]
 [+] Vrata_Detail: print location name [2020-02-10]
+[+] create specialized html table parser for automated tests [2020-02-12]

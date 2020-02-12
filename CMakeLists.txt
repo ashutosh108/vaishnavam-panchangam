@@ -104,6 +104,7 @@ add_executable(test-main
     tests/test-vrata-detail.cpp
     tests/test-paran.cpp
     tests/test-text-interface.cpp
+    tests/html-parser.cpp tests/test-html-parser.cpp
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR}/src)
 target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2)
