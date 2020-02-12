@@ -207,13 +207,13 @@ void check_atirikta_at_location(const char * name, const Location & location, co
     REQUIRE(actual_vrata.paran.paran_end.has_value());
 
     // 2. Paran *date* must be two days after vrata date.
-    auto timezone = date::locate_zone(location.timezone_name);
+    auto time_zone_at_location = date::locate_zone(location.timezone_name);
 
-    auto zoned_paran_start = date::make_zoned(timezone, actual_vrata.paran.paran_start->as_sys_time());
+    auto zoned_paran_start = date::make_zoned(time_zone_at_location, actual_vrata.paran.paran_start->as_sys_time());
     auto local_days_paran_start = date::floor<date::days>(zoned_paran_start.get_local_time());
     CHECK(date::local_days{actual_vrata.date} + date::days{2} == local_days_paran_start);
 
-    auto zoned_paran_end = date::make_zoned(timezone, actual_vrata.paran.paran_end->as_sys_time());
+    auto zoned_paran_end = date::make_zoned(time_zone_at_location, actual_vrata.paran.paran_end->as_sys_time());
     auto local_days_paran_end = date::floor<date::days>(zoned_paran_end.get_local_time());
     CHECK(date::local_days{actual_vrata.date} + date::days{2} == local_days_paran_end);
 
