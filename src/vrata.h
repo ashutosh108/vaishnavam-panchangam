@@ -39,6 +39,10 @@ bool operator==(Vrata const &, Vrata const &);
 bool operator!=(Vrata const &, Vrata const &);
 std::ostream &operator<<(std::ostream &o, Vrata const &v);
 
+// ref to static vector of all known ekAdashI names in English, capitalized. E.g. "Varūthinī"
+const std::vector<std::string> & ekadashi_names();
+const std::vector<std::string> & ekadashi_names_rus();
+
 } // namespace vp
 
 #endif // VRATA_H

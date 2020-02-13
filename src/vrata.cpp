@@ -47,4 +47,70 @@ std::ostream &operator<<(std::ostream &o, const Vrata_Type &v)
     return o;
 }
 
+const std::vector<std::string> & ekadashi_names()
+{
+    static const std::vector<std::string> static_names{
+        "Pāpamocanī",         // 01
+        "Kāmadā",             // 02
+        "Varūthinī",          // 03
+        "Mohinī",             // 04
+        "Aparā",              // 05
+        "Nirjalā",            // 06
+        "Yoginī",             // 07
+        "Śayanī",             // 08
+        "Kāmikā",             // 09
+        "Pāvitrā",            // 10
+        "Ajā",                // 11
+        "Pārśva-parivartinī", // 12
+        "Indirā",             // 13
+        "Pāśaṅkuśā",          // 14
+        "Ramā",               // 15
+        "Prabodhinī",         // 16
+        "Utpattikā",          // 17
+        "Mokṣadā",            // 18
+        "Saphalā",            // 19
+        "Putradā",            // 20
+        "Ṣaṭ-tilā",           // 21
+        "Jayā",               // 22
+        "Vijayā",             // 23
+        "Amalakī",            // 24
+        "Kamalā",             // 25
+        "Padmā"               // 26
+    };
+    return static_names;
+}
+
+const std::vector<std::string> & ekadashi_names_rus()
+{
+    static const std::vector<std::string> static_names{
+        "Пāпамочанӣ",         // 01
+        "Кāмадā",             // 02
+        "Варӯтӿинӣ",          // 03
+        "Мохинӣ",             // 04
+        "Апарā",              // 05
+        "Нирџалā",            // 06
+        "Йогинӣ",             // 07
+        "Щайанӣ",             // 08
+        "Кāмикā",             // 09
+        "Пāвитрā",            // 10
+        "Аџā",                // 11
+        "Пāрщва-паривартинӣ", // 12
+        "Индирā",             // 13
+        "Пāщаӈкущā",          // 14
+        "Рамā",               // 15
+        "Прабодӿинӣ",         // 16
+        "Утпаттикā",          // 17
+        "Мокшадā",            // 18
+        "Сапӿалā",            // 19
+        "Путрадā",            // 20
+        "Шат̣-тилā",           // 21
+        "Џайā",               // 22
+        "Виџайā",             // 23
+        "Амалакӣ",            // 24
+        "Камалā",             // 25
+        "Падмā"               // 26
+    };
+    return static_names;
+}
+
 } // namespace vp
