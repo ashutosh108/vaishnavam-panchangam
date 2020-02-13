@@ -1,3 +1,4 @@
+[ ] fix utf-8 output in Windows (cmd window, qt creator application output window)
 [ ] generic test for pre-calculated ekadashi:
     - print all relevant data on mismatch (Vrata_Detail)
 [ ] generate tests based on existing html tables

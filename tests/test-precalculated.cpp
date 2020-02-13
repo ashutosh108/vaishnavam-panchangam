@@ -141,8 +141,8 @@ std::size_t check_vrata(const std::string & case_slug, const std::vector<std::st
     if (cells_handled < 2) {
         std::string row_str = join(row);
         REQUIRE_THAT(cells_handled,
-                     Catch::Predicate<std::size_t>([](std::size_t cells_handled) -> bool {
-                         return cells_handled >= 2;
+                     Catch::Predicate<std::size_t>([](std::size_t cells_handled_) -> bool {
+                         return cells_handled_ >= 2;
                      },
                      case_slug + ": can't handle ekAdashI at col " + std::to_string(col) + " of " + row_str
                      ));
