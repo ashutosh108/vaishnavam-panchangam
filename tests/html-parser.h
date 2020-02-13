@@ -53,6 +53,8 @@ public:
 //    void append_cells(rowspan rowspan_, std::string && s);
 //    void append_cells(std::size_t row, colspan colspan_, std::string && s);
     std::size_t get_row_length(std::size_t row);
+    std::size_t row_count();
+    std::vector<std::string> & get_row(std::size_t row);
 
 private:
     int width;

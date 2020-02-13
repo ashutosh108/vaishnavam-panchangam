@@ -101,6 +101,16 @@ std::size_t html::Table::get_row_length(std::size_t row)
     return data[row].size();
 }
 
+std::size_t html::Table::row_count()
+{
+    return data.size();
+}
+
+std::vector<std::string> &html::Table::get_row(std::size_t row)
+{
+    return data.at(row);
+}
+
 std::optional<html::Table> html::TableParser::next_table()
 {
     enum class State { WaitTableTag, WaitTdTag };
