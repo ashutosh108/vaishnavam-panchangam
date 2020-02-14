@@ -1,6 +1,8 @@
-
+#include "calc.h"
 #include "html-parser.h"
+#include "location.h"
 #include "vrata.h"
+#include "vrata_detail.h"
 
 #include "catch.hpp"
 #include "date-fixed.h"
@@ -103,8 +105,28 @@ TEST_CASE("get_ekadashi_name works") {
     REQUIRE(get_ekadashi_name(", Варӯтӿинӣ экāдащӣ, ") == "Варӯтӿинӣ");
 }
 
+class Precalculated_Vrata {
+    date::year_month_day date;
+public:
+    Precalculated_Vrata(date::year_month_day date_)
+        : date(date_) {}
+    bool operator==(const vp::Vrata_Detail & other) const {
+        return date == other.vrata.date;
+    }
+};
+
+Precalculated_Vrata get_precalc_ekadashi(const std::string & case_slug, const vp::Location & location, const std::vector<std::string> & row_data, std::size_t col, const std::string & ekadashi_name, date::year_month_day date) {
+    return Precalculated_Vrata{date};
+}
+
 // TODO: remove [[maybe_unused]] after completing this check.
-size_t check_ekadashi([[maybe_unused]] const std::vector<std::string> & row, [[maybe_unused]] std::size_t col, [[maybe_unused]] const std::string & ekadashi_name) {
+size_t check_ekadashi(const std::string & case_slug, const vp::Location & location, const std::vector<std::string> & row_data, std::size_t col, const std::string & ekadashi_name, col_to_date & date_map) {
+    auto date = date_map[col];
+    auto precalc_vrata = get_precalc_ekadashi(case_slug, location, row_data, col, ekadashi_name, date);
+    auto our_vrata = vp::Calc{location}.find_next_vrata(date);
+    REQUIRE(our_vrata.has_value());
+    auto our_vrata_detail = vp::Vrata_Detail{*our_vrata, location};
+    REQUIRE(precalc_vrata == our_vrata_detail);
     return 0;
 }
 
@@ -131,38 +153,155 @@ TEST_CASE("join() works") {
  * Two for normal case of single-day ekAdashI (vrata+pAraNam)
  * Zero if we didn't detect any vrata we would know how to handle.
  */
-std::size_t check_vrata(const std::string & case_slug, const std::vector<std::string> & row, std::size_t col) {
-    std::string ekadashi_name = get_ekadashi_name(row[col]);
+std::size_t check_vrata(const std::string & case_slug, const vp::Location & location, const std::vector<std::string> & row_data, std::size_t col, col_to_date & date_map) {
+    std::string ekadashi_name = get_ekadashi_name(row_data[col]);
     if (ekadashi_name.empty()) return 0;
     // first +1 is to compensate zero-based counting
     // second +1 means we require that there is at least one more column (for pAraNam).
-    REQUIRE(row.size() >= col+1+1);
-    std::size_t cells_handled = check_ekadashi(row, col, ekadashi_name);
+    REQUIRE(row_data.size() >= col+1+1);
+    std::size_t cells_handled = check_ekadashi(case_slug, location, row_data, col, ekadashi_name, date_map);
     if (cells_handled < 2) {
-        std::string row_str = join(row);
+        std::string row_str = join(row_data);
         REQUIRE_THAT(cells_handled,
                      Catch::Predicate<std::size_t>([](std::size_t cells_handled_) -> bool {
-                         return cells_handled_ >= 2;
+                         return cells_handled_ == 2 || cells_handled_ == 3;
                      },
-                     case_slug + ": can't handle ekAdashI at col " + std::to_string(col) + " of " + row_str
+                     case_slug + ": " + std::to_string(cells_handled) + " cells handled (should have been 2 or 3) at col " + std::to_string(col) + " of " + row_str
                      ));
     }
     return cells_handled;
 }
 
+vp::Location find_location_by_name_rus(const std::string & name) {
+    static std::vector<std::pair<const char *, vp::Location>> rus_locations {
+        { "Odessa", vp::odessa_coord },
+        { "Vinnitsa", vp::vinnitsa_coord },
+        { "Kiev", vp::kiev_coord },
+        { "San Francisco", vp::sanfrantsisko_coord },
+        { "Tiraspol", vp::tiraspol_coord },
+        { "Khmelnytskyi", vp::hmelnitskiy_coord },
+        { "Kishinev", vp::kishinev_coord },
+        { "Voronezh", vp::voronezh_coord },
+        { "Kharkov", vp::harkov_coord },
+        { "Khabarovsk", vp::habarovsk_coord },
+        { "Lugansk", vp::lugansk_coord },
+        { "Moscow", vp::moskva_coord },
+        { "Vrindavan", vp::vrindavan_coord },
+        { "Los Angeles", vp::losanjeles_coord },
+        { "Kolkata", vp::kalkuta_coord },
+        { "Saint Petersburg", vp::spb_coord },
+        { "Freiburg im Breisgau", vp::freiburg_coord },
+        { "Nikolaev", vp::nikolaev_coord },
+        { "Ramenskoye, Moscow Oblast", vp::ramenskoe_m_obl_coord },
+        { "Minsk", vp::minsk_coord },
+        { "Barnaul", vp::barnaul_coord },
+        { "New Delhi", vp::newdelhi_coord },
+        { "Dusseldorf", vp::dusseldorf_coord },
+        { "Cologne", vp::koeln_kkd_coord },
+        { "Sochi", vp::sochi_coord },
+        { "Velikiy Novgorod", vp::novgorod_coord },
+        { "London", vp::london_coord },
+        { "Manchester", vp::manchester_coord },
+        { "Panaji", vp::panaji_coord },
+        { "Mumbai", vp::bombey_coord },
+        { "Pune", vp::pune_coord },
+        { "Simferopol", vp::simferopol_coord },
+        { "Manali, Himachal Pradesh", vp::manali_coord },
+        { "Pyatigorsk", vp::pyatigorsk_coord },
+        { "Kirov", vp::kirov_coord },
+        { "Washington, D.C.", vp::washington_coord },
+        { "Gokarna, Karnataka", vp::gokarna_coord },
+        { "Tel Aviv", vp::telaviv_coord },
+        { "Tomsk", vp::tomsk_coord },
+        { "Kiev", vp::kiel_coord },
+        { "Omsk", vp::omsk_coord },
+        { "Tashkent", vp::tashkent_coord },
+        { "Удупи", vp::udupi_coord },
+        { "Варшава", vp::varshava_coord },
+        { "Donetsk", vp::donetsk_coord },
+        { "Tbilisi", vp::tbilisi_coord },
+        { "Sukhum", vp::suhum_coord },
+        { "Kremenchug", vp::kremenchug_coord },
+        { "Puno", vp::puno_coord },
+        { "Vladivostok", vp::vladivostok_coord },
+        { "Pernem", vp::pernem_coord },
+        { "Krasnodar", vp::krasnodar_coord },
+        { "Meadow Lake, Canada", vp::meadowlake_coord },
+        { "Toronto", vp::toronto_coord },
+        { "Fredericton", vp::frederikton_coord },
+        { "Perm", vp::perm_coord },
+        { "Ufa", vp::ufa_coord },
+        { "Smolensk", vp::smolensk_coord },
+        { "Krivoy Rog", vp::krivoyrog_coord },
+        { "Petropavlovsk-Kamchatsky", vp::petropavlovskkamchatskiy_coord },
+        { "Ko Pha-ngan", vp::kophangan_coord },
+        { "Denpasar", vp::denpasar_coord },
+        { "Mundelein", vp::mundelein_coord },
+        { "Bishkek", vp::bishkek_coord },
+        { "Vienna", vp::vena_coord },
+        { "Stary Oskol", vp::staryyoskol_coord },
+        { "Edmonton", vp::edmonton_coord },
+        { "Novosibirsk", vp::novosibirsk_coord },
+        { "Yerevan", vp::erevan_coord },
+        { "Stavropol", vp::stavropol_coord },
+        { "Pokhara", vp::pokhara_coord },
+        { "Murmansk", vp::murmansk_coord },
+        { "Mirny, Sakha Republic", vp::mirnyy_coord },
+        { "Riga", vp::riga_coord },
+        { "Surgut", vp::surgut_coord },
+        { "Ryazan", vp::ryazan_coord },
+        { "Athens", vp::afiny_coord },
+        { "Chita", vp::chita_coord },
+        { "Poltava", vp::poltava_coord },
+        { "Kazan", vp::kazan_coord },
+        { "Aktau", vp::aktau_coord },
+        { "Tallinn", vp::tallin_coord },
+        { "Jurmala", vp::yurmala_coord },
+        { "Semikarakorsk", vp::semikarakorsk_coord },
+        { "Colombo", vp::kolombo_coord },
+        { "Ulyanovsk", vp::ulyanovsk_coord },
+        { "Tagbilaran", vp::tagbilaran_coord },
+        { "Gomel", vp::gomel_coord },
+        { "Yekaterinburg", vp::ekaterinburg_coord },
+        { "Vilnius", vp::vilnyus_coord },
+        { "Kostomuksha", vp::kostomuksha_coord },
+        { "Almaty", vp::almaata_coord },
+        { "Kolomyia", vp::kolomyya_coord },
+        { "Samara", vp::samara_coord },
+        { "Chelyabinsk", vp::chelyabinsk_coord },
+        { "Tekeli, Kazakhstan", vp::tekeli_coord },
+        { "Volgograd", vp::volgograd_coord },
+        { "Tambov", vp::tambov_coord },
+        { "Marseille", vp::marsel_coord },
+        { "Barcelona", vp::barcelona_coord },
+        { "Madrid", vp::madrid_coord },
+        { "Miami", vp::miami_coord }
+    };
+    auto iter = std::find_if(rus_locations.begin(), rus_locations.end(), [&name](const auto & pair) {
+        return pair.first == name;
+    });
+    if (iter == rus_locations.end()) {
+        throw std::runtime_error("location '" + name + "' is not known in test data, aborting");
+    }
+    return iter->second;
+}
+
 /* Returns number of vratas handled in this row (should always be 1 for I haven't seen two ekAdashI vratas in a single table yet)
  */
-std::size_t check_vratas_from_row(const std::string & case_slug, const std::vector<std::string> & row, const col_to_date & date_map) {
+std::size_t check_vratas_from_row(const std::string & case_slug, const std::vector<std::string> & row, col_to_date & date_map) {
+    vp::Location location = find_location_by_name_rus(row[2]);
     // manual loop because occasionally we need to increment the iterator manually to skip some cells
     std::size_t vratas_handled = 0;
     for (auto iter = date_map.begin(); iter != date_map.end(); ++iter) {
         auto & col = iter->first;
 
-        std::size_t handled_cells = check_vrata(case_slug, row, col);
+        std::size_t handled_cells = check_vrata(case_slug, location, row, col, date_map);
         vratas_handled += (handled_cells > 0);
         // TODO: when handled_cells > 1, check if all correponding next dates in date_map are always one day after a previous one,
         // fail the test otherwise.
-        for (; handled_cells > 2; --handled_cells) {
+
+        // skip all extra processed cells (beyond 1 which will be skipped as part of standard raw loop)
+        for (; handled_cells > 1; --handled_cells) {
             ++iter;
             if (iter == date_map.end()) break;
         }
@@ -170,7 +309,7 @@ std::size_t check_vratas_from_row(const std::string & case_slug, const std::vect
     return vratas_handled;
 }
 
-void test_one_precalculated_case(const std::string & slug) {
+void test_one_precalculated_table(const std::string & slug) {
     std::string filename{std::string{"data/precalculated-"} + slug + ".html"};
     auto s = slurp_file(source_dir_path / filename);
     REQUIRE(!s.empty());
@@ -183,6 +322,14 @@ void test_one_precalculated_case(const std::string & slug) {
     // from row 1 because row 0 is date headers only
     for (size_t row=1; row < row_count; ++row) {
         auto & row_data = t->get_row(row);
+
+        REQUIRE_THAT(row_data.size(),
+                     Catch::Predicate<std::size_t>(
+                         [](std::size_t size) -> bool {
+                            return size > 3;
+                         },
+                         slug + ": row " + std::to_string(row) + ": size(" + std::to_string(row_data.size()) + ") must be > 3"
+                         ));
 
         // skip header rows, they have colspan=3 in the beginning
         if (row_data[0] == row_data[1] && row_data[0] == row_data[2]) {
@@ -209,10 +356,9 @@ void test_one_precalculated_case(const std::string & slug) {
                         },
                         slug + ", row " + std::to_string(row+1) + ": ekAdashI count should be strictly 1\n" + row_str
                     ));
-        REQUIRE(ekadashi_etc_count == 1);
     }
 }
 
 TEST_CASE("precalculated ekAdashIs", "[!hide]") {
-    test_one_precalculated_case(std::string{"2019-04-27"});
+    test_one_precalculated_table(std::string{"2019-04-27"});
 }
