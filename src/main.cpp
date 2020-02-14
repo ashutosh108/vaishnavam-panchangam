@@ -4,6 +4,12 @@
 
 #include "text-interface.h"
 
+// include Windows.h should go after including date.h (which is included from text-interface.h).
+// Otherwise troubles with min() which is used both as: 1) a macro in Windows.h 2) method function in date.h.
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
 using namespace vp::text_ui;
 
 void print_usage() {
@@ -16,6 +22,9 @@ void print_usage() {
 
 int main(int argc, char *argv[])
 {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
     vp::text_ui::change_to_data_dir(argv[0]);
     date::set_install("tzdata");
     if (argc-1 >= 1 && strcmp(argv[1], "-d") == 0) {
