@@ -113,4 +113,11 @@ const std::vector<std::string> & ekadashi_names_rus()
     return static_names;
 }
 
+bool Vrata::is_two_days() const
+{
+    return type == Vrata_Type::With_Atirikta_Dvadashi || type == Vrata_Type::Sandigdha_With_Atirikta_Dvadashi
+            ||
+           type == Vrata_Type::With_Atirikta_Ekadashi || type == Vrata_Type::Sandigdha_With_Atirikta_Ekadashi;
+}
+
 } // namespace vp

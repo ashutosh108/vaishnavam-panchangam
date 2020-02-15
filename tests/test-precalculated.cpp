@@ -107,16 +107,25 @@ TEST_CASE("get_ekadashi_name works") {
 
 class Precalculated_Vrata {
     date::year_month_day date;
+    std::string case_slug; // test case id (slug like 2019-04-27)
+    vp::Location location;
 public:
-    Precalculated_Vrata(date::year_month_day date_)
-        : date(date_) {}
+    Precalculated_Vrata(std::string case_slug_, vp::Location location_, date::year_month_day date_)
+        : date(date_), case_slug(std::move(case_slug_)), location(location_) {}
     bool operator==(const vp::Vrata_Detail & other) const {
         return date == other.vrata.date;
     }
+    friend std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v);
 };
 
-Precalculated_Vrata get_precalc_ekadashi(const std::string & case_slug, const vp::Location & location, const std::vector<std::string> & row_data, std::size_t col, const std::string & ekadashi_name, date::year_month_day date) {
-    return Precalculated_Vrata{date};
+std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v) {
+    return s << "case '" << v.case_slug << "' " << v.location.name << " date=" << v.date;
+}
+
+
+Precalculated_Vrata get_precalc_ekadashi(const std::string & case_slug, const vp::Location & location, [[maybe_unused]] const std::vector<std::string> & row_data, [[maybe_unused]] std::size_t col, [[maybe_unused]] const std::string & ekadashi_name, date::year_month_day date) {
+    // TODO: extract vrata type and pAraNam time.
+    return Precalculated_Vrata{case_slug, location, date};
 }
 
 // TODO: remove [[maybe_unused]] after completing this check.
@@ -127,7 +136,7 @@ size_t check_ekadashi(const std::string & case_slug, const vp::Location & locati
     REQUIRE(our_vrata.has_value());
     auto our_vrata_detail = vp::Vrata_Detail{*our_vrata, location};
     REQUIRE(precalc_vrata == our_vrata_detail);
-    return 0;
+    return (our_vrata->is_two_days() ? 3 : 2);
 }
 
 std::string join(const std::vector<std::string> & v, char joiner=';') {
@@ -289,24 +298,30 @@ vp::Location find_location_by_name_rus(const std::string & name) {
 /* Returns number of vratas handled in this row (should always be 1 for I haven't seen two ekAdashI vratas in a single table yet)
  */
 std::size_t check_vratas_from_row(const std::string & case_slug, const std::vector<std::string> & row, col_to_date & date_map) {
-    vp::Location location = find_location_by_name_rus(row[2]);
-    // manual loop because occasionally we need to increment the iterator manually to skip some cells
-    std::size_t vratas_handled = 0;
-    for (auto iter = date_map.begin(); iter != date_map.end(); ++iter) {
-        auto & col = iter->first;
+    try {
+        vp::Location location = find_location_by_name_rus(row[2]);
 
-        std::size_t handled_cells = check_vrata(case_slug, location, row, col, date_map);
-        vratas_handled += (handled_cells > 0);
-        // TODO: when handled_cells > 1, check if all correponding next dates in date_map are always one day after a previous one,
-        // fail the test otherwise.
+        // manual loop because occasionally we need to increment the iterator manually to skip some cells
+        std::size_t vratas_handled = 0;
+        for (auto iter = date_map.begin(); iter != date_map.end(); ++iter) {
+            auto & col = iter->first;
 
-        // skip all extra processed cells (beyond 1 which will be skipped as part of standard raw loop)
-        for (; handled_cells > 1; --handled_cells) {
-            ++iter;
-            if (iter == date_map.end()) break;
+            std::size_t handled_cells = check_vrata(case_slug, location, row, col, date_map);
+            vratas_handled += (handled_cells > 0);
+            // TODO: when handled_cells > 1, check if all correponding next dates in date_map are always one day after a previous one,
+            // fail the test otherwise.
+
+            // skip all extra processed cells (beyond 1 which will be skipped as part of standard raw loop)
+            for (; handled_cells > 1; --handled_cells) {
+                ++iter;
+                if (iter == date_map.end()) break;
+            }
         }
+        return vratas_handled;
+    } catch(...) {
+        Catch::cerr() << case_slug << ", " << join(row) << '\n';
+        throw;
     }
-    return vratas_handled;
 }
 
 void test_one_precalculated_table(const std::string & slug) {

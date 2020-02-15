@@ -15,7 +15,9 @@ enum class Vrata_Type {
     Ekadashi,
     Sandigdha_Ekadashi, // when Ekadashi Tithi starts before Arunodaya, but less than 0.25 muhurtas before.
     With_Atirikta_Dvadashi,
-    Sandigdha_With_Atirikta_Dvadashi
+    Sandigdha_With_Atirikta_Dvadashi,
+    With_Atirikta_Ekadashi,
+    Sandigdha_With_Atirikta_Ekadashi
 };
 
 std::ostream &operator<<(std::ostream &o, Vrata_Type const &v);
@@ -33,6 +35,7 @@ struct Vrata {
         : type(_type),
           date(_date),
           paran(_paran){}
+    bool is_two_days() const;
 };
 
 bool operator==(Vrata const &, Vrata const &);

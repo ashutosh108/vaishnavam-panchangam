@@ -12,7 +12,7 @@ namespace vp {
 
 Calc::Calc(Location coord):swe{coord} {}
 
-/* Key function: find sunrise during next ekadashi tithi or right after it.
+/* Find sunrise during next ekadashi tithi or right after it.
  */
 std::optional<JulDays_UT> Calc::find_next_ekadashi_sunrise(JulDays_UT after) const
 {
@@ -43,7 +43,7 @@ date::year_month_day Calc::get_vrata_date(const JulDays_UT &sunrise) const
 Paran Calc::get_paran(JulDays_UT const &last_fasting_sunrise) const
 {
     std::optional<JulDays_UT> paran_start, paran_end;
-    auto paran_sunrise = swe.get_sunrise(last_fasting_sunrise+double_days{0.1});
+    auto paran_sunrise = next_sunrise(last_fasting_sunrise);
     if (paran_sunrise) {
         auto paran_sunset = swe.get_sunset(*paran_sunrise);
         paran_start = paran_sunrise;
@@ -122,9 +122,16 @@ bool Calc::got_atirikta_dvadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or
  *       Need to find an example and add test.*/
 std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
 {
-    auto sunrise = find_next_ekadashi_sunrise(JulDays_UT{after});
+    auto midnight = calc_astronomical_midnight(after);
+    auto start_time = midnight - double_days{3.0};
+    bool did_run_once = false;
+repeat_with_fixed_start_time:
+    assert(!did_run_once); // make sure we don't loop forever
+    did_run_once = true;
+    auto sunrise = find_next_ekadashi_sunrise(start_time);
     if (!sunrise) return std::nullopt;
 
+    // jump here can opnly happen once per call, when we got vrata from yesterday.
     auto arunodaya_info = get_arunodaya(*sunrise);
     if (!arunodaya_info.has_value()) { return{}; }
 
@@ -145,6 +152,15 @@ std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
         }
     }
 
+    auto vrata_date = get_vrata_date(*sunrise);
+
+    // if we found vrata before the requested date, then those -3days in the beginning were too much of an adjustment.
+    // so we restart without that 3 days offset.
+    if (vrata_date < after) {
+        start_time = midnight;
+        goto repeat_with_fixed_start_time;
+    }
+
     if (got_atirikta_dvadashi(*sunrise)) {
         if (type == Vrata_Type::Sandigdha_Ekadashi) {
             type = Vrata_Type::Sandigdha_With_Atirikta_Dvadashi;
@@ -154,13 +170,13 @@ std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
 
         return Vrata{
                     type,
-                    get_vrata_date(*sunrise),
+                    vrata_date,
                     atirikta_dvadashi_paran(*sunrise)};
     }
 
     return Vrata{
                 type,
-                get_vrata_date(*sunrise),
+                vrata_date,
                 get_paran(*sunrise)};
 }
 
@@ -225,6 +241,11 @@ std::optional<JulDays_UT> Calc::get_next_tithi_start(JulDays_UT const from, Tith
         }
     }
     return time;
+}
+
+JulDays_UT Calc::calc_astronomical_midnight(date::year_month_day date) const {
+    double_days adjustment{swe.coord.longitude * (1.0/360.0)};
+    return JulDays_UT{JulDays_UT{date} - adjustment};
 }
 
 } // namespace vp

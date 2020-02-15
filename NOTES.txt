@@ -136,3 +136,4 @@ done:
 [+] Vrata_Detail: print location name [2020-02-10]
 [+] create specialized html table parser for automated tests [2020-02-12]
 [+] fix utf-8 output in Windows cmd window [2020-02-14]
+[+] never get yesterday's vrata, always get today's vrata [2020-02-15]

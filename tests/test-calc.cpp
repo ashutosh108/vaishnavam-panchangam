@@ -458,3 +458,28 @@ TEST_CASE("Kiev after 2020-01-21 does NOT return 2020-01-21") {
     auto vrata = calc.find_next_vrata(from);
     REQUIRE(vrata->date != from);
 }
+
+TEST_CASE("get_astronomical_midnight returns time *before* utc midnight for location to the east from greenwich") {
+    vp::Calc c{moskva_coord};
+    auto date = 2019_y/January/1;
+
+    REQUIRE(c.calc_astronomical_midnight(date) < vp::JulDays_UT{date});
+}
+
+TEST_CASE("get_astronomical_midnight returns time *after* utc midnight for location to the west from greenwich") {
+    vp::Calc c{losanjeles_coord};
+    auto date = 2019_y/January/1;
+
+    REQUIRE(c.calc_astronomical_midnight(date) > vp::JulDays_UT{date});
+}
+
+TEST_CASE("get_astronomical_midnight() adjusts to the right side") {
+    Calc c{petropavlovskkamchatskiy_coord};
+    auto date = 2019_y/March/18;
+
+    auto local_midnight = c.calc_astronomical_midnight(date);
+    JulDays_UT local_midnight_in_utc_earliest{2019_y/March/17};
+    JulDays_UT local_midnight_in_utc_latest{2019_y/March/18};
+    REQUIRE(local_midnight > local_midnight_in_utc_earliest);
+    REQUIRE(local_midnight < local_midnight_in_utc_latest);
+}

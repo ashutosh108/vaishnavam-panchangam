@@ -10,7 +10,6 @@ struct Vrata_Detail {
     Location location;
     Calc calc;
     Vrata_Detail(Vrata _vrata, Location _location);
-    JulDays_UT get_approx_local_midnight() const;
     struct NamedTimePoint {
         const char *name;
         std::optional<JulDays_UT> time_point;

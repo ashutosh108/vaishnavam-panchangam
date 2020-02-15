@@ -8,7 +8,7 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _location):vrata(_vrata), loca
     events.push_back({"pAraNam start", vrata.paran.paran_start});
     events.push_back({"pAraNam end", vrata.paran.paran_end});
 
-    JulDays_UT local_midnight = get_approx_local_midnight();
+    JulDays_UT local_midnight = calc.calc_astronomical_midnight(vrata.date);
     auto sunrise = calc.swe.get_sunrise(local_midnight);
     events.push_back({"sunrise1", sunrise});
     if (sunrise) {
@@ -62,12 +62,6 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _location):vrata(_vrata), loca
         }
     }
 }
-
-JulDays_UT Vrata_Detail::get_approx_local_midnight() const {
-    double_days adjustment{location.longitude * (1.0/360.0)};
-    return JulDays_UT{JulDays_UT{vrata.date} - adjustment};
-}
-
 
 std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
 {
