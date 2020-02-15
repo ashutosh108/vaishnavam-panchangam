@@ -124,10 +124,13 @@ std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
 {
     auto midnight = calc_astronomical_midnight(after);
     auto start_time = midnight - double_days{3.0};
-    bool did_run_once = false;
+    int run_number = 0;
 repeat_with_fixed_start_time:
-    assert(!did_run_once); // make sure we don't loop forever
-    did_run_once = true;
+    if (++run_number > 2) {
+        std::stringstream s;
+        s << swe.coord.name << " after " << after << " (" << start_time << "): potential eternal loop detected";
+        throw std::runtime_error(s.str());
+    }
     auto sunrise = find_next_ekadashi_sunrise(start_time);
     if (!sunrise) return std::nullopt;
 
