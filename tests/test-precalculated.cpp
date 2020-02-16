@@ -77,6 +77,11 @@ col_to_date get_date_headers(html::Table & t, date::year year) {
     return map;
 }
 
+template <class Container, class T>
+bool contains(Container & c, T & val) {
+    return std::find(c.begin(), c.end(), val) != c.end();
+}
+
 /* In: text from cell in pañcāṅgam, possibly including "such-and-such ekAdashI" in Russian language. E.g. "Варӯтӿинӣ экāдащӣ"
  * Detect whether known ekAdashI is described in this cell.
  * fail check on unknown ekAdashI name.
@@ -90,13 +95,9 @@ std::string get_ekadashi_name(const std::string & text) {
         return "";
     }
     std::string ekadashi_name = match[1].str();
+    CAPTURE(text, ekadashi_name);
     // require ekadashi_name to be known
-    REQUIRE_THAT(ekadashi_name,
-                 Catch::Predicate<const std::string &>(
-                     [](const std::string & s) -> bool {
-                        return std::find(vp::ekadashi_names_rus().begin(), vp::ekadashi_names_rus().end(), s) != vp::ekadashi_names_rus().end();
-                     }
-    ));
+    REQUIRE(contains(vp::ekadashi_names_rus(), ekadashi_name));
     return ekadashi_name;
 }
 
@@ -171,12 +172,7 @@ std::size_t check_vrata(const std::string & case_slug, const vp::Location & loca
     std::size_t cells_handled = check_ekadashi(case_slug, location, row_data, col, ekadashi_name, date_map);
     if (cells_handled < 2) {
         std::string row_str = join(row_data);
-        REQUIRE_THAT(cells_handled,
-                     Catch::Predicate<std::size_t>([](std::size_t cells_handled_) -> bool {
-                         return cells_handled_ == 2 || cells_handled_ == 3;
-                     },
-                     case_slug + ": " + std::to_string(cells_handled) + " cells handled (should have been 2 or 3) at col " + std::to_string(col) + " of " + row_str
-                     ));
+        REQUIRE((cells_handled == 2 || cells_handled == 3));
     }
     return cells_handled;
 }
@@ -298,33 +294,37 @@ vp::Location find_location_by_name_rus(const std::string & name) {
 /* Returns number of vratas handled in this row (should always be 1 for I haven't seen two ekAdashI vratas in a single table yet)
  */
 std::size_t check_vratas_from_row(const std::string & case_slug, html::Table::Row & row, col_to_date & date_map) {
-    try {
-        vp::Location location = find_location_by_name_rus(row[2]);
+    vp::Location location = find_location_by_name_rus(row[2]);
 
-        // manual loop because occasionally we need to increment the iterator manually to skip some cells
-        std::size_t vratas_handled = 0;
-        for (auto iter = date_map.begin(); iter != date_map.end(); ++iter) {
-            auto & col = iter->first;
+    // manual loop because occasionally we need to increment the iterator manually to skip some cells
+    std::size_t vratas_handled = 0;
+    for (auto iter = date_map.begin(); iter != date_map.end(); ++iter) {
+        auto & col = iter->first;
 
-            std::size_t handled_cells = check_vrata(case_slug, location, row, col, date_map);
-            vratas_handled += (handled_cells > 0);
-            // TODO: when handled_cells > 1, check if all correponding next dates in date_map are always one day after a previous one,
-            // fail the test otherwise.
+        std::size_t handled_cells = check_vrata(case_slug, location, row, col, date_map);
+        vratas_handled += (handled_cells > 0);
+        // TODO: when handled_cells > 1, check if all correponding next dates in date_map are always one day after a previous one,
+        // fail the test otherwise.
 
-            // skip all extra processed cells (beyond 1 which will be skipped as part of standard raw loop)
-            for (; handled_cells > 1; --handled_cells) {
-                ++iter;
-                if (iter == date_map.end()) break;
-            }
+        // skip all extra processed cells (beyond 1 which will be skipped as part of standard raw loop)
+        for (; handled_cells > 1; --handled_cells) {
+            ++iter;
+            if (iter == date_map.end()) break;
         }
-        return vratas_handled;
-    } catch(...) {
-        Catch::cerr() << case_slug << ", " << join(row) << '\n';
-        throw;
     }
+    return vratas_handled;
+}
+
+date::year get_year_from_slug(const std::string &slug) {
+    std::istringstream s{slug};
+    date::year year;
+    s >> date::parse("%Y", year);
+    return year;
 }
 
 void test_one_precalculated_table(const std::string & slug) {
+    CAPTURE(slug);
+
     std::string filename{std::string{"data/precalculated-"} + slug + ".html"};
     auto s = slurp_file(source_dir_path / filename);
     REQUIRE(!s.empty());
@@ -332,19 +332,18 @@ void test_one_precalculated_table(const std::string & slug) {
     auto t = p.next_table();
     REQUIRE(t.has_value());
 
-    auto date_headers = get_date_headers(*t, date::year{2019});
+    auto year = get_year_from_slug(slug);
+    //sanity check
+    REQUIRE(year >= date::year{2000});
+    REQUIRE(year < date::year{2030});
+    auto date_headers = get_date_headers(*t, year);
     std::size_t row_count = t->row_count();
     // from row 1 because row 0 is date headers only
     for (size_t row=1; row < row_count; ++row) {
+        CAPTURE(row);
         auto & row_data = t->get_row(row);
-
-        REQUIRE_THAT(row_data.size(),
-                     Catch::Predicate<std::size_t>(
-                         [](std::size_t size) -> bool {
-                            return size > 3;
-                         },
-                         slug + ": row " + std::to_string(row) + ": size(" + std::to_string(row_data.size()) + ") must be > 3"
-                         ));
+        CAPTURE(join(row_data));
+        REQUIRE(row_data.size() > 3);
 
         // skip header rows, they have colspan=3 in the beginning
         if (row_data[0] == row_data[1] && row_data[0] == row_data[2]) {
@@ -355,14 +354,7 @@ void test_one_precalculated_table(const std::string & slug) {
 
         std::size_t ekadashi_etc_count = check_vratas_from_row(slug, row_data, date_headers);
         std::string row_str = join(row_data);
-        REQUIRE_THAT(
-                    ekadashi_etc_count,
-                    Catch::Predicate<std::size_t>(
-                        [] (std::size_t count) -> bool {
-                            return count == 1;
-                        },
-                        slug + ", row " + std::to_string(row+1) + ": ekAdashI count should be strictly 1\n" + row_str
-                    ));
+        REQUIRE(ekadashi_etc_count == 1);
     }
 }
 
