@@ -123,13 +123,13 @@ std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v) {
 }
 
 
-Precalculated_Vrata get_precalc_ekadashi(const std::string & case_slug, const vp::Location & location, [[maybe_unused]] const std::vector<std::string> & row_data, [[maybe_unused]] std::size_t col, [[maybe_unused]] const std::string & ekadashi_name, date::year_month_day date) {
+Precalculated_Vrata get_precalc_ekadashi(const std::string & case_slug, const vp::Location & location, [[maybe_unused]] html::Table::Row & row_data, [[maybe_unused]] std::size_t col, [[maybe_unused]] const std::string & ekadashi_name, date::year_month_day date) {
     // TODO: extract vrata type and pAraNam time.
     return Precalculated_Vrata{case_slug, location, date};
 }
 
 // TODO: remove [[maybe_unused]] after completing this check.
-size_t check_ekadashi(const std::string & case_slug, const vp::Location & location, const std::vector<std::string> & row_data, std::size_t col, const std::string & ekadashi_name, col_to_date & date_map) {
+size_t check_ekadashi(const std::string & case_slug, const vp::Location & location, html::Table::Row & row_data, std::size_t col, const std::string & ekadashi_name, col_to_date & date_map) {
     auto date = date_map[col];
     auto precalc_vrata = get_precalc_ekadashi(case_slug, location, row_data, col, ekadashi_name, date);
     auto our_vrata = vp::Calc{location}.find_next_vrata(date);
@@ -139,10 +139,10 @@ size_t check_ekadashi(const std::string & case_slug, const vp::Location & locati
     return (our_vrata->is_two_days() ? 3 : 2);
 }
 
-std::string join(const std::vector<std::string> & v, char joiner=';') {
+std::string join(const html::Table::Row & v, char joiner=';') {
     std::string joined;
     bool first = true;
-    for (const auto & cell : v) {
+    for (const auto & [col, cell]: v) {
         if (!first) {
             joined += joiner;
         }
@@ -153,7 +153,7 @@ std::string join(const std::vector<std::string> & v, char joiner=';') {
 }
 
 TEST_CASE("join() works") {
-    REQUIRE("a;b" == join(std::vector<std::string>{"a", "b"}));
+    REQUIRE("a;b" == join(html::Table::Row{{1, "a"}, {2, "b"}}));
 }
 
 /* If indicated cell text represents vrata we know how to handle (ekAdashI), then check if our calculations give the same result
@@ -162,7 +162,7 @@ TEST_CASE("join() works") {
  * Two for normal case of single-day ekAdashI (vrata+pAraNam)
  * Zero if we didn't detect any vrata we would know how to handle.
  */
-std::size_t check_vrata(const std::string & case_slug, const vp::Location & location, const std::vector<std::string> & row_data, std::size_t col, col_to_date & date_map) {
+std::size_t check_vrata(const std::string & case_slug, const vp::Location & location, html::Table::Row & row_data, std::size_t col, col_to_date & date_map) {
     std::string ekadashi_name = get_ekadashi_name(row_data[col]);
     if (ekadashi_name.empty()) return 0;
     // first +1 is to compensate zero-based counting
@@ -297,7 +297,7 @@ vp::Location find_location_by_name_rus(const std::string & name) {
 
 /* Returns number of vratas handled in this row (should always be 1 for I haven't seen two ekAdashI vratas in a single table yet)
  */
-std::size_t check_vratas_from_row(const std::string & case_slug, const std::vector<std::string> & row, col_to_date & date_map) {
+std::size_t check_vratas_from_row(const std::string & case_slug, html::Table::Row & row, col_to_date & date_map) {
     try {
         vp::Location location = find_location_by_name_rus(row[2]);
 
@@ -354,15 +354,7 @@ void test_one_precalculated_table(const std::string & slug) {
         // TODO: check that timezone in the table matches our data
 
         std::size_t ekadashi_etc_count = check_vratas_from_row(slug, row_data, date_headers);
-        std::string row_str;
-        bool first = true;
-        for (const auto & cell : row_data) {
-            if (!first) {
-                row_str += ';';
-            }
-            first = false;
-            row_str += cell;
-        }
+        std::string row_str = join(row_data);
         REQUIRE_THAT(
                     ekadashi_etc_count,
                     Catch::Predicate<std::size_t>(

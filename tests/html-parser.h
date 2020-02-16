@@ -1,6 +1,7 @@
 #ifndef VP_TESTS_HTML_PARSER_H
 #define VP_TESTS_HTML_PARSER_H
 
+#include <map>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -41,25 +42,23 @@ class Table {
 public:
     std::string get(std::size_t row, std::size_t column);
 
-    struct rowspan {
+    struct RowSpan {
         std::size_t row_count;
     };
 
-    struct colspan {
+    struct ColSpan {
         std::size_t col_count;
     };
+    using Row = std::map<std::size_t, std::string>;
 
-    void append_cell(std::size_t row, std::string && s, rowspan rowspan_=rowspan{1}, colspan colspan_=colspan{1});
-//    void append_cells(rowspan rowspan_, std::string && s);
-//    void append_cells(std::size_t row, colspan colspan_, std::string && s);
+    void append_cell(std::size_t row, std::string && s, RowSpan rowspan_=RowSpan{1}, ColSpan colspan_=ColSpan{1});
     std::size_t get_row_length(std::size_t row);
     std::size_t row_count();
-    std::vector<std::string> & get_row(std::size_t row);
-
+    Row  & get_row(std::size_t row);
+    std::string & set(std::size_t row, std::size_t col, std::string s);
 private:
-    int width;
-    int height;
-    std::vector<std::vector<std::string>> data;
+    std::vector<Row> data;
+    std::size_t find_first_free_col_at_row(std::size_t row);
 };
 
 class TableParser {
