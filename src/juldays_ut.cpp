@@ -18,7 +18,22 @@ JulDays_UT::JulDays_UT(date::year_month_day d, double_hours hours)
                                  static_cast<int>(static_cast<unsigned>(d.month())),
                                  static_cast<int>(static_cast<unsigned>(d.day())),
                                  hours.count(),
-                                 SE_GREG_CAL)};
+                                         SE_GREG_CAL)};
+}
+
+JulDays_UT::JulDays_UT(date::local_time<double_days> t, const date::time_zone * tz)
+{
+    [[maybe_unused]] auto z = date::make_zoned(tz, t, date::choose::earliest);
+    date::sys_time<double_days> sys = z.get_sys_time();
+    auto sys_days = date::floor<date::days>(sys);
+    date::year_month_day ymd = sys_days;
+    double_hours hours{sys - sys_days};
+    juldays_ut_ = double_days{
+            swe_julday(static_cast<int>(ymd.year()),
+                       static_cast<int>(static_cast<unsigned>(ymd.month())),
+                       static_cast<int>(static_cast<unsigned>(ymd.day())),
+                       hours.count(),
+                       SE_GREG_CAL)};
 }
 
 bool JulDays_UT::operator==(const JulDays_UT &to) const
