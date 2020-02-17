@@ -82,6 +82,7 @@ inline bool operator!=(const Location & one, const Location & other) {
 [[maybe_unused]] constexpr Location kiel_coord{"Kiev", 54, 19, 0, 10, 8, 0, "Europe/Berlin"};
 [[maybe_unused]] constexpr Location omsk_coord{"Omsk", 54, 58, 0, 73, 23, 0, "Asia/Omsk"};
 [[maybe_unused]] constexpr Location tashkent_coord{"Tashkent", 41, 18, 0, 68, 16, 0, "Asia/Almaty"};
+[[maybe_unused]] constexpr Location dushanbe_coord{"Dushanbe", 38, 32, 12, 68, 46, 48, "Asia/Dushanbe"};
 [[maybe_unused]] constexpr Location udupi_coord{"Udupi", 13, 59, 0, 74, 75, 0, "Asia/Kolkata"};
 [[maybe_unused]] constexpr Location varshava_coord{"Warsaw", 52, 13, 0, 21, 2, 0, "Europe/Warsaw"};
 [[maybe_unused]] constexpr Location donetsk_coord{"Donetsk", 48, 0, 0, 37, 48, 0, "Europe/Moscow"};
