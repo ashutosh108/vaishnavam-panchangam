@@ -72,6 +72,14 @@ std::ostream &operator<<(std::ostream &os, JulDays_UT const &t) {
     return os;
 }
 
+std::ostream &operator<<(std::ostream &os, const std::optional<JulDays_UT> &t)
+{
+    if (t) {
+        return os << *t;
+    }
+    return os << "(unspecified)";
+}
+
 std::ostream &operator<<(std::ostream &os, JulDays_Zoned const &t) {
     auto timezone = date::locate_zone(t.timezone_name_);
     auto z = date::make_zoned(timezone, t.t_.as_sys_time());

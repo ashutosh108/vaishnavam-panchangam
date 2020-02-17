@@ -4,6 +4,7 @@
 #include "date-fixed.h"
 #include "tz-fixed.h"
 
+#include <optional>
 #include <ostream>
 
 namespace vp {
@@ -50,6 +51,7 @@ public:
 };
 
 std::ostream &operator<<(std::ostream &os, JulDays_UT const &t);
+std::ostream &operator<<(std::ostream &os, const std::optional<JulDays_UT> & t);
 std::ostream &operator<<(std::ostream &os, JulDays_Zoned const &t);
 JulDays_UT operator +(const JulDays_UT &, double_days);
 JulDays_UT operator -(const JulDays_UT &, double_days);
