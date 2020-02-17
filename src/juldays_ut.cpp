@@ -23,7 +23,7 @@ JulDays_UT::JulDays_UT(date::year_month_day d, double_hours hours)
 
 JulDays_UT::JulDays_UT(date::local_time<double_days> t, const date::time_zone * tz)
 {
-    [[maybe_unused]] auto z = date::make_zoned(tz, t, date::choose::earliest);
+    auto z = date::make_zoned(tz, t, date::choose::earliest);
     date::sys_time<double_days> sys = z.get_sys_time();
     auto sys_days = date::floor<date::days>(sys);
     date::year_month_day ymd = sys_days;

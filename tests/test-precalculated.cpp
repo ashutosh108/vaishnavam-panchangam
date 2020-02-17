@@ -108,8 +108,8 @@ TEST_CASE("get_ekadashi_name works") {
 
 struct Precalculated_Vrata {
     date::year_month_day date;
-    vp::Location location;
     vp::Vrata_Type type;
+    vp::Location location;
     std::optional<vp::JulDays_UT> paranam_start;
     std::optional<vp::JulDays_UT> paranam_end;
     Precalculated_Vrata(vp::Location location_,
@@ -118,8 +118,8 @@ struct Precalculated_Vrata {
                         std::optional<vp::JulDays_UT> paranam_start_ = std::nullopt,
                         std::optional<vp::JulDays_UT> paranam_end_ = std::nullopt)
         : date(date_),
-          location(location_),
           type(type_),
+          location(location_),
           paranam_start(paranam_start_),
           paranam_end(paranam_end_) {}
     bool operator==(const vp::Vrata_Detail & other) const {
@@ -129,7 +129,8 @@ struct Precalculated_Vrata {
             // in case of standard paranam, start and end time must not be set
             if (paranam_start || paranam_end) return false;
         }
-        return true;
+        return paranam_start == other.vrata.paran.paran_start &&
+                paranam_end == other.vrata.paran.paran_end;
         // TODO: more detailed comparison for pAraNam
     }
     friend std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v);
@@ -173,22 +174,32 @@ std::pair<std::optional<vp::JulDays_UT>, std::optional<vp::JulDays_UT>> parse_pr
     if (s == "*") {
         return {{}, {}};
     }
-    std::regex r{R"~((\d?\d:\d\d) - (\d?\d:\d\d))~"};
     std::smatch match;
-    if (std::regex_search(s, match, r)) {
+    if (std::regex_search(s, match, std::regex{R"~((\d?\d:\d\d) - (\d?\d:\d\d))~"})) {
         if (match.size() >= 2) {
-            std::istringstream stream{s};
             std::chrono::minutes start_h_m{h_m_from_string(match[1].str())};
             std::chrono::minutes end_h_m{h_m_from_string(match[2].str())};
-            auto timezone = date::locate_zone(timezone_name);
-            vp::JulDays_UT start_time{date::local_days{date}+start_h_m, timezone};
-            vp::JulDays_UT end_time{date::local_days{date}+end_h_m, timezone};
+            auto time_zone = date::locate_zone(timezone_name);
+            vp::JulDays_UT start_time{date::local_days{date}+start_h_m, time_zone};
+            vp::JulDays_UT end_time{date::local_days{date}+end_h_m, time_zone};
             return {start_time, end_time};
+        }
+    } else if (std::regex_search(s, match, std::regex{R"~(&gt;\s*(\d?\d:\d\d))~"})) {
+        if (match.size() >= 1) {
+            std::chrono::minutes start_h_m{h_m_from_string(match[1].str())};
+            auto time_zone = date::locate_zone(timezone_name);
+            vp::JulDays_UT start_time{date::local_days{date}+start_h_m, time_zone};
+            return {start_time, std::nullopt};
+        }
+    } else if (std::regex_search(s, match, std::regex{R"~(&lt;\s*(\d?\d:\d\d))~"})) {
+        if (match.size() >= 1) {
+            std::chrono::minutes end_h_m{h_m_from_string(match[1].str())};
+            auto time_zone = date::locate_zone(timezone_name);
+            vp::JulDays_UT end_time{date::local_days{date}+end_h_m, time_zone};
+            return {std::nullopt, end_time};
         }
     }
     throw std::runtime_error("can't parse paran time '" + s + "'");
-//    std::optional<vp::JulDays_UT> start;
-//    std::optional<vp::JulDays_UT> end;
 }
 
 Precalculated_Vrata get_precalc_ekadashi(const vp::Location & location, [[maybe_unused]] html::Table::Row & row_data, [[maybe_unused]] std::size_t col, [[maybe_unused]] const std::string & ekadashi_name, date::year_month_day date) {
@@ -338,8 +349,7 @@ vp::Location find_location_by_name_rus(const std::string & name) {
     return iter->second;
 }
 
-/* Extracts single vrata from a row
- */
+/* Extracts single vrata from a row */
 Precalculated_Vrata extract_vrata_from_row(html::Table::Row & row, col_to_date & date_map) {
     vp::Location location = find_location_by_name_rus(row[2]);
 
@@ -390,8 +400,6 @@ std::vector<Precalculated_Vrata> extract_vratas_from_precalculated_table(std::st
 }
 
 // TODO: check that we extract all relevant info in cases of:
-// 3. standard ekAdashI with "> start" pAraNam
-// 4. standard ekAdashI with "< end" pAraNam
 // 5-12. same four cases for atirikA ekAdashI and atiriktA dvAdashI
 TEST_CASE("do not allow empty paran type cell") {
     REQUIRE_THROWS_AS(
@@ -419,6 +427,32 @@ TEST_CASE("precalc parsing: 2. standard ekAdashI with 'start-end' pAraNam", "[do
     REQUIRE(vratas.size() == 1);
     // 5:30 is indian timezone shift from UTC
     vp::JulDays_UT paran_start{2019_y/January/2, std::chrono::hours{6} + std::chrono::minutes{7} - std::chrono::minutes{5*60+30}};
+    vp::JulDays_UT paran_end{2019_y/January/2, std::chrono::hours{6} + std::chrono::minutes{8} - std::chrono::minutes{5*60+30}};
+    Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1, vp::Vrata_Type::Ekadashi, paran_start, paran_end};
+    REQUIRE(expected == vratas[0]);
+}
+
+TEST_CASE("precalc parsing: 3. standard ekAdashI with '> start' pAraNam", "[donothide]") {
+    using namespace date;
+    auto vratas = extract_vratas_from_precalculated_table(
+                "<table><td><td><td><td>1 января<td>2 января"
+                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>&gt;6:07", 2019_y);
+    REQUIRE(vratas.size() == 1);
+    // 5:30 is indian timezone shift from UTC
+    vp::JulDays_UT paran_start{2019_y/January/2, std::chrono::hours{6} + std::chrono::minutes{7} - std::chrono::minutes{5*60+30}};
+    std::optional<vp::JulDays_UT> paran_end{};
+    Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1, vp::Vrata_Type::Ekadashi, paran_start, paran_end};
+    REQUIRE(expected == vratas[0]);
+}
+
+TEST_CASE("precalc parsing: 4. standard ekAdashI with '< end' pAraNam", "[donothide]") {
+    using namespace date;
+    auto vratas = extract_vratas_from_precalculated_table(
+                "<table><td><td><td><td>1 января<td>2 января"
+                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>&lt;6:08", 2019_y);
+    REQUIRE(vratas.size() == 1);
+    // 5:30 is indian timezone shift from UTC
+    std::optional<vp::JulDays_UT> paran_start{};
     vp::JulDays_UT paran_end{2019_y/January/2, std::chrono::hours{6} + std::chrono::minutes{8} - std::chrono::minutes{5*60+30}};
     Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1, vp::Vrata_Type::Ekadashi, paran_start, paran_end};
     REQUIRE(expected == vratas[0]);
