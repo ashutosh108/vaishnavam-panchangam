@@ -143,12 +143,48 @@ bool operator==(const Precalculated_Vrata & one, const Precalculated_Vrata & oth
 }
 
 std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v) {
-    return s << v.location.name << " date=" << v.date;
+    s << v.type << "@" << v.location.name << " on " << v.date;
+    s << ", pAraNam: " << v.paranam_start << ".." << v.paranam_end;
+    return s;
 }
 
-std::pair<std::optional<vp::JulDays_UT>, std::optional<vp::JulDays_UT>> parse_precalc_paranam(std::string s) {
+std::chrono::minutes h_m_from_string(const std::string & s) {
+    std::istringstream stream{s};
+    std::chrono::minutes h_m;
+    stream >> date::parse("%H:%M", h_m);
+    if (!stream.good()) {
+        throw std::runtime_error{"can't parse '" + s + "' as HH:MM"};
+    }
+    return h_m;
+}
+
+TEST_CASE("h_m_from_string works for basic cases") {
+    using namespace std::string_literals;
+    using namespace std::chrono;
+    REQUIRE(hours{0} + minutes{0} == h_m_from_string("0:00"s));
+    REQUIRE(hours{0} + minutes{0} == h_m_from_string("00:00"s));
+    REQUIRE(hours{23} + minutes{45} == h_m_from_string("23:45"s));
+    REQUIRE(hours{23} + minutes{59} == h_m_from_string("23:59"s));
+}
+
+
+std::pair<std::optional<vp::JulDays_UT>, std::optional<vp::JulDays_UT>> parse_precalc_paranam(std::string s, date::year_month_day date, const char * timezone_name) {
+    using namespace date;
     if (s == "*") {
         return {{}, {}};
+    }
+    std::regex r{R"~((\d?\d:\d\d) - (\d?\d:\d\d))~"};
+    std::smatch match;
+    if (std::regex_search(s, match, r)) {
+        if (match.size() >= 2) {
+            std::istringstream stream{s};
+            std::chrono::minutes start_h_m{h_m_from_string(match[1].str())};
+            std::chrono::minutes end_h_m{h_m_from_string(match[2].str())};
+            auto timezone = date::locate_zone(timezone_name);
+            vp::JulDays_UT start_time{date::local_days{date}+start_h_m, timezone};
+            vp::JulDays_UT end_time{date::local_days{date}+end_h_m, timezone};
+            return {start_time, end_time};
+        }
     }
     throw std::runtime_error("can't parse paran time '" + s + "'");
 //    std::optional<vp::JulDays_UT> start;
@@ -158,7 +194,8 @@ std::pair<std::optional<vp::JulDays_UT>, std::optional<vp::JulDays_UT>> parse_pr
 Precalculated_Vrata get_precalc_ekadashi(const vp::Location & location, [[maybe_unused]] html::Table::Row & row_data, [[maybe_unused]] std::size_t col, [[maybe_unused]] const std::string & ekadashi_name, date::year_month_day date) {
     // TODO: extract vrata type and pAraNam time.
     vp::Vrata_Type type {vp::Vrata_Type::Ekadashi};
-    auto [paranam_start, paranam_end] = parse_precalc_paranam(row_data[col+1]);
+    date::year_month_day next_day{date::sys_days{date} + date::days{1}};
+    auto [paranam_start, paranam_end] = parse_precalc_paranam(row_data[col+1], next_day, location.timezone_name);
     return Precalculated_Vrata{location, date, type, paranam_start, paranam_end};
 }
 
@@ -353,29 +390,37 @@ std::vector<Precalculated_Vrata> extract_vratas_from_precalculated_table(std::st
 }
 
 // TODO: check that we extract all relevant info in cases of:
-// 1. standard ekAdashI with standard pAraNam
-// 2. standard ekAdashI with "start-end" pAraNam
 // 3. standard ekAdashI with "> start" pAraNam
 // 4. standard ekAdashI with "< end" pAraNam
 // 5-12. same four cases for atirikA ekAdashI and atiriktA dvAdashI
 TEST_CASE("do not allow empty paran type cell") {
-    using namespace date;
-    using namespace vp;
     REQUIRE_THROWS_AS(
                 extract_vratas_from_precalculated_table(
                 "<table><td><td><td><td>1 января<td>2 января"
-                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>", 2019_y),
+                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>", date::year{2019}),
                 std::runtime_error);
 }
 
-TEST_CASE("we capture all relevant data from tables") {
+TEST_CASE("precalc parsing: 1. standard ekAdashI with standard pAraNam") {
     using namespace date;
-    using namespace vp;
     auto vratas = extract_vratas_from_precalculated_table(
                 "<table><td><td><td><td>1 января<td>2 января"
                 "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>*", 2019_y);
     REQUIRE(vratas.size() == 1);
     Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1};
+    REQUIRE(expected == vratas[0]);
+}
+
+TEST_CASE("precalc parsing: 2. standard ekAdashI with 'start-end' pAraNam", "[donothide]") {
+    using namespace date;
+    auto vratas = extract_vratas_from_precalculated_table(
+                "<table><td><td><td><td>1 января<td>2 января"
+                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>6:07 - 6:08", 2019_y);
+    REQUIRE(vratas.size() == 1);
+    // 5:30 is indian timezone shift from UTC
+    vp::JulDays_UT paran_start{2019_y/January/2, std::chrono::hours{6} + std::chrono::minutes{7} - std::chrono::minutes{5*60+30}};
+    vp::JulDays_UT paran_end{2019_y/January/2, std::chrono::hours{6} + std::chrono::minutes{8} - std::chrono::minutes{5*60+30}};
+    Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1, vp::Vrata_Type::Ekadashi, paran_start, paran_end};
     REQUIRE(expected == vratas[0]);
 }
 
