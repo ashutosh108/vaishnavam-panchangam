@@ -1,6 +1,8 @@
 #ifndef LOCATION_H
 #define LOCATION_H
 
+#include <cstring>
+
 namespace vp {
 
 struct Location
@@ -28,6 +30,11 @@ struct Location
           timezone_name(_timezone_name),
           name(_name) {}
 };
+
+inline bool operator==(const Location & one, const Location & other) {
+    return one.latitude == other.latitude && one.longitude == other.longitude && std::strcmp(one.timezone_name, other.timezone_name) == 0 && std::strcmp(one.name, other.name) == 0;
+}
+
 
 [[maybe_unused]] constexpr Location odessa_coord{"Odessa", 46, 28, 0, 30, 44, 0, "Europe/Kiev"};
 [[maybe_unused]] constexpr Location vinnitsa_coord{"Vinnitsa", 49, 14, 0, 28, 27, 0, "Europe/Kiev"};

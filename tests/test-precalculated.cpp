@@ -12,7 +12,7 @@
 #include <regex>
 #include <sstream>
 
-std::string slurp_file(std::filesystem::path filename) {
+std::string slurp_file(const std::filesystem::path & filename) {
     std::ifstream f;
     f.open(filename);
     if (!f) {
@@ -29,20 +29,20 @@ static std::filesystem::path source_dir_path{std::filesystem::path{__FILE__}.par
 /* decode strings like "30 апреля" as date::month_day.
  * Throw on error.
  */
-date::month_day decode_month_day(std::string s) {
+date::month_day decode_month_day(const std::string& s) {
     static std::unordered_map<std::string, date::month> month_map{
-        {"января", date::January}
-        ,{"февраля", date::February}
-        ,{"марта", date::March}
-        ,{"апреля", date::April}
-        ,{"мая", date::May}
-        ,{"июня", date::June}
-        ,{"июля", date::July}
-        ,{"августа", date::August}
-        ,{"сентября", date::September}
-        ,{"октября", date::October}
-        ,{"ноября", date::November}
-        ,{"декабря", date::December}
+        {"января", date::January},
+        {"февраля", date::February},
+        {"марта", date::March},
+        {"апреля", date::April},
+        {"мая", date::May},
+        {"июня", date::June},
+        {"июля", date::July},
+        {"августа", date::August},
+        {"сентября", date::September},
+        {"октября", date::October},
+        {"ноября", date::November},
+        {"декабря", date::December}
     };
     std::string month_str;
     int day;
@@ -106,38 +106,29 @@ TEST_CASE("get_ekadashi_name works") {
     REQUIRE(get_ekadashi_name(", Варӯтӿинӣ экāдащӣ, ") == "Варӯтӿинӣ");
 }
 
-class Precalculated_Vrata {
+struct Precalculated_Vrata {
     date::year_month_day date;
-    std::string case_slug; // test case id (slug like 2019-04-27)
     vp::Location location;
-public:
-    Precalculated_Vrata(std::string case_slug_, vp::Location location_, date::year_month_day date_)
-        : date(date_), case_slug(std::move(case_slug_)), location(location_) {}
+    Precalculated_Vrata(vp::Location location_, date::year_month_day date_)
+        : date(date_), location(location_) {}
     bool operator==(const vp::Vrata_Detail & other) const {
-        return date == other.vrata.date;
+        return date == other.vrata.date && location == other.location;
     }
     friend std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v);
 };
 
+bool operator==(const Precalculated_Vrata & one, const Precalculated_Vrata & other) {
+    return one.date == other.date && one.location == other.location;
+}
+
 std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v) {
-    return s << "case '" << v.case_slug << "' " << v.location.name << " date=" << v.date;
+    return s << v.location.name << " date=" << v.date;
 }
 
 
-Precalculated_Vrata get_precalc_ekadashi(const std::string & case_slug, const vp::Location & location, [[maybe_unused]] html::Table::Row & row_data, [[maybe_unused]] std::size_t col, [[maybe_unused]] const std::string & ekadashi_name, date::year_month_day date) {
+Precalculated_Vrata get_precalc_ekadashi(const vp::Location & location, [[maybe_unused]] html::Table::Row & row_data, [[maybe_unused]] std::size_t col, [[maybe_unused]] const std::string & ekadashi_name, date::year_month_day date) {
     // TODO: extract vrata type and pAraNam time.
-    return Precalculated_Vrata{case_slug, location, date};
-}
-
-// TODO: remove [[maybe_unused]] after completing this check.
-size_t check_ekadashi(const std::string & case_slug, const vp::Location & location, html::Table::Row & row_data, std::size_t col, const std::string & ekadashi_name, col_to_date & date_map) {
-    auto date = date_map[col];
-    auto precalc_vrata = get_precalc_ekadashi(case_slug, location, row_data, col, ekadashi_name, date);
-    auto our_vrata = vp::Calc{location}.find_next_vrata(date);
-    REQUIRE(our_vrata.has_value());
-    auto our_vrata_detail = vp::Vrata_Detail{*our_vrata, location};
-    REQUIRE(precalc_vrata == our_vrata_detail);
-    return (our_vrata->is_two_days() ? 3 : 2);
+    return Precalculated_Vrata{location, date};
 }
 
 std::string join(const html::Table::Row & v, char joiner=';') {
@@ -157,24 +148,12 @@ TEST_CASE("join() works") {
     REQUIRE("a;b" == join(html::Table::Row{{1, "a"}, {2, "b"}}));
 }
 
-/* If indicated cell text represents vrata we know how to handle (ekAdashI), then check if our calculations give the same result
- * Returns number of cells handled.
- * It's three for atiriktA ekAdashI or atiriktA dvAdashI(vrata+atiriktA+pAraNam),
- * Two for normal case of single-day ekAdashI (vrata+pAraNam)
- * Zero if we didn't detect any vrata we would know how to handle.
+/* Try extracting vrata data from indicated cell.
  */
-std::size_t check_vrata(const std::string & case_slug, const vp::Location & location, html::Table::Row & row_data, std::size_t col, col_to_date & date_map) {
+std::optional<Precalculated_Vrata> try_extract_vrata_from_cell(const vp::Location & location, html::Table::Row & row_data, std::size_t col, col_to_date & date_map) {
     std::string ekadashi_name = get_ekadashi_name(row_data[col]);
-    if (ekadashi_name.empty()) return 0;
-    // first +1 is to compensate zero-based counting
-    // second +1 means we require that there is at least one more column (for pAraNam).
-    REQUIRE(row_data.size() >= col+1+1);
-    std::size_t cells_handled = check_ekadashi(case_slug, location, row_data, col, ekadashi_name, date_map);
-    if (cells_handled < 2) {
-        std::string row_str = join(row_data);
-        REQUIRE((cells_handled == 2 || cells_handled == 3));
-    }
-    return cells_handled;
+    if (ekadashi_name.empty()) return std::nullopt;
+    return get_precalc_ekadashi(location, row_data, col, ekadashi_name, date_map[col]);
 }
 
 vp::Location find_location_by_name_rus(const std::string & name) {
@@ -291,51 +270,36 @@ vp::Location find_location_by_name_rus(const std::string & name) {
     return iter->second;
 }
 
-/* Returns number of vratas handled in this row (should always be 1 for I haven't seen two ekAdashI vratas in a single table yet)
+/* Extracts single vrata from a row
  */
-std::size_t check_vratas_from_row(const std::string & case_slug, html::Table::Row & row, col_to_date & date_map) {
+Precalculated_Vrata extract_vrata_from_row(html::Table::Row & row, col_to_date & date_map) {
     vp::Location location = find_location_by_name_rus(row[2]);
 
     // manual loop because occasionally we need to increment the iterator manually to skip some cells
-    std::size_t vratas_handled = 0;
     for (auto iter = date_map.begin(); iter != date_map.end(); ++iter) {
         auto & col = iter->first;
 
-        std::size_t handled_cells = check_vrata(case_slug, location, row, col, date_map);
-        vratas_handled += (handled_cells > 0);
-        // TODO: when handled_cells > 1, check if all correponding next dates in date_map are always one day after a previous one,
-        // fail the test otherwise.
-
-        // skip all extra processed cells (beyond 1 which will be skipped as part of standard raw loop)
-        for (; handled_cells > 1; --handled_cells) {
-            ++iter;
-            if (iter == date_map.end()) break;
-        }
+        std::optional<Precalculated_Vrata> vrata = try_extract_vrata_from_cell(location, row, col, date_map);
+        if (vrata)
+            return *vrata;
     }
-    return vratas_handled;
+    CAPTURE(row, date_map);
+    throw std::runtime_error("can't extract vrata from row");
 }
 
-date::year get_year_from_slug(const std::string &slug) {
+date::year get_year_from_slug(const char * slug) {
     std::istringstream s{slug};
-    date::year year;
+    date::year year{};
     s >> date::parse("%Y", year);
     return year;
 }
 
-void test_one_precalculated_table(const std::string & slug) {
-    CAPTURE(slug);
-
-    std::string filename{std::string{"data/precalculated-"} + slug + ".html"};
-    auto s = slurp_file(source_dir_path / filename);
-    REQUIRE(!s.empty());
+std::vector<Precalculated_Vrata> extract_vratas_from_precalculated_table(std::string && s, date::year year) {
     auto p = html::TableParser(std::move(s));
     auto t = p.next_table();
-    REQUIRE(t.has_value());
+    if (!t) throw std::runtime_error("can't parse table");
+    std::vector<Precalculated_Vrata> vratas;
 
-    auto year = get_year_from_slug(slug);
-    //sanity check
-    REQUIRE(year >= date::year{2000});
-    REQUIRE(year < date::year{2030});
     auto date_headers = get_date_headers(*t, year);
     std::size_t row_count = t->row_count();
     // from row 1 because row 0 is date headers only
@@ -350,14 +314,59 @@ void test_one_precalculated_table(const std::string & slug) {
             continue;
         }
 
-        // TODO: check that timezone in the table matches our data
+        // TODO: check that timezone in the table matches our data (move to extract_vrata?)
 
-        std::size_t ekadashi_etc_count = check_vratas_from_row(slug, row_data, date_headers);
-        std::string row_str = join(row_data);
-        REQUIRE(ekadashi_etc_count == 1);
+        vratas.push_back(extract_vrata_from_row(row_data, date_headers));
+    }
+    return vratas;
+}
+
+// TODO: check that we extract all relevant info in cases of:
+// 1. standard ekAdashI with standard pAraNam
+// 2. standard ekAdashI with "start-end" pAraNam
+// 3. standard ekAdashI with "> start" pAraNam
+// 4. standard ekAdashI with "< end" pAraNam
+// 5-12. same four cases for atirikA ekAdashI and atiriktA dvAdashI
+TEST_CASE("we capture all relevant data from tables") {
+    using namespace date;
+    using namespace vp;
+    auto vratas = extract_vratas_from_precalculated_table(
+                "<table><td><td><td><td>1 января<td>2 января"
+                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>*", 2019_y);
+    REQUIRE(vratas.size() == 1);
+    Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1};
+    REQUIRE(expected == vratas[0]);
+}
+
+void check_precalculated_vrata(const Precalculated_Vrata & vrata) {
+    auto our_vrata = vp::Calc{vrata.location}.find_next_vrata(vrata.date);
+    REQUIRE(our_vrata.has_value());
+    auto our_vrata_detail = vp::Vrata_Detail{*our_vrata, vrata.location};
+    REQUIRE(vrata == our_vrata_detail);
+}
+
+void check_precalculated_vratas(const std::vector<Precalculated_Vrata> & vratas) {
+    for (const auto & v : vratas) {
+        check_precalculated_vrata(v);
     }
 }
 
+void test_one_precalculated_table_slug(const char * slug) {
+    CAPTURE(slug);
+
+    std::string filename{std::string{"data/precalculated-"} + slug + ".html"};
+    auto s = slurp_file(source_dir_path / filename);
+    REQUIRE(!s.empty());
+
+    auto year = get_year_from_slug(slug);
+    //sanity check
+    REQUIRE(year >= date::year{2000});
+    REQUIRE(year < date::year{2030});
+
+    std::vector<Precalculated_Vrata> vratas = extract_vratas_from_precalculated_table(std::move(s), year);
+    check_precalculated_vratas(vratas);
+}
+
 TEST_CASE("precalculated ekAdashIs", "[!hide]") {
-    test_one_precalculated_table(std::string{"2019-04-27"});
+    test_one_precalculated_table_slug("2019-04-27");
 }
