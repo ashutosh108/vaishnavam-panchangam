@@ -125,3 +125,18 @@ TEST_CASE("html::TableParser can handle rowspans when long col comes before the 
     REQUIRE("0..2 2" == t->get(1, 2));
     REQUIRE("0..2 2" == t->get(2, 2));
 }
+
+TEST_CASE("html::TableParser trims spaces") {
+    html::TableParser p{R"~(<table><td>  0 0    )~"};
+    auto t = p.next_table();
+    REQUIRE(t.has_value());
+    REQUIRE("0 0" == t->get(0, 0));
+}
+
+
+TEST_CASE("html::TableParser strips <br>s", "[!hide]") {
+    html::TableParser p{R"~(<table><td>0<br>0)~"};
+    auto t = p.next_table();
+    REQUIRE(t.has_value());
+    REQUIRE("0 0" == t->get(0, 0));
+}

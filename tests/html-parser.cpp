@@ -131,6 +131,12 @@ std::string & html::Table::set(std::size_t row, std::size_t col, std::string s)
     return row_data[col] = s;
 }
 
+std::string trim(std::string_view s) {
+    auto first_non_ws = std::find_if(s.begin(), s.end(), [](char c){ return !std::isspace(c); });
+    auto last_non_ws = std::find_if(s.rbegin(), s.rend(), [](char c){ return !std::isspace(c); }).base();
+    return first_non_ws >= last_non_ws ? std::string{} : std::string(first_non_ws, last_non_ws);
+}
+
 std::optional<html::Table> html::TableParser::next_table()
 {
     enum class State { WaitTableTag, WaitTdTag };
@@ -158,7 +164,7 @@ std::optional<html::Table> html::TableParser::next_table()
                 got_tr_or_td = true;
                 std::size_t colspan = token->get_attr_ul_or_default("colspan", 1);
                 std::size_t rowspan = token->get_attr_ul_or_default("rowspan", 1);
-                t.append_cell(row, std::string{token->text_after}, Table::RowSpan{rowspan}, Table::ColSpan{colspan});
+                t.append_cell(row, trim(token->text_after), Table::RowSpan{rowspan}, Table::ColSpan{colspan});
             }
             break;
         }
