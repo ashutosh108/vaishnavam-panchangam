@@ -109,26 +109,57 @@ TEST_CASE("get_ekadashi_name works") {
 struct Precalculated_Vrata {
     date::year_month_day date;
     vp::Location location;
-    Precalculated_Vrata(vp::Location location_, date::year_month_day date_)
-        : date(date_), location(location_) {}
+    vp::Vrata_Type type;
+    std::optional<vp::JulDays_UT> paranam_start;
+    std::optional<vp::JulDays_UT> paranam_end;
+    Precalculated_Vrata(vp::Location location_,
+                        date::year_month_day date_,
+                        vp::Vrata_Type type_ = vp::Vrata_Type::Ekadashi,
+                        std::optional<vp::JulDays_UT> paranam_start_ = std::nullopt,
+                        std::optional<vp::JulDays_UT> paranam_end_ = std::nullopt)
+        : date(date_),
+          location(location_),
+          type(type_),
+          paranam_start(paranam_start_),
+          paranam_end(paranam_end_) {}
     bool operator==(const vp::Vrata_Detail & other) const {
-        return date == other.vrata.date && location == other.location;
+        if (date != other.vrata.date || location != other.location
+                || type != other.vrata.type) return false;
+        if (other.vrata.paran.type == vp::Paran::Type::Standard) {
+            // in case of standard paranam, start and end time must not be set
+            if (paranam_start || paranam_end) return false;
+        }
+        return true;
+        // TODO: more detailed comparison for pAraNam
     }
     friend std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v);
 };
 
 bool operator==(const Precalculated_Vrata & one, const Precalculated_Vrata & other) {
-    return one.date == other.date && one.location == other.location;
+    return one.date == other.date && one.location == other.location
+            && one.type == other.type
+            && one.paranam_start == other.paranam_start
+            && one.paranam_end == other.paranam_end;
 }
 
 std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v) {
     return s << v.location.name << " date=" << v.date;
 }
 
+std::pair<std::optional<vp::JulDays_UT>, std::optional<vp::JulDays_UT>> parse_precalc_paranam(std::string s) {
+    if (s == "*") {
+        return {{}, {}};
+    }
+    throw std::runtime_error("can't parse paran time '" + s + "'");
+//    std::optional<vp::JulDays_UT> start;
+//    std::optional<vp::JulDays_UT> end;
+}
 
 Precalculated_Vrata get_precalc_ekadashi(const vp::Location & location, [[maybe_unused]] html::Table::Row & row_data, [[maybe_unused]] std::size_t col, [[maybe_unused]] const std::string & ekadashi_name, date::year_month_day date) {
     // TODO: extract vrata type and pAraNam time.
-    return Precalculated_Vrata{location, date};
+    vp::Vrata_Type type {vp::Vrata_Type::Ekadashi};
+    auto [paranam_start, paranam_end] = parse_precalc_paranam(row_data[col+1]);
+    return Precalculated_Vrata{location, date, type, paranam_start, paranam_end};
 }
 
 std::string join(const html::Table::Row & v, char joiner=';') {
@@ -327,6 +358,16 @@ std::vector<Precalculated_Vrata> extract_vratas_from_precalculated_table(std::st
 // 3. standard ekAdashI with "> start" pAraNam
 // 4. standard ekAdashI with "< end" pAraNam
 // 5-12. same four cases for atirikA ekAdashI and atiriktA dvAdashI
+TEST_CASE("do not allow empty paran type cell") {
+    using namespace date;
+    using namespace vp;
+    REQUIRE_THROWS_AS(
+                extract_vratas_from_precalculated_table(
+                "<table><td><td><td><td>1 января<td>2 января"
+                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>", 2019_y),
+                std::runtime_error);
+}
+
 TEST_CASE("we capture all relevant data from tables") {
     using namespace date;
     using namespace vp;
