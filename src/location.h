@@ -137,12 +137,14 @@ inline bool operator!=(const Location & one, const Location & other) {
 [[maybe_unused]] constexpr Location samara_coord{"Samara", 53, 11, 0, 50, 7, 0, "Europe/Samara"};
 [[maybe_unused]] constexpr Location chelyabinsk_coord{"Chelyabinsk", 55, 9, 44, 61, 24, 11, "Asia/Yekaterinburg"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location tekeli_coord{"Tekeli, Kazakhstan", 44, 51, 47, 78, 45, 51, "Asia/Almaty"}; // ru Wikipedia
+[[maybe_unused]] constexpr Location ustkamenogorsk_coord{"Ust-Kamenogorsk (Oskemen)", 49, 59, 0, 82, 37, 0, "Asia/Almaty"}; // en Wikipedia
 [[maybe_unused]] constexpr Location volgograd_coord{"Volgograd", 48, 41, 57, 44, 28, 24, "Europe/Volgograd"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location tambov_coord{"Tambov", 52, 43, 0, 41, 26, 0, "Europe/Moscow"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location marsel_coord{"Marseille", 43, 17, 47, 5, 22, 12, "Europe/Paris"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location barcelona_coord{"Barcelona", 41, 23, 00, 2, 11, 00, "Europe/Madrid"}; // en Wikipedia
 [[maybe_unused]] constexpr Location madrid_coord{"Madrid", 40, 24, 0, -3, -41, -0, "Europe/Madrid"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location miami_coord{"Miami", 25, 47, 0, -80, -13, -0, "America/New_York"}; // ru Wikipedia
+[[maybe_unused]] constexpr Location cancun_coord{"Cancun", 21, 9, 38, -86, -50, -51, "America/Cancun"}; // en Wikipedia
 
 
 

@@ -35,6 +35,7 @@ const std::vector<LocationDb::NamedCoord> &LocationDb::locations() {
         { "Bishkek", bishkek_coord },
         { "Almaty", almaata_coord },
         { "Tekeli, Kazakhstan", tekeli_coord },
+        { "Ust-Kamenogorsk (Oskemen)", ustkamenogorsk_coord },
         { "Omsk", omsk_coord },
         { "Novosibirsk", novosibirsk_coord },
         { "Barnaul", barnaul_coord },
@@ -91,6 +92,7 @@ const std::vector<LocationDb::NamedCoord> &LocationDb::locations() {
         { "Fredericton", frederikton_coord },
         { "Toronto", toronto_coord },
         { "Miami", miami_coord },
+        { "Cancun", cancun_coord },
         { "Meadow Lake, Canada", meadowlake_coord },
     };
     return locations_;
