@@ -3,7 +3,6 @@
 [ ] HTML table parser: accumulate <td> data until </td> or </tr> or </table>
 [ ] HTML table parser: stop after </table> (allow more than one table in a single HTML string)
 [ ] location.h/text-interface.h: add all locations automatically (order by longitude?)
-[ ] "About" with version (+version in status line?)
 [ ] generic test for pre-calculated ekadashi:
     - print all relevant data on mismatch (Vrata_Detail)
 [ ] generate tests based on existing html tables
@@ -147,3 +146,4 @@ done:
 [+] JulDays_UT: allow creation from local time and timezone [2020-02-17]
 [+] add Cancun (Mexica), Ust-kamenogorsk [2020-02-18]
 [+] replace LocationDb::NamedCoord with Location, remove duplicated names [2020-02-18]
+[+] "About" with version (+version in status line) [2020-02-18]

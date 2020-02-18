@@ -20,6 +20,8 @@ void calc_one(date::year_month_day base_date, const char * location_name, std::o
 void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o=std::cout);
 void print_detail_one(date::year_month_day base_date, const char * location_name, std::ostream &o=std::cout);
 void calc_all(date::year_month_day d, std::ostream &o=std::cout);
+std::string version();
+std::string program_name_and_version();
 
 class LocationDb {
 public:

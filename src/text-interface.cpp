@@ -198,4 +198,18 @@ void change_to_data_dir(const char* argv0)
     std::filesystem::current_path(working_dir);
 }
 
+std::string version()
+{
+#ifdef VP_VERSION
+    return std::string{VP_VERSION};
+#else
+    return std::string{"unknown"};
+#endif
+}
+
+std::string program_name_and_version()
+{
+    return "Vaiṣṇavaṁ Pañcāṅgam " + version();
+}
+
 } // namespace vp::text_ui

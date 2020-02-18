@@ -232,3 +232,23 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
     set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fsanitize=address")
 endif()
+
+find_package(Git)
+if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
+    EXECUTE_PROCESS(
+        COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE VP_REV
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+    EXECUTE_PROCESS(
+        COMMAND ${GIT_EXECUTABLE} log -1 --format=%cd --date=format:%Y-%m-%d
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE VP_COMPILATION_DATE
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+else()
+    set(VP_REV "unknown")
+    string(TIMESTAMP VP_COMPILATION_DATE "%Y-%m-%d" UTC)
+endif()
+set(VP_VERSION "preview ${VP_COMPILATION_DATE} rev ${VP_REV}")
+message(STATUS "VP version ${VP_VERSION}")
+target_compile_definitions(swe PRIVATE VP_VERSION="${VP_VERSION}")

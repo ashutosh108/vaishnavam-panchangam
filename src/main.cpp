@@ -13,6 +13,7 @@
 using namespace vp::text_ui;
 
 void print_usage() {
+    std::cout << program_name_and_version() << '\n';
     std::cout << "USAGE:\n";
     std::cout << "vaishnavam-panchangam YYYY-MM-DD latitude longitude\n";
     std::cout << "vaishnavam-panchangam YYYY-MM-DD location-name\n";

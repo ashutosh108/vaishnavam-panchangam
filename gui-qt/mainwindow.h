@@ -19,11 +19,16 @@ public:
 private slots:
     void on_FindNextEkadashi_clicked();
 
+    void on_actionAbout_triggered();
+
+    void on_actionE_xit_2_triggered();
+
 private:
     Ui::MainWindow *ui;
     void setupLocationsComboBox();
     void setDateToToday();
     void calcAll(date::year_month_day base_date, std::ostream & o);
     void calcOne(date::year_month_day base_date, QString location, std::ostream & o);
+    void showVersionInStatusLine();
 };
 #endif // MAINWINDOW_H

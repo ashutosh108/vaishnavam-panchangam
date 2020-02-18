@@ -17,8 +17,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowTitle(QString::fromStdString(vp::text_ui::program_name_and_version()));
     setupLocationsComboBox();
     setDateToToday();
+    showVersionInStatusLine();
 }
 
 MainWindow::~MainWindow()
@@ -114,4 +116,19 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
         vp::Vrata_Detail vd{*vrata, *location};
         o << vd << "\n\n";
     }
+}
+
+void MainWindow::showVersionInStatusLine()
+{
+    statusBar()->showMessage(QString::fromStdString(vp::text_ui::program_name_and_version()));
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    QMessageBox::about(this, "About", QString::fromStdString(vp::text_ui::program_name_and_version()));
+}
+
+void MainWindow::on_actionE_xit_2_triggered()
+{
+    QApplication::quit();
 }
