@@ -23,17 +23,13 @@ void calc_all(date::year_month_day d, std::ostream &o=std::cout);
 
 class LocationDb {
 public:
-    struct NamedCoord {
-        const char *name;
-        Location coord;
-    };
 
     auto begin() { return locations().cbegin(); }
     auto end() { return locations().cend(); }
     static std::optional<Location> find_coord(const char *location_name);
 
 private:
-    static const std::vector<NamedCoord> & locations();
+    static const std::vector<Location> & locations();
 };
 
 namespace detail {

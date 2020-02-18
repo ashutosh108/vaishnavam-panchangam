@@ -1,3 +1,4 @@
+[ ] location.h/text-interface.h: add all locations automatically (order by longitude?)
 [ ] "About" with version (+version in status line?)
 [ ] generic test for pre-calculated ekadashi:
     - print all relevant data on mismatch (Vrata_Detail)
@@ -141,3 +142,4 @@ done:
 [+] fix html-parser for cells with rowspans in non-first column; fix <tr> processing [2020-02-16]
 [+] JulDays_UT: allow creation from local time and timezone [2020-02-17]
 [+] add Cancun (Mexica), Ust-kamenogorsk [2020-02-18]
+[+] replace LocationDb::NamedCoord with Location, remove duplicated names [2020-02-18]
