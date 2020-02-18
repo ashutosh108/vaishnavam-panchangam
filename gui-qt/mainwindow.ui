@@ -39,6 +39,9 @@
              <property name="margin">
               <number>5</number>
              </property>
+             <property name="buddy">
+              <cstring>dateEdit</cstring>
+             </property>
             </widget>
            </item>
            <item>
@@ -70,16 +73,105 @@
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
             <widget class="QLabel" name="locationLabel">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>Location:</string>
              </property>
              <property name="margin">
               <number>5</number>
              </property>
+             <property name="buddy">
+              <cstring>locationComboBox</cstring>
+             </property>
             </widget>
            </item>
            <item>
             <widget class="QComboBox" name="locationComboBox"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="hlLatLong">
+           <item>
+            <widget class="QLabel" name="latitudeLabel">
+             <property name="toolTip">
+              <string>Latitude in decimal degrees (+ means North)</string>
+             </property>
+             <property name="text">
+              <string>Lat:</string>
+             </property>
+             <property name="margin">
+              <number>5</number>
+             </property>
+             <property name="buddy">
+              <cstring>latitude</cstring>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="latitude">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Latitude in decimal degrees (+ means North)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="longitudeLabel">
+             <property name="toolTip">
+              <string>Longitude in decimal degrees (+ means East)</string>
+             </property>
+             <property name="text">
+              <string>Long:</string>
+             </property>
+             <property name="margin">
+              <number>5</number>
+             </property>
+             <property name="buddy">
+              <cstring>longitude</cstring>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="longitude">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Longitude in decimal degrees (+ means East)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="hlTimezone">
+           <item>
+            <widget class="QLabel" name="timezoneLabel">
+             <property name="text">
+              <string>TZ:</string>
+             </property>
+             <property name="margin">
+              <number>5</number>
+             </property>
+             <property name="buddy">
+              <cstring>timezone</cstring>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="timezone">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -91,13 +183,6 @@
           </widget>
          </item>
         </layout>
-       </item>
-       <item>
-        <widget class="QToolButton" name="toolButton">
-         <property name="text">
-          <string>...</string>
-         </property>
-        </widget>
        </item>
        <item>
         <spacer name="verticalSpacer">

@@ -23,6 +23,8 @@ private slots:
 
     void on_actionE_xit_2_triggered();
 
+    void on_locationComboBox_currentIndexChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     void setupLocationsComboBox();
@@ -30,5 +32,6 @@ private:
     void calcAll(date::year_month_day base_date, std::ostream & o);
     void calcOne(date::year_month_day base_date, QString location, std::ostream & o);
     void showVersionInStatusLine();
+    void clearLocationData();
 };
 #endif // MAINWINDOW_H

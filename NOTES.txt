@@ -1,5 +1,4 @@
 [ ] allow entering arbitrary latitude/longitude/timezone
-[ ] show longitude/latitude of selected location
 [ ] HTML table parser: accumulate <td> data until </td> or </tr> or </table>
 [ ] HTML table parser: stop after </table> (allow more than one table in a single HTML string)
 [ ] location.h/text-interface.h: add all locations automatically (order by longitude?)
@@ -147,3 +146,4 @@ done:
 [+] add Cancun (Mexica), Ust-kamenogorsk [2020-02-18]
 [+] replace LocationDb::NamedCoord with Location, remove duplicated names [2020-02-18]
 [+] "About" with version (+version in status line) [2020-02-18]
+[+] show longitude/latitude of selected location [2020-02-18]

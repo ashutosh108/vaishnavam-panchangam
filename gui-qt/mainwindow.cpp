@@ -132,3 +132,20 @@ void MainWindow::on_actionE_xit_2_triggered()
 {
     QApplication::quit();
 }
+
+void MainWindow::clearLocationData() {
+    ui->latitude->setText("(multiple)");
+    ui->longitude->setText("(multiple)");
+    ui->timezone->setText("(multiple values)");
+}
+
+void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location_name)
+{
+    if (location_name == "all") return clearLocationData();
+    auto location_arr = location_name.toUtf8();
+    auto location = vp::text_ui::LocationDb().find_coord(location_arr.data());
+    if (!location.has_value()) return;
+    ui->latitude->setText(QString::number(location->latitude));
+    ui->longitude->setText(QString::number(location->longitude));
+    ui->timezone->setText(location->timezone_name);
+}
