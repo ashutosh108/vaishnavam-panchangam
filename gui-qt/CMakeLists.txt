@@ -73,3 +73,10 @@ else()
         target_link_options(${VP_QT_GUI_EXE} PRIVATE -static)
     endif()
 endif()
+
+# GCC 8.x: link with stdc++fs library
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if (NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0))
+        target_link_libraries(${VP_QT_GUI_EXE} PRIVATE stdc++fs)
+    endif()
+endif()

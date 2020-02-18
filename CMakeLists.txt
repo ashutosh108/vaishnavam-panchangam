@@ -221,3 +221,11 @@ add_custom_target(
 include(CPack)
 
 add_subdirectory(gui-qt)
+
+# GCC 8.x: link with stdc++fs library
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if (NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0))
+        target_link_libraries(test-main PRIVATE stdc++fs)
+        target_link_libraries(${VP_CLI_EXE} PRIVATE stdc++fs)
+    endif()
+endif()
