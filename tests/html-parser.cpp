@@ -109,7 +109,7 @@ void html::Table::append_cell(std::size_t row, std::string && s, RowSpan rowspan
 
 std::size_t html::Table::get_row_length(std::size_t row)
 {
-    return data[row].size();
+    return data.at(row).size();
 }
 
 std::size_t html::Table::row_count()

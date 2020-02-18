@@ -1,3 +1,7 @@
+[ ] allow entering arbitrary latitude/longitude/timezone
+[ ] show longitude/latitude of selected location
+[ ] HTML table parser: accumulate <td> data until </td> or </tr> or </table>
+[ ] HTML table parser: stop after </table> (allow more than one table in a single HTML string)
 [ ] location.h/text-interface.h: add all locations automatically (order by longitude?)
 [ ] "About" with version (+version in status line?)
 [ ] generic test for pre-calculated ekadashi:
