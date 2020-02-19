@@ -82,8 +82,8 @@ TEST_CASE("html::TableParser trims spaces") {
 }
 
 
-TEST_CASE("html::TableParser strips <br>s", "[!hide]") {
-    html::TableParser p{R"~(<table><td>0<br>0)~"};
+TEST_CASE("html::TableParser strips <br>s") {
+    html::TableParser p{R"~(<table><td>0 <br><br> 0 )~"};
     auto t = p.next_table();
     REQUIRE(t.has_value());
     REQUIRE("0 0" == t->get(0, 0));

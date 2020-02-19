@@ -24,7 +24,7 @@ std::size_t Table::find_first_free_col_at_row(std::size_t row) {
     return last_possible_col+1;
 }
 
-void Table::append_cell(std::size_t row, std::string && s, RowSpan rowspan_, ColSpan colspan_)
+void Table::append_cell(std::size_t row, std::string s, RowSpan rowspan_, ColSpan colspan_)
 {
     std::size_t col = find_first_free_col_at_row(row);
 
@@ -78,12 +78,27 @@ struct TdOpen : tinyfsm::Event {
 struct TdClose : tinyfsm::Event {};
 struct TrOpen : tinyfsm::Event {};
 struct TrClose : tinyfsm::Event {};
+struct OtherTag : tinyfsm::Event {
+    std::string_view text_after;
+    OtherTag(std::string_view text_after_)
+        : text_after(text_after_) {}
+};
+struct EndStream : tinyfsm::Event {};
 
 // Finite State Machine
+class WaitTdTag;
 class ParserMachine : public tinyfsm::Fsm<ParserMachine> {
 public:
     /* default reaction for unhandled events */
     void react(tinyfsm::Event const &) { }
+
+    static void start() {
+        ParserMachine::row = 0;
+        ParserMachine::got_table = false;
+        ParserMachine::got_tr_or_td = false;
+        ParserMachine::t = {};
+        tinyfsm::Fsm<ParserMachine>::start();
+    }
 
     virtual void react(TableOpen const &) {}
     virtual void react(TableClose const &) {}
@@ -91,36 +106,86 @@ public:
     virtual void react(TrClose const &) {}
     virtual void react(TdOpen const &) {}
     virtual void react(TdClose const &) {}
+    virtual void react(OtherTag const &) {}
+    virtual void react(EndStream const &) {
+        transit<WaitTdTag>();
+    }
     virtual ~ParserMachine()=default;
     virtual void entry(void) {}
-    virtual void exit(void) {}
+    virtual void exit(void);
+
     inline static std::size_t row = 0;
     inline static bool got_table = false;
     inline static bool got_tr_or_td = false;
     inline static Table t{};
+    inline static std::string td_text{};
+    inline static Table::RowSpan row_span{};
+    inline static Table::ColSpan col_span{};
 };
+void ParserMachine::exit() {}
 
 // States
-class WaitTdTag;
 class WaitTableTag : public ParserMachine {
-    void react(const TableOpen & /*event*/) override {
-        got_table = true;
-        transit<WaitTdTag>();
-    }
+    virtual void react(const TableOpen & /*event*/) override;
+private:
+    using ParserMachine::react;
 };
 
+void WaitTableTag::react(const TableOpen &)
+{
+    got_table = true;
+    transit<WaitTdTag>();
+}
+
+class InsideTdTag;
 class WaitTdTag : public ParserMachine {
-    void react(const TrOpen & /*event*/) override {
+    void react(const TrOpen &) override {
         if (got_tr_or_td) ++row;
         got_tr_or_td = true;
     }
     void react(const TdOpen & event) override {
         got_tr_or_td = true;
-        t.append_cell(row, trim(event.text_after), event.row_span, event.col_span);
+        row_span = event.row_span;
+        col_span = event.col_span;
+        td_text = trim(event.text_after);
+        transit<InsideTdTag>();
     }
+private:
+    using ParserMachine::react;
 };
 
-}
+class InsideTdTag : public ParserMachine {
+    void react(const TrOpen &) override {
+        transit<WaitTdTag>([]() { ++row; });
+    }
+    void react(const TrClose &) override {
+        transit<WaitTdTag>();
+    }
+    void react(const TdClose &) override {
+        transit<WaitTdTag>();
+    }
+    void react(const TdOpen & event) override {
+        transit<class InsideTdTag>([&] {
+            row_span = event.row_span;
+            col_span = event.col_span;
+            td_text = trim(event.text_after);
+        });
+    }
+    void react(const OtherTag & event) override {
+        //append space unless string already ends on space
+        if (!td_text.empty() && !std::isspace(*td_text.rbegin())) {
+            td_text += " ";
+        }
+        td_text += trim(event.text_after);
+    }
+    void exit() override {
+        t.append_cell(row, td_text, row_span, col_span);
+    }
+private:
+    using ParserMachine::react;
+};
+
+} // namespace html
 
 // have to declare this in the global namespace (probably due to tinyfsm bug)
 FSM_INITIAL_STATE(html::ParserMachine, html::WaitTableTag)
@@ -129,10 +194,6 @@ namespace html {
 
 std::optional<Table> TableParser::next_table()
 {
-    ParserMachine::row = 0;
-    ParserMachine::got_table = false;
-    ParserMachine::got_tr_or_td = false;
-    ParserMachine::t = {};
     ParserMachine::start();
     while (auto token = token_stream.next_token()) {
         if (token->tag_name == "table") {
@@ -149,8 +210,11 @@ std::optional<Table> TableParser::next_table()
             ParserMachine::dispatch(TdOpen(row_span, col_span, token->text_after));
         } else if (token->tag_name == "/td") {
             ParserMachine::dispatch(TdClose{});
+        } else {
+            ParserMachine::dispatch(OtherTag{token->text_after});
         }
     }
+    ParserMachine::dispatch(EndStream{});
 
     if (!ParserMachine::got_table) {
         return {};

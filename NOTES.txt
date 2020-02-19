@@ -1,6 +1,4 @@
 [ ] allow entering arbitrary latitude/longitude/timezone
-[ ] HTML table parser: accumulate <td> data until </td> or </tr> or </table>
-[ ] HTML table parser: stop after </table> (allow more than one table in a single HTML string)
 [ ] location.h/text-interface.h: add all locations automatically (order by longitude?)
 [ ] generic test for pre-calculated ekadashi:
     - print all relevant data on mismatch (Vrata_Detail)
@@ -148,3 +146,4 @@ done:
 [+] "About" with version (+version in status line) [2020-02-18]
 [+] show longitude/latitude of selected location [2020-02-18]
 [+] summary UI: removed gray background from seconds (it was unnoticeable with some themes) [2020-02-19]
+[+] HTML table parser: accumulate <td> data until </td> or </tr> or </table> [2020-02-19]

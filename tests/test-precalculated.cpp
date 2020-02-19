@@ -438,7 +438,7 @@ TEST_CASE("precalc parsing: 1. standard ekAdashI with standard pAraNam") {
     REQUIRE(expected == vratas[0]);
 }
 
-TEST_CASE("precalc parsing: 2. standard ekAdashI with 'start-end' pAraNam", "[donothide]") {
+TEST_CASE("precalc parsing: 2. standard ekAdashI with 'start-end' pAraNam") {
     using namespace date;
     auto vratas = extract_vratas_from_precalculated_table(
                 "<table><td><td><td><td>1 января<td>2 января"
@@ -451,7 +451,7 @@ TEST_CASE("precalc parsing: 2. standard ekAdashI with 'start-end' pAraNam", "[do
     REQUIRE(expected == vratas[0]);
 }
 
-TEST_CASE("precalc parsing: 3. standard ekAdashI with '> start' pAraNam", "[donothide]") {
+TEST_CASE("precalc parsing: 3. standard ekAdashI with '> start' pAraNam") {
     using namespace date;
     auto vratas = extract_vratas_from_precalculated_table(
                 "<table><td><td><td><td>1 января<td>2 января"
@@ -464,7 +464,7 @@ TEST_CASE("precalc parsing: 3. standard ekAdashI with '> start' pAraNam", "[dono
     REQUIRE(expected == vratas[0]);
 }
 
-TEST_CASE("precalc parsing: 4. standard ekAdashI with '< end' pAraNam", "[donothide]") {
+TEST_CASE("precalc parsing: 4. standard ekAdashI with '< end' pAraNam") {
     using namespace date;
     auto vratas = extract_vratas_from_precalculated_table(
                 "<table><td><td><td><td>1 января<td>2 января"
