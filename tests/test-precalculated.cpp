@@ -127,7 +127,18 @@ struct Precalculated_Vrata {
                 || type != other.vrata.type) return false;
         if (other.vrata.paran.type == vp::Paran::Type::Standard) {
             // in case of standard paranam, start and end time must not be set
-            if (paranam_start || paranam_end) return false;
+            return !paranam_start && !paranam_end;
+        }
+        // it must be ">HH:MM" form, check with 1-min precision
+        if (other.vrata.paran.type == vp::Paran::Type::From_Quarter_Dvadashi) {
+            // ">HH:MM" must have start and must NOT have end time
+            if (!paranam_start) return false;
+            if (paranam_end) return false;
+
+            if (!other.vrata.paran.paran_start) return false; // now-calculated paran must have start time
+
+            auto other_rounded = other.vrata.paran.paran_start->round_to_minute_up();
+            return *paranam_start == other_rounded;
         }
         return paranam_start == other.vrata.paran.paran_start &&
                 paranam_end == other.vrata.paran.paran_end;
