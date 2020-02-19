@@ -266,10 +266,9 @@ TEST_CASE("atiriktA-dvadashI {hab,vlad} 2019-09-09-10 https://tatvavadi.ru/pa,.n
     check_atirikta_at_location("vladivostok", vladivostok_coord, v01_atirikta_dvadashi, d);
 }
 
-// disabled until we get better diagnostics for failing tests
-TEST_CASE("atiriktA-dvadashI {mirny,hab,vlad} 2019-04-30-01 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-04-27/", "[!hide]") {
-    date::year_month_day d{2019_y/March/26};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/29, Paran{Paran::Type::Puccha_Dvadashi}};
+TEST_CASE("atiriktA-dvadashI {mirny,hab,vlad} 2019-04-30-01 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-04-27/") {
+    date::year_month_day d{2019_y/April/30};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, d, Paran{Paran::Type::Puccha_Dvadashi}};
 
     check_atirikta_at_location("mirnyy", mirnyy_coord, v01_atirikta_dvadashi, d);
     check_atirikta_at_location("habarovsk", habarovsk_coord, v01_atirikta_dvadashi, d);
