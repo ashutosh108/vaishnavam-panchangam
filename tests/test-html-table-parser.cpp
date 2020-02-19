@@ -95,3 +95,11 @@ TEST_CASE("html::TableParser doesn't add final spaces from trailing <br>s") {
     REQUIRE(t.has_value());
     REQUIRE("0" == t->get(0, 0));
 }
+
+TEST_CASE("html::TableParser treats <th> as <td>s") {
+    html::TableParser p{R"~(<table><th>0<td>1)~"};
+    auto t = p.next_table();
+    REQUIRE(t.has_value());
+    REQUIRE("0" == t->get(0, 0));
+    REQUIRE("1" == t->get(0, 1));
+}

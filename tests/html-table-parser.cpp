@@ -204,7 +204,7 @@ std::optional<Table> TableParser::next_table()
             ParserMachine::dispatch(TrOpen{});
         } else if (token->tag_name == "/tr") {
             ParserMachine::dispatch(TrClose{});
-        } else if (token->tag_name == "td") {
+        } else if (token->tag_name == "td" || token->tag_name == "th") {
             Table::RowSpan row_span{token->get_attr_ul_or_default("rowspan", 1)};
             Table::ColSpan col_span{token->get_attr_ul_or_default("colspan", 1)};
             ParserMachine::dispatch(TdOpen(row_span, col_span, token->text_after));

@@ -62,6 +62,7 @@ using col_to_date = std::map<std::size_t, date::year_month_day>;
 /* return map "column number => date" for table header */
 col_to_date get_date_headers(html::Table & t, date::year year) {
     std::size_t col_count = t.get_row_length(0);
+    CAPTURE(col_count);
 
     std::map<std::size_t, date::year_month_day> map;
 
@@ -196,7 +197,7 @@ std::pair<std::optional<vp::JulDays_UT>, std::optional<vp::JulDays_UT>> parse_pr
         return {{}, {}};
     }
     std::smatch match;
-    if (std::regex_search(s, match, std::regex{R"~((\d?\d:\d\d) - (\d?\d:\d\d))~"})) {
+    if (std::regex_search(s, match, std::regex{R"~((\d?\d:\d\d) (?:-|—) (\d?\d:\d\d))~"})) {
         if (match.size() >= 2) {
             std::chrono::minutes start_h_m{h_m_from_string(match[1].str())};
             std::chrono::minutes end_h_m{h_m_from_string(match[2].str())};
@@ -355,7 +356,7 @@ vp::Location find_location_by_name_rus(const std::string & name) {
         { "Рязань", vp::ryazan_coord },
         { "Athens", vp::afiny_coord },
         { "Chita", vp::chita_coord },
-        { "Poltava", vp::poltava_coord },
+        { "Полтава", vp::poltava_coord },
         { "Казань", vp::kazan_coord },
         { "Актау", vp::aktau_coord },
         { "Таллин", vp::tallin_coord },
@@ -417,8 +418,10 @@ std::vector<Precalculated_Vrata> extract_vratas_from_precalculated_table(std::st
     auto t = p.next_table();
     if (!t) throw std::runtime_error("can't parse table");
     std::vector<Precalculated_Vrata> vratas;
+    INFO("extract_vratas_from_precalculated_table()")
 
     auto date_headers = get_date_headers(*t, year);
+    CAPTURE(date_headers);
     std::size_t row_count = t->row_count();
     // from row 1 because row 0 is date headers only
     for (size_t row=1; row < row_count; ++row) {
@@ -523,10 +526,13 @@ void test_one_precalculated_table_slug(const char * slug) {
     REQUIRE(year >= date::year{2000});
     REQUIRE(year < date::year{2030});
 
+    CAPTURE(year);
     std::vector<Precalculated_Vrata> vratas = extract_vratas_from_precalculated_table(std::move(s), year);
+    CAPTURE(vratas.size());
     check_precalculated_vratas(vratas);
 }
 
 TEST_CASE("precalculated ekAdashIs") {
+//    test_one_precalculated_table_slug("2017-11-12");
     test_one_precalculated_table_slug("2019-04-27");
 }
