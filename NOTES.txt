@@ -147,3 +147,4 @@ done:
 [+] replace LocationDb::NamedCoord with Location, remove duplicated names [2020-02-18]
 [+] "About" with version (+version in status line) [2020-02-18]
 [+] show longitude/latitude of selected location [2020-02-18]
+[+] summary UI: removed gray background from seconds (it was unnoticeable with some themes) [2020-02-19]

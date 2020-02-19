@@ -106,9 +106,9 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
         std::string paranTime = vp::ParanFormatter::format(
                     vrata->paran,
                     location->timezone_name,
-                    "%H:%M<span style=\"color:darkgray; font-size:small;\">:%S</span>",
+                    "%H:%M<span style=\"font-size:small;\">:%S</span>",
                     "–",
-                    "%H:%M<span style=\"color:darkgray; font-size:small;\">:%S</span>",
+                    "%H:%M<span style=\"font-size:small;\">:%S</span>",
                     "<sup>*</sup><br><small><sup>*</sup>");
         paranTime += "</small>";
         ui->paranTime->setText(QString::fromStdString(paranTime));
