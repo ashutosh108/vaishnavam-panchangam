@@ -1,7 +1,7 @@
 [ ] allow entering arbitrary latitude/longitude/timezone
 [ ] location.h/text-interface.h: add all locations automatically (order by longitude?)
 [ ] generic test for pre-calculated ekadashi:
-    - print all relevant data on mismatch (Vrata_Detail)
+    + works for 2019-04-27
 [ ] generate tests based on existing html tables
 [ ] omit pāraṇam end time when it's less than one muhūrta (≈48min) long. We should only use strict (very short) pāraṇam interval for cases like sAdhana-dvAdashI when it's really justified.
 [ ] determine current nakshatra
@@ -16,31 +16,6 @@
 [ ] encapsulate tzdata (so we can run bare executable, wihout any tzdata files at all)
 [ ] encapsulate swe's ephemeris database (so we can run with higher precision while having no data files at hand)
 [ ] check all tests for 2019-March-1,2
-[ ] atiriktA ekAdashI:
-- london 2019-11-07-8
-- toronto 2019-10-08-9
-- ppk 2019-09-09-10
-- ppk 2019-04-30-01
-- {Kolkata,Tekeli,nov,barn,tomsk} 2019-03-31-01
-- ppk 2018-09-20-21
-- {aktau,samara,ulyanovsk,kazan,kirov,murmansk} 2018-08-21-22
-- {kostomuksha} 2018-04-11-12
-- {frederikton} 2018-02-10-11
-День, когда за чистой (щуддӿā) экāдащью сразу слѣдует другая чистая экāдащӣ, называется Атириктā экāдащӣ. В таких случаях пост соблюдается два дня подряд, а пāран̣іе (завершеніе поста) принимается на третій день.
-[ ] atiriktA dvAdashI:
-+ {aktau, surgut, chelyabinsk, yerevan, tbilisi} 2019-12-07-8 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-12-01/
-+ {madrid,london} (nA: marseille,london) 2019-11-07-8 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-11-05/
-+ meadowlake 2019-10-08-9
-+ {hab,vlad} 2019-09-09-10
-- {mirny,hav,vlad} 2019-04-30-01
-- {udupi,gokarna,newdelhi,manali,aktau,perm,ufa,ekb,surgut,chel,bishkek,omsk,erevam,tbilisi,samara,volg,ulya,pyati,stav,semik,krasnodar,star oskol,voronezh,tambov,kazan,kirov,ryazan,moscow,murmansk} 2019-03-31-01
-+ {vena,marsel,madrid,london} 2019-03-01-2 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-02-28/
-- {federikton,toronto,miami} 2019-01-30-31
-- {erevan,tbilisi,pyati,stav,semi,krasnodar,simf,donetsk,staryoskol,voronezh,ryazan,moscow,spb,kostomuksha,smolensk,minsk,gomel,harkov,poltava,kremenchug,krivoyrog,kiev,nikolaev,odessa,kolomya,kishinev,riga,jurmala,tallin,vilnuys,varshava,vena} 2018-08-21-22
-- {perm,ekb,almaata,murmansk} 2018-06-23-24
-- {simferopol,spb,smolensk,minsk,gomel,poltava,kremenchug,krivoyrog,kiev,nikolaev,odessa,kishinev,riga,jurmala,tallin,vilnyus} 2018-04-11-12
-- {toronto} 2018-02-10-11
-- {kophangan+kosamui} 2017-12-13-14
 [ ] shravaNA dvAdashI: {fred,tor,meadowlake} 2019-09-09-10
 Двāдащӣ-титӿи в сопряженіи со Щраван̣ā-накшатром от восхода Сӯрьи до полудня дают Щраван̣ā двāдащӣ, день таких же обѣтов, как и в щуддӿā экāдащӣ. Двāдащӣ является Хари-вāсаром, а Щраван̣ā является Хари-накшатром, поэтому их соединеніе особо чтимо вәишн̣авами. Если такое сочетаніе приходится на слѣдующій день после чистой экāдащӣ, то пост надлежит соблюдать два дня подряд.
 द्वादशीं श्रवणोपेतां यो नोपोष्यात्स मूढधीः ।
@@ -147,3 +122,4 @@ done:
 [+] show longitude/latitude of selected location [2020-02-18]
 [+] summary UI: removed gray background from seconds (it was unnoticeable with some themes) [2020-02-19]
 [+] HTML table parser: accumulate <td> data until </td> or </tr> or </table> [2020-02-19]
+[+] atiriktA ekAdashI and atiriktA dvAdashI [2020-02-19]

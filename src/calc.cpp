@@ -85,7 +85,7 @@ Paran Calc::get_paran(JulDays_UT const &last_fasting_sunrise) const
     return paran;
 }
 
-Paran Calc::atirikta_dvadashi_paran(const JulDays_UT &first_fasting_sunrise) const
+Paran Calc::atirikta_paran(const JulDays_UT &first_fasting_sunrise) const
 {
     auto second_fasting_sunrise = next_sunrise(first_fasting_sunrise);
     auto paran_sunrise = next_sunrise(second_fasting_sunrise.value());
@@ -97,7 +97,21 @@ std::optional<JulDays_UT> Calc::next_sunrise(JulDays_UT sunrise) const {
     return swe.get_sunrise(sunrise + double_days{0.1});
 }
 
-/* Find out if we have "shuddha dvAdashI" situation.
+/* Find out if we have "atiriktA ekAdashI" situation (shuddha ekAdashI encompasses two sunrises).
+ * This function assumes that if first sunrise is ekAdashI, then it's shuddhA-ekAdashI.
+ * Otherwise the sunrise under consideration would have been "next sunrise" already.
+ */
+bool Calc::got_atirikta_ekadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const
+{
+    auto second_sunrise = next_sunrise(sunrise_on_shuddha_ekadashi_or_next_one);
+    if (!second_sunrise.has_value()) return false;
+
+    Tithi tithi_on_first_sunrise = swe.get_tithi(sunrise_on_shuddha_ekadashi_or_next_one);
+    Tithi tithi_on_second_sunrise = swe.get_tithi(*second_sunrise);
+    return tithi_on_first_sunrise.is_ekadashi() && tithi_on_second_sunrise.is_ekadashi();
+}
+
+/* Find out if we have "atiriktA dvAdashI" situation (dvadashI encompasses two sunrises).
  * If yes, then adjust the sunrise to be next day's sunrise
  * (because it has to be the sunrise of last fastiung day).
  */
@@ -164,6 +178,19 @@ repeat_with_fixed_start_time:
         goto repeat_with_fixed_start_time;
     }
 
+    if (got_atirikta_ekadashi(*sunrise)) {
+        if (type == Vrata_Type::Sandigdha_Ekadashi) {
+            type = Vrata_Type::Sandigdha_Atirikta_Ekadashi;
+        } else {
+            type = Vrata_Type::Atirikta_Ekadashi;
+        }
+
+        return Vrata{
+                    type,
+                    vrata_date,
+                    atirikta_paran(*sunrise)};
+    }
+
     if (got_atirikta_dvadashi(*sunrise)) {
         if (type == Vrata_Type::Sandigdha_Ekadashi) {
             type = Vrata_Type::Sandigdha_With_Atirikta_Dvadashi;
@@ -174,7 +201,7 @@ repeat_with_fixed_start_time:
         return Vrata{
                     type,
                     vrata_date,
-                    atirikta_dvadashi_paran(*sunrise)};
+                    atirikta_paran(*sunrise)};
     }
 
     return Vrata{

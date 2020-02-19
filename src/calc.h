@@ -39,9 +39,10 @@ private:
     std::optional<JulDays_UT> get_prev_sunset(JulDays_UT const sunrise) const;
     date::year_month_day get_vrata_date(const JulDays_UT &sunrise) const;
     Paran get_paran(JulDays_UT const &last_fasting_sunrise) const;
-    Paran atirikta_dvadashi_paran(JulDays_UT const &first_fasting_sunrise) const;
+    Paran atirikta_paran(JulDays_UT const &first_fasting_sunrise) const;
 
     std::optional<JulDays_UT> next_sunrise(JulDays_UT sunrise) const;
+    bool got_atirikta_ekadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const;
     bool got_atirikta_dvadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const;
 };
 

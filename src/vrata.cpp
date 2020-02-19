@@ -41,6 +41,10 @@ std::ostream &operator<<(std::ostream &o, const Vrata_Type &v)
         o << "With_Atirikta_Dvadashi"; break;
     case Vrata_Type::Sandigdha_With_Atirikta_Dvadashi:
         o << "Sandigdha_With_Atirikta_Dvadashi"; break;
+    case Vrata_Type::Atirikta_Ekadashi:
+        o << "Atirikta_Ekadashi"; break;
+    case Vrata_Type::Sandigdha_Atirikta_Ekadashi:
+        o << "Sandigdha_Atirikta_Dvadashi"; break;
 //    default:
 //        o << "Vrata#" << static_cast<int>(v);
     }
@@ -117,7 +121,7 @@ bool Vrata::is_two_days() const
 {
     return type == Vrata_Type::With_Atirikta_Dvadashi || type == Vrata_Type::Sandigdha_With_Atirikta_Dvadashi
             ||
-           type == Vrata_Type::With_Atirikta_Ekadashi || type == Vrata_Type::Sandigdha_With_Atirikta_Ekadashi;
+           type == Vrata_Type::Atirikta_Ekadashi || type == Vrata_Type::Sandigdha_Atirikta_Ekadashi;
 }
 
 } // namespace vp

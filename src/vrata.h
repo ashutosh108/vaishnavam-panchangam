@@ -16,8 +16,8 @@ enum class Vrata_Type {
     Sandigdha_Ekadashi, // when Ekadashi Tithi starts before Arunodaya, but less than 0.25 muhurtas before.
     With_Atirikta_Dvadashi,
     Sandigdha_With_Atirikta_Dvadashi,
-    With_Atirikta_Ekadashi,
-    Sandigdha_With_Atirikta_Ekadashi
+    Atirikta_Ekadashi,
+    Sandigdha_Atirikta_Ekadashi
 };
 
 std::ostream &operator<<(std::ostream &o, Vrata_Type const &v);

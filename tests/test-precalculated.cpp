@@ -225,7 +225,7 @@ std::pair<std::optional<vp::JulDays_UT>, std::optional<vp::JulDays_UT>> parse_pr
 
 bool is_atirikta(std::string cell_text, /*out*/ vp::Vrata_Type & type) {
     if (cell_text.find("Атириктā экāдащӣ") != std::string::npos) {
-        type = vp::Vrata_Type::With_Atirikta_Ekadashi;
+        type = vp::Vrata_Type::Atirikta_Ekadashi;
         return true;
     } else if (cell_text.find("Атириктā двāдащӣ") != std::string::npos) {
         type = vp::Vrata_Type::With_Atirikta_Dvadashi;
@@ -527,6 +527,6 @@ void test_one_precalculated_table_slug(const char * slug) {
     check_precalculated_vratas(vratas);
 }
 
-TEST_CASE("precalculated ekAdashIs", "[!hide]") {
+TEST_CASE("precalculated ekAdashIs") {
     test_one_precalculated_table_slug("2019-04-27");
 }
