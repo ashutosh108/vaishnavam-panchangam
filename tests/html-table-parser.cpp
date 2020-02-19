@@ -65,43 +65,97 @@ std::string trim(std::string_view s) {
     return first_non_ws >= last_non_ws ? std::string{} : std::string(first_non_ws, last_non_ws);
 }
 
+// Events
+struct TableOpen : tinyfsm::Event {};
+struct TableClose : tinyfsm::Event {};
+struct TdOpen : tinyfsm::Event {
+    Table::RowSpan row_span{1};
+    Table::ColSpan col_span{1};
+    std::string_view text_after;
+    TdOpen(Table::RowSpan row_span_, Table::ColSpan col_span_, std::string_view text_after_)
+        : row_span(row_span_), col_span(col_span_), text_after(text_after_) {}
+};
+struct TdClose : tinyfsm::Event {};
+struct TrOpen : tinyfsm::Event {};
+struct TrClose : tinyfsm::Event {};
+
+// Finite State Machine
+class ParserMachine : public tinyfsm::Fsm<ParserMachine> {
+public:
+    /* default reaction for unhandled events */
+    void react(tinyfsm::Event const &) { }
+
+    virtual void react(TableOpen const &) {}
+    virtual void react(TableClose const &) {}
+    virtual void react(TrOpen const &) {}
+    virtual void react(TrClose const &) {}
+    virtual void react(TdOpen const &) {}
+    virtual void react(TdClose const &) {}
+    virtual ~ParserMachine()=default;
+    virtual void entry(void) {}
+    virtual void exit(void) {}
+    inline static std::size_t row = 0;
+    inline static bool got_table = false;
+    inline static bool got_tr_or_td = false;
+    inline static Table t{};
+};
+
+// States
+class WaitTdTag;
+class WaitTableTag : public ParserMachine {
+    void react(const TableOpen & /*event*/) override {
+        got_table = true;
+        transit<WaitTdTag>();
+    }
+};
+
+class WaitTdTag : public ParserMachine {
+    void react(const TrOpen & /*event*/) override {
+        if (got_tr_or_td) ++row;
+        got_tr_or_td = true;
+    }
+    void react(const TdOpen & event) override {
+        got_tr_or_td = true;
+        t.append_cell(row, trim(event.text_after), event.row_span, event.col_span);
+    }
+};
+
+}
+
+// have to declare this in the global namespace (probably due to tinyfsm bug)
+FSM_INITIAL_STATE(html::ParserMachine, html::WaitTableTag)
+
+namespace html {
+
 std::optional<Table> TableParser::next_table()
 {
-    enum class State { WaitTableTag, WaitTdTag };
-    State state{State::WaitTableTag};
-    std::size_t row{0};
-    bool got_table = false;
-    bool got_tr_or_td = false;
-    Table t;
+    ParserMachine::row = 0;
+    ParserMachine::got_table = false;
+    ParserMachine::got_tr_or_td = false;
+    ParserMachine::t = {};
+    ParserMachine::start();
     while (auto token = token_stream.next_token()) {
-        switch (state) {
-        case State::WaitTableTag:
-            if (token->tag_name == "table") {
-                got_table = true;
-                state = State::WaitTdTag;
-            }
-            break;
-        case State::WaitTdTag:
-            if (token->tag_name == "tr") {
-                // first <tr> means we get 0-th row. Next <tr>s increment row count.
-                if (got_tr_or_td) {
-                    ++row;
-                }
-                got_tr_or_td = true;
-            } else if (token->tag_name == "td") {
-                got_tr_or_td = true;
-                std::size_t colspan = token->get_attr_ul_or_default("colspan", 1);
-                std::size_t rowspan = token->get_attr_ul_or_default("rowspan", 1);
-                t.append_cell(row, trim(token->text_after), Table::RowSpan{rowspan}, Table::ColSpan{colspan});
-            }
-            break;
+        if (token->tag_name == "table") {
+            ParserMachine::dispatch(TableOpen{});
+        } else if (token->tag_name == "/table") {
+            ParserMachine::dispatch(TableClose{});
+        } else if (token->tag_name == "tr") {
+            ParserMachine::dispatch(TrOpen{});
+        } else if (token->tag_name == "/tr") {
+            ParserMachine::dispatch(TrClose{});
+        } else if (token->tag_name == "td") {
+            Table::RowSpan row_span{token->get_attr_ul_or_default("rowspan", 1)};
+            Table::ColSpan col_span{token->get_attr_ul_or_default("colspan", 1)};
+            ParserMachine::dispatch(TdOpen(row_span, col_span, token->text_after));
+        } else if (token->tag_name == "/td") {
+            ParserMachine::dispatch(TdClose{});
         }
     }
 
-    if (!got_table) {
+    if (!ParserMachine::got_table) {
         return {};
     }
-    return {t};
+    return {ParserMachine::t};
 }
 
 } // namespace html
