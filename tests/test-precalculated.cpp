@@ -316,7 +316,7 @@ vp::Location find_location_by_name_rus(const std::string & name) {
         { "Смоленск", vp::smolensk_coord },
         { "Кривой Рог", vp::krivoyrog_coord },
         { "Петропавловск-Камчатскій", vp::petropavlovskkamchatskiy_coord },
-        { "Ко Пха Нган", vp::kophangan_coord },
+        { "Ко Пха Нган Ко Самуи", vp::kophangan_coord },
         { "Денпасар", vp::denpasar_coord },
         { "Mundelein", vp::mundelein_coord },
         { "Бишкек", vp::bishkek_coord },
