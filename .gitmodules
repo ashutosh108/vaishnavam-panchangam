@@ -7,3 +7,6 @@
 [submodule "vendor/date"]
 	path = vendor/date
 	url = https://github.com/HowardHinnant/date.git
+[submodule "vendor/tinyfsm"]
+	path = vendor/tinyfsm
+	url = https://github.com/digint/tinyfsm.git

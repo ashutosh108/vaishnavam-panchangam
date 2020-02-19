@@ -3,15 +3,16 @@
 
 #include <algorithm>
 #include <cctype>
+#include "tinyfsm.hpp"
 
 namespace html {
 
-std::string html::Table::get(std::size_t row, std::size_t column)
+std::string Table::get(std::size_t row, std::size_t column)
 {
     return data.at(row).at(column);
 }
 
-std::size_t html::Table::find_first_free_col_at_row(std::size_t row) {
+std::size_t Table::find_first_free_col_at_row(std::size_t row) {
     auto & row_data = get_row(row);
     if (row_data.empty()) return 0;
     auto last_possible_col = row_data.rbegin()->first; // key of last element in row is the last candidate for linear search
@@ -23,7 +24,7 @@ std::size_t html::Table::find_first_free_col_at_row(std::size_t row) {
     return last_possible_col+1;
 }
 
-void html::Table::append_cell(std::size_t row, std::string && s, RowSpan rowspan_, ColSpan colspan_)
+void Table::append_cell(std::size_t row, std::string && s, RowSpan rowspan_, ColSpan colspan_)
 {
     std::size_t col = find_first_free_col_at_row(row);
 
@@ -34,17 +35,17 @@ void html::Table::append_cell(std::size_t row, std::string && s, RowSpan rowspan
     }
 }
 
-std::size_t html::Table::get_row_length(std::size_t row)
+std::size_t Table::get_row_length(std::size_t row)
 {
     return data.at(row).size();
 }
 
-std::size_t html::Table::row_count()
+std::size_t Table::row_count()
 {
     return data.size();
 }
 
-html::Table::Row & html::Table::get_row(std::size_t row)
+Table::Row & Table::get_row(std::size_t row)
 {
     if (row >= data.size()) {
         data.resize(row+1);
@@ -52,7 +53,7 @@ html::Table::Row & html::Table::get_row(std::size_t row)
     return data.at(row);
 }
 
-std::string & html::Table::set(std::size_t row, std::size_t col, std::string s)
+std::string & Table::set(std::size_t row, std::size_t col, std::string s)
 {
     auto & row_data = get_row(row);
     return row_data[col] = s;
@@ -64,7 +65,7 @@ std::string trim(std::string_view s) {
     return first_non_ws >= last_non_ws ? std::string{} : std::string(first_non_ws, last_non_ws);
 }
 
-std::optional<html::Table> html::TableParser::next_table()
+std::optional<Table> TableParser::next_table()
 {
     enum class State { WaitTableTag, WaitTdTag };
     State state{State::WaitTableTag};

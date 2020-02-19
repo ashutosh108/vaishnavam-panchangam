@@ -109,7 +109,7 @@ add_executable(test-main
     tests/test-precalculated.cpp
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR}/src)
-target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2)
+target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2 vendor/tinyfsm/include)
 target_link_libraries(test-main PRIVATE sweph swe date::date)
 
 enable_testing()
