@@ -102,7 +102,7 @@ inline bool operator!=(const Location & one, const Location & other) {
 [[maybe_unused]] constexpr Location krivoyrog_coord{"Krivoy Rog", 47, 57, 0, 33, 25, 0, "Europe/Kiev"};
 [[maybe_unused]] constexpr Location petropavlovskkamchatskiy_coord{"Petropavlovsk-Kamchatsky", 53, 1, 0, 158, 39, 0, "Asia/Kamchatka"};
 [[maybe_unused]] constexpr Location kophangan_coord{"Ko Pha-ngan", 9, 43, 0, 100, 0, 0, "Asia/Bangkok"};
-[[maybe_unused]] constexpr Location denpasar_coord{"Denpasar", -8, -39, 0, 115, 13, 0, "Asia/Jakarta"};
+[[maybe_unused]] constexpr Location denpasar_coord{"Denpasar", -8, -39, 0, 115, 13, 0, "Asia/Makassar"};
 [[maybe_unused]] constexpr Location mundelein_coord{"Mundelein", 42, 16, 0, -88, 0, 0, "America/Chicago"};
 [[maybe_unused]] constexpr Location bishkek_coord{"Bishkek", 42, 52, 0, 74, 34, 0, "Asia/Bishkek"};
 [[maybe_unused]] constexpr Location vena_coord{"Vienna", 48, 12, 0, 16, 22, 0, "Europe/Vienna"};
