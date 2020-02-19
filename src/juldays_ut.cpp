@@ -157,4 +157,10 @@ JulDays_UT JulDays_UT::round_to_minute_up() const
     return JulDays_UT{rounded_sys};
 }
 
+JulDays_UT JulDays_UT::round_to_minute_down() const
+{
+    auto rounded_sys = date::floor<std::chrono::minutes>(as_sys_time());
+    return JulDays_UT{rounded_sys};
+}
+
 } // namespace vp

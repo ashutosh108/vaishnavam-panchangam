@@ -40,6 +40,7 @@ public:
     bool operator >=(JulDays_UT const &other) const;
     bool operator !=(JulDays_UT const &other) const;
     JulDays_UT round_to_minute_up() const;
+    JulDays_UT round_to_minute_down() const;
 private:
     double_days juldays_ut_;
 };

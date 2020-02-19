@@ -140,6 +140,16 @@ struct Precalculated_Vrata {
             auto other_rounded = other.vrata.paran.paran_start->round_to_minute_up();
             return *paranam_start == other_rounded;
         }
+        if (other.vrata.paran.type == vp::Paran::Type::Puccha_Dvadashi) {
+            // "<HH:MM" must NOT have start and MUST have end time
+            if (paranam_start || !paranam_end) return false;
+
+            if (!other.vrata.paran.paran_end) return false; // now-calculated paran must have end time
+
+            auto other_rounded = other.vrata.paran.paran_end->round_to_minute_down();
+            return *paranam_end == other_rounded;
+
+        }
         return paranam_start == other.vrata.paran.paran_start &&
                 paranam_end == other.vrata.paran.paran_end;
         // TODO: more detailed comparison for pAraNam
