@@ -179,7 +179,7 @@ class InsideTdTag : public ParserMachine {
         td_text += trim(event.text_after);
     }
     void exit() override {
-        t.append_cell(row, td_text, row_span, col_span);
+        t.append_cell(row, trim(td_text), row_span, col_span);
     }
 private:
     using ParserMachine::react;
