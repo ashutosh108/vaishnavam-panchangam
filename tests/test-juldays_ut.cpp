@@ -133,3 +133,14 @@ TEST_CASE("Can output non-empty optional Juldays_UT") {
     std::stringstream s;
     s << jd;
 }
+
+TEST_CASE("round_to_minute_up() works") {
+    using namespace std::chrono_literals;
+    auto date{2019_y/January/1};
+    std::pair pair1{3h+5min+1s, 3h+6min};
+    std::pair pair2{0h+0min+0s, 0h+0min};
+    std::pair pair3{22h+59min+59s, 23h+0min};
+    REQUIRE(JulDays_UT{date, pair1.second} == JulDays_UT{date, pair1.first}.round_to_minute_up());
+    REQUIRE(JulDays_UT{date, pair2.second} == JulDays_UT{date, pair2.first}.round_to_minute_up());
+    REQUIRE(JulDays_UT{date, pair3.second} == JulDays_UT{date, pair3.first}.round_to_minute_up());
+}

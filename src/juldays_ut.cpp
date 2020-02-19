@@ -36,6 +36,19 @@ JulDays_UT::JulDays_UT(date::local_time<double_days> t, const date::time_zone * 
                        SE_GREG_CAL)};
 }
 
+JulDays_UT::JulDays_UT(date::sys_time<double_days> t)
+{
+    auto t_days = date::floor<date::days>(t);
+    date::year_month_day ymd{t_days};
+    double_hours hours{t-t_days};
+    juldays_ut_ = double_days{
+            swe_julday(static_cast<int>(ymd.year()),
+                       static_cast<int>(static_cast<unsigned>(ymd.month())),
+                       static_cast<int>(static_cast<unsigned>(ymd.day())),
+                       hours.count(),
+                       SE_GREG_CAL)};
+}
+
 bool JulDays_UT::operator==(const JulDays_UT &to) const
 {
     const double epsilon = 1e-6;
@@ -136,6 +149,12 @@ bool JulDays_UT::operator !=(const JulDays_UT &other) const
 double_days operator -(const JulDays_UT &t1, const JulDays_UT &t2)
 {
     return t1.raw_julian_days_ut() - t2.raw_julian_days_ut();
+}
+
+JulDays_UT JulDays_UT::round_to_minute_up() const
+{
+    auto rounded_sys = date::ceil<std::chrono::minutes>(as_sys_time());
+    return JulDays_UT{rounded_sys};
 }
 
 } // namespace vp
