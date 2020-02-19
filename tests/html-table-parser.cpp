@@ -173,7 +173,7 @@ class InsideTdTag : public ParserMachine {
     }
     void react(const OtherTag & event) override {
         //append space unless string already ends on space
-        if (!td_text.empty() && !std::isspace(*td_text.rbegin())) {
+        if (!td_text.empty() && !std::isspace(td_text.back())) {
             td_text += " ";
         }
         td_text += trim(event.text_after);
