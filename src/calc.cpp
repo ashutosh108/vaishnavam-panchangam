@@ -27,7 +27,7 @@ JulDays_UT Calc::proportional_time(JulDays_UT const t1, JulDays_UT const t2, dou
     return t1 + distance * proportion;
 }
 
-date::year_month_day Calc::get_vrata_date(const JulDays_UT &sunrise) const
+date::year_month_day Calc::get_vrata_date(const JulDays_UT sunrise) const
 {
     // Adjust to make sure that Vrata data is correct in local timezone
     // (as opposed to *sunrise which is in UTC). We do this by adding an hour
@@ -40,7 +40,7 @@ date::year_month_day Calc::get_vrata_date(const JulDays_UT &sunrise) const
     return local_sunrise.year_month_day();
 }
 
-Paran Calc::get_paran(JulDays_UT const &last_fasting_sunrise) const
+Paran Calc::get_paran(const JulDays_UT last_fasting_sunrise) const
 {
     std::optional<JulDays_UT> paran_start, paran_end;
     auto paran_sunrise = next_sunrise(last_fasting_sunrise);
@@ -85,7 +85,7 @@ Paran Calc::get_paran(JulDays_UT const &last_fasting_sunrise) const
     return paran;
 }
 
-Paran Calc::atirikta_paran(const JulDays_UT &first_fasting_sunrise) const
+Paran Calc::atirikta_paran(const JulDays_UT first_fasting_sunrise) const
 {
     auto second_fasting_sunrise = next_sunrise(first_fasting_sunrise);
     auto paran_sunrise = next_sunrise(second_fasting_sunrise.value());
@@ -94,7 +94,7 @@ Paran Calc::atirikta_paran(const JulDays_UT &first_fasting_sunrise) const
 }
 
 std::optional<JulDays_UT> Calc::next_sunrise(JulDays_UT sunrise) const {
-    return swe.get_sunrise(sunrise + double_days{0.01});
+    return swe.get_sunrise(sunrise + double_days{0.001});
 }
 
 /* Find out if we have "atiriktA ekAdashI" situation (shuddha ekAdashI encompasses two sunrises).

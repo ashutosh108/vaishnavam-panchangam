@@ -1,4 +1,5 @@
-[ ] Surgut 2019-12-07 with next_sunrise delta=0.001: atiriktA, but paranam date is one day early.
+[ ] print tithi length in details (at the beginning of tithi?)
+[ ] no suryodaya case (like december in Murmansk): decrease latitude until we get all necessary sunrises, print message that vrata is printed for alternative location.
 [ ] Murmansk 2017-11-27: why can't calculate? Also provide better error message.
 [ ] allow entering arbitrary latitude/longitude/timezone
 [ ] location.h/text-interface.h: add all locations automatically (order by longitude?)
@@ -125,3 +126,12 @@ done:
 [+] summary UI: removed gray background from seconds (it was unnoticeable with some themes) [2020-02-19]
 [+] HTML table parser: accumulate <td> data until </td> or </tr> or </table> [2020-02-19]
 [+] atiriktA ekAdashI and atiriktA dvAdashI [2020-02-19]
+[+] Surgut 2019-12-07 with next_sunrise delta=0.001: atiriktA, but paranam date is one day early. [2020-02-20]
+    With SE_BIT_GEOCTR_NO_ECL_LAT flag Surgut next_sunrise() sometimes returns a time few minutes too early and that breaks paran time detection and other things.
+    For some reason, sweph's authors suggest that "vedic" way is using that flag, but I don't see any good reasons for that. So, just turn it off to avoid problems like this:
+    Consequent calls to next_sunrise() give:
+        - 2019-12-07 04:14:22.701041 UTC (~04:14:32 from Stellarium)
+        - 2019-12-08 04:11:41.859145 UTC (too low! *wrong*)
+        - 2019-12-08 04:16:16.527379 UTC (about right? ~04:16:26 in Stellarium)
+        - 2019-12-09 04:13:11.999593 UTC (too low again! *wrong*)
+        - 2019-12-09 04:18:05.685709 UTC (about right? ~04:18:15 in Stellarium)

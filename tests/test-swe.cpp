@@ -21,14 +21,14 @@ TEST_CASE("get sunrise") {
     auto sunrise = Swe{c}.get_sunrise(JulDays_UT{2019_y/March/10});
     REQUIRE(sunrise.has_value());
     REQUIRE(sunrise->year_month_day() == 2019_y/March/10);
-    REQUIRE(sunrise->hours().count() == Approx(4.4816697389));
+    REQUIRE(sunrise->hours().count() == Approx(4.4816697389).margin(60./86400)); // 1 minute margin
 }
 
 TEST_CASE("get_sunset") {
     Location c{50.45, 30.523333};
     auto sunset = Swe{c}.get_sunset(JulDays_UT{2019_y/March/10});
     REQUIRE(sunset.has_value());
-    REQUIRE(*sunset == JulDays_UT{2019_y/March/10, 15h + 48min + 33.812600s});
+    REQUIRE(sunset->round_to_minute_down() == JulDays_UT{2019_y/March/10, 15h + 48min /*+ 33.812600s*/});
 }
 
 TEST_CASE("get sun longitude") {

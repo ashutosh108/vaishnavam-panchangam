@@ -1,8 +1,9 @@
 #include "calc.h"
 
+#include "juldays_ut.h"
 #include "paran.h"
 #include "swe.h"
-#include "juldays_ut.h"
+#include "vrata_detail.h"
 
 #include "catch.hpp"
 #include <chrono>
@@ -73,9 +74,9 @@ TEST_CASE("find_next_ekadashi_sunrise") {
     JulDays_UT start{2019_y/March/9};
     Location coord{50.45, 30.523333};
     auto sunrise = Calc{coord}.find_next_ekadashi_sunrise(start);
-    JulDays_UT expected{2019_y/March/17, 4h + 13min + 36.270031s};
+    JulDays_UT expected{2019_y/March/17, 4h + 13min/* + 36.270031s*/};
     REQUIRE(sunrise.has_value());
-    REQUIRE(*sunrise == expected);
+    REQUIRE(sunrise->round_to_minute_down() == expected);
 }
 
 TEST_CASE("Vijaya Ekadashi Kiev 2019") {
@@ -92,7 +93,7 @@ TEST_CASE("get_arunodaya") {
     Location kiev{50.45, 30.523333};
     auto arunodaya = Calc{kiev}.get_arunodaya(JulDays_UT{2019_y/March/2, 4h + 45min + 58.052015s});
     REQUIRE(arunodaya.has_value());
-    REQUIRE(arunodaya->first == JulDays_UT{2019_y/March/2, 3h + 0min + 17.512880s});
+    REQUIRE(arunodaya->first.round_to_minute_down() == JulDays_UT{2019_y/March/2, 3h + 0min /*+ 17.512880s*/});
 }
 
 Vrata vrata(const Calc &c, date::year_month_day base_date) {
@@ -490,4 +491,13 @@ TEST_CASE("get_astronomical_midnight() adjusts to the right side") {
     JulDays_UT local_midnight_in_utc_latest{2019_y/March/18};
     REQUIRE(local_midnight > local_midnight_in_utc_earliest);
     REQUIRE(local_midnight < local_midnight_in_utc_latest);
+}
+
+TEST_CASE("Surgut 2019-12-07 gets paranam time +2days after atiriktA as it should") {
+    auto vrata = Calc{surgut_coord}.find_next_vrata(2019_y/December/7);
+    REQUIRE(vrata.has_value());
+    auto expected_ymd = 2019_y/December/9;
+    date::year_month_day local_ymd{date::floor<date::days>(vrata->paran.paran_start->as_zoned_time(date::locate_zone(surgut_coord.timezone_name)).get_local_time())};
+    CAPTURE(Vrata_Detail{*vrata, surgut_coord});
+    REQUIRE(expected_ymd == local_ymd);
 }
