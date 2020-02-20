@@ -174,7 +174,19 @@ bool operator==(const Precalculated_Vrata & one, const Precalculated_Vrata & oth
 
 std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v) {
     s << v.type << "@" << v.location.name << " on " << v.date;
-    s << ", pAraNam: " << v.paranam_start << ".." << v.paranam_end;
+    auto z = date::locate_zone(v.location.timezone_name);
+    s << ", pAraNam: ";
+    if (v.paranam_start) {
+        s << v.paranam_start->as_zoned_time_rounded_to_seconds(z);
+    } else {
+        s << "unspecified";
+    }
+    s << "..";
+    if (v.paranam_end) {
+         s << v.paranam_end->as_zoned_time_rounded_to_seconds(z);
+    } else {
+        s << "unspecified";
+    }
     return s;
 }
 
@@ -204,7 +216,7 @@ std::pair<std::optional<vp::JulDays_UT>, std::optional<vp::JulDays_UT>> parse_pr
         return {{}, {}};
     }
     std::smatch match;
-    if (std::regex_search(s, match, std::regex{R"~((\d?\d:\d\d) (?:-|—) (\d?\d:\d\d))~"})) {
+    if (std::regex_search(s, match, std::regex{R"~((\d?\d:\d\d)\s*(?:-|—)\s*(\d?\d:\d\d))~"})) {
         if (match.size() >= 2) {
             std::chrono::minutes start_h_m{h_m_from_string(match[1].str())};
             std::chrono::minutes end_h_m{h_m_from_string(match[2].str())};
@@ -528,13 +540,12 @@ enum class Fix {
 };
 
 struct FixItem {
-    const vp::Location & loc;
     Fix type;
     std::string from;
     std::string to;
 };
 
-using Fixes = std::vector<FixItem>;
+using Fixes = std::map<vp::Location, std::vector<FixItem>>;
 
 date::local_time<std::chrono::seconds> local_from_y_m_d_h_m(const std::string & y_m_d_h_m) {
     std::istringstream s{y_m_d_h_m};
@@ -593,11 +604,11 @@ void apply_vrata_fix(Precalculated_Vrata & vrata, const FixItem & fix) {
 
 void fix_vratas(std::vector<Precalculated_Vrata> & vratas, Fixes && fixes) {
     for (auto & vrata : vratas) {
-        auto fix_iter = std::find_if(fixes.cbegin(), fixes.cend(), [&vrata](const FixItem & fix) {
-            return fix.loc == vrata.location;
-        });
-        if (fix_iter != fixes.cend()) {
-            apply_vrata_fix(vrata, *fix_iter);
+        auto fix_iter = fixes.find(vrata.location);
+        if (fix_iter != fixes.end()) {
+            for (auto & fix : fix_iter->second) {
+                apply_vrata_fix(vrata, fix);
+            }
         }
     }
 }
@@ -625,25 +636,37 @@ TEST_CASE("precalculated ekAdashIs") {
     test_one_precalculated_table_slug(
         "2017-11-12",
         {
-            {vp::murmansk_coord, Fix::ParanStartTime, "10:30", "2017-11-15 10:36"},
-            {vp::riga_coord, Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"},
-            {vp::yurmala_coord, Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}
+            {vp::murmansk_coord, {{Fix::ParanStartTime, "10:30", "2017-11-15 10:36"}}},
+            {vp::riga_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}},
+            {vp::yurmala_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}}
         });
     test_one_precalculated_table_slug(
         "2017-11-27",
         {
-            {vp::murmansk_coord, Fix::Skip, "", ""}, // TODO: fix calculations for no sunrise cases
-            {vp::london_coord, Fix::ParanStartTime, "09:24", "2017-11-30 09:23"},
+            {vp::murmansk_coord, {{Fix::Skip, "", ""}}}, // TODO: fix calculations for no sunrise cases
+            {vp::london_coord, {{Fix::ParanStartTime, "09:24", "2017-11-30 09:23"}}},
         });
-//    test_one_precalculated_table_slug("2017-12-11");
-//    test_one_precalculated_table_slug("2017-12-26");
+//    test_one_precalculated_table_slug("2017-12-11"); // TODO: fix joined ekAdashI/atiriktA cells
+    test_one_precalculated_table_slug("2017-12-26",
+        {
+            {vp::murmansk_coord, {{Fix::Skip, "", ""}}}, // TODO: fix calculations for no sunrise cases
+        });
     test_one_precalculated_table_slug(
         "2018-01-10",
         {
-            {vp::petropavlovskkamchatskiy_coord, Fix::ParanStartTime, "10:28", "2018-01-13 10:31"},
-            {vp::murmansk_coord, Fix::Skip, "", ""}, // TODO: fix calculations for no sunrise cases
+            {vp::petropavlovskkamchatskiy_coord, {{Fix::ParanStartTime, "10:28", "2018-01-13 10:31"}}},
+            {vp::murmansk_coord, {{Fix::Skip, "", ""}}}, // TODO: fix calculations for no sunrise cases
         });
-//    test_one_precalculated_table_slug("2018-01-23");
+//    test_one_precalculated_table_slug("2018-01-23",
+//        {
+//            {vp::kophangan_coord,
+//                {{Fix::ParanStartTime, "06:45", "2018-01-29 06:46"},
+//                 {Fix::ParanEndTime, "06:47", "2018-01-29 06:48"}}},
+//            {vp::habarovsk_coord,
+//                {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
+//            {vp::vladivostok_coord,
+//                {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
+//        });
 //    test_one_precalculated_table_slug("2018-01-30");
 //    test_one_precalculated_table_slug("2018-02-08");
 //    test_one_precalculated_table_slug("2018-02-24");

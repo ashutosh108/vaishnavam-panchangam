@@ -2,6 +2,7 @@
 #define LOCATION_H
 
 #include <cstring>
+#include <tuple>
 
 namespace vp {
 
@@ -37,6 +38,14 @@ inline bool operator==(const Location & one, const Location & other) {
 
 inline bool operator!=(const Location & one, const Location & other) {
     return !(one == other);
+}
+
+inline bool operator<(const Location & one, const Location & other) {
+    bool c = std::tie(one.latitude, one.longitude) < std::tie(other.latitude, other.longitude);
+    if (c) return c;
+    int c2 = std::strcmp(one.timezone_name, other.timezone_name);
+    if (c2 < 0) return true;
+    return std::strcmp(one.name, other.name) < 0;
 }
 
 
