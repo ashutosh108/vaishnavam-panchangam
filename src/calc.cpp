@@ -94,7 +94,7 @@ Paran Calc::atirikta_paran(const JulDays_UT &first_fasting_sunrise) const
 }
 
 std::optional<JulDays_UT> Calc::next_sunrise(JulDays_UT sunrise) const {
-    return swe.get_sunrise(sunrise + double_days{0.1});
+    return swe.get_sunrise(sunrise + double_days{0.01});
 }
 
 /* Find out if we have "atiriktA ekAdashI" situation (shuddha ekAdashI encompasses two sunrises).
@@ -157,14 +157,14 @@ repeat_with_fixed_start_time:
     Vrata_Type type = Vrata_Type::Ekadashi;
     if ((tithi_arunodaya.is_dashami())) {
         // purva-viddha Ekadashi, get next sunrise
-        sunrise = swe.get_sunrise(*sunrise + double_days{0.1});
+        sunrise = next_sunrise(*sunrise);
         if (!sunrise) { return {}; }
     } else {
         Tithi tithi_ardha_ghatika_before_arunodaya = swe.get_tithi(ardha_ghatika_before_arunodaya);
         if (tithi_ardha_ghatika_before_arunodaya.is_dashami()) {
             type = Vrata_Type::Sandigdha_Ekadashi;
             // Sandigdha (almost purva-viddha Ekadashi), get next sunrise
-            sunrise = swe.get_sunrise(*sunrise + double_days{0.1});
+            sunrise = next_sunrise(*sunrise);
             if (!sunrise) { return {}; }
         }
     }

@@ -1,3 +1,4 @@
+[ ] Surgut 2019-12-07 with next_sunrise delta=0.001: atiriktA, but paranam date is one day early.
 [ ] Murmansk 2017-11-27: why can't calculate? Also provide better error message.
 [ ] allow entering arbitrary latitude/longitude/timezone
 [ ] location.h/text-interface.h: add all locations automatically (order by longitude?)

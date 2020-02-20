@@ -199,6 +199,7 @@ std::ostream & operator<<(std::ostream & s, const NamedVrata &nv) {
 }
 
 void check_atirikta_at_location(const char * name, const Location & location, const Vrata & expected_vrata, date::year_month_day date) {
+    CAPTURE(name);
     auto actual_vrata = vrata(Calc{location}, date);
     NamedVrata expected_named_vrata{name, expected_vrata};
     CHECK(expected_named_vrata == actual_vrata);
@@ -210,7 +211,7 @@ void check_atirikta_at_location(const char * name, const Location & location, co
     // 2. Paran *date* must be two days after vrata date.
     auto time_zone_at_location = date::locate_zone(location.timezone_name);
 
-    auto zoned_paran_start = date::make_zoned(time_zone_at_location, actual_vrata.paran.paran_start->as_sys_time());
+    auto zoned_paran_start = actual_vrata.paran.paran_start->as_zoned_time(time_zone_at_location);
     auto local_days_paran_start = date::floor<date::days>(zoned_paran_start.get_local_time());
     CHECK(date::local_days{actual_vrata.date} + date::days{2} == local_days_paran_start);
 
