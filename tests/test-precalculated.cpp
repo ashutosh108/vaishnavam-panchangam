@@ -626,5 +626,6 @@ TEST_CASE("precalculated ekAdashIs") {
             {vp::yurmala_coord, Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}
         });
 //    test_one_precalculated_table_slug("2017-11-27");
+//    test_one_precalculated_table_slug("2017-12-11");
     test_one_precalculated_table_slug("2019-04-27");
 }
