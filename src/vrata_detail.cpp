@@ -29,7 +29,8 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _location):vrata(_vrata), loca
                 if (sunset2) {
                     auto fifth_of_day2 = calc.proportional_time(*sunrise2, *sunset2, 0.2);
                     events.push_back({"1/5 of day2", fifth_of_day2});
-                    if (vrata.type == Vrata_Type::With_Atirikta_Dvadashi || vrata.type == Vrata_Type::Sandigdha_With_Atirikta_Dvadashi) {
+                    if (vrata.type == Vrata_Type::With_Atirikta_Dvadashi || vrata.type == Vrata_Type::Sandigdha_With_Atirikta_Dvadashi
+                            || vrata.type == Vrata_Type::Atirikta_Ekadashi || vrata.type == Vrata_Type::Sandigdha_Atirikta_Ekadashi) {
                         auto sunrise3 = calc.swe.get_sunrise(*sunset2);
                         events.push_back({"sunrise3", sunrise3});
                         if (sunrise3) {
