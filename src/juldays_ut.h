@@ -41,6 +41,7 @@ public:
     bool operator !=(JulDays_UT const &other) const;
     JulDays_UT round_to_minute_up() const;
     JulDays_UT round_to_minute_down() const;
+    date::zoned_time<double_days> as_zoned_time(const date::time_zone * time_zone) const;
 private:
     double_days juldays_ut_;
 };
