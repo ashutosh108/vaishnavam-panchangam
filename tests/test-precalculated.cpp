@@ -508,6 +508,7 @@ TEST_CASE("precalc parsing: 4. standard ekAdashI with '< end' pAraNam") {
 }
 
 void check_precalculated_vrata(const Precalculated_Vrata & vrata) {
+    CAPTURE(vrata);
     auto our_vrata = vp::Calc{vrata.location}.find_next_vrata(vrata.date);
     REQUIRE(our_vrata.has_value());
     auto our_vrata_detail = vp::Vrata_Detail{*our_vrata, vrata.location};
@@ -624,5 +625,6 @@ TEST_CASE("precalculated ekAdashIs") {
             {vp::riga_coord, Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"},
             {vp::yurmala_coord, Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}
         });
+//    test_one_precalculated_table_slug("2017-11-27");
     test_one_precalculated_table_slug("2019-04-27");
 }
