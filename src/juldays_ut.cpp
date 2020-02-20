@@ -167,4 +167,9 @@ date::zoned_time<double_days> JulDays_UT::as_zoned_time(const date::time_zone * 
     return date::make_zoned(time_zone, as_sys_time());
 }
 
+date::zoned_time<std::chrono::seconds> JulDays_UT::as_zoned_time_rounded_to_seconds(const date::time_zone *time_zone) const
+{
+    return date::make_zoned(time_zone, date::round<std::chrono::seconds>(as_sys_time()));
+}
+
 } // namespace vp
