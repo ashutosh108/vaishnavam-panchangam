@@ -113,6 +113,7 @@ struct Precalculated_Vrata {
     vp::Location location;
     std::optional<vp::JulDays_UT> paranam_start;
     std::optional<vp::JulDays_UT> paranam_end;
+    bool skip = false;
     Precalculated_Vrata(vp::Location location_,
                         date::year_month_day date_,
                         vp::Vrata_Type type_ = vp::Vrata_Type::Ekadashi,
@@ -517,12 +518,13 @@ void check_precalculated_vrata(const Precalculated_Vrata & vrata) {
 
 void check_precalculated_vratas(const std::vector<Precalculated_Vrata> & vratas) {
     for (const auto & v : vratas) {
+        if (v.skip) continue;
         check_precalculated_vrata(v);
     }
 }
 
 enum class Fix {
-    ParanStartTime, ParanEndTime
+    ParanStartTime, ParanEndTime, Skip
 };
 
 struct FixItem {
@@ -548,7 +550,7 @@ enum class Round { Up, Down };
 
 typedef void (vp::JulDays_UT::*Rounder)(void);
 
-void replace_time(std::optional<vp::JulDays_UT> & time, const std::string & from_str, const std::string & to_str, const char * timezone_name, Round rounding) {
+void replace_time(std::optional<vp::JulDays_UT> & time, const std::string & from_str, const std::string & to_str, const char * timezone_name) {
     if (!time && from_str != "unspecified") {
         throw std::runtime_error("can't fix time from " + from_str + " to " + to_str + ": it's empty");
     }
@@ -560,12 +562,11 @@ void replace_time(std::optional<vp::JulDays_UT> & time, const std::string & from
             throw std::runtime_error(s.str());
         }
     } else {
-        auto existing_rounded = (rounding == Round::Up) ? time->round_to_minute_up() : time->round_to_minute_down();
-        auto existing_rounded_z = existing_rounded.as_zoned_time(time_zone);
-        auto existing_h_m = date::format("%H:%M", existing_rounded_z);
+        auto existing_zoned = time->as_zoned_time(time_zone);
+        auto existing_h_m = date::format("%H:%M", existing_zoned);
         if (existing_h_m != from_str) {
             std::stringstream s;
-            s << "can't replace " << from_str << "=>" << to_str <<  " in " << existing_rounded_z << ": HH:MM do not match";
+            s << "can't replace " << from_str << "=>" << to_str <<  " in " << existing_zoned << ": HH:MM do not match";
             throw std::runtime_error(s.str());
         }
     }
@@ -579,10 +580,13 @@ void replace_time(std::optional<vp::JulDays_UT> & time, const std::string & from
 void apply_vrata_fix(Precalculated_Vrata & vrata, const FixItem & fix) {
     switch (fix.type) {
     case Fix::ParanStartTime:
-        replace_time(vrata.paranam_start, fix.from, fix.to, vrata.location.timezone_name, Round::Up);
+        replace_time(vrata.paranam_start, fix.from, fix.to, vrata.location.timezone_name);
         break;
     case Fix::ParanEndTime:
-        replace_time(vrata.paranam_end, fix.from, fix.to, vrata.location.timezone_name, Round::Down);
+        replace_time(vrata.paranam_end, fix.from, fix.to, vrata.location.timezone_name);
+        break;
+    case Fix::Skip:
+        vrata.skip = true;
         break;
     }
 }
@@ -628,7 +632,12 @@ TEST_CASE("precalculated ekAdashIs") {
 //    test_one_precalculated_table_slug("2017-11-27");
 //    test_one_precalculated_table_slug("2017-12-11");
 //    test_one_precalculated_table_slug("2017-12-26");
-//    test_one_precalculated_table_slug("2018-01-10");
+    test_one_precalculated_table_slug(
+        "2018-01-10",
+        {
+            {vp::petropavlovskkamchatskiy_coord, Fix::ParanStartTime, "10:28", "2018-01-13 10:31"},
+            {vp::murmansk_coord, Fix::Skip, "", ""}, // TODO: fix calculations for no sunrise cases
+        });
 //    test_one_precalculated_table_slug("2018-01-23");
 //    test_one_precalculated_table_slug("2018-01-30");
 //    test_one_precalculated_table_slug("2018-02-08");
