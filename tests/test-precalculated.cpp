@@ -124,14 +124,19 @@ struct Precalculated_Vrata {
           paranam_start(paranam_start_),
           paranam_end(paranam_end_) {}
     bool operator==(const vp::Vrata_Detail & other) const {
+        UNSCOPED_INFO("comparing: " << date << "<=>" << other.vrata.date << "; "
+                      << location.name << "<=>" << other.location.name << "; "
+                      << type << "<=>" << other.vrata.type);
         if (date != other.vrata.date || location != other.location
                 || type != other.vrata.type) return false;
         if (other.vrata.paran.type == vp::Paran::Type::Standard) {
+            UNSCOPED_INFO("paranam_start=" << paranam_start << ", end=" << paranam_end);
             // in case of standard paranam, start and end time must not be set
             return !paranam_start && !paranam_end;
         }
         // it must be ">HH:MM" form, check with 1-min precision
         if (other.vrata.paran.type == vp::Paran::Type::From_Quarter_Dvadashi) {
+            UNSCOPED_INFO("paran_type: From_Quarter_Dvadashi");
             // ">HH:MM" must have start and must NOT have end time
             if (!paranam_start) return false;
             if (paranam_end) return false;
@@ -141,19 +146,20 @@ struct Precalculated_Vrata {
             auto other_rounded = other.vrata.paran.paran_start->round_to_minute_up();
             return *paranam_start == other_rounded;
         }
-        if (other.vrata.paran.type == vp::Paran::Type::Puccha_Dvadashi) {
-            // "<HH:MM" must NOT have start and MUST have end time
-            if (paranam_start || !paranam_end) return false;
+        if (other.vrata.paran.type == vp::Paran::Type::Puccha_Dvadashi || other.vrata.paran.type == vp::Paran::Type::Until_Dvadashi_End) {
+            UNSCOPED_INFO("paran type: " << other.vrata.paran.type);
+            // "<HH:MM" might have start time and MUST have end time
+            if (!paranam_end) return false;
 
             if (!other.vrata.paran.paran_end) return false; // now-calculated paran must have end time
 
             auto other_rounded = other.vrata.paran.paran_end->round_to_minute_down();
             return *paranam_end == other_rounded;
-
         }
-        return paranam_start == other.vrata.paran.paran_start &&
-                paranam_end == other.vrata.paran.paran_end;
-        // TODO: more detailed comparison for pAraNam
+        UNSCOPED_INFO("paranam comparison: start " << paranam_start << " <=> " << other.vrata.paran.paran_start->round_to_minute_up()
+                      << "\nend " << paranam_end << " <=> " << other.vrata.paran.paran_end->round_to_minute_down());
+        return paranam_start == other.vrata.paran.paran_start.value().round_to_minute_up() &&
+                paranam_end == other.vrata.paran.paran_end.value().round_to_minute_down();
     }
     friend std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v);
 };
@@ -514,7 +520,84 @@ void check_precalculated_vratas(const std::vector<Precalculated_Vrata> & vratas)
     }
 }
 
-void test_one_precalculated_table_slug(const char * slug) {
+enum class Fix {
+    ParanStartTime, ParanEndTime
+};
+
+struct FixItem {
+    const vp::Location & loc;
+    Fix type;
+    std::string from;
+    std::string to;
+};
+
+using Fixes = std::vector<FixItem>;
+
+date::local_time<std::chrono::seconds> local_from_y_m_d_h_m(const std::string & y_m_d_h_m) {
+    std::istringstream s{y_m_d_h_m};
+    date::local_time<std::chrono::seconds> local_time;
+    s >> date::parse("%Y-%m-%d %H:%M", local_time);
+    if (!s.good()) {
+        throw std::runtime_error("can't parse " + y_m_d_h_m + " as local time");
+    }
+    return local_time;
+}
+
+enum class Round { Up, Down };
+
+typedef void (vp::JulDays_UT::*Rounder)(void);
+
+void replace_time(std::optional<vp::JulDays_UT> & time, const std::string & from_str, const std::string & to_str, const char * timezone_name, Round rounding) {
+    if (!time && from_str != "unspecified") {
+        throw std::runtime_error("can't fix time from " + from_str + " to " + to_str + ": it's empty");
+    }
+    auto time_zone = date::locate_zone(timezone_name);
+    if (from_str == "unspecified") {
+        if (time) {
+            std::stringstream s;
+            s << "can't fix time from " << from_str << " to " << to_str << ": it's not unspecified but is " << *time << " instead";
+            throw std::runtime_error(s.str());
+        }
+    } else {
+        auto existing_rounded = (rounding == Round::Up) ? time->round_to_minute_up() : time->round_to_minute_down();
+        auto existing_rounded_z = existing_rounded.as_zoned_time(time_zone);
+        auto existing_h_m = date::format("%H:%M", existing_rounded_z);
+        if (existing_h_m != from_str) {
+            std::stringstream s;
+            s << "can't replace " << from_str << "=>" << to_str <<  " in " << existing_rounded_z << ": HH:MM do not match";
+            throw std::runtime_error(s.str());
+        }
+    }
+    auto new_local_time = local_from_y_m_d_h_m(to_str);
+    auto new_zoned_time = date::make_zoned(time_zone, new_local_time);
+    auto new_sys_time{new_zoned_time.get_sys_time()};
+    time = vp::JulDays_UT{new_sys_time};
+}
+
+
+void apply_vrata_fix(Precalculated_Vrata & vrata, const FixItem & fix) {
+    switch (fix.type) {
+    case Fix::ParanStartTime:
+        replace_time(vrata.paranam_start, fix.from, fix.to, vrata.location.timezone_name, Round::Up);
+        break;
+    case Fix::ParanEndTime:
+        replace_time(vrata.paranam_end, fix.from, fix.to, vrata.location.timezone_name, Round::Down);
+        break;
+    }
+}
+
+void fix_vratas(std::vector<Precalculated_Vrata> & vratas, Fixes && fixes) {
+    for (auto & vrata : vratas) {
+        auto fix_iter = std::find_if(fixes.cbegin(), fixes.cend(), [&vrata](const FixItem & fix) {
+            return fix.loc == vrata.location;
+        });
+        if (fix_iter != fixes.cend()) {
+            apply_vrata_fix(vrata, *fix_iter);
+        }
+    }
+}
+
+void test_one_precalculated_table_slug(const char * slug, Fixes fixes={}) {
     CAPTURE(slug);
 
     std::string filename{std::string{"data/precalculated-"} + slug + ".html"};
@@ -528,11 +611,18 @@ void test_one_precalculated_table_slug(const char * slug) {
 
     CAPTURE(year);
     std::vector<Precalculated_Vrata> vratas = extract_vratas_from_precalculated_table(std::move(s), year);
+    fix_vratas(vratas, std::move(fixes));
     CAPTURE(vratas.size());
     check_precalculated_vratas(vratas);
 }
 
 TEST_CASE("precalculated ekAdashIs") {
-//    test_one_precalculated_table_slug("2017-11-12");
+    test_one_precalculated_table_slug(
+        "2017-11-12",
+        {
+            {vp::murmansk_coord, Fix::ParanStartTime, "10:30", "2017-11-15 10:36"},
+            {vp::riga_coord, Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"},
+            {vp::yurmala_coord, Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}
+        });
     test_one_precalculated_table_slug("2019-04-27");
 }
