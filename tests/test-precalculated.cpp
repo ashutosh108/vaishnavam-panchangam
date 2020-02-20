@@ -562,7 +562,7 @@ void replace_time(std::optional<vp::JulDays_UT> & time, const std::string & from
             throw std::runtime_error(s.str());
         }
     } else {
-        auto existing_zoned = time->as_zoned_time(time_zone);
+        auto existing_zoned = time->as_zoned_time_rounded_to_seconds(time_zone);
         auto existing_h_m = date::format("%H:%M", existing_zoned);
         if (existing_h_m != from_str) {
             std::stringstream s;
@@ -629,7 +629,12 @@ TEST_CASE("precalculated ekAdashIs") {
             {vp::riga_coord, Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"},
             {vp::yurmala_coord, Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}
         });
-//    test_one_precalculated_table_slug("2017-11-27");
+    test_one_precalculated_table_slug(
+        "2017-11-27",
+        {
+            {vp::murmansk_coord, Fix::Skip, "", ""}, // TODO: fix calculations for no sunrise cases
+            {vp::london_coord, Fix::ParanStartTime, "09:24", "2017-11-30 09:23"},
+        });
 //    test_one_precalculated_table_slug("2017-12-11");
 //    test_one_precalculated_table_slug("2017-12-26");
     test_one_precalculated_table_slug(
