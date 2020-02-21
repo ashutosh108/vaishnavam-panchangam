@@ -668,9 +668,8 @@ TEST_CASE("precalculated ekAdashIs") {
             {vp::vladivostok_coord,
                 {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
         });
-//    test_one_precalculated_table_slug("2018-01-30");
-//    test_one_precalculated_table_slug("2018-02-08");
-//    test_one_precalculated_table_slug("2018-02-24");
+//    test_one_precalculated_table_slug("2018-02-08"); // TODO: fix joined ekAdashI/atiriktA cells
+    test_one_precalculated_table_slug("2018-02-24");
 //    test_one_precalculated_table_slug("2018-03-10");
 //    test_one_precalculated_table_slug("2018-03-17");
 //    test_one_precalculated_table_slug("2018-03-23");
