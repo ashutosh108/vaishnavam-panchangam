@@ -149,42 +149,78 @@ struct Precalculated_Vrata {
                       << type << "<=>" << other.vrata.type << "; "
                       << to_str(paranam_start) << "<=>" << other.vrata.paran.paran_start << "; "
                       << to_str(paranam_end) << "<=>" << other.vrata.paran.paran_end);
-        if (date != other.vrata.date || location != other.location) return false;
+        if (date != other.vrata.date || location != other.location) {
+            UNSCOPED_INFO("dates and locations must match, but they don't");
+            return false;
+        }
         // allow mismatch between vrata types when precalc is Ekadashi and now-calc is Sandigdha_Ekadashi
-        if (type != other.vrata.type && !(type==vp::Vrata_Type::Ekadashi && other.vrata.type == vp::Vrata_Type::Sandigdha_Ekadashi)) return false;
+        if (type != other.vrata.type && !(type==vp::Vrata_Type::Ekadashi && other.vrata.type == vp::Vrata_Type::Sandigdha_Ekadashi)) {
+            UNSCOPED_INFO("vrata types must match, but they don't");
+            return false;
+        }
         if (other.vrata.paran.type == vp::Paran::Type::Standard) {
             UNSCOPED_INFO("paranam_start=" << to_str(paranam_start) << ", end=" << to_str(paranam_end));
-            // in case of standard paranam, start and end time must not be set
+            UNSCOPED_INFO("in case of standard paranam, start and end time must not be set");
             return !paranam_start && !paranam_end;
         }
         // it must be ">HH:MM" form, check with 1-min precision
         if (other.vrata.paran.type == vp::Paran::Type::From_Quarter_Dvadashi) {
             UNSCOPED_INFO("paran_type: From_Quarter_Dvadashi");
             // ">HH:MM" must have start and must NOT have end time
-            if (!paranam_start) return false;
-            if (paranam_end) return false;
+            if (!paranam_start) {
+                UNSCOPED_INFO("pAraNam start must be set, but it is not");
+                return false;
+            }
+            if (paranam_end) {
+                UNSCOPED_INFO("pAraNam end must NOT be set, but it is set");
+                return false;
+            }
 
-            if (!other.vrata.paran.paran_start) return false; // now-calculated paran must have start time
+            if (!other.vrata.paran.paran_start) {
+                UNSCOPED_INFO("now-calculated pAraNam must have start time");
+                return false;
+            }
 
             auto other_rounded = other.vrata.paran.paran_start->round_to_minute_up();
-            return paranam_start.value() == other_rounded;
+            bool result = paranam_start.value() == other_rounded;
+            if (!result) {
+                UNSCOPED_INFO("precaltulated pAraNam start should equal to now-calculated one, but it is not");
+            }
+            return result;
         }
         if (other.vrata.paran.type == vp::Paran::Type::Puccha_Dvadashi || other.vrata.paran.type == vp::Paran::Type::Until_Dvadashi_End) {
             UNSCOPED_INFO("paran type: " << other.vrata.paran.type);
             // "<HH:MM" might have start time and MUST have end time
-            if (!paranam_end) return false;
+            if (!paranam_end) {
+                UNSCOPED_INFO("pAraNam end must be set");
+                return false;
+            }
 
-            if (!other.vrata.paran.paran_end) return false; // now-calculated paran must have end time
+            if (!other.vrata.paran.paran_end) {
+                UNSCOPED_INFO("now-calculated pAraNam must have end time");
+                return false;
+            }
 
             auto other_rounded = other.vrata.paran.paran_end->round_to_minute_down();
-            return *paranam_end == other_rounded;
+            bool result = *paranam_end == other_rounded;
+            if (!result) {
+                UNSCOPED_INFO("pAraNam end must match, but it doesn't");
+            }
+            return result;
         }
         UNSCOPED_INFO("paranam comparison: start " << to_str(paranam_start) << " <=> " << date::format("%F %T %Z", other.vrata.paran.paran_start->round_to_minute_up())
                       << "\nend " << to_str(paranam_end) << " <=> " << date::format("%F %T %Z", other.vrata.paran.paran_end->round_to_minute_down()));
         UNSCOPED_INFO("end result: " << (paranam_start == other.vrata.paran.paran_start.value().round_to_minute_up() &&
                                          paranam_end == other.vrata.paran.paran_end.value().round_to_minute_down()));
-        return paranam_start == other.vrata.paran.paran_start.value().round_to_minute_up() &&
-                paranam_end == other.vrata.paran.paran_end.value().round_to_minute_down();
+        bool start_matches = paranam_start == other.vrata.paran.paran_start.value().round_to_minute_up();
+        bool end_matches = paranam_end == other.vrata.paran.paran_end.value().round_to_minute_down();
+        if (!start_matches) {
+            UNSCOPED_INFO("pAraNam start does not match");
+        }
+        if (!end_matches) {
+            UNSCOPED_INFO("pAraNam end does not match");
+        }
+        return start_matches && end_matches;
     }
     friend std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v);
 };
@@ -732,7 +768,42 @@ TEST_CASE("precalculated ekAdashIs") {
             {vp::fredericton_coord,
               {{Fix::ParanStartTime, "06:32:00", "2018-04-26 06:33"}}},
         });
-//    test_one_precalculated_table_slug("2018-05-09");
+    test_one_precalculated_table_slug("2018-05-09",
+        {
+            {vp::manali_coord,
+             {{Fix::ParanStartTime, "unspecified", "2018-05-12 05:34"}}},
+            {vp::kalkuta_coord,
+             {{Fix::ParanStartTime, "unspecified", "2018-05-12 05:34"}}},
+            {vp::ekaterinburg_coord,
+             {{Fix::ParanStartTime, "unspecified", "2018-05-12 05:04"}}},
+            {vp::surgut_coord,
+             {{Fix::ParanStartTime, "05:05:00", "2018-05-12 05:04"}}},
+            {vp::bishkek_coord,
+             {{Fix::ParanStartTime, "06:05:00", "2018-05-12 06:04"}}},
+            {vp::almaata_coord,
+             {{Fix::ParanStartTime, "06:05:00", "2018-05-12 06:04"}}},
+            {vp::omsk_coord,
+             {{Fix::ParanStartTime, "06:05:00", "2018-05-12 06:04"}}},
+            {vp::novosibirsk_coord,
+             {{Fix::ParanStartTime, "07:05:00", "2018-05-12 07:04"}}},
+            {vp::barnaul_coord,
+             {{Fix::ParanStartTime, "07:05:00", "2018-05-12 07:04"}}},
+            {vp::tomsk_coord,
+             {{Fix::ParanStartTime, "07:05:00", "2018-05-12 07:04"}}},
+            {vp::kophangan_coord,
+             {{Fix::ParanStartTime, "07:05:00", "2018-05-12 07:04"}}},
+            {vp::mirnyy_coord,
+             {{Fix::ParanStartTime, "09:05:00", "2018-05-12 09:04"}}},
+            {vp::habarovsk_coord,
+             {{Fix::ParanStartTime, "10:05:00", "2018-05-12 10:04"}}},
+            {vp::vladivostok_coord,
+             {{Fix::ParanStartTime, "10:05:00", "2018-05-12 10:04"}}},
+            {vp::petropavlovskkamchatskiy_coord,
+             {{Fix::ParanStartTime, "05:36:00", "unspecified"},
+              {Fix::ParanEndTime, "05:36:30", "unspecified"}}},
+            {vp::murmansk_coord,
+             {{Fix::ParanStartTime, "03:05:00", "2018-05-12 03:04"}}},
+        });
 //    test_one_precalculated_table_slug("2018-05-14_adhimaasa");
 //    test_one_precalculated_table_slug("2018-05-23");
 //    test_one_precalculated_table_slug("2018-06-07");
