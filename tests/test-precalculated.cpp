@@ -36,7 +36,7 @@ date::month_day decode_month_day(const std::string& s) {
         {"марта", date::March},
         {"апреля", date::April},
         {"мая", date::May},
-        {"июня", date::June},
+        {"іюня", date::June},
         {"июля", date::July},
         {"августа", date::August},
         {"сентября", date::September},
@@ -804,8 +804,12 @@ TEST_CASE("precalculated ekAdashIs") {
             {vp::murmansk_coord,
              {{Fix::ParanStartTime, "03:05:00", "2018-05-12 03:04"}}},
         });
-//    test_one_precalculated_table_slug("2018-05-14_adhimaasa");
-//    test_one_precalculated_table_slug("2018-05-23");
+//    test_one_precalculated_table_slug("2018-05-14_adhimaasa"); // disabled until we learn to parse non-ekadashi tables (asdhimAsa start here)
+    test_one_precalculated_table_slug("2018-05-23",
+        {
+              {vp::petropavlovskkamchatskiy_coord,
+               {{Fix::ParanStartTime, "unspecified", "2018-05-26 06:16"}}},
+        });
 //    test_one_precalculated_table_slug("2018-06-07");
 //    test_one_precalculated_table_slug("2018-06-21");
 //    test_one_precalculated_table_slug("2018-07-06");
