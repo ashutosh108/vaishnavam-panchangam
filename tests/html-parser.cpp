@@ -2,7 +2,7 @@
 
 #include <cassert>
 #include <cctype>
-#include <charconv>
+#include <cstdlib>
 #include <iostream>
 #include <regex>
 
@@ -97,12 +97,12 @@ unsigned long html::Token::get_attr_ul_or_default(std::string attr, unsigned lon
 {
     auto val = get_attr(attr);
     if (val) {
-        const char * begin = val->data();
-        const char * end = val->data() + val->size();
-        unsigned long int_val;
-        auto [p, errc] = std::from_chars(begin, end, int_val);
-        if (errc == std::errc()) {
-            return int_val;
+        const char * begin = val->c_str();
+        char * str_end;
+        // since from_chars isn't available in gcc 7.x, have to use strtol instead
+        long long_val = std::strtol(begin, &str_end, 10);
+        if (str_end != begin && long_val >= 0) {
+            return static_cast<unsigned long>(long_val);
         }
     }
     return default_val;
