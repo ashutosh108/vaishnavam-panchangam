@@ -223,18 +223,24 @@ include(CPack)
 
 add_subdirectory(gui-qt)
 
-# GCC 8.x: link with stdc++fs library
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    if (NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0))
-        target_link_libraries(test-main PRIVATE stdc++fs)
-        target_link_libraries(${VP_CLI_EXE} PRIVATE stdc++fs)
-    endif()
-    if (UNIX) # address sanitizer with GCC only works in linux and MacOS (not windows)
-        set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address")
-        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
-        set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fsanitize=address")
-    endif()
+# GCC 7.x and 8.x: link with stdc++fs library
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0))
+    target_link_libraries(test-main PRIVATE stdc++fs)
+    target_link_libraries(${VP_CLI_EXE} PRIVATE stdc++fs)
 endif()
+
+# address sanitizer with GCC only works in linux and MacOS (not windows)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND UNIX)
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
+    set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fsanitize=address")
+endif()
+
+# gcc 7: define VP_USE_EXPERIMENTAL_FILESYSTEM
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0))
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVP_USE_EXPERIMENTAL_FILESYSTEM")
+endif()
+
 
 find_package(Git)
 if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
