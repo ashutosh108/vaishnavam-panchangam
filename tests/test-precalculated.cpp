@@ -6,13 +6,13 @@
 
 #include "catch.hpp"
 #include "date-fixed.h"
-#include <filesystem>
+#include "filesystem-fixed.h"
 #include <fstream>
 #include <map>
 #include <regex>
 #include <sstream>
 
-std::string slurp_file(const std::filesystem::path & filename) {
+std::string slurp_file(const fs::path & filename) {
     std::ifstream f;
     f.open(filename);
     if (!f) {
@@ -24,7 +24,7 @@ std::string slurp_file(const std::filesystem::path & filename) {
     return sstr.str();
 }
 
-static std::filesystem::path source_dir_path{std::filesystem::path{__FILE__}.parent_path()};
+static fs::path source_dir_path{fs::path{__FILE__}.parent_path()};
 
 /* decode strings like "30 апреля" as date::month_day.
  * Throw on error.
@@ -221,22 +221,22 @@ std::pair<std::optional<vp::JulDays_UT>, std::optional<vp::JulDays_UT>> parse_pr
             std::chrono::minutes start_h_m{h_m_from_string(match[1].str())};
             std::chrono::minutes end_h_m{h_m_from_string(match[2].str())};
             auto time_zone = date::locate_zone(timezone_name);
-            vp::JulDays_UT start_time{date::local_days{date}+start_h_m, time_zone};
-            vp::JulDays_UT end_time{date::local_days{date}+end_h_m, time_zone};
+            vp::JulDays_UT start_time{date::local_days(date)+start_h_m, time_zone};
+            vp::JulDays_UT end_time{date::local_days(date)+end_h_m, time_zone};
             return {start_time, end_time};
         }
     } else if (std::regex_search(s, match, std::regex{R"~(&gt;\s*(\d?\d:\d\d))~"})) {
         if (match.size() >= 1) {
             std::chrono::minutes start_h_m{h_m_from_string(match[1].str())};
             auto time_zone = date::locate_zone(timezone_name);
-            vp::JulDays_UT start_time{date::local_days{date}+start_h_m, time_zone};
+            vp::JulDays_UT start_time{date::local_days(date)+start_h_m, time_zone};
             return {start_time, std::nullopt};
         }
     } else if (std::regex_search(s, match, std::regex{R"~(&lt;\s*(\d?\d:\d\d))~"})) {
         if (match.size() >= 1) {
             std::chrono::minutes end_h_m{h_m_from_string(match[1].str())};
             auto time_zone = date::locate_zone(timezone_name);
-            vp::JulDays_UT end_time{date::local_days{date}+end_h_m, time_zone};
+            vp::JulDays_UT end_time{date::local_days(date)+end_h_m, time_zone};
             return {std::nullopt, end_time};
         }
     }
@@ -260,10 +260,10 @@ Precalculated_Vrata get_precalc_ekadashi(const vp::Location & location, [[maybe_
     std::optional<vp::JulDays_UT> paranam_start;
     std::optional<vp::JulDays_UT> paranam_end;
     if (is_atirikta(row_data[col+1], type)) {
-        date::year_month_day day3{date::sys_days{date} + date::days{2}};
+        date::year_month_day day3{date::sys_days(date) + date::days{2}};
         std::tie(paranam_start, paranam_end) = parse_precalc_paranam(row_data[col+2], day3, location.timezone_name);
     } else {
-        date::year_month_day day2{date::sys_days{date} + date::days{1}};
+        date::year_month_day day2{date::sys_days(date) + date::days{1}};
         std::tie(paranam_start, paranam_end) = parse_precalc_paranam(row_data[col+1], day2, location.timezone_name);
     }
     return Precalculated_Vrata{location, date, type, paranam_start, paranam_end};
@@ -271,13 +271,13 @@ Precalculated_Vrata get_precalc_ekadashi(const vp::Location & location, [[maybe_
 
 std::string join(const html::Table::Row & v, char joiner=';') {
     std::string joined;
-    bool first = true;
-    for (const auto & [col, cell]: v) {
-        if (!first) {
+    bool first_string = true;
+    for (const auto & pair : v) {
+        if (!first_string) {
             joined += joiner;
         }
-        first = false;
-        joined += cell;
+        first_string = false;
+        joined += pair.second;
     }
     return joined;
 }

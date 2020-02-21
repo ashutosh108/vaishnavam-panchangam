@@ -214,11 +214,11 @@ void check_atirikta_at_location(const char * name, const Location & location, co
 
     auto zoned_paran_start = actual_vrata.paran.paran_start->as_zoned_time(time_zone_at_location);
     auto local_days_paran_start = date::floor<date::days>(zoned_paran_start.get_local_time());
-    CHECK(date::local_days{actual_vrata.date} + date::days{2} == local_days_paran_start);
+    CHECK(date::local_days(actual_vrata.date) + date::days{2} == local_days_paran_start);
 
     auto zoned_paran_end = date::make_zoned(time_zone_at_location, actual_vrata.paran.paran_end->as_sys_time());
     auto local_days_paran_end = date::floor<date::days>(zoned_paran_end.get_local_time());
-    CHECK(date::local_days{actual_vrata.date} + date::days{2} == local_days_paran_end);
+    CHECK(date::local_days(actual_vrata.date) + date::days{2} == local_days_paran_end);
 
     // 3. TODO: Paran_start must match sunrise
     // 4. TODO: Paran_end must match dvadashi_end

@@ -2,7 +2,7 @@
 #define VP_SRC_TEXT_INTERFACE_H
 
 #include <chrono>
-#include <filesystem>
+#include "filesystem-fixed.h"
 #include <iostream>
 #include <optional>
 
@@ -36,8 +36,8 @@ private:
 
 namespace detail {
 
-std::filesystem::path determine_exe_dir(const char* argv0);
-std::filesystem::path determine_working_dir(const char* argv0);
+fs::path determine_exe_dir(const char* argv0);
+fs::path determine_working_dir(const char* argv0);
 
 } // namespace detail
 

@@ -1,12 +1,11 @@
 #include "text-interface.h"
 
-#include <cstring>
-#include <filesystem>
-#include <iomanip>
-#include <iostream>
-
 #include "calc.h"
 #include "vrata_detail.h"
+
+#include <cstring>
+#include <iomanip>
+#include <iostream>
 
 using namespace vp;
 
@@ -164,13 +163,11 @@ void calc_all(date::year_month_day d, std::ostream &o) {
 }
 
 namespace detail {
-    std::filesystem::path determine_exe_dir(const char* argv0) {
-        namespace fs = std::filesystem;
+    fs::path determine_exe_dir(const char* argv0) {
         return fs::absolute(fs::path{argv0}).parent_path();
     }
 
-    std::filesystem::path determine_working_dir(const char* argv0) {
-        namespace fs = std::filesystem;
+    fs::path determine_working_dir(const char* argv0) {
         auto exe_dir = detail::determine_exe_dir(argv0);
 
         constexpr int max_steps_up = 2;
@@ -195,7 +192,7 @@ namespace detail {
 void change_to_data_dir(const char* argv0)
 {
     auto working_dir = detail::determine_working_dir(argv0);
-    std::filesystem::current_path(working_dir);
+    fs::current_path(working_dir);
 }
 
 std::string version()

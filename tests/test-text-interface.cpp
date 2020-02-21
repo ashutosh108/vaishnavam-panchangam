@@ -2,7 +2,6 @@
 
 #include <array>
 #include "catch.hpp"
-#include <filesystem>
 
 TEST_CASE("get_exe_dir() exists and returns something") {
     auto exe_dir = vp::text_ui::detail::determine_exe_dir("imaginary/path/to/exe/file");

@@ -116,7 +116,7 @@ TEST_CASE("Pretty-print zoned time") {
 }
 
 TEST_CASE("Can create Juldays_UT from local hh:mm") {
-    date::local_time<double_days> local = date::local_days{2019_y/January/1} + std::chrono::hours{3} + std::chrono::minutes{15};
+    date::local_time<double_days> local = date::local_days(2019_y/January/1) + std::chrono::hours{3} + std::chrono::minutes{15};
     JulDays_UT jd{local, date::locate_zone("Europe/Moscow")};
     // 0.25 means 00:15am UTC which correposnds to 03:15 Moscow local time
     REQUIRE(JulDays_UT{2019_y/January/1, double_hours{0.25}} == jd);
