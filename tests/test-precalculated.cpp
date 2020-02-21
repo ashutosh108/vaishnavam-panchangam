@@ -128,8 +128,9 @@ struct Precalculated_Vrata {
         UNSCOPED_INFO("comparing: " << date << "<=>" << other.vrata.date << "; "
                       << location.name << "<=>" << other.location.name << "; "
                       << type << "<=>" << other.vrata.type);
-        if (date != other.vrata.date || location != other.location
-                || type != other.vrata.type) return false;
+        if (date != other.vrata.date || location != other.location) return false;
+        // allow mismatch between vrata types when precalc is Ekadashi and now-calc is Sandigdha_Ekadashi
+        if (type != other.vrata.type && !(type==vp::Vrata_Type::Ekadashi && other.vrata.type == vp::Vrata_Type::Sandigdha_Ekadashi)) return false;
         if (other.vrata.paran.type == vp::Paran::Type::Standard) {
             UNSCOPED_INFO("paranam_start=" << paranam_start << ", end=" << paranam_end);
             // in case of standard paranam, start and end time must not be set
@@ -657,16 +658,16 @@ TEST_CASE("precalculated ekAdashIs") {
             {vp::petropavlovskkamchatskiy_coord, {{Fix::ParanStartTime, "10:28", "2018-01-13 10:31"}}},
             {vp::murmansk_coord, {{Fix::Skip, "", ""}}}, // TODO: fix calculations for no sunrise cases
         });
-//    test_one_precalculated_table_slug("2018-01-23",
-//        {
-//            {vp::kophangan_coord,
-//                {{Fix::ParanStartTime, "06:45", "2018-01-29 06:46"},
-//                 {Fix::ParanEndTime, "06:47", "2018-01-29 06:48"}}},
-//            {vp::habarovsk_coord,
-//                {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
-//            {vp::vladivostok_coord,
-//                {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
-//        });
+    test_one_precalculated_table_slug("2018-01-23",
+        {
+            {vp::kophangan_coord,
+                {{Fix::ParanStartTime, "06:45", "2018-01-29 06:46"},
+                 {Fix::ParanEndTime, "06:47", "2018-01-29 06:48"}}},
+            {vp::habarovsk_coord,
+                {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
+            {vp::vladivostok_coord,
+                {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
+        });
 //    test_one_precalculated_table_slug("2018-01-30");
 //    test_one_precalculated_table_slug("2018-02-08");
 //    test_one_precalculated_table_slug("2018-02-24");
