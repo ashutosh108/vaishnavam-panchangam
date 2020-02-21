@@ -2,6 +2,7 @@
 #define LOCATION_H
 
 #include <cstring>
+#include <string_view>
 #include <tuple>
 
 namespace vp {
