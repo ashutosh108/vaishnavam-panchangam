@@ -670,9 +670,9 @@ TEST_CASE("precalculated ekAdashIs") {
         });
 //    test_one_precalculated_table_slug("2018-02-08"); // TODO: fix joined ekAdashI/atiriktA cells
     test_one_precalculated_table_slug("2018-02-24");
-//    test_one_precalculated_table_slug("2018-03-10");
-//    test_one_precalculated_table_slug("2018-03-17");
-//    test_one_precalculated_table_slug("2018-03-23");
+//    test_one_precalculated_table_slug("2018-03-10"); // TODO: support shravaNA dvAdashI
+//    test_one_precalculated_table_slug("2018-03-17"); // TODO: support non-ekAdashI tables (chAndra-yugAdi etc)
+    test_one_precalculated_table_slug("2018-03-23");
 //    test_one_precalculated_table_slug("2018-04-09");
 //    test_one_precalculated_table_slug("2018-04-24");
 //    test_one_precalculated_table_slug("2018-05-09");
