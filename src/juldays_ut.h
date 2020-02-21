@@ -39,8 +39,8 @@ public:
     bool operator >(JulDays_UT const &other) const;
     bool operator >=(JulDays_UT const &other) const;
     bool operator !=(JulDays_UT const &other) const;
-    JulDays_UT round_to_minute_up() const;
-    JulDays_UT round_to_minute_down() const;
+    date::sys_seconds round_to_minute_up() const;
+    date::sys_seconds round_to_minute_down() const;
     date::zoned_time<double_days> as_zoned_time(const date::time_zone * time_zone) const;
     date::zoned_time<std::chrono::seconds> as_zoned_time_rounded_to_seconds(const date::time_zone * time_zone) const;
 private:

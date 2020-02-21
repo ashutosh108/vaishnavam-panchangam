@@ -107,18 +107,37 @@ TEST_CASE("get_ekadashi_name works") {
     REQUIRE(get_ekadashi_name(", Варӯтӿинӣ экāдащӣ, ") == "Варӯтӿинӣ");
 }
 
+std::ostream & operator<<(std::ostream & s, const std::optional<date::sys_seconds> & t) {
+    if (t) {
+        s << date::format("%Y-%m-%d %H:%M:%S %Z", *t);
+    } else {
+        s << "unspecified";
+    }
+    return s;
+}
+
+std::string to_str(const std::optional<date::sys_seconds> t) {
+    std::stringstream s;
+    if (t) {
+        s << date::format("%Y-%m-%d %H:%M:%S %Z", *t);
+    } else {
+        s << "unspecified";
+    }
+    return s.str();
+}
+
 struct Precalculated_Vrata {
     date::year_month_day date;
     vp::Vrata_Type type;
     vp::Location location;
-    std::optional<vp::JulDays_UT> paranam_start;
-    std::optional<vp::JulDays_UT> paranam_end;
+    std::optional<date::sys_seconds> paranam_start;
+    std::optional<date::sys_seconds> paranam_end;
     bool skip = false;
     Precalculated_Vrata(vp::Location location_,
                         date::year_month_day date_,
                         vp::Vrata_Type type_ = vp::Vrata_Type::Ekadashi,
-                        std::optional<vp::JulDays_UT> paranam_start_ = std::nullopt,
-                        std::optional<vp::JulDays_UT> paranam_end_ = std::nullopt)
+                        std::optional<date::sys_seconds> paranam_start_ = std::nullopt,
+                        std::optional<date::sys_seconds> paranam_end_ = std::nullopt)
         : date(date_),
           type(type_),
           location(location_),
@@ -127,12 +146,14 @@ struct Precalculated_Vrata {
     bool operator==(const vp::Vrata_Detail & other) const {
         UNSCOPED_INFO("comparing: " << date << "<=>" << other.vrata.date << "; "
                       << location.name << "<=>" << other.location.name << "; "
-                      << type << "<=>" << other.vrata.type);
+                      << type << "<=>" << other.vrata.type << "; "
+                      << to_str(paranam_start) << "<=>" << other.vrata.paran.paran_start << "; "
+                      << to_str(paranam_end) << "<=>" << other.vrata.paran.paran_end);
         if (date != other.vrata.date || location != other.location) return false;
         // allow mismatch between vrata types when precalc is Ekadashi and now-calc is Sandigdha_Ekadashi
         if (type != other.vrata.type && !(type==vp::Vrata_Type::Ekadashi && other.vrata.type == vp::Vrata_Type::Sandigdha_Ekadashi)) return false;
         if (other.vrata.paran.type == vp::Paran::Type::Standard) {
-            UNSCOPED_INFO("paranam_start=" << paranam_start << ", end=" << paranam_end);
+            UNSCOPED_INFO("paranam_start=" << to_str(paranam_start) << ", end=" << to_str(paranam_end));
             // in case of standard paranam, start and end time must not be set
             return !paranam_start && !paranam_end;
         }
@@ -146,7 +167,7 @@ struct Precalculated_Vrata {
             if (!other.vrata.paran.paran_start) return false; // now-calculated paran must have start time
 
             auto other_rounded = other.vrata.paran.paran_start->round_to_minute_up();
-            return *paranam_start == other_rounded;
+            return paranam_start.value() == other_rounded;
         }
         if (other.vrata.paran.type == vp::Paran::Type::Puccha_Dvadashi || other.vrata.paran.type == vp::Paran::Type::Until_Dvadashi_End) {
             UNSCOPED_INFO("paran type: " << other.vrata.paran.type);
@@ -158,8 +179,10 @@ struct Precalculated_Vrata {
             auto other_rounded = other.vrata.paran.paran_end->round_to_minute_down();
             return *paranam_end == other_rounded;
         }
-        UNSCOPED_INFO("paranam comparison: start " << paranam_start << " <=> " << other.vrata.paran.paran_start->round_to_minute_up()
-                      << "\nend " << paranam_end << " <=> " << other.vrata.paran.paran_end->round_to_minute_down());
+        UNSCOPED_INFO("paranam comparison: start " << to_str(paranam_start) << " <=> " << date::format("%F %T %Z", other.vrata.paran.paran_start->round_to_minute_up())
+                      << "\nend " << to_str(paranam_end) << " <=> " << date::format("%F %T %Z", other.vrata.paran.paran_end->round_to_minute_down()));
+        UNSCOPED_INFO("end result: " << (paranam_start == other.vrata.paran.paran_start.value().round_to_minute_up() &&
+                                         paranam_end == other.vrata.paran.paran_end.value().round_to_minute_down()));
         return paranam_start == other.vrata.paran.paran_start.value().round_to_minute_up() &&
                 paranam_end == other.vrata.paran.paran_end.value().round_to_minute_down();
     }
@@ -178,67 +201,89 @@ std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v) {
     auto z = date::locate_zone(v.location.timezone_name);
     s << ", pAraNam: ";
     if (v.paranam_start) {
-        s << v.paranam_start->as_zoned_time_rounded_to_seconds(z);
+        s << date::make_zoned(z, *v.paranam_start);
     } else {
         s << "unspecified";
     }
     s << "..";
     if (v.paranam_end) {
-         s << v.paranam_end->as_zoned_time_rounded_to_seconds(z);
+         s << date::make_zoned(z, *v.paranam_end);
     } else {
         s << "unspecified";
     }
     return s;
 }
 
-std::chrono::minutes h_m_from_string(const std::string & s) {
+std::chrono::seconds h_m_s_from_string(const std::string & s) {
+    using namespace std::chrono_literals;
     std::istringstream stream{s};
-    std::chrono::minutes h_m;
-    stream >> date::parse("%H:%M", h_m);
+    std::chrono::seconds h_m_s;
+    stream >> date::parse("%H:%M", h_m_s);
     if (!stream.good()) {
+        error:
         throw std::runtime_error{"can't parse '" + s + "' as HH:MM"};
     }
-    return h_m;
+
+    // if there are more characters to read, they must be ":SS"
+    if (stream.rdbuf()->in_avail() != 0) {
+        std::chrono::seconds sec;
+        stream >> date::parse(":%S", sec);
+        if (!stream.good() || stream.rdbuf()->in_avail() != 0) {
+            goto error;
+        }
+        h_m_s += sec;
+    }
+    if (h_m_s >= 24h) {
+        throw std::runtime_error("HH:MM[:SS] is 24 hours or more: '" + s + "'");
+    }
+    return h_m_s;
 }
 
 TEST_CASE("h_m_from_string works for basic cases") {
     using namespace std::string_literals;
     using namespace std::chrono;
-    REQUIRE(hours{0} + minutes{0} == h_m_from_string("0:00"s));
-    REQUIRE(hours{0} + minutes{0} == h_m_from_string("00:00"s));
-    REQUIRE(hours{23} + minutes{45} == h_m_from_string("23:45"s));
-    REQUIRE(hours{23} + minutes{59} == h_m_from_string("23:59"s));
+    REQUIRE(hours{0} + minutes{0} == h_m_s_from_string("0:00"s));
+    REQUIRE(hours{0} + minutes{0} == h_m_s_from_string("00:00"s));
+    REQUIRE(hours{23} + minutes{45} == h_m_s_from_string("23:45"s));
+    REQUIRE(hours{23} + minutes{59} == h_m_s_from_string("23:59"s));
+    REQUIRE(hours{23} + minutes{45} == h_m_s_from_string("23:45:00"s));
+    REQUIRE(23h + 45min + 15s == h_m_s_from_string("23:45:15"s));
+    REQUIRE(23h + 45min + 59s == h_m_s_from_string("23:45:59"s));
+    REQUIRE(hours{23} + minutes{59} == h_m_s_from_string("23:59"s));
+    // 24hours or more should throw:
+    REQUIRE_THROWS(h_m_s_from_string("24:00"));
+    REQUIRE_THROWS(h_m_s_from_string("36:15"));
 }
 
-
-std::pair<std::optional<vp::JulDays_UT>, std::optional<vp::JulDays_UT>> parse_precalc_paranam(std::string s, date::year_month_day date, const char * timezone_name) {
+std::pair<std::optional<date::sys_seconds>, std::optional<date::sys_seconds>> parse_precalc_paranam(std::string s, date::year_month_day date, const char * timezone_name) {
     using namespace date;
-    if (s == "*") {
-        return {{}, {}};
-    }
     std::smatch match;
-    if (std::regex_search(s, match, std::regex{R"~((\d?\d:\d\d)\s*(?:-|—)\s*(\d?\d:\d\d))~"})) {
+    // "*" alone or "*;" followed by other descriptions
+    if (std::regex_search(s, match, std::regex{R"~(^\*($|[;,]\s+))~"})) {
+        return {{}, {}};
+    } else if (std::regex_search(s, match, std::regex{R"regex(^(?:!\s+)?(\d?\d:\d\d(?::\d\d)?)\s*(?:-|—)\s*(\d?\d:\d\d(?::\d\d)?)$)regex"})) {
         if (match.size() >= 2) {
-            std::chrono::minutes start_h_m{h_m_from_string(match[1].str())};
-            std::chrono::minutes end_h_m{h_m_from_string(match[2].str())};
+            auto start_h_m_s{h_m_s_from_string(match[1].str())};
+            auto end_h_m_s{h_m_s_from_string(match[2].str())};
             auto time_zone = date::locate_zone(timezone_name);
-            vp::JulDays_UT start_time{date::local_days(date)+start_h_m, time_zone};
-            vp::JulDays_UT end_time{date::local_days(date)+end_h_m, time_zone};
-            return {start_time, end_time};
+            auto start_zoned = date::make_zoned(time_zone, date::local_days(date) + start_h_m_s);
+            auto end_zoned = date::make_zoned(time_zone, date::local_days(date) + end_h_m_s);
+            return {start_zoned.get_sys_time(), end_zoned.get_sys_time()};
         }
     } else if (std::regex_search(s, match, std::regex{R"~(&gt;\s*(\d?\d:\d\d))~"})) {
         if (match.size() >= 1) {
-            std::chrono::minutes start_h_m{h_m_from_string(match[1].str())};
+            auto start_h_m_s{h_m_s_from_string(match[1].str())};
             auto time_zone = date::locate_zone(timezone_name);
-            vp::JulDays_UT start_time{date::local_days(date)+start_h_m, time_zone};
-            return {start_time, std::nullopt};
+            auto start_zoned = date::make_zoned(time_zone, date::local_days(date) + start_h_m_s);
+            vp::JulDays_UT start_time{date::local_days(date)+start_h_m_s, time_zone};
+            return {start_zoned.get_sys_time(), std::nullopt};
         }
     } else if (std::regex_search(s, match, std::regex{R"~(&lt;\s*(\d?\d:\d\d))~"})) {
         if (match.size() >= 1) {
-            std::chrono::minutes end_h_m{h_m_from_string(match[1].str())};
+            auto end_h_m_s{h_m_s_from_string(match[1].str())};
             auto time_zone = date::locate_zone(timezone_name);
-            vp::JulDays_UT end_time{date::local_days(date)+end_h_m, time_zone};
-            return {std::nullopt, end_time};
+            auto end_zoned = date::make_zoned(time_zone, date::local_days(date) + end_h_m_s);
+            return {std::nullopt, end_zoned.get_sys_time()};
         }
     }
     throw std::runtime_error("can't parse paran time '" + s + "'");
@@ -258,8 +303,8 @@ bool is_atirikta(std::string cell_text, /*out*/ vp::Vrata_Type & type) {
 Precalculated_Vrata get_precalc_ekadashi(const vp::Location & location, [[maybe_unused]] html::Table::Row & row_data, [[maybe_unused]] std::size_t col, [[maybe_unused]] const std::string & ekadashi_name, date::year_month_day date) {
     // TODO: extract vrata type and pAraNam time.
     vp::Vrata_Type type {vp::Vrata_Type::Ekadashi};
-    std::optional<vp::JulDays_UT> paranam_start;
-    std::optional<vp::JulDays_UT> paranam_end;
+    std::optional<date::sys_seconds> paranam_start;
+    std::optional<date::sys_seconds> paranam_end;
     if (is_atirikta(row_data[col+1], type)) {
         date::year_month_day day3{date::sys_days(date) + date::days{2}};
         std::tie(paranam_start, paranam_end) = parse_precalc_paranam(row_data[col+2], day3, location.timezone_name);
@@ -352,7 +397,7 @@ vp::Location find_location_by_name_rus(const std::string & name) {
         { "Краснодар", vp::krasnodar_coord },
         { "Meadow Lake", vp::meadowlake_coord },
         { "Торонто", vp::toronto_coord },
-        { "Фредериктон", vp::frederikton_coord },
+        { "Фредериктон", vp::fredericton_coord },
         { "Пермь", vp::perm_coord },
         { "Уфа", vp::ufa_coord },
         { "Смоленск", vp::smolensk_coord },
@@ -489,8 +534,8 @@ TEST_CASE("precalc parsing: 2. standard ekAdashI with 'start-end' pAraNam") {
                 "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>6:07 - 6:08", 2019_y);
     REQUIRE(vratas.size() == 1);
     // 5:30 is indian timezone shift from UTC
-    vp::JulDays_UT paran_start{2019_y/January/2, std::chrono::hours{6} + std::chrono::minutes{7} - std::chrono::minutes{5*60+30}};
-    vp::JulDays_UT paran_end{2019_y/January/2, std::chrono::hours{6} + std::chrono::minutes{8} - std::chrono::minutes{5*60+30}};
+    date::sys_seconds paran_start{date::sys_days(2019_y/January/2) + std::chrono::hours{6} + std::chrono::minutes{7} - std::chrono::minutes{5*60+30}};
+    date::sys_seconds paran_end{date::sys_days(2019_y/January/2) + std::chrono::hours{6} + std::chrono::minutes{8} - std::chrono::minutes{5*60+30}};
     Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1, vp::Vrata_Type::Ekadashi, paran_start, paran_end};
     REQUIRE(expected == vratas[0]);
 }
@@ -502,9 +547,8 @@ TEST_CASE("precalc parsing: 3. standard ekAdashI with '> start' pAraNam") {
                 "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>&gt;6:07", 2019_y);
     REQUIRE(vratas.size() == 1);
     // 5:30 is indian timezone shift from UTC
-    vp::JulDays_UT paran_start{2019_y/January/2, std::chrono::hours{6} + std::chrono::minutes{7} - std::chrono::minutes{5*60+30}};
-    std::optional<vp::JulDays_UT> paran_end{};
-    Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1, vp::Vrata_Type::Ekadashi, paran_start, paran_end};
+    date::sys_seconds paran_start{date::sys_days(2019_y/January/2) + std::chrono::hours{6} + std::chrono::minutes{7} - std::chrono::minutes{5*60+30}};
+    Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1, vp::Vrata_Type::Ekadashi, paran_start, {}};
     REQUIRE(expected == vratas[0]);
 }
 
@@ -515,9 +559,8 @@ TEST_CASE("precalc parsing: 4. standard ekAdashI with '< end' pAraNam") {
                 "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>&lt;6:08", 2019_y);
     REQUIRE(vratas.size() == 1);
     // 5:30 is indian timezone shift from UTC
-    std::optional<vp::JulDays_UT> paran_start{};
-    vp::JulDays_UT paran_end{2019_y/January/2, std::chrono::hours{6} + std::chrono::minutes{8} - std::chrono::minutes{5*60+30}};
-    Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1, vp::Vrata_Type::Ekadashi, paran_start, paran_end};
+    date::sys_seconds paran_end{date::sys_days(2019_y/January/2) + std::chrono::hours{6} + std::chrono::minutes{8} - std::chrono::minutes{5*60+30}};
+    Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1, vp::Vrata_Type::Ekadashi, {}, paran_end};
     REQUIRE(expected == vratas[0]);
 }
 
@@ -562,7 +605,7 @@ enum class Round { Up, Down };
 
 typedef void (vp::JulDays_UT::*Rounder)(void);
 
-void replace_time(std::optional<vp::JulDays_UT> & time, const std::string & from_str, const std::string & to_str, const char * timezone_name) {
+void replace_time(std::optional<date::sys_seconds> & time, const std::string & from_str, const std::string & to_str, const char * timezone_name) {
     if (!time && from_str != "unspecified") {
         throw std::runtime_error("can't fix time from " + from_str + " to " + to_str + ": it's empty");
     }
@@ -570,22 +613,26 @@ void replace_time(std::optional<vp::JulDays_UT> & time, const std::string & from
     if (from_str == "unspecified") {
         if (time) {
             std::stringstream s;
-            s << "can't fix time from " << from_str << " to " << to_str << ": it's not unspecified but is " << *time << " instead";
+            s << "can't fix time from " << from_str << " to " << to_str << ": it's not unspecified but is " << date::format("%Y-%m-%d %T %Z", *time) << " instead";
             throw std::runtime_error(s.str());
         }
     } else {
-        auto existing_zoned = time->as_zoned_time_rounded_to_seconds(time_zone);
-        auto existing_h_m = date::format("%H:%M", existing_zoned);
+        auto existing_zoned = date::make_zoned(time_zone, time.value());
+        auto existing_h_m = date::format("%H:%M:%S", existing_zoned);
         if (existing_h_m != from_str) {
             std::stringstream s;
-            s << "can't replace " << from_str << "=>" << to_str <<  " in " << existing_zoned << ": HH:MM do not match";
+            s << "can't replace " << from_str << "=>" << to_str <<  " in " << existing_zoned << ": HH:MM:SS do not match";
             throw std::runtime_error(s.str());
         }
     }
-    auto new_local_time = local_from_y_m_d_h_m(to_str);
-    auto new_zoned_time = date::make_zoned(time_zone, new_local_time);
-    auto new_sys_time{new_zoned_time.get_sys_time()};
-    time = vp::JulDays_UT{new_sys_time};
+    if (to_str == "unspecified") {
+        time = std::nullopt;
+    } else {
+        auto new_local_time = local_from_y_m_d_h_m(to_str);
+        auto new_zoned_time = date::make_zoned(time_zone, new_local_time);
+        auto new_sys_time{new_zoned_time.get_sys_time()};
+        time = new_sys_time;
+    }
 }
 
 
@@ -637,7 +684,7 @@ TEST_CASE("precalculated ekAdashIs") {
     test_one_precalculated_table_slug(
         "2017-11-12",
         {
-            {vp::murmansk_coord, {{Fix::ParanStartTime, "10:30", "2017-11-15 10:36"}}},
+            {vp::murmansk_coord, {{Fix::ParanStartTime, "10:30:00", "2017-11-15 10:36"}}},
             {vp::riga_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}},
             {vp::yurmala_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}}
         });
@@ -645,7 +692,7 @@ TEST_CASE("precalculated ekAdashIs") {
         "2017-11-27",
         {
             {vp::murmansk_coord, {{Fix::Skip, "", ""}}}, // TODO: fix calculations for no sunrise cases
-            {vp::london_coord, {{Fix::ParanStartTime, "09:24", "2017-11-30 09:23"}}},
+            {vp::london_coord, {{Fix::ParanStartTime, "09:24:00", "2017-11-30 09:23"}}},
         });
 //    test_one_precalculated_table_slug("2017-12-11"); // TODO: fix joined ekAdashI/atiriktA cells
     test_one_precalculated_table_slug("2017-12-26",
@@ -655,26 +702,36 @@ TEST_CASE("precalculated ekAdashIs") {
     test_one_precalculated_table_slug(
         "2018-01-10",
         {
-            {vp::petropavlovskkamchatskiy_coord, {{Fix::ParanStartTime, "10:28", "2018-01-13 10:31"}}},
+            {vp::petropavlovskkamchatskiy_coord, {{Fix::ParanStartTime, "10:28:00", "2018-01-13 10:31"}}},
             {vp::murmansk_coord, {{Fix::Skip, "", ""}}}, // TODO: fix calculations for no sunrise cases
         });
     test_one_precalculated_table_slug("2018-01-23",
         {
             {vp::kophangan_coord,
-                {{Fix::ParanStartTime, "06:45", "2018-01-29 06:46"},
-                 {Fix::ParanEndTime, "06:47", "2018-01-29 06:48"}}},
+                {{Fix::ParanStartTime, "06:45:00", "2018-01-29 06:46"},
+                 {Fix::ParanEndTime, "06:47:00", "2018-01-29 06:48"}}},
             {vp::habarovsk_coord,
-                {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
+                {{Fix::ParanEndTime, "09:47:00", "2018-01-29 09:48"}}},
             {vp::vladivostok_coord,
-                {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
+                {{Fix::ParanEndTime, "09:47:00", "2018-01-29 09:48"}}},
         });
-//    test_one_precalculated_table_slug("2018-02-08"); // TODO: fix joined ekAdashI/atiriktA cells
+//    test_one_precalculated_table_slug("2018-02-08"); // TODO: support joined ekAdashI/atiriktA cells
     test_one_precalculated_table_slug("2018-02-24");
 //    test_one_precalculated_table_slug("2018-03-10"); // TODO: support shravaNA dvAdashI
 //    test_one_precalculated_table_slug("2018-03-17"); // TODO: support non-ekAdashI tables (chAndra-yugAdi etc)
     test_one_precalculated_table_slug("2018-03-23");
-//    test_one_precalculated_table_slug("2018-04-09");
-//    test_one_precalculated_table_slug("2018-04-24");
+//    test_one_precalculated_table_slug("2018-04-09"); // TODO: support joined ekAdashI/atiriktA cells
+    test_one_precalculated_table_slug("2018-04-24",
+        {
+            {vp::kremenchug_coord,
+             // case manually verified by Ashutosha on 2020-02-21 and confirmed by Narasimha:
+             // the reason for difference is the underlying data difference. Old Panchangam gives sunrise < dvadashi_end
+             // (thus brief interval of pAraNam in dvAdashI puccha), and new data are sunrise > dvadashi, so standard pAraNam.
+             {{Fix::ParanStartTime, "05:36:30", "unspecified"},
+              {Fix::ParanEndTime, "05:37:00", "unspecified"}}},
+            {vp::fredericton_coord,
+              {{Fix::ParanStartTime, "06:32:00", "2018-04-26 06:33"}}},
+        });
 //    test_one_precalculated_table_slug("2018-05-09");
 //    test_one_precalculated_table_slug("2018-05-14_adhimaasa");
 //    test_one_precalculated_table_slug("2018-05-23");

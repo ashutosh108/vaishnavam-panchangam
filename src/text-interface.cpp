@@ -88,7 +88,7 @@ const std::vector<Location> &LocationDb::locations() {
         { barcelona_coord },
         { madrid_coord },
         { london_coord },
-        { frederikton_coord },
+        { fredericton_coord },
         { toronto_coord },
         { miami_coord },
         { cancun_coord },

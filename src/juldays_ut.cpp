@@ -150,16 +150,14 @@ double_days operator -(const JulDays_UT &t1, const JulDays_UT &t2)
     return t1.raw_julian_days_ut() - t2.raw_julian_days_ut();
 }
 
-JulDays_UT JulDays_UT::round_to_minute_up() const
+date::sys_seconds JulDays_UT::round_to_minute_up() const
 {
-    auto rounded_sys = date::ceil<std::chrono::minutes>(as_sys_time());
-    return JulDays_UT{rounded_sys};
+    return date::ceil<std::chrono::minutes>(as_sys_time());
 }
 
-JulDays_UT JulDays_UT::round_to_minute_down() const
+date::sys_seconds JulDays_UT::round_to_minute_down() const
 {
-    auto rounded_sys = date::floor<std::chrono::minutes>(as_sys_time());
-    return JulDays_UT{rounded_sys};
+    return date::floor<std::chrono::minutes>(as_sys_time());
 }
 
 date::zoned_time<double_days> JulDays_UT::as_zoned_time(const date::time_zone * time_zone) const

@@ -140,9 +140,9 @@ TEST_CASE("round_to_minute_up() works") {
     std::pair pair1{3h+5min+1s, 3h+6min};
     std::pair pair2{0h+0min+0s, 0h+0min};
     std::pair pair3{22h+59min+59s, 23h+0min};
-    REQUIRE(JulDays_UT{date, pair1.second} == JulDays_UT{date, pair1.first}.round_to_minute_up());
-    REQUIRE(JulDays_UT{date, pair2.second} == JulDays_UT{date, pair2.first}.round_to_minute_up());
-    REQUIRE(JulDays_UT{date, pair3.second} == JulDays_UT{date, pair3.first}.round_to_minute_up());
+    REQUIRE(date::sys_days(date) + pair1.second == JulDays_UT{date, pair1.first}.round_to_minute_up());
+    REQUIRE(date::sys_days(date) + pair2.second == JulDays_UT{date, pair2.first}.round_to_minute_up());
+    REQUIRE(date::sys_days(date) + pair3.second == JulDays_UT{date, pair3.first}.round_to_minute_up());
 }
 
 TEST_CASE("round_to_minute_down() works") {
@@ -151,7 +151,7 @@ TEST_CASE("round_to_minute_down() works") {
     std::pair pair1{3h+5min+1s, 3h+5min};
     std::pair pair2{0h+0min+0s, 0h+0min};
     std::pair pair3{22h+59min+59s, 22h+59min};
-    REQUIRE(JulDays_UT{date, pair1.second} == JulDays_UT{date, pair1.first}.round_to_minute_down());
-    REQUIRE(JulDays_UT{date, pair2.second} == JulDays_UT{date, pair2.first}.round_to_minute_down());
-    REQUIRE(JulDays_UT{date, pair3.second} == JulDays_UT{date, pair3.first}.round_to_minute_down());
+    REQUIRE(date::sys_days{date} + pair1.second == JulDays_UT{date, pair1.first}.round_to_minute_down());
+    REQUIRE(date::sys_days(date) + pair2.second == JulDays_UT{date, pair2.first}.round_to_minute_down());
+    REQUIRE(date::sys_days(date) + pair3.second == JulDays_UT{date, pair3.first}.round_to_minute_down());
 }

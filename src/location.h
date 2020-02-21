@@ -107,7 +107,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location krasnodar_coord{"Krasnodar", 45, 2, 0, 38, 59, 0, "Europe/Moscow"};
 [[maybe_unused]] constexpr Location meadowlake_coord{"Meadow Lake, Canada", 54, 7, 0, -108, -26, 0, "America/Regina"};
 [[maybe_unused]] constexpr Location toronto_coord{"Toronto", 42, 43, 0, -79, -24, 0, "America/New_York"};
-[[maybe_unused]] constexpr Location frederikton_coord{"Fredericton", 45, 57, 0, -66, -38, 0, "America/Moncton"};
+[[maybe_unused]] constexpr Location fredericton_coord{"Fredericton", 45, 57, 0, -66, -38, 0, "America/Moncton"};
 [[maybe_unused]] constexpr Location perm_coord{"Perm", 58, 0, 0, 56, 14, 0, "Asia/Yekaterinburg"};
 [[maybe_unused]] constexpr Location ufa_coord{"Ufa", 54, 44, 0, 55, 58, 0, "Asia/Yekaterinburg"};
 [[maybe_unused]] constexpr Location smolensk_coord{"Smolensk", 54, 46, 0, 32, 2, 0, "Europe/Moscow"};

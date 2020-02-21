@@ -1,4 +1,4 @@
-[ ] gcc 7.4 on Linux: why test-main emits lots and lots of empty "\r\n" lines?
+[ ] gcc 7.4 on Linux: why test-main emits lots and lots of empty "\r\n" lines to stderr?
 [ ] precalc: allow colspan=2 cells with combined description of ekAdashI and atiriktA dvAdashI, like 2017-12-11 kophangan
 [ ] print tithi length in details (at the beginning of tithi?)
 [ ] no suryodaya case (like december in Murmansk): decrease latitude until we get all necessary sunrises, print message that vrata is printed for alternative location.

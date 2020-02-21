@@ -74,7 +74,7 @@ TEST_CASE("find_next_ekadashi_sunrise") {
     JulDays_UT start{2019_y/March/9};
     Location coord{50.45, 30.523333};
     auto sunrise = Calc{coord}.find_next_ekadashi_sunrise(start);
-    JulDays_UT expected{2019_y/March/17, 4h + 13min/* + 36.270031s*/};
+    auto expected = date::sys_days(2019_y/March/17) + 4h + 13min/* + 36.270031s*/;
     REQUIRE(sunrise.has_value());
     REQUIRE(sunrise->round_to_minute_down() == expected);
 }
@@ -93,7 +93,7 @@ TEST_CASE("get_arunodaya") {
     Location kiev{50.45, 30.523333};
     auto arunodaya = Calc{kiev}.get_arunodaya(JulDays_UT{2019_y/March/2, 4h + 45min + 58.052015s});
     REQUIRE(arunodaya.has_value());
-    REQUIRE(arunodaya->first.round_to_minute_down() == JulDays_UT{2019_y/March/2, 3h + 0min /*+ 17.512880s*/});
+    REQUIRE(arunodaya->first.round_to_minute_down() == date::sys_days(2019_y/March/2) + 3h + 0min /*+ 17.512880s*/);
 }
 
 Vrata vrata(const Calc &c, date::year_month_day base_date) {
@@ -177,7 +177,7 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(v01_atirikta_dvadashi == vrata(Calc{marsel_coord}, d)); //atirikta dvadashi   < 9:14
     REQUIRE(v01_atirikta_dvadashi == vrata(Calc{madrid_coord}, d)); //atirikta dvadashi   < 9:14
     REQUIRE(v01_atirikta_dvadashi == vrata(Calc{london_coord}, d)); //atirikta dvadashi   < 8:14
-    REQUIRE(v01_paran_after_quarter == vrata(Calc{frederikton_coord}, d));  // > 8:15
+    REQUIRE(v01_paran_after_quarter == vrata(Calc{fredericton_coord}, d));  // > 8:15
     REQUIRE(v01_paran_after_quarter == vrata(Calc{toronto_coord}, d));      // > 7:15
     REQUIRE(v01_paran_after_quarter == vrata(Calc{miami_coord}, d));       // > 7:15
     REQUIRE(v01 == vrata(Calc{meadowlake_coord}, d));
@@ -360,7 +360,7 @@ TEST_CASE("Ekadashi 2019-03-17") {
     REQUIRE(v17 == vrata(Calc{marsel_coord}, d));
     REQUIRE(v17 == vrata(Calc{madrid_coord}, d));
     REQUIRE(v17 == vrata(Calc{london_coord}, d));
-    REQUIRE(v17_paran_before == vrata(Calc{frederikton_coord}, d));
+    REQUIRE(v17_paran_before == vrata(Calc{fredericton_coord}, d));
     REQUIRE(v17_paran_before == vrata(Calc{toronto_coord}, d));
     REQUIRE(v17_paran_before == vrata(Calc{miami_coord}, d));
     Vrata v_meadowlake = vrata(Calc{meadowlake_coord}, d);
@@ -372,7 +372,7 @@ TEST_CASE("Ekadashi 2019-03-17") {
 TEST_CASE("get_next_tithi_start gives what we expect (close to the target tithi)") {
     JulDays_UT from{2019_y/March/17};
     Tithi expected_tithi{Tithi::Dvadashi_End};
-    Calc calc{frederikton_coord};
+    Calc calc{fredericton_coord};
 
     std::optional<JulDays_UT> actual_time = calc.get_next_tithi_start(from, expected_tithi);
 
