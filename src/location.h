@@ -40,12 +40,14 @@ inline bool operator!=(const Location & one, const Location & other) {
     return !(one == other);
 }
 
-inline bool operator<(const Location & one, const Location & other) {
-    bool c = std::tie(one.latitude, one.longitude) < std::tie(other.latitude, other.longitude);
-    if (c) return c;
-    int c2 = std::strcmp(one.timezone_name, other.timezone_name);
-    if (c2 < 0) return true;
-    return std::strcmp(one.name, other.name) < 0;
+inline bool operator<(const Location & one, const Location & two) {
+    std::string_view one_tz{one.timezone_name};
+    std::string_view two_tz{two.timezone_name};
+    std::string_view one_name{one.name};
+    std::string_view two_name{two.name};
+    return
+            std::tie(one.latitude, one.longitude, one_tz, one_name) <
+            std::tie(two.latitude, two.longitude, two_tz, two_name);
 }
 
 

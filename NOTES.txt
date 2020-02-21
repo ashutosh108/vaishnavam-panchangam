@@ -1,3 +1,4 @@
+[ ] gcc 7.4 on Linux: why test-main emits lots and lots of empty "\r\n" lines?
 [ ] precalc: allow colspan=2 cells with combined description of ekAdashI and atiriktA dvAdashI, like 2017-12-11 kophangan
 [ ] print tithi length in details (at the beginning of tithi?)
 [ ] no suryodaya case (like december in Murmansk): decrease latitude until we get all necessary sunrises, print message that vrata is printed for alternative location.
@@ -136,3 +137,4 @@ done:
         - 2019-12-08 04:16:16.527379 UTC (about right? ~04:16:26 in Stellarium)
         - 2019-12-09 04:13:11.999593 UTC (too low again! *wrong*)
         - 2019-12-09 04:18:05.685709 UTC (about right? ~04:18:15 in Stellarium)
+[+] fix Location "<" comparison to be consistent (AKA gcc 7.4 on Linux: why precalc test 2017-11-12 Riga fails?) [2020-02-20]
