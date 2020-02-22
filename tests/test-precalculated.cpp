@@ -807,10 +807,18 @@ TEST_CASE("precalculated ekAdashIs") {
 //    test_one_precalculated_table_slug("2018-05-14_adhimaasa"); // disabled until we learn to parse non-ekadashi tables (asdhimAsa start here)
     test_one_precalculated_table_slug("2018-05-23",
         {
-              {vp::petropavlovskkamchatskiy_coord,
-               {{Fix::ParanStartTime, "unspecified", "2018-05-26 06:16"}}},
+            {vp::petropavlovskkamchatskiy_coord,
+             {{Fix::ParanStartTime, "unspecified", "2018-05-26 06:16"}}},
         });
-//    test_one_precalculated_table_slug("2018-06-07");
+    test_one_precalculated_table_slug("2018-06-07",
+        {
+            {vp::erevan_coord,
+             {{Fix::ParanEndTime, "unspecified", "2018-06-11 08:34"}}},
+            {vp::tbilisi_coord,
+             {{Fix::ParanEndTime, "08:33:00", "unspecified"}}},
+            {vp::stavropol_coord,
+             {{Fix::ParanEndTime, "unspecified", "2018-06-11 07:34"}}},
+        });
 //    test_one_precalculated_table_slug("2018-06-21");
 //    test_one_precalculated_table_slug("2018-07-06");
 //    test_one_precalculated_table_slug("2018-07-20");
