@@ -162,7 +162,12 @@ struct Precalculated_Vrata {
         }
         if (other.vrata.paran.type == vp::Paran::Type::Standard) {
             UNSCOPED_INFO("paranam_start=" << to_str(paranam_start) << ", end=" << to_str(paranam_end));
-            UNSCOPED_INFO("in case of standard paranam, start and end time must not be set");
+            if (paranam_start) {
+                UNSCOPED_INFO("in case of standard paranam, start time must not be set");
+            }
+            if (paranam_end) {
+                UNSCOPED_INFO("in case of standard paranam, end time must not be set");
+            }
             return !paranam_start && !paranam_end;
         }
         // it must be ">HH:MM" form, check with 1-min precision
@@ -619,6 +624,7 @@ enum class Fix {
     ParanStartTime, ParanEndTime, Skip,
     AddMinutesToParanStartTimeIfExists,
     AddMinutesToParanEndTimeIfExists,
+    ParanDate,
 };
 
 struct FixItem {
@@ -683,6 +689,34 @@ void shift_time_if_exists(std::optional<date::sys_seconds> & time, const std::st
     *time += std::chrono::minutes(shift_by_min);
 }
 
+void change_paran_date(date::year_month_day & date, const std::string & from, const std::string & to) {
+    std::istringstream s_from{from};
+    date::year_month_day from_ymd;
+    s_from >> date::parse("%Y-%m-%d", from_ymd);
+    if (!s_from.good() || s_from.rdbuf()->in_avail() != 0) {
+        std::stringstream out;
+        out << date << ": can't replace '" << from << "' by '" << to << "': can't parse '" << from << "' as YYYY-MM-DD";
+        throw std::runtime_error(out.str());
+    }
+
+    std::istringstream s_to{to};
+    date::year_month_day to_ymd;
+    s_to >> date::parse("%Y-%m-%d", to_ymd);
+    if (!s_to.good() || s_to.rdbuf()->in_avail() != 0) {
+        std::stringstream out;
+        out << date << ": can't replace '" << from << "' by '" << to << "': can't parse '" << to << "' as YYYY-MM-DD";
+        throw std::runtime_error(out.str());
+    }
+
+    if (date != from_ymd) {
+        std::stringstream out;
+        out << date << ": can't replace '" << from << "' by '" << to << "': dates don't match";
+        throw std::runtime_error(out.str());
+    }
+    date = to_ymd;
+}
+
+
 void apply_vrata_fix(Precalculated_Vrata & vrata, const FixItem & fix) {
     switch (fix.type) {
     case Fix::ParanStartTime:
@@ -700,6 +734,8 @@ void apply_vrata_fix(Precalculated_Vrata & vrata, const FixItem & fix) {
     case Fix::AddMinutesToParanEndTimeIfExists:
         shift_time_if_exists(vrata.paranam_end, fix.to);
         break;
+    case Fix::ParanDate:
+        change_paran_date(vrata.date, fix.from, fix.to);
     }
     vrata.already_fixed = true;
 }
@@ -836,11 +872,18 @@ TEST_CASE("precalculated ekAdashIs") {
                     {vp::murmansk_coord,
                      {{Fix::Skip, "", ""}}}, // TODO: "no sunset" cases
                 });
-//    test_one_precalculated_table_slug(
-//                "2018-07-06", {
-//                    {vp::mirnyy_coord,
-//                     {{Fix::ParanStartTime, "5:18", "2018-07-10 06:17"}}},
-//                });
+    test_one_precalculated_table_slug(
+                "2018-07-06", {
+                    {vp::mirnyy_coord,
+                     {{Fix::ParanStartTime, "5:18", "2018-07-10 06:17"}}},
+                    {vp::habarovsk_coord,
+                     {{Fix::ParanDate, "2018-07-09", "2018-07-10"}, // date change because we consider it (barely) sandigdha, while precalc table does not
+                      {Fix::ParanStartTime, "7:18", "unspecified"}}},
+                    {vp::vladivostok_coord,
+                     {{Fix::AddMinutesToParanStartTimeIfExists, "", "-1"}}},
+                    {vp::murmansk_coord,
+                     {{Fix::Skip, "", ""}}}, // TODO: "no sunset" cases
+                });
 //    test_one_precalculated_table_slug("2018-07-20");
 //    test_one_precalculated_table_slug("2018-08-05");
 //    test_one_precalculated_table_slug("2018-08-19");
