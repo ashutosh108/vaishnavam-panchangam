@@ -117,7 +117,7 @@ const std::vector<std::string> & ekadashi_names_rus()
     return static_names;
 }
 
-bool Vrata::is_two_days() const
+bool is_atirikta(Vrata_Type type)
 {
     return type == Vrata_Type::With_Atirikta_Dvadashi || type == Vrata_Type::Sandigdha_With_Atirikta_Dvadashi
             ||

@@ -20,6 +20,8 @@ enum class Vrata_Type {
     Sandigdha_Atirikta_Ekadashi
 };
 
+bool is_atirikta(Vrata_Type t);
+
 std::ostream &operator<<(std::ostream &o, Vrata_Type const &v);
 
 struct Vrata {
@@ -35,7 +37,6 @@ struct Vrata {
         : type(_type),
           date(_date),
           paran(_paran){}
-    bool is_two_days() const;
 };
 
 bool operator==(Vrata const &, Vrata const &);
