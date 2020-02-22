@@ -11,7 +11,7 @@ struct Vrata_Detail {
     Calc calc;
     Vrata_Detail(Vrata _vrata, Location _location);
     struct NamedTimePoint {
-        const char *name;
+        std::string name;
         std::optional<JulDays_UT> time_point;
     };
 
