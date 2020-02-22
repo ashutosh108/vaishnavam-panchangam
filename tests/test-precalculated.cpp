@@ -461,7 +461,7 @@ vp::Location find_location_by_name_rus(const std::string & name) {
         { "Казань", vp::kazan_coord },
         { "Актау", vp::aktau_coord },
         { "Таллин", vp::tallin_coord },
-        { "Юрмала", vp::yurmala_coord },
+        { "Юрмала", vp::jurmala_coord },
         { "Семикаракорск", vp::semikarakorsk_coord },
         { "Colombo", vp::kolombo_coord },
         { "Ульяновск", vp::ulyanovsk_coord },
@@ -722,7 +722,7 @@ TEST_CASE("precalculated ekAdashIs") {
         {
             {vp::murmansk_coord, {{Fix::ParanStartTime, "10:30:00", "2017-11-15 10:36"}}},
             {vp::riga_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}},
-            {vp::yurmala_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}}
+            {vp::jurmala_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}}
         });
     test_one_precalculated_table_slug(
         "2017-11-27",
@@ -810,15 +810,63 @@ TEST_CASE("precalculated ekAdashIs") {
             {vp::petropavlovskkamchatskiy_coord,
              {{Fix::ParanStartTime, "unspecified", "2018-05-26 06:16"}}},
         });
-    test_one_precalculated_table_slug("2018-06-07",
-        {
-            {vp::erevan_coord,
-             {{Fix::ParanEndTime, "unspecified", "2018-06-11 08:34"}}},
-            {vp::tbilisi_coord,
-             {{Fix::ParanEndTime, "08:33:00", "unspecified"}}},
-            {vp::stavropol_coord,
-             {{Fix::ParanEndTime, "unspecified", "2018-06-11 07:34"}}},
-        });
+    test_one_precalculated_table_slug(
+                "2018-06-07", {
+                    {vp::erevan_coord,
+                     {{Fix::ParanEndTime, "unspecified", "2018-06-11 08:34"}}},
+                    {vp::tbilisi_coord,
+                     {{Fix::ParanEndTime, "08:33:00", "unspecified"}}},
+                    {vp::stavropol_coord,
+                     {{Fix::ParanEndTime, "unspecified", "2018-06-11 07:34"}}},
+                    {vp::krasnodar_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::simferopol_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::donetsk_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::staryyoskol_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::murmansk_coord,
+                     {{Fix::Skip, "", ""}}}, // TODO: handle "no sunset" cases
+                    {vp::smolensk_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::minsk_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::gomel_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::harkov_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::poltava_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::kremenchug_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::krivoyrog_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::kiev_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::nikolaev_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::odessa_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::kolomyya_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::kishinev_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::riga_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::jurmala_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::tallin_coord,
+                     {{Fix::ParanEndTime, "unspecified", "2018-06-11 07:34"}}},
+                    {vp::vilnyus_coord,
+                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                    {vp::varshava_coord,
+                     {{Fix::ParanEndTime, "06:33:00", "2018-06-11 06:34"}}},
+                    {vp::vena_coord,
+                     {{Fix::ParanEndTime, "06:33:00", "2018-06-11 06:34"}}},
+                    {vp::london_coord,
+                     {{Fix::ParanEndTime, "05:33:00", "2018-06-11 05:34"}}},
+                });
 //    test_one_precalculated_table_slug("2018-06-21");
 //    test_one_precalculated_table_slug("2018-07-06");
 //    test_one_precalculated_table_slug("2018-07-20");

@@ -169,7 +169,7 @@ TEST_CASE("Ekadashi 2019-02-28") {
     Paran paran1415{Paran::Type::From_Quarter_Dvadashi, JulDays_UT{2019_y/March/2, 12h + 14min + 40.513510s}};
     Expected_Vrata v01_paran_after_quarter{Vrata_Type::Ekadashi, 2019_y/March/1, paran1415};
     REQUIRE(v01_atirikta_ekadashi == vrata(Calc{riga_coord}, d));     // > 14:15, differs from Naarasimha's calendar
-    REQUIRE(v01_atirikta_ekadashi == vrata(Calc{yurmala_coord}, d));  // > 14:15, differs from Naarasimha's calendar
+    REQUIRE(v01_atirikta_ekadashi == vrata(Calc{jurmala_coord}, d));  // > 14:15, differs from Naarasimha's calendar
     REQUIRE(v01_atirikta_ekadashi == vrata(Calc{tallin_coord}, d));   // > 14:15, differs from Naarasimha's calendar
     REQUIRE(v01_atirikta_ekadashi == vrata(Calc{vilnyus_coord}, d));  // > 14:15, differs from Naarasimha's calendar
     REQUIRE(v01_atirikta_ekadashi == vrata(Calc{varshava_coord}, d)); // > 13:15, differs from Naarasimha's calendar
@@ -352,7 +352,7 @@ TEST_CASE("Ekadashi 2019-03-17") {
     REQUIRE(v17 == vrata(Calc{kolomyya_coord}, d));
     REQUIRE(v17 == vrata(Calc{kishinev_coord}, d));
     REQUIRE(v17 == vrata(Calc{riga_coord}, d));
-    REQUIRE(v17 == vrata(Calc{yurmala_coord}, d));
+    REQUIRE(v17 == vrata(Calc{jurmala_coord}, d));
     REQUIRE(v17 == vrata(Calc{tallin_coord}, d));
     REQUIRE(v17 == vrata(Calc{vilnyus_coord}, d));
     REQUIRE(v17 == vrata(Calc{varshava_coord}, d));
