@@ -146,10 +146,10 @@ struct Precalculated_Vrata {
           paranam_start(paranam_start_),
           paranam_end(paranam_end_) {}
     bool operator==(const vp::Vrata_Detail & other) const {
-        UNSCOPED_INFO("comparing: " << date << "<=>" << other.vrata.date << "; "
-                      << location.name << "<=>" << other.location.name << "; "
-                      << type << "<=>" << other.vrata.type << "; "
-                      << to_str(paranam_start) << "<=>" << other.vrata.paran.paran_start << "; "
+        UNSCOPED_INFO("comparing: " << date << "<=>" << other.vrata.date << ";\n"
+                      << location.name << "<=>" << other.location.name << ";\n"
+                      << type << "<=>" << other.vrata.type << ";\n"
+                      << to_str(paranam_start) << "<=>" << other.vrata.paran.paran_start << ";\n"
                       << to_str(paranam_end) << "<=>" << other.vrata.paran.paran_end);
         if (date != other.vrata.date || location != other.location) {
             UNSCOPED_INFO("dates and locations must match, but they don't");
@@ -772,7 +772,7 @@ TEST_CASE("precalculated ekAdashIs") {
     test_one_precalculated_table_slug(
                 "2018-01-23", {
                     {vp::kophangan_coord,
-                        {{Fix::ParanStartTime, "06:45", "2018-01-29 06:46"},
+                        {{Fix::AddMinutesToParanStartTimeIfExists, "", "+1"},
                          {Fix::AddMinutesToParanEndTimeIfExists, "", "+1"}}},
                     {all_coord,
                         {{Fix::AddMinutesToParanEndTimeIfExists, "", "+1"}}},
@@ -836,7 +836,11 @@ TEST_CASE("precalculated ekAdashIs") {
                     {vp::murmansk_coord,
                      {{Fix::Skip, "", ""}}}, // TODO: "no sunset" cases
                 });
-//    test_one_precalculated_table_slug("2018-07-06");
+//    test_one_precalculated_table_slug(
+//                "2018-07-06", {
+//                    {vp::mirnyy_coord,
+//                     {{Fix::ParanStartTime, "5:18", "2018-07-10 06:17"}}},
+//                });
 //    test_one_precalculated_table_slug("2018-07-20");
 //    test_one_precalculated_table_slug("2018-08-05");
 //    test_one_precalculated_table_slug("2018-08-19");

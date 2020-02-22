@@ -14,8 +14,8 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _location):vrata(_vrata), loca
     if (sunrise) {
         auto arunodaya_pair = calc.get_arunodaya(*sunrise);
         if (arunodaya_pair) {
-            events.push_back({"aruNodaya", arunodaya_pair->first});
-            events.push_back({"arddha-ghaTika before aruNodaya", arunodaya_pair->second});
+            events.push_back({"aruNodaya1", arunodaya_pair->first});
+            events.push_back({"arddha-ghaTika before aruNodaya1", arunodaya_pair->second});
         }
 
         auto sunset = calc.swe.get_sunset(*sunrise);
@@ -59,6 +59,17 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _location):vrata(_vrata), loca
             events.push_back({"dvAdashI end", dvadashi_end});
             if (dvadashi_end) {
                 events.push_back({"dvAdashI quarter", Calc::proportional_time(*dvadashi_start, *dvadashi_end, 0.25)});
+            }
+        }
+        if (sunrise) {
+            auto sunrise0 = calc.swe.get_sunrise(*sunrise - double_days{1.5});
+            if (sunrise0 && *sunrise0 >= *ekadashi_start) {
+                events.push_back({"sunrise0", sunrise0});
+                auto arunodaya_pair = calc.get_arunodaya(*sunrise0);
+                if (arunodaya_pair) {
+                    events.push_back({"aruNodaya0", arunodaya_pair->first});
+                    events.push_back({"arddha-ghaTika before aruNodaya0", arunodaya_pair->second});
+                }
             }
         }
     }
