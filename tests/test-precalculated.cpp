@@ -835,11 +835,13 @@ TEST_CASE("precalculated ekAdashIs") {
                     {all_coord,
                      {{Fix::AddMinutesToParanEndTimeIfExists, "", "+1"}}},
                 });
-//    test_one_precalculated_table_slug(
-//                "2018-06-21", {
-//                    {vp::udupi_coord,
-//                     {{Fix::ParanStartTime, "10:08", "2018-06-24 10:09"}}},
-//                });
+    test_one_precalculated_table_slug(
+                "2018-06-21", {
+                    {all_coord,
+                     {{Fix::AddMinutesToParanStartTimeIfExists, "", "+1"}}},
+                    {vp::murmansk_coord,
+                     {{Fix::Skip, "", ""}}}, // TODO: handle "no sunset" cases
+                });
 //    test_one_precalculated_table_slug("2018-07-06");
 //    test_one_precalculated_table_slug("2018-07-20");
 //    test_one_precalculated_table_slug("2018-08-05");
