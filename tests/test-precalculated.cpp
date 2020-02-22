@@ -38,7 +38,7 @@ date::month_day decode_month_day(const std::string& s) {
         {"апреля", date::April},
         {"мая", date::May},
         {"іюня", date::June},
-        {"июля", date::July},
+        {"іюля", date::July},
         {"августа", date::August},
         {"сентября", date::September},
         {"октября", date::October},
@@ -338,7 +338,8 @@ bool is_atirikta(std::string cell_text, /*out*/ vp::Vrata_Type & type) {
 }
 
 Precalculated_Vrata get_precalc_ekadashi(const vp::Location & location, [[maybe_unused]] html::Table::Row & row_data, [[maybe_unused]] std::size_t col, [[maybe_unused]] const std::string & ekadashi_name, date::year_month_day date) {
-    // TODO: extract vrata type and pAraNam time.
+    // TODO: shravanA dvAdashI
+    // TODO: joined ekAdashI/atiriktA cells
     vp::Vrata_Type type {vp::Vrata_Type::Ekadashi};
     std::optional<date::sys_seconds> paranam_start;
     std::optional<date::sys_seconds> paranam_end;
@@ -544,8 +545,6 @@ std::vector<Precalculated_Vrata> extract_vratas_from_precalculated_table(std::st
     return vratas;
 }
 
-// TODO: check that we extract all relevant info in cases of:
-// 5-12. same four cases for atirikA ekAdashI and atiriktA dvAdashI
 TEST_CASE("do not allow empty paran type cell") {
     REQUIRE_THROWS_AS(
                 extract_vratas_from_precalculated_table(
@@ -750,56 +749,51 @@ void test_one_precalculated_table_slug(const char * slug, Fixes fixes={}) {
 
 TEST_CASE("precalculated ekAdashIs") {
     test_one_precalculated_table_slug(
-        "2017-11-12",
-        {
-            {vp::murmansk_coord, {{Fix::ParanStartTime, "10:30", "2017-11-15 10:36"}}},
-            {vp::riga_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}},
-            {vp::jurmala_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}}
-        });
+                "2017-11-12", {
+                    {vp::murmansk_coord, {{Fix::ParanStartTime, "10:30", "2017-11-15 10:36"}}},
+                    {vp::riga_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}},
+                    {vp::jurmala_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}}
+                });
     test_one_precalculated_table_slug(
-        "2017-11-27",
-        {
-            {vp::murmansk_coord, {{Fix::Skip, "", ""}}}, // TODO: fix calculations for no sunrise cases
-            {vp::london_coord, {{Fix::ParanStartTime, "09:24:00", "2017-11-30 09:23"}}},
-        });
-//    test_one_precalculated_table_slug("2017-12-11"); // TODO: fix joined ekAdashI/atiriktA cells
-    test_one_precalculated_table_slug("2017-12-26",
-        {
-            {vp::murmansk_coord, {{Fix::Skip, "", ""}}}, // TODO: fix calculations for no sunrise cases
-        });
+                "2017-11-27", {
+                    {vp::murmansk_coord, {{Fix::Skip, "", ""}}}, // TODO: no sunrise cases
+                    {vp::london_coord, {{Fix::AddMinutesToParanStartTimeIfExists, "", "-1"}}},
+                });
+//    test_one_precalculated_table_slug("2017-12-11"); // TODO: joined ekAdashI/atiriktA cells
     test_one_precalculated_table_slug(
-        "2018-01-10",
-        {
-            {vp::petropavlovskkamchatskiy_coord, {{Fix::ParanStartTime, "10:28:00", "2018-01-13 10:31"}}},
-            {vp::murmansk_coord, {{Fix::Skip, "", ""}}}, // TODO: fix calculations for no sunrise cases
-        });
-    test_one_precalculated_table_slug("2018-01-23",
-        {
-            {vp::kophangan_coord,
-                {{Fix::ParanStartTime, "06:45", "2018-01-29 06:46"},
-                 {Fix::ParanEndTime, "06:47", "2018-01-29 06:48"}}},
-            {vp::habarovsk_coord,
-                {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
-            {vp::vladivostok_coord,
-                {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
-        });
-//    test_one_precalculated_table_slug("2018-02-08"); // TODO: support joined ekAdashI/atiriktA cells
+                "2017-12-26", {
+                    {vp::murmansk_coord, {{Fix::Skip, "", ""}}}, // TODO: no sunrise cases
+                });
+    test_one_precalculated_table_slug(
+                "2018-01-10", {
+                            {vp::petropavlovskkamchatskiy_coord, {{Fix::AddMinutesToParanStartTimeIfExists, "", "+3"}}},
+                            {vp::murmansk_coord, {{Fix::Skip, "", ""}}}, // TODO: no sunrise cases
+                });
+    test_one_precalculated_table_slug(
+                "2018-01-23", {
+                    {vp::kophangan_coord,
+                        {{Fix::ParanStartTime, "06:45", "2018-01-29 06:46"},
+                         {Fix::AddMinutesToParanEndTimeIfExists, "", "+1"}}},
+                    {all_coord,
+                        {{Fix::AddMinutesToParanEndTimeIfExists, "", "+1"}}},
+                });
+//    test_one_precalculated_table_slug("2018-02-08"); // TODO: joined ekAdashI/atiriktA cells
     test_one_precalculated_table_slug("2018-02-24");
-//    test_one_precalculated_table_slug("2018-03-10"); // TODO: support shravaNA dvAdashI
-//    test_one_precalculated_table_slug("2018-03-17"); // TODO: support non-ekAdashI tables (chAndra-yugAdi etc)
+//    test_one_precalculated_table_slug("2018-03-10"); // TODO: shravaNA dvAdashI
+//    test_one_precalculated_table_slug("2018-03-17"); // TODO: non-ekAdashI tables (chAndra-yugAdi etc)
     test_one_precalculated_table_slug("2018-03-23");
-//    test_one_precalculated_table_slug("2018-04-09"); // TODO: support joined ekAdashI/atiriktA cells
-    test_one_precalculated_table_slug("2018-04-24",
-        {
-            {vp::kremenchug_coord,
-             // case manually verified by Ashutosha on 2020-02-21 and confirmed by Narasimha:
-             // the reason for difference is the underlying data difference. Old Panchangam gives sunrise < dvadashi_end
-             // (thus brief interval of pAraNam in dvAdashI puccha), and new data are sunrise > dvadashi, so standard pAraNam.
-             {{Fix::ParanStartTime, "05:36:30", "unspecified"},
-              {Fix::ParanEndTime, "05:37:00", "unspecified"}}},
-            {vp::fredericton_coord,
-              {{Fix::ParanStartTime, "06:32", "2018-04-26 06:33"}}},
-        });
+//    test_one_precalculated_table_slug("2018-04-09"); // TODO: joined ekAdashI/atiriktA cells
+    test_one_precalculated_table_slug(
+                "2018-04-24", {
+                    {vp::kremenchug_coord,
+                     // case manually verified by Ashutosha on 2020-02-21 and confirmed by Narasimha:
+                     // the reason for difference is the underlying data difference. Old Panchangam gives sunrise < dvadashi_end
+                     // (thus brief interval of pAraNam in dvAdashI puccha), and new data are sunrise > dvadashi, so standard pAraNam.
+                     {{Fix::ParanStartTime, "05:36:30", "unspecified"},
+                      {Fix::ParanEndTime, "05:37:00", "unspecified"}}},
+                    {vp::fredericton_coord,
+                      {{Fix::AddMinutesToParanStartTimeIfExists, "", "+1"}}},
+                });
     test_one_precalculated_table_slug(
                 "2018-05-09", {
                     {vp::manali_coord,
@@ -814,12 +808,12 @@ TEST_CASE("precalculated ekAdashIs") {
                     {all_coord,
                      {{Fix::AddMinutesToParanStartTimeIfExists, "", "-1"}}},
                 });
-//    test_one_precalculated_table_slug("2018-05-14_adhimaasa"); // disabled until we learn to parse non-ekadashi tables (asdhimAsa start here)
-    test_one_precalculated_table_slug("2018-05-23",
-        {
-            {vp::petropavlovskkamchatskiy_coord,
-             {{Fix::ParanStartTime, "unspecified", "2018-05-26 06:16"}}},
-        });
+//    test_one_precalculated_table_slug("2018-05-14_adhimaasa"); // TODO: non-ekadashi tables (asdhimAsa start here)
+    test_one_precalculated_table_slug(
+                "2018-05-23", {
+                    {vp::petropavlovskkamchatskiy_coord,
+                     {{Fix::ParanStartTime, "unspecified", "2018-05-26 06:16"}}},
+                });
     test_one_precalculated_table_slug(
                 "2018-06-07", {
                     {vp::erevan_coord,
@@ -829,7 +823,7 @@ TEST_CASE("precalculated ekAdashIs") {
                     {vp::stavropol_coord,
                      {{Fix::ParanEndTime, "unspecified", "2018-06-11 07:34"}}},
                     {vp::murmansk_coord,
-                     {{Fix::Skip, "", ""}}}, // TODO: handle "no sunset" cases
+                     {{Fix::Skip, "", ""}}}, // TODO: "no sunset" cases
                     {vp::tallin_coord,
                      {{Fix::ParanEndTime, "unspecified", "2018-06-11 07:34"}}},
                     {all_coord,
@@ -840,7 +834,7 @@ TEST_CASE("precalculated ekAdashIs") {
                     {all_coord,
                      {{Fix::AddMinutesToParanStartTimeIfExists, "", "+1"}}},
                     {vp::murmansk_coord,
-                     {{Fix::Skip, "", ""}}}, // TODO: handle "no sunset" cases
+                     {{Fix::Skip, "", ""}}}, // TODO: "no sunset" cases
                 });
 //    test_one_precalculated_table_slug("2018-07-06");
 //    test_one_precalculated_table_slug("2018-07-20");
