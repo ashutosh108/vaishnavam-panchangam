@@ -5,6 +5,7 @@
 #include "vrata_detail.h"
 
 #include "catch.hpp"
+#include <cstdlib>
 #include "date-fixed.h"
 #include "filesystem-fixed.h"
 #include <fstream>
@@ -133,6 +134,7 @@ struct Precalculated_Vrata {
     std::optional<date::sys_seconds> paranam_start;
     std::optional<date::sys_seconds> paranam_end;
     bool skip = false;
+    bool already_fixed = false;
     Precalculated_Vrata(vp::Location location_,
                         date::year_month_day date_,
                         vp::Vrata_Type type_ = vp::Vrata_Type::Ekadashi,
@@ -615,7 +617,9 @@ void check_precalculated_vratas(const std::vector<Precalculated_Vrata> & vratas)
 }
 
 enum class Fix {
-    ParanStartTime, ParanEndTime, Skip
+    ParanStartTime, ParanEndTime, Skip,
+    AddMinutesToParanStartTimeIfExists,
+    AddMinutesToParanEndTimeIfExists,
 };
 
 struct FixItem {
@@ -670,6 +674,15 @@ void replace_time(std::optional<date::sys_seconds> & time, const std::string & f
     }
 }
 
+void shift_time_if_exists(std::optional<date::sys_seconds> & time, const std::string & shift_by) {
+    char * end_ptr;
+    int shift_by_min = std::strtol(shift_by.c_str(), &end_ptr, 10);
+    if (end_ptr != shift_by.c_str()+shift_by.size()) {
+        throw std::runtime_error("can't parse time shift value '" + shift_by + "'");
+    }
+    if (!time) return;
+    *time += std::chrono::minutes(shift_by_min);
+}
 
 void apply_vrata_fix(Precalculated_Vrata & vrata, const FixItem & fix) {
     switch (fix.type) {
@@ -682,14 +695,34 @@ void apply_vrata_fix(Precalculated_Vrata & vrata, const FixItem & fix) {
     case Fix::Skip:
         vrata.skip = true;
         break;
+    case Fix::AddMinutesToParanStartTimeIfExists:
+        shift_time_if_exists(vrata.paranam_start, fix.to);
+        break;
+    case Fix::AddMinutesToParanEndTimeIfExists:
+        shift_time_if_exists(vrata.paranam_end, fix.to);
+        break;
     }
+    vrata.already_fixed = true;
 }
 
+static vp::Location all_coord{"all", 0.0, 0.0, "UTC"};
+
 void fix_vratas(std::vector<Precalculated_Vrata> & vratas, Fixes && fixes) {
+    // first apply individual fixes
     for (auto & vrata : vratas) {
         auto fix_iter = fixes.find(vrata.location);
         if (fix_iter != fixes.end()) {
             for (auto & fix : fix_iter->second) {
+                apply_vrata_fix(vrata, fix);
+            }
+        }
+    }
+    // if we have fixes to be applied to all coordinates, apply them,
+    // but only to vratas NOT affected by individual fixes.
+    if (auto iter=fixes.find(all_coord); iter != fixes.end()) {
+        for (auto & vrata : vratas) {
+            if (vrata.already_fixed) continue;
+            for (auto & fix : iter->second) {
                 apply_vrata_fix(vrata, fix);
             }
         }
@@ -767,42 +800,20 @@ TEST_CASE("precalculated ekAdashIs") {
             {vp::fredericton_coord,
               {{Fix::ParanStartTime, "06:32", "2018-04-26 06:33"}}},
         });
-    test_one_precalculated_table_slug("2018-05-09",
-        {
-            {vp::manali_coord,
-             {{Fix::ParanStartTime, "unspecified", "2018-05-12 05:34"}}},
-            {vp::kalkuta_coord,
-             {{Fix::ParanStartTime, "unspecified", "2018-05-12 05:34"}}},
-            {vp::ekaterinburg_coord,
-             {{Fix::ParanStartTime, "unspecified", "2018-05-12 05:04"}}},
-            {vp::surgut_coord,
-             {{Fix::ParanStartTime, "05:05", "2018-05-12 05:04"}}},
-            {vp::bishkek_coord,
-             {{Fix::ParanStartTime, "06:05", "2018-05-12 06:04"}}},
-            {vp::almaata_coord,
-             {{Fix::ParanStartTime, "06:05", "2018-05-12 06:04"}}},
-            {vp::omsk_coord,
-             {{Fix::ParanStartTime, "06:05", "2018-05-12 06:04"}}},
-            {vp::novosibirsk_coord,
-             {{Fix::ParanStartTime, "07:05", "2018-05-12 07:04"}}},
-            {vp::barnaul_coord,
-             {{Fix::ParanStartTime, "07:05", "2018-05-12 07:04"}}},
-            {vp::tomsk_coord,
-             {{Fix::ParanStartTime, "07:05", "2018-05-12 07:04"}}},
-            {vp::kophangan_coord,
-             {{Fix::ParanStartTime, "07:05", "2018-05-12 07:04"}}},
-            {vp::mirnyy_coord,
-             {{Fix::ParanStartTime, "09:05", "2018-05-12 09:04"}}},
-            {vp::habarovsk_coord,
-             {{Fix::ParanStartTime, "10:05", "2018-05-12 10:04"}}},
-            {vp::vladivostok_coord,
-             {{Fix::ParanStartTime, "10:05", "2018-05-12 10:04"}}},
-            {vp::petropavlovskkamchatskiy_coord,
-             {{Fix::ParanStartTime, "05:36", "unspecified"},
-              {Fix::ParanEndTime, "05:36:30", "unspecified"}}},
-            {vp::murmansk_coord,
-             {{Fix::ParanStartTime, "03:05", "2018-05-12 03:04"}}},
-        });
+    test_one_precalculated_table_slug(
+                "2018-05-09", {
+                    {vp::manali_coord,
+                     {{Fix::ParanStartTime, "unspecified", "2018-05-12 05:34"}}},
+                    {vp::kalkuta_coord,
+                     {{Fix::ParanStartTime, "unspecified", "2018-05-12 05:34"}}},
+                    {vp::ekaterinburg_coord,
+                     {{Fix::ParanStartTime, "unspecified", "2018-05-12 05:04"}}},
+                    {vp::petropavlovskkamchatskiy_coord,
+                     {{Fix::ParanStartTime, "05:36", "unspecified"},
+                      {Fix::ParanEndTime, "05:36:30", "unspecified"}}},
+                    {all_coord,
+                     {{Fix::AddMinutesToParanStartTimeIfExists, "", "-1"}}},
+                });
 //    test_one_precalculated_table_slug("2018-05-14_adhimaasa"); // disabled until we learn to parse non-ekadashi tables (asdhimAsa start here)
     test_one_precalculated_table_slug("2018-05-23",
         {
@@ -817,54 +828,12 @@ TEST_CASE("precalculated ekAdashIs") {
                      {{Fix::ParanEndTime, "08:33", "unspecified"}}},
                     {vp::stavropol_coord,
                      {{Fix::ParanEndTime, "unspecified", "2018-06-11 07:34"}}},
-                    {vp::krasnodar_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::simferopol_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::donetsk_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::staryyoskol_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::murmansk_coord,
                      {{Fix::Skip, "", ""}}}, // TODO: handle "no sunset" cases
-                    {vp::smolensk_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::minsk_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::gomel_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::harkov_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::poltava_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::kremenchug_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::krivoyrog_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::kiev_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::nikolaev_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::odessa_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::kolomyya_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::kishinev_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::riga_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::jurmala_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::tallin_coord,
                      {{Fix::ParanEndTime, "unspecified", "2018-06-11 07:34"}}},
-                    {vp::vilnyus_coord,
-                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
-                    {vp::varshava_coord,
-                     {{Fix::ParanEndTime, "06:33", "2018-06-11 06:34"}}},
-                    {vp::vena_coord,
-                     {{Fix::ParanEndTime, "06:33", "2018-06-11 06:34"}}},
-                    {vp::london_coord,
-                     {{Fix::ParanEndTime, "05:33", "2018-06-11 05:34"}}},
+                    {all_coord,
+                     {{Fix::AddMinutesToParanEndTimeIfExists, "", "+1"}}},
                 });
 //    test_one_precalculated_table_slug(
 //                "2018-06-21", {
