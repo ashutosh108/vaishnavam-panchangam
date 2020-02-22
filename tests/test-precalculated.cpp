@@ -256,7 +256,6 @@ std::chrono::seconds h_m_s_from_string(const std::string & s) {
     std::chrono::seconds h_m_s;
     stream >> date::parse("%H:%M", h_m_s);
     if (!stream.good()) {
-        error:
         throw std::runtime_error{"can't parse '" + s + "' as HH:MM"};
     }
 
@@ -265,7 +264,7 @@ std::chrono::seconds h_m_s_from_string(const std::string & s) {
         std::chrono::seconds sec;
         stream >> date::parse(":%S", sec);
         if (!stream.good() || stream.rdbuf()->in_avail() != 0) {
-            goto error;
+            throw std::runtime_error{"can't parse '" + s + "' as HH:MM:SS"};
         }
         h_m_s += sec;
     }
@@ -653,11 +652,11 @@ void replace_time(std::optional<date::sys_seconds> & time, const std::string & f
             throw std::runtime_error(s.str());
         }
     } else {
-        auto existing_zoned = date::make_zoned(time_zone, time.value());
-        auto existing_h_m = date::format("%H:%M:%S", existing_zoned);
-        if (existing_h_m != from_str) {
+        auto existing_local = date::make_zoned(time_zone, time.value()).get_local_time();
+        auto expected_local = date::floor<date::days>(existing_local) + h_m_s_from_string(from_str);
+        if (existing_local != expected_local) {
             std::stringstream s;
-            s << "can't replace " << from_str << "=>" << to_str <<  " in " << existing_zoned << ": HH:MM:SS do not match";
+            s << "can't replace " << from_str << "=>" << to_str <<  " in " << existing_local << ": HH:MM:SS do not match";
             throw std::runtime_error(s.str());
         }
     }
@@ -720,7 +719,7 @@ TEST_CASE("precalculated ekAdashIs") {
     test_one_precalculated_table_slug(
         "2017-11-12",
         {
-            {vp::murmansk_coord, {{Fix::ParanStartTime, "10:30:00", "2017-11-15 10:36"}}},
+            {vp::murmansk_coord, {{Fix::ParanStartTime, "10:30", "2017-11-15 10:36"}}},
             {vp::riga_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}},
             {vp::jurmala_coord, {{Fix::ParanEndTime, "unspecified", "2017-11-15 09:40"}}}
         });
@@ -744,12 +743,12 @@ TEST_CASE("precalculated ekAdashIs") {
     test_one_precalculated_table_slug("2018-01-23",
         {
             {vp::kophangan_coord,
-                {{Fix::ParanStartTime, "06:45:00", "2018-01-29 06:46"},
-                 {Fix::ParanEndTime, "06:47:00", "2018-01-29 06:48"}}},
+                {{Fix::ParanStartTime, "06:45", "2018-01-29 06:46"},
+                 {Fix::ParanEndTime, "06:47", "2018-01-29 06:48"}}},
             {vp::habarovsk_coord,
-                {{Fix::ParanEndTime, "09:47:00", "2018-01-29 09:48"}}},
+                {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
             {vp::vladivostok_coord,
-                {{Fix::ParanEndTime, "09:47:00", "2018-01-29 09:48"}}},
+                {{Fix::ParanEndTime, "09:47", "2018-01-29 09:48"}}},
         });
 //    test_one_precalculated_table_slug("2018-02-08"); // TODO: support joined ekAdashI/atiriktA cells
     test_one_precalculated_table_slug("2018-02-24");
@@ -766,7 +765,7 @@ TEST_CASE("precalculated ekAdashIs") {
              {{Fix::ParanStartTime, "05:36:30", "unspecified"},
               {Fix::ParanEndTime, "05:37:00", "unspecified"}}},
             {vp::fredericton_coord,
-              {{Fix::ParanStartTime, "06:32:00", "2018-04-26 06:33"}}},
+              {{Fix::ParanStartTime, "06:32", "2018-04-26 06:33"}}},
         });
     test_one_precalculated_table_slug("2018-05-09",
         {
@@ -777,32 +776,32 @@ TEST_CASE("precalculated ekAdashIs") {
             {vp::ekaterinburg_coord,
              {{Fix::ParanStartTime, "unspecified", "2018-05-12 05:04"}}},
             {vp::surgut_coord,
-             {{Fix::ParanStartTime, "05:05:00", "2018-05-12 05:04"}}},
+             {{Fix::ParanStartTime, "05:05", "2018-05-12 05:04"}}},
             {vp::bishkek_coord,
-             {{Fix::ParanStartTime, "06:05:00", "2018-05-12 06:04"}}},
+             {{Fix::ParanStartTime, "06:05", "2018-05-12 06:04"}}},
             {vp::almaata_coord,
-             {{Fix::ParanStartTime, "06:05:00", "2018-05-12 06:04"}}},
+             {{Fix::ParanStartTime, "06:05", "2018-05-12 06:04"}}},
             {vp::omsk_coord,
-             {{Fix::ParanStartTime, "06:05:00", "2018-05-12 06:04"}}},
+             {{Fix::ParanStartTime, "06:05", "2018-05-12 06:04"}}},
             {vp::novosibirsk_coord,
-             {{Fix::ParanStartTime, "07:05:00", "2018-05-12 07:04"}}},
+             {{Fix::ParanStartTime, "07:05", "2018-05-12 07:04"}}},
             {vp::barnaul_coord,
-             {{Fix::ParanStartTime, "07:05:00", "2018-05-12 07:04"}}},
+             {{Fix::ParanStartTime, "07:05", "2018-05-12 07:04"}}},
             {vp::tomsk_coord,
-             {{Fix::ParanStartTime, "07:05:00", "2018-05-12 07:04"}}},
+             {{Fix::ParanStartTime, "07:05", "2018-05-12 07:04"}}},
             {vp::kophangan_coord,
-             {{Fix::ParanStartTime, "07:05:00", "2018-05-12 07:04"}}},
+             {{Fix::ParanStartTime, "07:05", "2018-05-12 07:04"}}},
             {vp::mirnyy_coord,
-             {{Fix::ParanStartTime, "09:05:00", "2018-05-12 09:04"}}},
+             {{Fix::ParanStartTime, "09:05", "2018-05-12 09:04"}}},
             {vp::habarovsk_coord,
-             {{Fix::ParanStartTime, "10:05:00", "2018-05-12 10:04"}}},
+             {{Fix::ParanStartTime, "10:05", "2018-05-12 10:04"}}},
             {vp::vladivostok_coord,
-             {{Fix::ParanStartTime, "10:05:00", "2018-05-12 10:04"}}},
+             {{Fix::ParanStartTime, "10:05", "2018-05-12 10:04"}}},
             {vp::petropavlovskkamchatskiy_coord,
-             {{Fix::ParanStartTime, "05:36:00", "unspecified"},
+             {{Fix::ParanStartTime, "05:36", "unspecified"},
               {Fix::ParanEndTime, "05:36:30", "unspecified"}}},
             {vp::murmansk_coord,
-             {{Fix::ParanStartTime, "03:05:00", "2018-05-12 03:04"}}},
+             {{Fix::ParanStartTime, "03:05", "2018-05-12 03:04"}}},
         });
 //    test_one_precalculated_table_slug("2018-05-14_adhimaasa"); // disabled until we learn to parse non-ekadashi tables (asdhimAsa start here)
     test_one_precalculated_table_slug("2018-05-23",
@@ -815,59 +814,63 @@ TEST_CASE("precalculated ekAdashIs") {
                     {vp::erevan_coord,
                      {{Fix::ParanEndTime, "unspecified", "2018-06-11 08:34"}}},
                     {vp::tbilisi_coord,
-                     {{Fix::ParanEndTime, "08:33:00", "unspecified"}}},
+                     {{Fix::ParanEndTime, "08:33", "unspecified"}}},
                     {vp::stavropol_coord,
                      {{Fix::ParanEndTime, "unspecified", "2018-06-11 07:34"}}},
                     {vp::krasnodar_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::simferopol_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::donetsk_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::staryyoskol_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::murmansk_coord,
                      {{Fix::Skip, "", ""}}}, // TODO: handle "no sunset" cases
                     {vp::smolensk_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::minsk_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::gomel_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::harkov_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::poltava_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::kremenchug_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::krivoyrog_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::kiev_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::nikolaev_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::odessa_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::kolomyya_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::kishinev_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::riga_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::jurmala_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::tallin_coord,
                      {{Fix::ParanEndTime, "unspecified", "2018-06-11 07:34"}}},
                     {vp::vilnyus_coord,
-                     {{Fix::ParanEndTime, "07:33:00", "2018-06-11 07:34"}}},
+                     {{Fix::ParanEndTime, "07:33", "2018-06-11 07:34"}}},
                     {vp::varshava_coord,
-                     {{Fix::ParanEndTime, "06:33:00", "2018-06-11 06:34"}}},
+                     {{Fix::ParanEndTime, "06:33", "2018-06-11 06:34"}}},
                     {vp::vena_coord,
-                     {{Fix::ParanEndTime, "06:33:00", "2018-06-11 06:34"}}},
+                     {{Fix::ParanEndTime, "06:33", "2018-06-11 06:34"}}},
                     {vp::london_coord,
-                     {{Fix::ParanEndTime, "05:33:00", "2018-06-11 05:34"}}},
+                     {{Fix::ParanEndTime, "05:33", "2018-06-11 05:34"}}},
                 });
-//    test_one_precalculated_table_slug("2018-06-21");
+//    test_one_precalculated_table_slug(
+//                "2018-06-21", {
+//                    {vp::udupi_coord,
+//                     {{Fix::ParanStartTime, "10:08", "2018-06-24 10:09"}}},
+//                });
 //    test_one_precalculated_table_slug("2018-07-06");
 //    test_one_precalculated_table_slug("2018-07-20");
 //    test_one_precalculated_table_slug("2018-08-05");
