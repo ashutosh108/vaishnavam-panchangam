@@ -319,7 +319,7 @@ TEST_CASE("h_m_from_string works for basic cases") {
 std::pair<std::optional<date::zoned_seconds>, std::optional<date::zoned_seconds>> parse_precalc_paranam(std::string s, date::year_month_day date, const char * timezone_name) {
     std::smatch match;
     // "*" alone or "*;" followed by other descriptions
-    if (std::regex_search(s, match, std::regex{R"~(^\*($|[;,]\s+))~"})) {
+    if (std::regex_search(s, match, std::regex{R"~(^\*($|[;,]?\s+))~"})) {
         return {{}, {}};
     } else if (std::regex_search(s, match, std::regex{R"regex(^(?:!\s+)?(\d?\d:\d\d(?::\d\d)?)\s*(?:-|—)\s*(\d?\d:\d\d(?::\d\d)?)$)regex"})) {
         if (match.size() >= 2) {
