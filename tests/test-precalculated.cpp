@@ -938,7 +938,16 @@ TEST_CASE("precalculated ekAdashIs") {
                     {vp::london_coord,
                      {FixShiftStartTime{-2min}}},
                 });
-//    test_one_precalculated_table_slug("2018-08-31");
+    test_one_precalculated_table_slug(
+                "2018-08-31", {
+                    {vp::kishinev_coord,
+                     {FixParanEndTime{std::nullopt, 6h + 42min}}},
+                    {vp::riga_coord,
+                     {FixRemoveParanStartTime{6h + 42min},
+                      FixRemoveParanEndTime{6h + 42min + 28s}}},
+                    {vp::vilnyus_coord,
+                     {FixParanEndTime{6h + 42min + 28s, 6h + 42min/*+37s*/}}}, //actually 6:42:37, but we round down before checks
+                });
 //    test_one_precalculated_table_slug("2018-09-12");
 //    test_one_precalculated_table_slug("2018-09-22");
 //    test_one_precalculated_table_slug("2018-10-03");
