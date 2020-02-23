@@ -964,7 +964,11 @@ TEST_CASE("precalculated ekAdashIs") {
                      {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
                       FixRemoveParanStartTime{9h+17min}}},
                 });
-//    test_one_precalculated_table_slug("2018-11-17");
+    test_one_precalculated_table_slug(
+                "2018-11-17", {
+                    {all_coord,
+                     {FixShiftStartTime{+1min}}},
+                });
 //    test_one_precalculated_table_slug("2018-12-01");
 //    test_one_precalculated_table_slug("2018-12-12");
 //    test_one_precalculated_table_slug("2018-12-29");
