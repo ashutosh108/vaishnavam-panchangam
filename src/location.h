@@ -91,7 +91,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location gokarna_coord{"Gokarna, Karnataka", 14, 33, 0, 74, 19, 0, "Asia/Kolkata"};
 [[maybe_unused]] constexpr Location telaviv_coord{"Tel Aviv", 32, 4, 0, 34, 47, 0, "Asia/Jerusalem"};
 [[maybe_unused]] constexpr Location tomsk_coord{"Tomsk", 56, 29, 0, 84, 57, 0, "Asia/Tomsk"};
-[[maybe_unused]] constexpr Location kiel_coord{"Kiev", 54, 19, 0, 10, 8, 0, "Europe/Berlin"};
+[[maybe_unused]] constexpr Location kiel_coord{"Kiel", 54, 19, 0, 10, 8, 0, "Europe/Berlin"};
 [[maybe_unused]] constexpr Location omsk_coord{"Omsk", 54, 58, 0, 73, 23, 0, "Asia/Omsk"};
 [[maybe_unused]] constexpr Location tashkent_coord{"Tashkent", 41, 18, 0, 68, 16, 0, "Asia/Almaty"};
 [[maybe_unused]] constexpr Location dushanbe_coord{"Dushanbe", 38, 32, 12, 68, 46, 48, "Asia/Dushanbe"};

@@ -32,6 +32,7 @@
 «У того недоумка, что не постится на сопряженную со Щраван̣ой двāдащӣ, пун̣ье, пріобретенное за пять лѣт, будет уничтожено» (Крьшн̣āмрьта-махāрн̣авам, 160).
 [ ] two-days ekAdashI
 - {kophangan+kosamui,denpasar,mirny,hab,vlad,ppk} 2019-03-31-01
+[ ] check for location name uniqueness(?)
 [ ] test cases from past Narasimha's calendars (all?)
 
 Вопросы, которые хотелось бы прояснить у пан̣д̣итов:
@@ -143,3 +144,4 @@ done:
 [+] print tithi length in details (at the beginning of tithi) [2020-02-22]
 [+] add find_sunrise_v, find_sunset_v (throw when not found, return non-optional values) [2020-02-23]
 [+] return standard pAraNam for atiriktA with dvadadhI end after 1/5 of day. [2020-02-23]
+[+] fix name: Kiev -> Kiel (this location wasn't exposed in default interface, so unnoticeable for GUI users) [2020-02-23]
