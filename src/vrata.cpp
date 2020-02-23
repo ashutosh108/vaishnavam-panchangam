@@ -67,7 +67,7 @@ const std::vector<std::string> & ekadashi_names()
         "Ajā",                // 11
         "Pārśva-parivartinī", // 12
         "Indirā",             // 13
-        "Pāśaṅkuśā",          // 14
+        "Pāśāṅkuśā",          // 14
         "Ramā",               // 15
         "Prabodhinī",         // 16
         "Utpattikā",          // 17
@@ -77,7 +77,7 @@ const std::vector<std::string> & ekadashi_names()
         "Ṣaṭ-tilā",           // 21
         "Jayā",               // 22
         "Vijayā",             // 23
-        "Amalakī",            // 24
+        "Āmalakī",            // 24
         "Kamalā",             // 25
         "Padmā"               // 26
     };
@@ -100,7 +100,7 @@ const std::vector<std::string> & ekadashi_names_rus()
         "Аџā",                // 11
         "Пāрщва-паривартинӣ", // 12
         "Индирā",             // 13
-        "Пāщаӈкущā",          // 14
+        "Пāщāӈкущā",          // 14
         "Рамā",               // 15
         "Прабодӿинӣ",         // 16
         "Утпаттикā",          // 17
