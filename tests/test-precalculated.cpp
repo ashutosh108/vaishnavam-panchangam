@@ -1008,7 +1008,10 @@ TEST_CASE("precalculated ekAdashIs") {
                       FixRemoveParanStartTime{10h+48min}}},
                     {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
                 });
-//    test_one_precalculated_table_slug("2018-12-29");
+    test_one_precalculated_table_slug(
+                "2018-12-29", {
+                    {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
+                });
 //    test_one_precalculated_table_slug("2019-01-09");
 //    test_one_precalculated_table_slug("2019-01-13");
 //    test_one_precalculated_table_slug("2019-01-29");
