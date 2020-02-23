@@ -169,22 +169,22 @@ struct Precalculated_Vrata {
           location(location_),
           paranam_start(paranam_start_),
           paranam_end(paranam_end_) {}
-    bool operator==(const vp::Vrata_Detail & other) const {
-        UNSCOPED_INFO("comparing: " << date << "<=>" << other.vrata.date << ";\n"
-                      << location.name << "<=>" << other.location.name << ";\n"
-                      << type << "<=>" << other.vrata.type << ";\n"
-                      << to_str(paranam_start) << "<=>" << other.vrata.paran.paran_start << ";\n"
-                      << to_str(paranam_end) << "<=>" << other.vrata.paran.paran_end);
-        if (date != other.vrata.date || location != other.location) {
+    bool operator==(const vp::Vrata_Detail & nowcalc) const {
+        UNSCOPED_INFO("comparing: " << date << "<=>" << nowcalc.vrata.date << ";\n"
+                      << location.name << "<=>" << nowcalc.location.name << ";\n"
+                      << type << "<=>" << nowcalc.vrata.type << ";\n"
+                      << to_str(paranam_start) << "<=>" << nowcalc.vrata.paran.paran_start << ";\n"
+                      << to_str(paranam_end) << "<=>" << nowcalc.vrata.paran.paran_end);
+        if (date != nowcalc.vrata.date || location != nowcalc.location) {
             UNSCOPED_INFO("dates and locations must match, but they don't");
             return false;
         }
         // allow mismatch between vrata types when precalc is Ekadashi and now-calc is Sandigdha_Ekadashi
-        if (type != other.vrata.type && !(type==vp::Vrata_Type::Ekadashi && other.vrata.type == vp::Vrata_Type::Sandigdha_Ekadashi)) {
+        if (type != nowcalc.vrata.type && !(type==vp::Vrata_Type::Ekadashi && nowcalc.vrata.type == vp::Vrata_Type::Sandigdha_Ekadashi)) {
             UNSCOPED_INFO("vrata types must match, but they don't");
             return false;
         }
-        if (other.vrata.paran.type == vp::Paran::Type::Standard) {
+        if (nowcalc.vrata.paran.type == vp::Paran::Type::Standard) {
             UNSCOPED_INFO("paranam_start=" << to_str(paranam_start) << ", end=" << to_str(paranam_end));
             if (paranam_start) {
                 UNSCOPED_INFO("in case of standard paranam, start time must not be set");
@@ -195,7 +195,7 @@ struct Precalculated_Vrata {
             return !paranam_start && !paranam_end;
         }
         // it must be ">HH:MM" form, check with 1-min precision
-        if (other.vrata.paran.type == vp::Paran::Type::From_Quarter_Dvadashi) {
+        if (nowcalc.vrata.paran.type == vp::Paran::Type::From_Quarter_Dvadashi) {
             UNSCOPED_INFO("paran_type: From_Quarter_Dvadashi");
             // ">HH:MM" must have start and must NOT have end time
             if (!paranam_start) {
@@ -207,44 +207,44 @@ struct Precalculated_Vrata {
                 return false;
             }
 
-            if (!other.vrata.paran.paran_start) {
+            if (!nowcalc.vrata.paran.paran_start) {
                 UNSCOPED_INFO("now-calculated pAraNam must have start time");
                 return false;
             }
 
-            auto other_rounded = other.vrata.paran.paran_start->round_to_minute_up();
+            auto other_rounded = nowcalc.vrata.paran.paran_start->round_to_minute_up();
             bool result = paranam_start.value().get_sys_time() == other_rounded;
             if (!result) {
                 UNSCOPED_INFO("precaltulated pAraNam start should equal to now-calculated one, but it is not");
             }
             return result;
         }
-        if (other.vrata.paran.type == vp::Paran::Type::Puccha_Dvadashi || other.vrata.paran.type == vp::Paran::Type::Until_Dvadashi_End) {
-            UNSCOPED_INFO("paran type: " << other.vrata.paran.type);
+        if (nowcalc.vrata.paran.type == vp::Paran::Type::Puccha_Dvadashi || nowcalc.vrata.paran.type == vp::Paran::Type::Until_Dvadashi_End) {
+            UNSCOPED_INFO("paran type: " << nowcalc.vrata.paran.type);
             // "<HH:MM" might have start time and MUST have end time
             if (!paranam_end) {
                 UNSCOPED_INFO("pAraNam end must be set");
                 return false;
             }
 
-            if (!other.vrata.paran.paran_end) {
+            if (!nowcalc.vrata.paran.paran_end) {
                 UNSCOPED_INFO("now-calculated pAraNam must have end time");
                 return false;
             }
 
-            auto other_rounded = other.vrata.paran.paran_end->round_to_minute_down();
+            auto other_rounded = nowcalc.vrata.paran.paran_end->round_to_minute_down();
             bool result = paranam_end->get_sys_time() == other_rounded;
             if (!result) {
                 UNSCOPED_INFO("pAraNam end must match, but it doesn't");
             }
             return result;
         }
-        UNSCOPED_INFO("paranam comparison: start " << to_str(paranam_start) << " <=> " << date::format("%F %T %Z", other.vrata.paran.paran_start->round_to_minute_up())
-                      << "\nend " << to_str(paranam_end) << " <=> " << date::format("%F %T %Z", other.vrata.paran.paran_end->round_to_minute_down()));
-        UNSCOPED_INFO("end result: " << (paranam_start->get_sys_time() == other.vrata.paran.paran_start.value().round_to_minute_up() &&
-                                         paranam_end->get_sys_time() == other.vrata.paran.paran_end.value().round_to_minute_down()));
-        bool start_matches = paranam_start->get_sys_time() == other.vrata.paran.paran_start.value().round_to_minute_up();
-        bool end_matches = paranam_end->get_sys_time() == other.vrata.paran.paran_end.value().round_to_minute_down();
+        UNSCOPED_INFO("paranam comparison: start " << to_str(paranam_start) << " <=> " << date::format("%F %T %Z", nowcalc.vrata.paran.paran_start->round_to_minute_up())
+                      << "\nend " << to_str(paranam_end) << " <=> " << date::format("%F %T %Z", nowcalc.vrata.paran.paran_end->round_to_minute_down()));
+        UNSCOPED_INFO("end result: " << (paranam_start->get_sys_time() == nowcalc.vrata.paran.paran_start.value().round_to_minute_up() &&
+                                         paranam_end->get_sys_time() == nowcalc.vrata.paran.paran_end.value().round_to_minute_down()));
+        bool start_matches = paranam_start->get_sys_time() == nowcalc.vrata.paran.paran_start.value().round_to_minute_up();
+        bool end_matches = paranam_end->get_sys_time() == nowcalc.vrata.paran.paran_end.value().round_to_minute_down();
         if (!start_matches) {
             UNSCOPED_INFO("pAraNam start does not match");
         }
@@ -933,7 +933,11 @@ TEST_CASE("precalculated ekAdashIs") {
                       FixParanEndTime{std::nullopt, 6h + 55min}}},
                 });
     test_one_precalculated_table_slug("2018-08-05");
-//    test_one_precalculated_table_slug("2018-08-19");
+    test_one_precalculated_table_slug(
+                "2018-08-19", {
+                    {vp::london_coord,
+                     {FixShiftStartTime{-2min}}},
+                });
 //    test_one_precalculated_table_slug("2018-08-31");
 //    test_one_precalculated_table_slug("2018-09-12");
 //    test_one_precalculated_table_slug("2018-09-22");
