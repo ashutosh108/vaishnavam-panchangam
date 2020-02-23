@@ -443,7 +443,7 @@ vp::Location find_location_by_name_rus(const std::string & name) {
         { "Гокарна", vp::gokarna_coord },
         { "Tel Aviv", vp::telaviv_coord },
         { "Томск", vp::tomsk_coord },
-        { "Kiev", vp::kiel_coord },
+        { "Kiel", vp::kiel_coord },
         { "Омск", vp::omsk_coord },
         { "Tashkent", vp::tashkent_coord },
         { "Удупи", vp::udupi_coord },
@@ -505,7 +505,7 @@ vp::Location find_location_by_name_rus(const std::string & name) {
         { "Марсель", vp::marsel_coord },
         { "Барселона", vp::barcelona_coord },
         { "Madrid", vp::madrid_coord },
-        { "Miami", vp::miami_coord }
+        { "Майами", vp::miami_coord }
     };
     auto iter = std::find_if(rus_locations.begin(), rus_locations.end(), [&name](const auto & pair) {
         return pair.first == name;
@@ -951,7 +951,7 @@ TEST_CASE("precalculated ekAdashIs") {
 //    test_one_precalculated_table_slug("2018-09-12"); // TODO: shravaNA dvAdashI
 //    test_one_precalculated_table_slug("2018-09-22"); // TODO: non-ekadashi tables (ananta-caturdashi here)
     test_one_precalculated_table_slug("2018-10-03");
-//    test_one_precalculated_table_slug("2018-10-18");
+    test_one_precalculated_table_slug("2018-10-18");
 //    test_one_precalculated_table_slug("2018-11-01");
 //    test_one_precalculated_table_slug("2018-11-17");
 //    test_one_precalculated_table_slug("2018-12-01");
