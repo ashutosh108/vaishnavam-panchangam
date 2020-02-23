@@ -145,3 +145,4 @@ done:
 [+] add find_sunrise_v, find_sunset_v (throw when not found, return non-optional values) [2020-02-23]
 [+] return standard pAraNam for atiriktA with dvadadhI end after 1/5 of day. [2020-02-23]
 [+] fix name: Kiev -> Kiel (this location wasn't exposed in default interface, so unnoticeable for GUI users) [2020-02-23]
+[+] properly determine year for date headers in precalc tables, even on the edge of the year [2020-02-23]

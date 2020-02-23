@@ -65,8 +65,19 @@ date::month_day decode_month_day(const std::string& s) {
 
 using col_to_date = std::map<std::size_t, date::year_month_day>;
 
+// make YYYY-MM-DD from MM-DD, provided that reference_ymd must be shortly before right result.
+date::year_month_day append_proper_year_to_md(date::year_month_day reference_ymd, date::month_day md) {
+    auto reference_year = reference_ymd.year();
+    auto ymd = reference_year / md;
+    // result must be >= reference, so adjust if we get otherwise
+    if (ymd < reference_ymd) {
+        return (++reference_year) / md;
+    }
+    return ymd;
+}
+
 /* return map "column number => date" for table header */
-col_to_date get_date_headers(html::Table & t, date::year year) {
+col_to_date get_date_headers(html::Table & t, date::year_month_day base_ymd) {
     std::size_t col_count = t.get_row_length(0);
     CAPTURE(col_count);
 
@@ -78,7 +89,7 @@ col_to_date get_date_headers(html::Table & t, date::year year) {
 
         // skip all cells identical to the first one (॥ श्रीः ॥).
         if (cell_text == first_cell_text) continue;
-        auto ymd = year / decode_month_day(cell_text);
+        auto ymd = append_proper_year_to_md(base_ymd, decode_month_day(cell_text));
         map[col] = ymd;
     }
     return map;
@@ -532,21 +543,24 @@ Precalculated_Vrata extract_vrata_from_row(html::Table::Row & row, col_to_date &
     throw std::runtime_error("can't extract vrata from row");
 }
 
-date::year get_year_from_slug(const char * slug) {
+date::year_month_day get_ymd_from_slug(const char * slug) {
     std::istringstream s{slug};
-    date::year year{};
-    s >> date::parse("%Y", year);
-    return year;
+    date::year_month_day ymd{};
+    s >> date::parse("%Y-%m-%d", ymd);
+    if (!s.good()) {
+        throw std::runtime_error(std::string{"can't get YYYY-MM-DD from slug: '"} + slug + "'");
+    }
+    return ymd;
 }
 
-std::vector<Precalculated_Vrata> extract_vratas_from_precalculated_table(std::string && s, date::year year) {
+std::vector<Precalculated_Vrata> extract_vratas_from_precalculated_table(std::string && s, date::year_month_day reference_ymd) {
     auto p = html::TableParser(std::move(s));
     auto t = p.next_table();
     if (!t) throw std::runtime_error("can't parse table");
     std::vector<Precalculated_Vrata> vratas;
     INFO("extract_vratas_from_precalculated_table()")
 
-    auto date_headers = get_date_headers(*t, year);
+    auto date_headers = get_date_headers(*t, reference_ymd);
     CAPTURE(date_headers);
     std::size_t row_count = t->row_count();
     // from row 1 because row 0 is date headers only
@@ -572,14 +586,14 @@ TEST_CASE("do not allow empty paran type cell") {
     REQUIRE_THROWS_AS(
                 extract_vratas_from_precalculated_table(
                 "<table><td><td><td><td>1 января<td>2 января"
-                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>", date::year{2019}),
+                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>", 2019_y/January/1),
                 std::runtime_error);
 }
 
 TEST_CASE("precalc parsing: 1. standard ekAdashI with standard pAraNam") {
     auto vratas = extract_vratas_from_precalculated_table(
                 "<table><td><td><td><td>1 января<td>2 января"
-                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>*", 2019_y);
+                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>*", 2019_y/January/1);
     REQUIRE(vratas.size() == 1);
     Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1};
     REQUIRE(expected == vratas[0]);
@@ -588,7 +602,7 @@ TEST_CASE("precalc parsing: 1. standard ekAdashI with standard pAraNam") {
 TEST_CASE("precalc parsing: 2. standard ekAdashI with 'start-end' pAraNam") {
     auto vratas = extract_vratas_from_precalculated_table(
                 "<table><td><td><td><td>1 января<td>2 января"
-                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>6:07 - 6:08", 2019_y);
+                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>6:07 - 6:08", 2019_y/January/1);
     REQUIRE(vratas.size() == 1);
     // 5:30 is indian timezone shift from UTC
     date::sys_seconds paran_start{date::sys_days(2019_y/January/2) + std::chrono::hours{6} + std::chrono::minutes{7} - std::chrono::minutes{5*60+30}};
@@ -600,7 +614,7 @@ TEST_CASE("precalc parsing: 2. standard ekAdashI with 'start-end' pAraNam") {
 TEST_CASE("precalc parsing: 3. standard ekAdashI with '> start' pAraNam") {
     auto vratas = extract_vratas_from_precalculated_table(
                 "<table><td><td><td><td>1 января<td>2 января"
-                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>&gt;6:07", 2019_y);
+                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>&gt;6:07", 2019_y/January/1);
     REQUIRE(vratas.size() == 1);
     // 5:30 is indian timezone shift from UTC
     date::sys_seconds paran_start{date::sys_days(2019_y/January/2) + std::chrono::hours{6} + std::chrono::minutes{7} - std::chrono::minutes{5*60+30}};
@@ -611,7 +625,7 @@ TEST_CASE("precalc parsing: 3. standard ekAdashI with '> start' pAraNam") {
 TEST_CASE("precalc parsing: 4. standard ekAdashI with '< end' pAraNam") {
     auto vratas = extract_vratas_from_precalculated_table(
                 "<table><td><td><td><td>1 января<td>2 января"
-                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>&lt;6:08", 2019_y);
+                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>&lt;6:08", 2019_y/January/1);
     REQUIRE(vratas.size() == 1);
     // 5:30 is indian timezone shift from UTC
     date::sys_seconds paran_end{date::sys_days(2019_y/January/2) + std::chrono::hours{6} + std::chrono::minutes{8} - std::chrono::minutes{5*60+30}};
@@ -811,13 +825,13 @@ void test_one_precalculated_table_slug(const char * slug, Fixes fixes={}) {
     auto s = slurp_file(source_dir_path / filename);
     REQUIRE(!s.empty());
 
-    auto year = get_year_from_slug(slug);
+    auto slug_ymd = get_ymd_from_slug(slug);
     //sanity check
-    REQUIRE(year >= date::year{2000});
-    REQUIRE(year < date::year{2030});
+    REQUIRE(slug_ymd >= 2000_y/January/1);
+    REQUIRE(slug_ymd < 2030_y/January/1);
 
-    CAPTURE(year);
-    std::vector<Precalculated_Vrata> vratas = extract_vratas_from_precalculated_table(std::move(s), year);
+    CAPTURE(slug_ymd);
+    std::vector<Precalculated_Vrata> vratas = extract_vratas_from_precalculated_table(std::move(s), slug_ymd);
     fix_vratas(vratas, std::move(fixes));
     CAPTURE(vratas.size());
     check_precalculated_vratas(vratas);
