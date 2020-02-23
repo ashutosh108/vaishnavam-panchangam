@@ -1,5 +1,6 @@
 #include "swe.h"
 
+#include "concat.h"
 #include "location.h"
 
 #include <exception>
@@ -61,14 +62,6 @@ Swe::~Swe()
 std::optional<JulDays_UT> Swe::find_sunrise(JulDays_UT after) const
 {
     return do_rise_trans(SE_CALC_RISE, after);
-}
-
-template <typename... T>
-std::string concat(T... args) {
-    std::stringstream s;
-    using DummyIntArray=int[];
-    (void)DummyIntArray{0, ( (s << args), 0 ) ...};
-    return s.str();
 }
 
 JulDays_UT Swe::find_sunrise_v(JulDays_UT after) const

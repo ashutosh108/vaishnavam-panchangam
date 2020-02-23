@@ -107,7 +107,9 @@ TEST_CASE("Ekadashi 2019-02-28") {
     Vrata v02{2019_y/March/2};
     Vrata sandigdha_mar02{Vrata_Type::Sandigdha_Ekadashi, 2019_y/March/2};
     Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}};
+    Vrata v01_atirikta_dvadashi_std_paran{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Standard}};
     Vrata v01_atirikta_ekadashi{Vrata_Type::Atirikta_Ekadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}};
+    Vrata v01_atirikta_ekadashi_std_paran{Vrata_Type::Atirikta_Ekadashi, 2019_y/March/1, Paran{Paran::Type::Standard}};
     REQUIRE(v02 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v02 == vrata(Calc{gokarna_coord}, d));
     REQUIRE(v02 == vrata(Calc{newdelhi_coord}, d));
@@ -168,12 +170,12 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(v02 == vrata(Calc{kishinev_coord}, d));
     Paran paran1415{Paran::Type::From_Quarter_Dvadashi, JulDays_UT{2019_y/March/2, 12h + 14min + 40.513510s}};
     Expected_Vrata v01_paran_after_quarter{Vrata_Type::Ekadashi, 2019_y/March/1, paran1415};
-    REQUIRE(v01_atirikta_ekadashi == vrata(Calc{riga_coord}, d));     // > 14:15, differs from Naarasimha's calendar
-    REQUIRE(v01_atirikta_ekadashi == vrata(Calc{jurmala_coord}, d));  // > 14:15, differs from Naarasimha's calendar
-    REQUIRE(v01_atirikta_ekadashi == vrata(Calc{tallin_coord}, d));   // > 14:15, differs from Naarasimha's calendar
-    REQUIRE(v01_atirikta_ekadashi == vrata(Calc{vilnyus_coord}, d));  // > 14:15, differs from Naarasimha's calendar
-    REQUIRE(v01_atirikta_ekadashi == vrata(Calc{varshava_coord}, d)); // > 13:15, differs from Naarasimha's calendar
-    REQUIRE(v01_atirikta_dvadashi == vrata(Calc{vena_coord}, d)); //atirikta dvadashi
+    REQUIRE(v01_atirikta_ekadashi_std_paran == vrata(Calc{riga_coord}, d));     // > 14:15, differs from Naarasimha's calendar
+    REQUIRE(v01_atirikta_ekadashi_std_paran == vrata(Calc{jurmala_coord}, d));  // > 14:15, differs from Naarasimha's calendar
+    REQUIRE(v01_atirikta_ekadashi_std_paran == vrata(Calc{tallin_coord}, d));   // > 14:15, differs from Naarasimha's calendar
+    REQUIRE(v01_atirikta_ekadashi_std_paran == vrata(Calc{vilnyus_coord}, d));  // > 14:15, differs from Naarasimha's calendar
+    REQUIRE(v01_atirikta_ekadashi_std_paran == vrata(Calc{varshava_coord}, d)); // > 13:15, differs from Naarasimha's calendar
+    REQUIRE(v01_atirikta_dvadashi_std_paran == vrata(Calc{vena_coord}, d)); //atirikta dvadashi
     REQUIRE(v01_atirikta_dvadashi == vrata(Calc{marsel_coord}, d)); //atirikta dvadashi   < 9:14
     REQUIRE(v01_atirikta_dvadashi == vrata(Calc{madrid_coord}, d)); //atirikta dvadashi   < 9:14
     REQUIRE(v01_atirikta_dvadashi == vrata(Calc{london_coord}, d)); //atirikta dvadashi   < 8:14
@@ -227,8 +229,9 @@ void check_atirikta_at_location(const char * name, const Location & location, co
 TEST_CASE("atiriktA-dvAdashI {vena,marsel,madrid,london} 2019-03-01-2 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-02-28/") {
     date::year_month_day d{2019_y/February/28};
     Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}};
+    Vrata v01_atirikta_dvadashi_std_paran{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Standard}};
 
-    check_atirikta_at_location("vena", vena_coord, v01_atirikta_dvadashi, d);
+    check_atirikta_at_location("vena", vena_coord, v01_atirikta_dvadashi_std_paran, d);
     check_atirikta_at_location("marsel", marsel_coord, v01_atirikta_dvadashi, d);
     check_atirikta_at_location("madrid", madrid_coord, v01_atirikta_dvadashi, d);
     check_atirikta_at_location("london", london_coord, v01_atirikta_dvadashi, d);
@@ -248,7 +251,7 @@ TEST_CASE("atiriktA-dvAdashI {aktau, surgut, chelyabinsk, yerevan, tbilisi} 2019
 
 TEST_CASE("atiriktA-dvAdashI {madrid,london} 2019-11-07-8 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-11-05/") {
     date::year_month_day d{2019_y/November/6};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/November/7, Paran{Paran::Type::Puccha_Dvadashi}};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/November/7, Paran{Paran::Type::Standard}};
 
     check_atirikta_at_location("madrid", madrid_coord, v01_atirikta_dvadashi, d);
     check_atirikta_at_location("london", london_coord, v01_atirikta_dvadashi, d);
@@ -381,6 +384,17 @@ TEST_CASE("find_tithi_start gives what we expect (close to the target tithi)") {
     REQUIRE(expected_tithi == actual_tithi);
 }
 
+TEST_CASE("find_tithi_start_v") {
+    JulDays_UT from{2019_y/March/17};
+    Tithi expected_tithi{Tithi::Dvadashi_End};
+    Calc calc{Location{"Fredericton", 45, 57, 0, -66, -38, 0}};
+
+    auto actual_time = calc.find_tithi_start_v(from, expected_tithi);
+
+    Tithi actual_tithi = calc.swe.get_tithi(actual_time);
+    REQUIRE(expected_tithi == actual_tithi);
+}
+
 auto get_next_tithi_wrapper(Calc const &calc, JulDays_UT from, Tithi tithi) {
     std::optional<JulDays_UT> retval;
 
@@ -502,7 +516,7 @@ TEST_CASE("Surgut 2019-12-07 gets paranam time +2days after atiriktA as it shoul
     REQUIRE(expected_ymd == local_ymd);
 }
 
-TEST_CASE("after atiriktA when 1/5 of day fits before end of dvAdashI, pAraNam must be standard", "[!hide]") {
+TEST_CASE("after atiriktA when 1/5 of day fits before end of dvAdashI, pAraNam must be standard, not 'pucchA-dvAdashI'") {
     auto vrata = Calc{aktau_coord}.find_next_vrata(2018_y/August/21);
     REQUIRE(vrata.has_value());
     REQUIRE(vrata->date == 2018_y/August/21);

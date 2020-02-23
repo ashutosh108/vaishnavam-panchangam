@@ -29,6 +29,7 @@ public:
     std::optional<std::pair<JulDays_UT, JulDays_UT>> arunodaya_for_sunrise(JulDays_UT sunrise) const;
 
     std::optional<JulDays_UT> find_tithi_start(JulDays_UT, Tithi) const;
+    JulDays_UT find_tithi_start_v(JulDays_UT, Tithi) const;
 
     static JulDays_UT proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion);
     JulDays_UT calc_astronomical_midnight(date::year_month_day date) const;
@@ -36,7 +37,7 @@ public:
     vp::Swe swe;
 
 private:
-    std::optional<JulDays_UT> get_prev_sunset(JulDays_UT const sunrise) const;
+    std::optional<JulDays_UT> sunset_before_sunrise(JulDays_UT const sunrise) const;
     date::year_month_day get_vrata_date(const JulDays_UT sunrise) const;
     Paran get_paran(const JulDays_UT last_fasting_sunrise) const;
     Paran atirikta_paran(const JulDays_UT first_fasting_sunrise) const;

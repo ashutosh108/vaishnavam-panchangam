@@ -6,6 +6,7 @@
 #include <optional>
 
 #include "calc.h"
+#include "concat.h"
 #include "swe.h"
 
 namespace vp {
@@ -89,7 +90,12 @@ Paran Calc::atirikta_paran(const JulDays_UT first_fasting_sunrise) const
 {
     auto second_fasting_sunrise = next_sunrise_v(first_fasting_sunrise);
     auto paran_sunrise = next_sunrise_v(second_fasting_sunrise);
+    auto paran_sunset = swe.find_sunset_v(paran_sunrise);
+    auto fifth_of_paran_daytime = proportional_time(paran_sunrise, paran_sunset, 0.2);
     auto dvadashi_end = find_tithi_start(paran_sunrise, Tithi{Tithi::Dvadashi_End});
+    if (fifth_of_paran_daytime < dvadashi_end) {
+        return {Paran::Type::Standard, paran_sunrise, fifth_of_paran_daytime};
+    }
     return {Paran::Type::Puccha_Dvadashi, paran_sunrise, dvadashi_end};
 }
 
@@ -221,14 +227,14 @@ repeat_with_fixed_start_time:
                 get_paran(*sunrise)};
 }
 
-std::optional<JulDays_UT> Calc::get_prev_sunset(JulDays_UT const sunrise) const {
+std::optional<JulDays_UT> Calc::sunset_before_sunrise(JulDays_UT const sunrise) const {
     JulDays_UT back_24hrs{sunrise - double_days{1.0}};
     return swe.find_sunset(back_24hrs);
 }
 
 std::optional<std::pair<JulDays_UT, JulDays_UT>> Calc::arunodaya_for_sunrise(JulDays_UT const sunrise) const
 {
-    auto const prev_sunset = get_prev_sunset(sunrise);
+    auto const prev_sunset = sunset_before_sunrise(sunrise);
     if (!prev_sunset.has_value()) { return{}; }
     constexpr double muhurtas_per_night = (12*60) / 48.0;
     constexpr double proportion_arunodaya = 2 / muhurtas_per_night; // 2/15 = 1/7.5
@@ -282,6 +288,15 @@ std::optional<JulDays_UT> Calc::find_tithi_start(JulDays_UT const from, Tithi co
         }
     }
     return time;
+}
+
+JulDays_UT Calc::find_tithi_start_v(const JulDays_UT from, const Tithi tithi) const
+{
+    auto tithi_start_or_nullopt = find_tithi_start(from, tithi);
+    if (!tithi_start_or_nullopt) {
+        throw std::runtime_error(concat("can't find ", tithi, " tithi after ", from));
+    }
+    return *tithi_start_or_nullopt;
 }
 
 JulDays_UT Calc::calc_astronomical_midnight(date::year_month_day date) const {
