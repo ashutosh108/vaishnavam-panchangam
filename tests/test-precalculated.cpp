@@ -981,7 +981,19 @@ TEST_CASE("precalculated ekAdashIs") {
                     {vp::tallin_coord,
                      {FixRemoveParanEndTime{8h+49min}}}, // sunrise is after dvadashi end, so it's standard "1/5" pAraNam there
                 });
-//    test_one_precalculated_table_slug("2018-12-12");
+    test_one_precalculated_table_slug(
+                "2018-12-12", {
+                    {all_coord,
+                     {FixShiftEndTime{+1min},
+                      FixShiftStartTime{+1min}}},
+                    {vp::samara_coord,
+                     {FixVrataDate{2018_y/December/18, 2018_y/December/19}, // sandigdha moved it one day forward
+                      FixRemoveParanStartTime{11h+48min}}},
+                    {vp::pyatigorsk_coord,
+                     {FixVrataDate{2018_y/December/18, 2018_y/December/19}, // sandigdha moved it one day forward
+                      FixRemoveParanStartTime{10h+48min}}},
+                    {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
+                });
 //    test_one_precalculated_table_slug("2018-12-29");
 //    test_one_precalculated_table_slug("2019-01-09");
 //    test_one_precalculated_table_slug("2019-01-13");
