@@ -20,8 +20,10 @@ public:
     // Copying it would allow for muiltiple swe_close() calls.
     Swe(const Swe &) = delete;
     Swe& operator=(const Swe &) = delete;
-    std::optional<JulDays_UT> get_sunrise(JulDays_UT after) const;
-    std::optional<JulDays_UT> get_sunset(JulDays_UT after) const;
+    std::optional<JulDays_UT> find_sunrise(JulDays_UT after) const;
+    JulDays_UT find_sunrise_v(JulDays_UT after) const;
+    std::optional<JulDays_UT> find_sunset(JulDays_UT after) const;
+    JulDays_UT find_sunset_v(JulDays_UT after) const;
     double get_sun_longitude(JulDays_UT time) const;
     double get_moon_longitude(JulDays_UT time) const;
     /** Get tithi as double [0..30) */

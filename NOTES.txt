@@ -1,3 +1,6 @@
+[ ] get rid of JulDays_Zoned (normal zoned time should work fine instead)
+[ ] allow to change settings: center/edge of disc, SWIEPH/MOSEPH, topo-/geo-centric sunrises. anything else?
+[ ] Vrata class: keep Location inside
 [ ] gcc 7.4 on Linux: why test-main emits lots and lots of empty "\r\n" lines to stderr?
 [ ] precalc: allow colspan=2 cells with combined description of ekAdashI and atiriktA dvAdashI, like 2017-12-11 kophangan
 [ ] no suryodaya case (like december in Murmansk): decrease latitude until we get all necessary sunrises, print message that vrata is printed for alternative location.
@@ -138,3 +141,4 @@ done:
         - 2019-12-09 04:18:05.685709 UTC (about right? ~04:18:15 in Stellarium)
 [+] fix Location "<" comparison to be consistent (AKA gcc 7.4 on Linux: why precalc test 2017-11-12 Riga fails?) [2020-02-20]
 [+] print tithi length in details (at the beginning of tithi) [2020-02-22]
+[+] add find_sunrise_v, find_sunset_v (throw when not found, return non-optional values) [2020-02-23]

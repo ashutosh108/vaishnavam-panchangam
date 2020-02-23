@@ -58,14 +58,40 @@ Swe::~Swe()
     swe_close();
 }
 
-std::optional<JulDays_UT> Swe::get_sunrise(JulDays_UT after) const
+std::optional<JulDays_UT> Swe::find_sunrise(JulDays_UT after) const
 {
     return do_rise_trans(SE_CALC_RISE, after);
 }
 
-std::optional<JulDays_UT> Swe::get_sunset(JulDays_UT after) const
+template <typename... T>
+std::string concat(T... args) {
+    std::stringstream s;
+    using DummyIntArray=int[];
+    (void)DummyIntArray{0, ( (s << args), 0 ) ...};
+    return s.str();
+}
+
+JulDays_UT Swe::find_sunrise_v(JulDays_UT after) const
+{
+    auto sunrise_or_nullopt = find_sunrise(after);
+    if (!sunrise_or_nullopt) {
+        throw std::runtime_error(concat("can't find next sunrise after ", after));
+    }
+    return *sunrise_or_nullopt;
+}
+
+std::optional<JulDays_UT> Swe::find_sunset(JulDays_UT after) const
 {
     return do_rise_trans(SE_CALC_SET, after);
+}
+
+JulDays_UT Swe::find_sunset_v(JulDays_UT after) const
+{
+    auto sunset_or_nullopt = find_sunset(after);
+    if (!sunset_or_nullopt) {
+        throw std::runtime_error(concat("can't find sunset after ", after));
+    }
+    return *sunset_or_nullopt;
 }
 
 [[noreturn]] void Swe::throw_on_wrong_flags(int out_flags, int in_flags, char *serr) const {

@@ -23,12 +23,12 @@ public:
     // but should be considered private otherwise.
 
     // find next sunrise which happens to be within Ekadashi tithi
-    std::optional<JulDays_UT> find_next_ekadashi_sunrise(JulDays_UT after) const;
+    std::optional<JulDays_UT> find_ekadashi_sunrise(JulDays_UT after) const;
 
     // get arunodaya(= sunrise - night_length/8) for given sunrise
-    std::optional<std::pair<JulDays_UT, JulDays_UT>> get_arunodaya(JulDays_UT sunrise) const;
+    std::optional<std::pair<JulDays_UT, JulDays_UT>> arunodaya_for_sunrise(JulDays_UT sunrise) const;
 
-    std::optional<JulDays_UT> get_next_tithi_start(JulDays_UT, Tithi) const;
+    std::optional<JulDays_UT> find_tithi_start(JulDays_UT, Tithi) const;
 
     static JulDays_UT proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion);
     JulDays_UT calc_astronomical_midnight(date::year_month_day date) const;
@@ -42,6 +42,7 @@ private:
     Paran atirikta_paran(const JulDays_UT first_fasting_sunrise) const;
 
     std::optional<JulDays_UT> next_sunrise(JulDays_UT sunrise) const;
+    JulDays_UT next_sunrise_v(JulDays_UT sunrise) const;
     bool got_atirikta_ekadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const;
     bool got_atirikta_dvadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const;
 };

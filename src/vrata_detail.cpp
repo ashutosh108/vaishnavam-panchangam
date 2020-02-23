@@ -9,32 +9,32 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _location):vrata(_vrata), loca
     events.push_back({"pAraNam end", vrata.paran.paran_end});
 
     JulDays_UT local_midnight = calc.calc_astronomical_midnight(vrata.date);
-    auto sunrise = calc.swe.get_sunrise(local_midnight);
+    auto sunrise = calc.swe.find_sunrise(local_midnight);
     events.push_back({"sunrise1", sunrise});
     if (sunrise) {
-        auto arunodaya_pair = calc.get_arunodaya(*sunrise);
+        auto arunodaya_pair = calc.arunodaya_for_sunrise(*sunrise);
         if (arunodaya_pair) {
             events.push_back({"aruNodaya1", arunodaya_pair->first});
             events.push_back({"arddha-ghaTika before aruNodaya1", arunodaya_pair->second});
         }
 
-        auto sunset = calc.swe.get_sunset(*sunrise);
+        auto sunset = calc.swe.find_sunset(*sunrise);
         events.push_back({"sunset1", sunset});
         if (sunset) {
-            auto sunrise2 = calc.swe.get_sunrise(*sunset);
+            auto sunrise2 = calc.swe.find_sunrise(*sunset);
             events.push_back({"sunrise2", sunrise2});
             if (sunrise2) {
-                auto sunset2 = calc.swe.get_sunset(*sunrise2);
+                auto sunset2 = calc.swe.find_sunset(*sunrise2);
                 events.push_back({"sunset2", sunset2});
                 if (sunset2) {
                     auto fifth_of_day2 = calc.proportional_time(*sunrise2, *sunset2, 0.2);
                     events.push_back({"1/5 of day2", fifth_of_day2});
                     if (vrata.type == Vrata_Type::With_Atirikta_Dvadashi || vrata.type == Vrata_Type::Sandigdha_With_Atirikta_Dvadashi
                             || vrata.type == Vrata_Type::Atirikta_Ekadashi || vrata.type == Vrata_Type::Sandigdha_Atirikta_Ekadashi) {
-                        auto sunrise3 = calc.swe.get_sunrise(*sunset2);
+                        auto sunrise3 = calc.swe.find_sunrise(*sunset2);
                         events.push_back({"sunrise3", sunrise3});
                         if (sunrise3) {
-                            auto sunset3 = calc.swe.get_sunset(*sunrise3);
+                            auto sunset3 = calc.swe.find_sunset(*sunrise3);
                             events.push_back({"sunset3", sunset3});
                             if (sunset3) {
                                 auto fifth_of_day3 = calc.proportional_time(*sunrise3, *sunset3, 0.2);
@@ -49,15 +49,15 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _location):vrata(_vrata), loca
 
     // -1.0 to ensure we actually select start time before Ekadashi.
     // Not 100% sure it's enough, but it's working for all test cases so far.
-    ekadashi_start = calc.get_next_tithi_start(local_midnight-double_days{1.0}, Tithi{Tithi::Ekadashi});
+    ekadashi_start = calc.find_tithi_start(local_midnight-double_days{1.0}, Tithi{Tithi::Ekadashi});
     std::string ekadashi_descr = "ekAdashI start";
     if (ekadashi_start) {
-        auto dvadashi_start = calc.get_next_tithi_start(*ekadashi_start, Tithi{Tithi::Dvadashi});
+        auto dvadashi_start = calc.find_tithi_start(*ekadashi_start, Tithi{Tithi::Dvadashi});
         std::string dvadashi_descr = "dvAdashI start";
         if (dvadashi_start) {
             auto ekadashi_length = *dvadashi_start - *ekadashi_start;
             ekadashi_descr += " (" + date::format("%Hh %Mm %Ss long", ekadashi_length) + ")";
-            auto dvadashi_end = calc.get_next_tithi_start(*dvadashi_start, Tithi{Tithi::Dvadashi_End});
+            auto dvadashi_end = calc.find_tithi_start(*dvadashi_start, Tithi{Tithi::Dvadashi_End});
             events.push_back({"dvAdashI end", dvadashi_end});
             if (dvadashi_end) {
                 auto dvadashi_length = *dvadashi_end - *dvadashi_start;
@@ -67,10 +67,10 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _location):vrata(_vrata), loca
         }
         events.push_back({dvadashi_descr, dvadashi_start});
         if (sunrise) {
-            auto sunrise0 = calc.swe.get_sunrise(*sunrise - double_days{1.5});
+            auto sunrise0 = calc.swe.find_sunrise(*sunrise - double_days{1.5});
             if (sunrise0 && *sunrise0 >= *ekadashi_start) {
                 events.push_back({"sunrise0", sunrise0});
-                auto arunodaya_pair = calc.get_arunodaya(*sunrise0);
+                auto arunodaya_pair = calc.arunodaya_for_sunrise(*sunrise0);
                 if (arunodaya_pair) {
                     events.push_back({"aruNodaya0", arunodaya_pair->first});
                     events.push_back({"arddha-ghaTika before aruNodaya0", arunodaya_pair->second});

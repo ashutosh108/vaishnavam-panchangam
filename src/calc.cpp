@@ -14,12 +14,12 @@ Calc::Calc(Location coord):swe{coord} {}
 
 /* Find sunrise during next ekadashi tithi or right after it.
  */
-std::optional<JulDays_UT> Calc::find_next_ekadashi_sunrise(JulDays_UT after) const
+std::optional<JulDays_UT> Calc::find_ekadashi_sunrise(JulDays_UT after) const
 {
-    std::optional<JulDays_UT> ekadashi = get_next_tithi_start(after, Tithi{Tithi::Ekadashi});
+    std::optional<JulDays_UT> ekadashi = find_tithi_start(after, Tithi{Tithi::Ekadashi});
     if (!ekadashi.has_value()) return std::nullopt;
 
-    return swe.get_sunrise(*ekadashi);
+    return swe.find_sunrise(*ekadashi);
 }
 
 JulDays_UT Calc::proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion) {
@@ -45,7 +45,7 @@ Paran Calc::get_paran(const JulDays_UT last_fasting_sunrise) const
     std::optional<JulDays_UT> paran_start, paran_end;
     auto paran_sunrise = next_sunrise(last_fasting_sunrise);
     if (paran_sunrise) {
-        auto paran_sunset = swe.get_sunset(*paran_sunrise);
+        auto paran_sunset = swe.find_sunset(*paran_sunrise);
         paran_start = paran_sunrise;
         if (paran_sunset) {
             paran_end = proportional_time(*paran_sunrise, *paran_sunset, 0.2);
@@ -54,9 +54,9 @@ Paran Calc::get_paran(const JulDays_UT last_fasting_sunrise) const
 
     Paran::Type type{Paran::Type::Standard};
 
-    auto dvadashi_start = get_next_tithi_start(last_fasting_sunrise-double_days{1.0}, Tithi{Tithi::Dvadashi});
+    auto dvadashi_start = find_tithi_start(last_fasting_sunrise-double_days{1.0}, Tithi{Tithi::Dvadashi});
     if (dvadashi_start) {
-        auto dvadashi_end = get_next_tithi_start(*dvadashi_start, Tithi{Tithi::Dvadashi_End});
+        auto dvadashi_end = find_tithi_start(*dvadashi_start, Tithi{Tithi::Dvadashi_End});
         if (dvadashi_end) {
             // paran start should never be before the end of Dvadashi's first quarter
             if (paran_start) {
@@ -87,14 +87,25 @@ Paran Calc::get_paran(const JulDays_UT last_fasting_sunrise) const
 
 Paran Calc::atirikta_paran(const JulDays_UT first_fasting_sunrise) const
 {
-    auto second_fasting_sunrise = next_sunrise(first_fasting_sunrise);
-    auto paran_sunrise = next_sunrise(second_fasting_sunrise.value());
-    auto dvadashi_end = get_next_tithi_start(paran_sunrise.value(), Tithi{Tithi::Dvadashi_End});
+    auto second_fasting_sunrise = next_sunrise_v(first_fasting_sunrise);
+    auto paran_sunrise = next_sunrise_v(second_fasting_sunrise);
+    auto dvadashi_end = find_tithi_start(paran_sunrise, Tithi{Tithi::Dvadashi_End});
     return {Paran::Type::Puccha_Dvadashi, paran_sunrise, dvadashi_end};
 }
 
 std::optional<JulDays_UT> Calc::next_sunrise(JulDays_UT sunrise) const {
-    return swe.get_sunrise(sunrise + double_days{0.001});
+    return swe.find_sunrise(sunrise + double_days{0.001});
+}
+
+JulDays_UT Calc::next_sunrise_v(JulDays_UT sunrise) const {
+    auto sunrise_or_nullopt = next_sunrise(sunrise);
+    if (!sunrise_or_nullopt) {
+        std::stringstream s;
+        s << "can't get next sunrise after " << sunrise;
+        throw std::runtime_error(s.str());
+    }
+
+    return *sunrise_or_nullopt;
 }
 
 /* Find out if we have "atiriktA ekAdashI" situation (shuddha ekAdashI encompasses two sunrises).
@@ -145,11 +156,11 @@ repeat_with_fixed_start_time:
         s << swe.coord.name << " after " << after << " (" << start_time << "): potential eternal loop detected";
         throw std::runtime_error(s.str());
     }
-    auto sunrise = find_next_ekadashi_sunrise(start_time);
+    auto sunrise = find_ekadashi_sunrise(start_time);
     if (!sunrise) return std::nullopt;
 
     // jump here can opnly happen once per call, when we got vrata from yesterday.
-    auto arunodaya_info = get_arunodaya(*sunrise);
+    auto arunodaya_info = arunodaya_for_sunrise(*sunrise);
     if (!arunodaya_info.has_value()) { return{}; }
 
     auto [arunodaya, ardha_ghatika_before_arunodaya] = *arunodaya_info;
@@ -212,10 +223,10 @@ repeat_with_fixed_start_time:
 
 std::optional<JulDays_UT> Calc::get_prev_sunset(JulDays_UT const sunrise) const {
     JulDays_UT back_24hrs{sunrise - double_days{1.0}};
-    return swe.get_sunset(back_24hrs);
+    return swe.find_sunset(back_24hrs);
 }
 
-std::optional<std::pair<JulDays_UT, JulDays_UT>> Calc::get_arunodaya(JulDays_UT const sunrise) const
+std::optional<std::pair<JulDays_UT, JulDays_UT>> Calc::arunodaya_for_sunrise(JulDays_UT const sunrise) const
 {
     auto const prev_sunset = get_prev_sunset(sunrise);
     if (!prev_sunset.has_value()) { return{}; }
@@ -228,7 +239,7 @@ std::optional<std::pair<JulDays_UT, JulDays_UT>> Calc::get_arunodaya(JulDays_UT 
     );
 }
 
-std::optional<JulDays_UT> Calc::get_next_tithi_start(JulDays_UT const from, Tithi const tithi) const
+std::optional<JulDays_UT> Calc::find_tithi_start(JulDays_UT const from, Tithi const tithi) const
 {
     using namespace std::literals::chrono_literals;
     constexpr double_hours average_tithi_length = 23h + 37min;

@@ -70,10 +70,10 @@ bool operator==(const Expected_Vrata &e, const Vrata &v) {
             paran_end_is_missing_or_same;
 }
 
-TEST_CASE("find_next_ekadashi_sunrise") {
+TEST_CASE("find_ekadashi_sunrise") {
     JulDays_UT start{2019_y/March/9};
     Location coord{50.45, 30.523333};
-    auto sunrise = Calc{coord}.find_next_ekadashi_sunrise(start);
+    auto sunrise = Calc{coord}.find_ekadashi_sunrise(start);
     auto expected = date::sys_days(2019_y/March/17) + 4h + 13min/* + 36.270031s*/;
     REQUIRE(sunrise.has_value());
     REQUIRE(sunrise->round_to_minute_down() == expected);
@@ -89,9 +89,9 @@ TEST_CASE("Vijaya Ekadashi Kiev 2019") {
     REQUIRE(vrata->date == 2019_y/March/2);
 }
 
-TEST_CASE("get_arunodaya") {
+TEST_CASE("arunodaya_for_sunrise") {
     Location kiev{50.45, 30.523333};
-    auto arunodaya = Calc{kiev}.get_arunodaya(JulDays_UT{2019_y/March/2, 4h + 45min + 58.052015s});
+    auto arunodaya = Calc{kiev}.arunodaya_for_sunrise(JulDays_UT{2019_y/March/2, 4h + 45min + 58.052015s});
     REQUIRE(arunodaya.has_value());
     REQUIRE(arunodaya->first.round_to_minute_down() == date::sys_days(2019_y/March/2) + 3h + 0min /*+ 17.512880s*/);
 }
@@ -369,12 +369,12 @@ TEST_CASE("Ekadashi 2019-03-17") {
     REQUIRE(*v_meadowlake.paran.paran_start < *v_meadowlake.paran.paran_end);
 }
 
-TEST_CASE("get_next_tithi_start gives what we expect (close to the target tithi)") {
+TEST_CASE("find_tithi_start gives what we expect (close to the target tithi)") {
     JulDays_UT from{2019_y/March/17};
     Tithi expected_tithi{Tithi::Dvadashi_End};
     Calc calc{fredericton_coord};
 
-    std::optional<JulDays_UT> actual_time = calc.get_next_tithi_start(from, expected_tithi);
+    std::optional<JulDays_UT> actual_time = calc.find_tithi_start(from, expected_tithi);
 
     REQUIRE(actual_time.has_value());
     Tithi actual_tithi = calc.swe.get_tithi(*actual_time);
@@ -384,7 +384,7 @@ TEST_CASE("get_next_tithi_start gives what we expect (close to the target tithi)
 auto get_next_tithi_wrapper(Calc const &calc, JulDays_UT from, Tithi tithi) {
     std::optional<JulDays_UT> retval;
 
-    retval = calc.get_next_tithi_start(from, tithi);
+    retval = calc.find_tithi_start(from, tithi);
     return retval;
 }
 
@@ -393,7 +393,7 @@ auto get_next_tithi_wrapper(Location coord, JulDays_UT from, Tithi tithi) {
     return get_next_tithi_wrapper(calc, from, tithi);
 }
 
-TEST_CASE("get_next_tithi_start breaks out from eternal loop") {
+TEST_CASE("find_tithi_start breaks out from eternal loop") {
     JulDays_UT from{2019_y/April/29, double_hours{2.0411111153662205}};
     Tithi tithi{Tithi::Ekadashi};
     auto actual = get_next_tithi_wrapper(london_coord, from, tithi);
@@ -500,4 +500,13 @@ TEST_CASE("Surgut 2019-12-07 gets paranam time +2days after atiriktA as it shoul
     date::year_month_day local_ymd{date::floor<date::days>(vrata->paran.paran_start->as_zoned_time(date::locate_zone(surgut_coord.timezone_name)).get_local_time())};
     CAPTURE(Vrata_Detail{*vrata, surgut_coord});
     REQUIRE(expected_ymd == local_ymd);
+}
+
+TEST_CASE("after atiriktA when 1/5 of day fits before end of dvAdashI, pAraNam must be standard", "[!hide]") {
+    auto vrata = Calc{aktau_coord}.find_next_vrata(2018_y/August/21);
+    REQUIRE(vrata.has_value());
+    REQUIRE(vrata->date == 2018_y/August/21);
+    auto vd = Vrata_Detail{*vrata, aktau_coord};
+    CAPTURE(vd);
+    REQUIRE(vrata->paran.type == Paran::Type::Standard);
 }

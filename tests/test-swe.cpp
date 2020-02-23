@@ -16,20 +16,44 @@ TEST_CASE("Swe default constructor") {
     REQUIRE(true);
 }
 
-TEST_CASE("get sunrise") {
+TEST_CASE("find_sunrise()") {
     Location c{50.45, 30.523333};
-    auto sunrise = Swe{c}.get_sunrise(JulDays_UT{2019_y/March/10});
+    auto sunrise = Swe{c}.find_sunrise(JulDays_UT{2019_y/March/10});
     REQUIRE(sunrise.has_value());
     REQUIRE(sunrise->year_month_day() == 2019_y/March/10);
     REQUIRE(sunrise->hours().count() == Approx(4.4816697389).margin(60./86400)); // 1 minute margin
 }
 
-TEST_CASE("get_sunset") {
+TEST_CASE("find_sunrise_v() is callable") {
     Location c{50.45, 30.523333};
-    auto sunset = Swe{c}.get_sunset(JulDays_UT{2019_y/March/10});
+    auto sunrise = Swe{c}.find_sunrise_v(JulDays_UT{2019_y/March/10});
+    REQUIRE(sunrise.year_month_day() == 2019_y/March/10);
+    REQUIRE(sunrise.hours().count() == Approx(4.4816697389).margin(60./86400)); // 1 minute margin
+}
+
+TEST_CASE("find_sunrise_v() throws when no (imminent) sunrise found") {
+    Location c{"Murmansk", 68, 58, 0, 33, 5, 0}; // fixed here to avoid test changes when we update coords
+    REQUIRE_THROWS(Swe{c}.find_sunrise_v(JulDays_UT{2019_y/December/1}));
+}
+
+TEST_CASE("find_sunset") {
+    Location c{50.45, 30.523333};
+    auto sunset = Swe{c}.find_sunset(JulDays_UT{2019_y/March/10});
     REQUIRE(sunset.has_value());
     REQUIRE(sunset->round_to_minute_down() == date::sys_days(2019_y/March/10) + 15h + 48min /*+ 33.812600s*/);
 }
+
+TEST_CASE("find_sunset_v") {
+    Location c{50.45, 30.523333};
+    auto sunset = Swe{c}.find_sunset_v(JulDays_UT{2019_y/March/10});
+    REQUIRE(sunset.round_to_minute_down() == date::sys_days(2019_y/March/10) + 15h + 48min /*+ 33.812600s*/);
+}
+
+TEST_CASE("find_sunset_v throws when no (imminent) sunset found") {
+    Location c{"Murmansk", 68, 58, 0, 33, 5, 0}; // fixed here to avoid test changes when we update coords
+    REQUIRE_THROWS(Swe{c}.find_sunset_v(JulDays_UT{2019_y/December/1}));
+}
+
 
 TEST_CASE("get sun longitude") {
     double sun_longitude = Swe{arbitrary_coord}.get_sun_longitude(JulDays_UT{2019_y/March/10});

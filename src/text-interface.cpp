@@ -132,9 +132,9 @@ void print_detail_one(date::year_month_day base_date, const char *location_name,
     o << location_name << ' ' << base_date << '\n';
     o << "<to be implemented>\n";
     Calc calc{coord};
-    auto sunrise = calc.swe.get_sunrise(JulDays_UT{base_date});
+    auto sunrise = calc.swe.find_sunrise(JulDays_UT{base_date});
     if (sunrise) {
-        auto arunodaya_info = calc.get_arunodaya(*sunrise);
+        auto arunodaya_info = calc.arunodaya_for_sunrise(*sunrise);
         if (arunodaya_info) {
             auto [arunodaya, arunodaya_half_ghatika_before] = *arunodaya_info;
 
