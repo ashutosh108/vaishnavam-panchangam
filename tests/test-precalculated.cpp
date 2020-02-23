@@ -1012,8 +1012,12 @@ TEST_CASE("precalculated ekAdashIs") {
                 "2018-12-29", {
                     {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
                 });
-//    test_one_precalculated_table_slug("2019-01-09");
-//    test_one_precalculated_table_slug("2019-01-13");
+//    test_one_precalculated_table_slug("2019-01-09"); // TODO: non-ekAdashI tables (dhanur-vyatipAta-yoga)
+    test_one_precalculated_table_slug(
+                "2019-01-13", {
+                    {vp::denpasar_coord,
+                     {FixParanStartTime{std::nullopt, 6h+32min}}},
+                });
 //    test_one_precalculated_table_slug("2019-01-29");
 //    test_one_precalculated_table_slug("2019-02-12");
 //    test_one_precalculated_table_slug("2019-02-28");
