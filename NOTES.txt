@@ -142,3 +142,4 @@ done:
 [+] fix Location "<" comparison to be consistent (AKA gcc 7.4 on Linux: why precalc test 2017-11-12 Riga fails?) [2020-02-20]
 [+] print tithi length in details (at the beginning of tithi) [2020-02-22]
 [+] add find_sunrise_v, find_sunset_v (throw when not found, return non-optional values) [2020-02-23]
+[+] return standard pAraNam for atiriktA with dvadadhI end after 1/5 of day. [2020-02-23]

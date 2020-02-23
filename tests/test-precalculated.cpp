@@ -932,7 +932,7 @@ TEST_CASE("precalculated ekAdashIs") {
                      {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::With_Atirikta_Dvadashi},
                       FixParanEndTime{std::nullopt, 6h + 55min}}},
                 });
-//    test_one_precalculated_table_slug("2018-08-05");
+    test_one_precalculated_table_slug("2018-08-05");
 //    test_one_precalculated_table_slug("2018-08-19");
 //    test_one_precalculated_table_slug("2018-08-31");
 //    test_one_precalculated_table_slug("2018-09-12");
