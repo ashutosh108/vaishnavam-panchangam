@@ -134,6 +134,7 @@ bool ekadashi_name_rus_is_valid(const std::string &name)
             v.insert(n);
         }
         v.insert("Шат̣-тилā"); // alternative spelling
+        v.insert("Амалакӣ");  // alternative spelling
         return v;
     }();
     return valid_names.find(name) != valid_names.end();
