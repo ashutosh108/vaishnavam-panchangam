@@ -1143,7 +1143,38 @@ TEST_CASE("precalculated ekAdashIs part 2", "[precalc]") {
                     {vp::murmansk_coord,    // empty cell in precalc table, but pAraNam interval is very short
                      {FixParanEndTime{std::nullopt, 6h+8min}}},
                 });
-//    test_one_precalculated_table_slug("2019-04-11");
+    test_one_precalculated_table_slug(
+                "2019-04-11", {
+                    {vp::petropavlovskkamchatskiy_coord,
+                     {FixShiftEndTime{+1min}}},
+                    {vp::gomel_coord, // sandigdha moved vrata one day ahead
+                     {FixVrataDate{2019_y/April/15, 2019_y/April/16},
+                      FixRemoveParanStartTime{7h+13min}}},
+                    {all_coord,
+                     {FixShiftStartTime{-4min}}},
+                    // Kremenchug old Panchangam data:
+                    // 2019-04-15 04:36:08 aruNodaya
+                    // 2019-04-15 04:38:24 ekAdashI start
+                    // 2019-04-15 05:59:45 sunrise0
+                    // 2019-04-16 01:53:15 dvAdashI start
+                    // so even from old data this should have been ekAdashI on 16th, not 15th.
+                    {vp::kremenchug_coord,
+                     {FixVrataDate{2019_y/April/15, 2019_y/April/16},
+                      FixRemoveParanStartTime{7h+13min}}},
+                    {vp::krivoyrog_coord, //sandigdha moved vrata one day ahead
+                     {FixVrataDate{2019_y/April/15, 2019_y/April/16},
+                      FixRemoveParanStartTime{7h+13min}}},
+                    {vp::kiev_coord, //sandigdha moved vrata one day ahead
+                     {FixVrataDate{2019_y/April/15, 2019_y/April/16},
+                      FixRemoveParanStartTime{7h+13min}}},
+                    {vp::nikolaev_coord, //sandigdha moved vrata one day ahead
+                     {FixVrataDate{2019_y/April/15, 2019_y/April/16},
+                      FixRemoveParanStartTime{7h+13min}}},
+                    {vp::vena_coord, // sunrise was tiny bit after 1/4dvAdashI, so standard pAraNam
+                     {FixRemoveParanStartTime{6h+13min}}},
+                    {vp::marsel_coord, // sunrise was a bit after 1/4dvAdashI, so standard pAraNam
+                     {FixRemoveParanStartTime{6h+13min}}},
+                });
     test_one_precalculated_table_slug("2019-04-27");
 //    test_one_precalculated_table_slug("2019-05-13");
 //    test_one_precalculated_table_slug("2019-05-28");
