@@ -329,8 +329,9 @@ TEST_CASE("h_m_from_string works for basic cases") {
 
 std::pair<std::optional<date::zoned_seconds>, std::optional<date::zoned_seconds>> parse_precalc_paranam(std::string s, date::year_month_day date, const char * timezone_name) {
     std::smatch match;
-    // "*" alone or "*;" followed by other descriptions
-    if (std::regex_search(s, match, std::regex{R"~(^\*($|[;,]?\s+))~"})) {
+    // "*" alone or "*;" followed by other descriptions.
+    // We also treat empty cell as a standard pAraNam, e.g. Murmansk in https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-03-29/
+    if (s.empty() || std::regex_search(s, match, std::regex{R"~(^\*($|[;,]?\s+))~"})) {
         return {{}, {}};
     } else if (std::regex_search(s, match, std::regex{R"regex(^(?:!\s+)?(\d?\d:\d\d(?::\d\d)?)\s*(?:-|—)\s*(\d?\d:\d\d(?::\d\d)?)$)regex"})) {
         if (match.size() >= 2) {
@@ -360,12 +361,18 @@ std::pair<std::optional<date::zoned_seconds>, std::optional<date::zoned_seconds>
     throw std::runtime_error("can't parse paran time '" + s + "'");
 }
 
-bool is_atirikta(std::string cell_text, /*out*/ vp::Vrata_Type & type) {
+bool is_atirikta(const std::string & prev_cell_text, const std::string & cell_text, /*out*/ vp::Vrata_Type & type) {
     if (cell_text.find("Атириктā экāдащӣ") != std::string::npos) {
         type = vp::Vrata_Type::Atirikta_Ekadashi;
         return true;
     } else if (cell_text.find("Атириктā двāдащӣ") != std::string::npos) {
         type = vp::Vrata_Type::With_Atirikta_Dvadashi;
+        return true;
+    }
+    // e.g. https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-03-29/ ko phan gan:
+    // "pApamocanI ekAdashI" in both cells.
+    if (prev_cell_text == cell_text) {
+        type = vp::Vrata_Type::Atirikta_Ekadashi;
         return true;
     }
     return false;
@@ -377,7 +384,7 @@ Precalculated_Vrata get_precalc_ekadashi(const vp::Location & location, [[maybe_
     vp::Vrata_Type type {vp::Vrata_Type::Ekadashi};
     std::optional<date::zoned_seconds> paranam_start;
     std::optional<date::zoned_seconds> paranam_end;
-    if (is_atirikta(row_data[col+1], type)) {
+    if (is_atirikta(row_data[col], row_data[col+1], type)) {
         date::year_month_day day3{date::sys_days(date) + date::days{2}};
         std::tie(paranam_start, paranam_end) = parse_precalc_paranam(row_data[col+2], day3, location.timezone_name);
     } else {
@@ -582,12 +589,13 @@ std::vector<Precalculated_Vrata> extract_vratas_from_precalculated_table(std::st
     return vratas;
 }
 
-TEST_CASE("do not allow empty paran type cell") {
-    REQUIRE_THROWS_AS(
-                extract_vratas_from_precalculated_table(
+TEST_CASE("*do* allow empty pAraNam type cell (treat is like standard pAraNam)") {
+    auto vratas = extract_vratas_from_precalculated_table(
                 "<table><td><td><td><td>1 января<td>2 января"
-                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>", 2019_y/January/1),
-                std::runtime_error);
+                "<tr><td><td><td>Удупи<td>Варӯтӿинӣ экāдащӣ<td>", 2019_y/January/1);
+    REQUIRE(vratas.size() == 1);
+    Precalculated_Vrata expected{vp::udupi_coord, 2019_y/January/1};
+    REQUIRE(expected == vratas[0]);
 }
 
 TEST_CASE("precalc parsing: 1. standard ekAdashI with standard pAraNam") {
@@ -1107,7 +1115,34 @@ TEST_CASE("precalculated ekAdashIs part 2", "[precalc]") {
                     {all_coord,
                      {FixShiftEndTime{+60min}}}, // switch to summer time happened earlier than old table's author expected.
                 });
-//    test_one_precalculated_table_slug("2019-03-29");
+    test_one_precalculated_table_slug(
+                "2019-03-29", {
+                    {vp::tekeli_coord,  // 1/5 of day comes before dvAdashI end, so it's standard pAraNam.
+                     {FixRemoveParanEndTime{9h+8min}}},
+                    // ko pha ngan .. petropavlovsk: simple cell rowspan error in precalc table.
+                    {vp::kophangan_coord,
+                     {FixVrataDate{2019_y/March/31, 2019_y/April/1},
+                      FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                    {vp::denpasar_coord,
+                     {FixVrataDate{2019_y/March/31, 2019_y/April/1},
+                      FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                    {vp::mirnyy_coord,
+                     {FixVrataDate{2019_y/March/31, 2019_y/April/1},
+                      FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                    {vp::habarovsk_coord,
+                     {FixVrataDate{2019_y/March/31, 2019_y/April/1},
+                      FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                    {vp::vladivostok_coord,
+                     {FixVrataDate{2019_y/March/31, 2019_y/April/1},
+                      FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                    {vp::petropavlovskkamchatskiy_coord,
+                     {FixVrataDate{2019_y/March/31, 2019_y/April/1},
+                      FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                    {all_coord,
+                     {FixShiftStartTime{-2min}}},
+                    {vp::murmansk_coord,    // empty cell in precalc table, but pAraNam interval is very short
+                     {FixParanEndTime{std::nullopt, 6h+8min}}},
+                });
 //    test_one_precalculated_table_slug("2019-04-11");
     test_one_precalculated_table_slug("2019-04-27");
 //    test_one_precalculated_table_slug("2019-05-13");
