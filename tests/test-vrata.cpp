@@ -29,3 +29,8 @@ TEST_CASE("Can create with \"before this time\" paran") {
             2019_y/March/19,
             Paran{Paran::Type::Standard, std::nullopt, JulDays_UT{2019_y/March/19, 11h + 13min}}};
 }
+
+TEST_CASE("ekadashi_name_rus_is_valid") {
+    REQUIRE(ekadashi_name_rus_is_valid("Шат̣-тилā"));
+    REQUIRE(ekadashi_name_rus_is_valid("Шат̣тилā"));
+}

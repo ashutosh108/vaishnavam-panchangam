@@ -1,5 +1,7 @@
 #include "vrata.h"
 
+#include <unordered_set>
+
 namespace vp {
 
 bool operator==(const Vrata &v1, const Vrata &v2)
@@ -121,7 +123,20 @@ bool is_atirikta(Vrata_Type type)
 {
     return type == Vrata_Type::With_Atirikta_Dvadashi || type == Vrata_Type::Sandigdha_With_Atirikta_Dvadashi
             ||
-           type == Vrata_Type::Atirikta_Ekadashi || type == Vrata_Type::Sandigdha_Atirikta_Ekadashi;
+            type == Vrata_Type::Atirikta_Ekadashi || type == Vrata_Type::Sandigdha_Atirikta_Ekadashi;
+}
+
+bool ekadashi_name_rus_is_valid(const std::string &name)
+{
+    static std::unordered_set<std::string> valid_names = []() {
+        std::unordered_set<std::string> v;
+        for (const auto & n : ekadashi_names_rus()) {
+            v.insert(n);
+        }
+        v.insert("Шат̣-тилā"); // alternative spelling
+        return v;
+    }();
+    return valid_names.find(name) != valid_names.end();
 }
 
 } // namespace vp

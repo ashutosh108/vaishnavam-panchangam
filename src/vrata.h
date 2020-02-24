@@ -46,6 +46,7 @@ std::ostream &operator<<(std::ostream &o, Vrata const &v);
 // ref to static vector of all known ekAdashI names in English, capitalized. E.g. "Varūthinī"
 const std::vector<std::string> & ekadashi_names();
 const std::vector<std::string> & ekadashi_names_rus();
+bool ekadashi_name_rus_is_valid(const std::string & name);
 
 } // namespace vp
 

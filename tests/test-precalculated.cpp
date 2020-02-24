@@ -115,7 +115,7 @@ std::string get_ekadashi_name(const std::string & text) {
     std::string ekadashi_name = match[1].str();
     CAPTURE(text, ekadashi_name);
     // require ekadashi_name to be known
-    REQUIRE(contains(vp::ekadashi_names_rus(), ekadashi_name));
+    REQUIRE(vp::ekadashi_name_rus_is_valid(ekadashi_name));
     return ekadashi_name;
 }
 
