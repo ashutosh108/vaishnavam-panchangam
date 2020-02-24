@@ -837,7 +837,7 @@ void test_one_precalculated_table_slug(const char * slug, Fixes fixes={}) {
     check_precalculated_vratas(vratas);
 }
 
-TEST_CASE("precalculated ekAdashIs") {
+TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2017-11-12", {
                     {vp::murmansk_coord, {FixParanStartTime{10h + 30min, 10h + 36min}}},
@@ -1035,7 +1035,73 @@ TEST_CASE("precalculated ekAdashIs") {
                       FixVrataType{vp::Vrata_Type::With_Atirikta_Dvadashi, vp::Vrata_Type::Ekadashi}}},
                 });
     test_one_precalculated_table_slug("2019-02-12");
-//    test_one_precalculated_table_slug("2019-02-28");
+}
+
+
+TEST_CASE("precalculated ekAdashIs part 2", "[precalc]") {
+    test_one_precalculated_table_slug(
+                "2019-02-28", {
+                    {vp::spb_coord,         // sandigdha: vrata next day
+                     {FixVrataDate{2019_y/March/1, 2019_y/March/2},
+                      FixRemoveParanStartTime{15h+15min}}},
+                    {vp::murmansk_coord,    // sandigdha: vrata next day
+                     {FixVrataDate{2019_y/March/1, 2019_y/March/2},
+                      FixRemoveParanStartTime{15h+15min}}},
+                    {vp::kostomuksha_coord, // sandigdha: vrata next day
+                     {FixVrataDate{2019_y/March/1, 2019_y/March/2},
+                      FixRemoveParanStartTime{15h+15min}}},
+                    {vp::minsk_coord,       // sandigdha: vrata next day
+                     {FixVrataDate{2019_y/March/1, 2019_y/March/2},
+                      FixRemoveParanStartTime{15h+15min}}},
+                    {vp::kolomyya_coord,    // sandigdha: vrata next day
+                     {FixVrataDate{2019_y/March/1, 2019_y/March/2},
+                      FixRemoveParanStartTime{14h+15min}}},
+                    // Riga: data from old Panchanga
+                    // 2019-03-01 05:09:25 ekAdashI start
+                    // 2019-03-01 07:21:55 sunrise1
+                    // 2019-03-02 07:19:19 sunrise2
+                    // 2019-03-02 07:34:39 dvAdashI start
+                    // So it looks like by old date it also should have been atiriktA ekAdashI.
+                    {vp::riga_coord,
+                     {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::Atirikta_Ekadashi},
+                      FixRemoveParanStartTime{14h+15min}}},
+                    // Jurmala: data from old Panchanga
+                    // 2019-03-01 05:09:25 ekAdashI start
+                    // 2019-03-01 07:23:15 sunrise1
+                    // 2019-03-02 07:20:38 sunrise2
+                    // 2019-03-02 07:34:39 dvAdashI start
+                    // So it looks like by old date it also should have been atiriktA ekAdashI.
+                    {vp::jurmala_coord,
+                     {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::Atirikta_Ekadashi},
+                      FixRemoveParanStartTime{14h+15min}}},
+                    // Tallin: data from old Panchanga
+                    // 2019-03-01 05:09:25 ekAdashI start
+                    // 2019-03-01 07:24:09 sunrise1
+                    // 2019-03-02 07:21:17 sunrise2
+                    // 2019-03-02 07:34:39 dvAdashI start
+                    // So it looks like by old date it also should have been atiriktA ekAdashI.
+                    {vp::tallin_coord,
+                     {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::Atirikta_Ekadashi},
+                      FixRemoveParanStartTime{14h+15min}}},
+                    // Vilnius: data from old Panchanga
+                    // 2019-03-01 05:09:25 ekAdashI start
+                    // 2019-03-01 07:13:23 sunrise1
+                    // 2019-03-02 07:10:59 sunrise2
+                    // 2019-03-02 07:34:39 dvAdashI start
+                    // So it looks like by old date it also should have been atiriktA ekAdashI.
+                    {vp::vilnyus_coord,
+                     {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::Atirikta_Ekadashi},
+                      FixRemoveParanStartTime{14h+15min}}},
+                    // Warsaw: data from old Panchanga
+                    // 2019-03-01 04:09:25 ekAdashI start
+                    // 2019-03-01 06:26:39 sunrise1
+                    // 2019-03-02 06:24:26 sunrise2
+                    // 2019-03-02 06:34:39 dvAdashI start
+                    // So it looks like by old date it also should have been atiriktA ekAdashI.
+                    {vp::varshava_coord,
+                     {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::Atirikta_Ekadashi},
+                      FixRemoveParanStartTime{13h+15min}}},
+                });
 //    test_one_precalculated_table_slug("2019-03-15");
 //    test_one_precalculated_table_slug("2019-03-29");
 //    test_one_precalculated_table_slug("2019-04-11");
