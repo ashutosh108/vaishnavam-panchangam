@@ -1018,7 +1018,22 @@ TEST_CASE("precalculated ekAdashIs") {
                     {vp::denpasar_coord,
                      {FixParanStartTime{std::nullopt, 6h+32min}}},
                 });
-//    test_one_precalculated_table_slug("2019-01-29");
+    test_one_precalculated_table_slug(
+                "2019-01-29", {
+                    // Fredericton *old* Panchangam data:
+                    // 2019-01-29 17:23:43 sunset // 10:31:11 night len */7.5=1:24:09
+                    // 2019-01-30 06:03:32 ekAdashI start
+                    // 2019-01-30 06:30:45 aruNoraya (sunrise-1/7.5 of night length)
+                    // 2019-01-30 07:54:54 sunrise1
+                    // 2019-01-31 07:32:05 dvAdashI start
+                    // 2019-01-31 07:53:44 sunrise2
+                    // 2019-02-01 07:52:32 sunrise3
+                    // 2019-02-01 09:49:45 dvAdashI end
+                    // so even by old anchangam data this is supposed to be clean ekAdashI on 2019-01-31, not atiriktA on 30th.
+                    {vp::fredericton_coord,
+                     {FixVrataDate{2019_y/January/30, 2019_y/January/31},
+                      FixVrataType{vp::Vrata_Type::With_Atirikta_Dvadashi, vp::Vrata_Type::Ekadashi}}},
+                });
 //    test_one_precalculated_table_slug("2019-02-12");
 //    test_one_precalculated_table_slug("2019-02-28");
 //    test_one_precalculated_table_slug("2019-03-15");
