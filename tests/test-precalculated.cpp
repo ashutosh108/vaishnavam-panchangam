@@ -515,7 +515,7 @@ vp::Location find_location_by_name_rus(const std::string & name) {
         { "Тамбов", vp::tambov_coord },
         { "Марсель", vp::marsel_coord },
         { "Барселона", vp::barcelona_coord },
-        { "Madrid", vp::madrid_coord },
+        { "Мадрид", vp::madrid_coord },
         { "Майами", vp::miami_coord }
     };
     auto iter = std::find_if(rus_locations.begin(), rus_locations.end(), [&name](const auto & pair) {
@@ -1034,7 +1034,7 @@ TEST_CASE("precalculated ekAdashIs") {
                      {FixVrataDate{2019_y/January/30, 2019_y/January/31},
                       FixVrataType{vp::Vrata_Type::With_Atirikta_Dvadashi, vp::Vrata_Type::Ekadashi}}},
                 });
-//    test_one_precalculated_table_slug("2019-02-12");
+    test_one_precalculated_table_slug("2019-02-12");
 //    test_one_precalculated_table_slug("2019-02-28");
 //    test_one_precalculated_table_slug("2019-03-15");
 //    test_one_precalculated_table_slug("2019-03-29");
