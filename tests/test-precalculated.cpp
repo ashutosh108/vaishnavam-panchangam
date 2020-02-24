@@ -1102,7 +1102,11 @@ TEST_CASE("precalculated ekAdashIs part 2", "[precalc]") {
                      {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::Atirikta_Ekadashi},
                       FixRemoveParanStartTime{13h+15min}}},
                 });
-//    test_one_precalculated_table_slug("2019-03-15");
+    test_one_precalculated_table_slug(
+                "2019-03-15", {
+                    {all_coord,
+                     {FixShiftEndTime{+60min}}}, // switch to summer time happened earlier than old table's author expected.
+                });
 //    test_one_precalculated_table_slug("2019-03-29");
 //    test_one_precalculated_table_slug("2019-04-11");
     test_one_precalculated_table_slug("2019-04-27");
