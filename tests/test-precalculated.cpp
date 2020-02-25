@@ -333,7 +333,7 @@ std::pair<std::optional<date::zoned_seconds>, std::optional<date::zoned_seconds>
     // We also treat empty cell as a standard pAraNam, e.g. Murmansk in https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-03-29/
     if (s.empty() || std::regex_search(s, match, std::regex{R"~(^\*($|[;,]?\s+))~"})) {
         return {{}, {}};
-    } else if (std::regex_search(s, match, std::regex{R"regex(^(?:!\s+)?(\d?\d:\d\d(?::\d\d)?)\s*(?:-|—)\s*(\d?\d:\d\d(?::\d\d)?)$)regex"})) {
+    } else if (std::regex_search(s, match, std::regex{R"regex(^(?:!\s+)?(\d?\d:\d\d(?::\d\d)?)\s*(?:-|—)\s*(\d?\d:\d\d(?::\d\d)?)(?:$|\s))regex"})) {
         if (match.size() >= 2) {
             auto start_h_m_s{h_m_s_from_string(match[1].str())};
             auto end_h_m_s{h_m_s_from_string(match[2].str())};
