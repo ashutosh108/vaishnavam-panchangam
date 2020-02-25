@@ -12,7 +12,7 @@ struct Location
     double latitude, longitude;
     const char *timezone_name;
     const char *name;
-    explicit constexpr Location(double _latitude, double _longitude)
+    explicit constexpr Location(double _latitude=0., double _longitude=0.)
         : latitude(_latitude), longitude(_longitude), timezone_name("UTC"), name("Custom location") {}
     explicit constexpr Location(const char * _name, double _latitude, double _longitude)
         : latitude(_latitude), longitude(_longitude), timezone_name("UTC"), name(_name) {}
