@@ -188,6 +188,35 @@ bool operator==(const Paranam & one, const Paranam & two) {
             one.precision == two.precision;
 }
 
+// asymmetric comparison: true if whatever information that precalc paranam has matches our info.
+bool precalc_paranam_time_matches_ours(const Paranam & precalc, const vp::Paran & nowcalc) {
+    if (precalc.start) {
+        if (!nowcalc.paran_start) {
+            return false;
+        }
+        auto now_start_rounded = (precalc.precision == Paranam::Precision::Minutes ?
+                                      nowcalc.paran_start->round_to_minute_up() :
+                                      nowcalc.paran_start->round_to_second_up());
+        auto precalc_start = precalc.start->get_sys_time();
+        if (precalc_start != now_start_rounded) {
+            return false;
+        }
+    }
+    if (precalc.end) {
+        if (!nowcalc.paran_end) {
+            return false;
+        }
+        auto now_end_rounded = (precalc.precision == Paranam::Precision::Minutes ?
+                                      nowcalc.paran_end->round_to_minute_down() :
+                                      nowcalc.paran_end->round_to_second_down());
+        auto precalc_end = precalc.end->get_sys_time();
+        if (precalc_end != now_end_rounded) {
+            return false;
+        }
+    }
+    return true;
+}
+
 struct Precalculated_Vrata {
     date::year_month_day date;
     vp::Vrata_Type type;
@@ -219,6 +248,10 @@ struct Precalculated_Vrata {
             UNSCOPED_INFO("vrata types must match, but they don't");
             return false;
         }
+        if (!precalc_paranam_time_matches_ours(paranam, nowcalc.vrata.paran)) {
+            UNSCOPED_INFO("vrata times do not match");
+            return false;
+        }
         if (nowcalc.vrata.paran.type == vp::Paran::Type::Standard) {
             if (paranam.start) {
                 UNSCOPED_INFO("in case of standard paranam, start time must not be set, but it's=" << to_str(paranam.start));
@@ -246,14 +279,7 @@ struct Precalculated_Vrata {
                 return false;
             }
 
-            auto other_rounded = (paranam.precision == Paranam::Precision::Minutes ?
-                                      nowcalc.vrata.paran.paran_start->round_to_minute_up() :
-                                      nowcalc.vrata.paran.paran_start->round_to_second_up());
-            bool result = paranam.start.value().get_sys_time() == other_rounded;
-            if (!result) {
-                UNSCOPED_INFO("precaltulated pAraNam start should equal to now-calculated one, but it is not");
-            }
-            return result;
+            return true;
         }
         if (nowcalc.vrata.paran.type == vp::Paran::Type::Puccha_Dvadashi || nowcalc.vrata.paran.type == vp::Paran::Type::Until_Dvadashi_End) {
             UNSCOPED_INFO("paran type: " << nowcalc.vrata.paran.type);
@@ -268,28 +294,9 @@ struct Precalculated_Vrata {
                 return false;
             }
 
-            auto other_rounded = (paranam.precision == Paranam::Precision::Minutes ?
-                                      nowcalc.vrata.paran.paran_end->round_to_minute_down() :
-                                      nowcalc.vrata.paran.paran_end->round_to_second_down());
-            bool result = paranam.end->get_sys_time() == other_rounded;
-            if (!result) {
-                UNSCOPED_INFO("pAraNam end must match, but it doesn't");
-            }
-            return result;
+            return true;
         }
-        UNSCOPED_INFO("paranam comparison: start " << to_str(paranam.start) << " <=> " << date::format("%F %T %Z", nowcalc.vrata.paran.paran_start->round_to_minute_up())
-                      << "\nend " << to_str(paranam.end) << " <=> " << date::format("%F %T %Z", nowcalc.vrata.paran.paran_end->round_to_minute_down()));
-        UNSCOPED_INFO("end result: " << (paranam.start->get_sys_time() == nowcalc.vrata.paran.paran_start.value().round_to_minute_up() &&
-                                         paranam.end->get_sys_time() == nowcalc.vrata.paran.paran_end.value().round_to_minute_down()));
-        bool start_matches = paranam.start->get_sys_time() == nowcalc.vrata.paran.paran_start.value().round_to_minute_up();
-        bool end_matches = paranam.end->get_sys_time() == nowcalc.vrata.paran.paran_end.value().round_to_minute_down();
-        if (!start_matches) {
-            UNSCOPED_INFO("pAraNam start does not match");
-        }
-        if (!end_matches) {
-            UNSCOPED_INFO("pAraNam end does not match");
-        }
-        return start_matches && end_matches;
+        throw std::runtime_error("unknown situation in comparison");
     }
     friend std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v);
 };
@@ -688,14 +695,22 @@ struct FixShiftStartTime {
 struct FixShiftEndTime {
     std::chrono::seconds s;
 };
-struct FixParanStartTime{
+struct FixStart{
+    std::optional<std::chrono::minutes> expected;
+    std::chrono::minutes new_time;
+};
+struct FixStartSeconds{
     std::optional<std::chrono::seconds> expected;
     std::chrono::seconds new_time;
 };
 struct FixRemoveParanStartTime{
     std::chrono::seconds expected;
 };
-struct FixParanEndTime{
+struct FixEnd{
+    std::optional<std::chrono::minutes> expected;
+    std::chrono::minutes new_time;
+};
+struct FixEndSeconds{
     std::optional<std::chrono::seconds> expected;
     std::chrono::seconds new_time;
 };
@@ -715,9 +730,11 @@ using FixVariant = std::variant<
     FixSkip,
     FixShiftStartTime,
     FixShiftEndTime,
-    FixParanStartTime,
+    FixStart,
+    FixStartSeconds,
     FixRemoveParanStartTime,
-    FixParanEndTime,
+    FixEnd,
+    FixEndSeconds,
     FixRemoveParanEndTime,
     FixVrataDate,
     FixVrataType
@@ -786,17 +803,31 @@ struct VrataFixer {
         auto local_days = date::floor<date::days>(zoned->get_local_time());
         return date::make_zoned(time_zone, local_days + *hms);
     }
-    void operator()(const FixParanStartTime & fix) {
+    void operator()(const FixStart & fix) {
         auto old_time = replace_hms(vrata.paranam.start, fix.expected);
         auto new_date = date::local_days(vrata.date) + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
         auto new_time = local_paran_hms_to_zone(vrata.location.timezone_name, new_date, fix.new_time);
         replace_time(vrata.paranam.start, old_time, new_time);
     }
-    void operator()(const FixParanEndTime & fix) {
+    void operator()(const FixStartSeconds & fix) {
+        auto old_time = replace_hms(vrata.paranam.start, fix.expected);
+        auto new_date = date::local_days(vrata.date) + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
+        auto new_time = local_paran_hms_to_zone(vrata.location.timezone_name, new_date, fix.new_time);
+        replace_time(vrata.paranam.start, old_time, new_time);
+        vrata.paranam.precision = Paranam::Precision::Seconds;
+    }
+    void operator()(const FixEnd & fix) {
         auto old_time = replace_hms(vrata.paranam.end, fix.expected);
         auto new_date = date::local_days(vrata.date) + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
         auto new_time = local_paran_hms_to_zone(vrata.location.timezone_name, new_date, fix.new_time);
         replace_time(vrata.paranam.end, old_time, new_time);
+    }
+    void operator()(const FixEndSeconds & fix) {
+        auto old_time = replace_hms(vrata.paranam.end, fix.expected);
+        auto new_date = date::local_days(vrata.date) + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
+        auto new_time = local_paran_hms_to_zone(vrata.location.timezone_name, new_date, fix.new_time);
+        replace_time(vrata.paranam.end, old_time, new_time);
+        vrata.paranam.precision = Paranam::Precision::Seconds;
     }
     void operator()(const FixRemoveParanStartTime & fix) {
         auto old_time = replace_hms(vrata.paranam.start, fix.expected);
@@ -870,17 +901,17 @@ void test_one_precalculated_table_slug(const char * slug, Fixes fixes={}) {
     check_precalculated_vratas(vratas);
 }
 
-TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
+TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
     test_one_precalculated_table_slug(
                 "2017-11-12", {
-                    {vp::murmansk_coord, {FixParanStartTime{10h + 30min, 10h + 36min}}},
-                    {vp::riga_coord, {FixParanEndTime{std::nullopt, 9h + 40min}}},
-                    {vp::jurmala_coord, {FixParanEndTime{std::nullopt, 9h + 40min}}}
+                    {vp::riga_coord, {FixEnd{std::nullopt, 9h + 40min}}},
+                    {vp::jurmala_coord, {FixEnd{std::nullopt, 9h + 40min}}}
                 });
     test_one_precalculated_table_slug(
                 "2017-11-27", {
                     {vp::murmansk_coord, {FixSkip{}}}, // TODO: no sunrise cases
-                    {vp::london_coord, {FixShiftStartTime{-1min}}},
+                    {vp::mirnyy_coord, {FixShiftStartTime{+1min}}}, // 10:31, not 10:30
+                    {vp::london_coord, {FixShiftStartTime{-1min}}}, // 09:23, not 09:24
                 });
 //    test_one_precalculated_table_slug("2017-12-11"); // TODO: joined ekAdashI/atiriktA cells
     test_one_precalculated_table_slug(
@@ -894,9 +925,6 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                 });
     test_one_precalculated_table_slug(
                 "2018-01-23", {
-                    {vp::kophangan_coord,
-                        {FixShiftStartTime{+1min},
-                         FixShiftEndTime{+1min}}},
                     {all_coord,
                         {FixShiftEndTime{+1min}}},
                 });
@@ -908,26 +936,31 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
 //    test_one_precalculated_table_slug("2018-04-09"); // TODO: joined ekAdashI/atiriktA cells
     test_one_precalculated_table_slug(
                 "2018-04-24", {
+                    {vp::gomel_coord,
+                     {FixStartSeconds{std::nullopt, 5h+37min+31s},
+                      FixEndSeconds{std::nullopt, 5h+37min+42s}}},
                     {vp::kremenchug_coord,
                      // case manually verified by Ashutosha on 2020-02-21 and confirmed by Narasimha:
                      // the reason for difference is the underlying data difference. Old Panchangam gives sunrise < dvadashi_end
                      // (thus brief interval of pAraNam in dvAdashI puccha), and new data are sunrise > dvadashi, so standard pAraNam.
-                     {FixRemoveParanStartTime{5h + 36min + 30s},
-                      FixRemoveParanEndTime{5h + 37min + 0s}}},
+                     {FixShiftStartTime{+6s},
+                      FixShiftEndTime{+42s}}},
                     {vp::fredericton_coord,
                       {FixShiftStartTime{+1min}}},
                 });
     test_one_precalculated_table_slug(
                 "2018-05-09", {
+                    {vp::perm_coord, // dvAdashI quarter and sunrise are very close
+                     {FixStart{std::nullopt, 5h+4min}}},
                     {vp::manali_coord,
-                     {FixParanStartTime{std::nullopt, 5h + 34min}}},
+                     {FixStart{std::nullopt, 5h + 34min}}},
                     {vp::kalkuta_coord,
-                     {FixParanStartTime{std::nullopt, 5h + 34min}}},
+                     {FixStart{std::nullopt, 5h + 34min}}},
                     {vp::ekaterinburg_coord,
-                     {FixParanStartTime{std::nullopt, 5h + 04min}}},
+                     {FixStart{std::nullopt, 5h + 04min}}},
                     {vp::petropavlovskkamchatskiy_coord,
-                     {FixRemoveParanStartTime{5h + 36min},
-                      FixRemoveParanEndTime{5h + 36min + 30s}}},
+                     {FixStartSeconds{5h + 36min + 0s, 5h+35min+51s},
+                      FixEndSeconds{5h + 36min + 30s, 5h+36min+39s}}},
                     {all_coord,
                      {FixShiftStartTime{-1min}}},
                 });
@@ -935,20 +968,22 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2018-05-23", {
                     {vp::petropavlovskkamchatskiy_coord,
-                     {FixParanStartTime{std::nullopt, 6h + 16min}}},
+                     {FixStart{std::nullopt, 6h + 16min}}},
+                    {vp::murmansk_coord, // TODO: "no sunset" case for sun disc edge
+                     {FixSkip{}}},
                 });
     test_one_precalculated_table_slug(
                 "2018-06-07", {
-                    {vp::erevan_coord,
-                     {FixParanEndTime{std::nullopt, 8h + 34min}}},
                     {vp::tbilisi_coord,
                      {FixRemoveParanEndTime{8h + 33min}}},
                     {vp::stavropol_coord,
-                     {FixParanEndTime{std::nullopt, 7h + 34min}}},
+                     {FixEnd{std::nullopt, 7h + 34min}}},
+                    {vp::staryyoskol_coord,
+                     {FixRemoveParanEndTime{7h + 33min}}}, // 1/5 is a bit before enf of dvAdashI
                     {vp::murmansk_coord,
                      {FixSkip{}}}, // TODO: "no sunset" cases
                     {vp::tallin_coord,
-                     {FixParanEndTime{std::nullopt, 7h + 34min}}},
+                     {FixEnd{std::nullopt, 7h + 34min}}},
                     {all_coord,
                      {FixShiftEndTime{+1min}}},
                 });
@@ -956,13 +991,19 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                 "2018-06-21", {
                     {all_coord,
                      {FixShiftStartTime{+1min}}},
+                    {vp::perm_coord,
+                     {FixShiftStartTime{+0min}}},
+                    {vp::ekaterinburg_coord,
+                     {FixShiftStartTime{+0min}}},
+                    {vp::almaata_coord,
+                     {FixShiftStartTime{+0min}}},
                     {vp::murmansk_coord,
                      {FixSkip{}}}, // TODO: "no sunset" cases
                 });
     test_one_precalculated_table_slug(
                 "2018-07-06", {
                     {vp::mirnyy_coord,
-                     {FixParanStartTime{5h + 18min, 6h + 17min}}},
+                     {FixStart{5h + 18min, 6h + 17min}}},
                     {vp::habarovsk_coord,
                      {FixVrataDate{2018_y/July/9, 2018_y/July/10}, // date change because we consider it (barely) sandigdha, while precalc table does not
                       FixRemoveParanStartTime{7h + 18min}}},
@@ -971,13 +1012,17 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                     {vp::murmansk_coord,
                      {FixSkip{}}}, // TODO: "no sunset" cases
                 });
+}
+
+
+TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2018-07-20", {
                     {vp::toronto_coord,
-                     {FixParanEndTime{8h + 25min, 8h + 55min}}},
+                     {FixEnd{8h + 25min, 8h + 55min}}},
                     {vp::meadowlake_coord,
                      {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::With_Atirikta_Dvadashi},
-                      FixParanEndTime{std::nullopt, 6h + 55min}}},
+                      FixEnd{std::nullopt, 6h + 55min}}},
                 });
     test_one_precalculated_table_slug("2018-08-05");
     test_one_precalculated_table_slug(
@@ -988,12 +1033,12 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2018-08-31", {
                     {vp::kishinev_coord,
-                     {FixParanEndTime{std::nullopt, 6h + 42min}}},
+                     {FixEnd{std::nullopt, 6h + 42min}}},
                     {vp::riga_coord,
                      {FixRemoveParanStartTime{6h + 42min},
                       FixRemoveParanEndTime{6h + 42min + 28s}}},
                     {vp::vilnyus_coord,
-                     {FixParanEndTime{6h + 42min + 28s, 6h + 42min/*+37s*/}}}, //actually 6:42:37, but we round down before checks
+                     {FixEndSeconds{6h + 42min + 28s, 6h + 42min + 37s}}}, //actually 6:42:37, but we round down before checks
                 });
 //    test_one_precalculated_table_slug("2018-09-12"); // TODO: shravaNA dvAdashI
 //    test_one_precalculated_table_slug("2018-09-22"); // TODO: non-ekadashi tables (ananta-caturdashi here)
@@ -1049,7 +1094,7 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2019-01-13", {
                     {vp::denpasar_coord,
-                     {FixParanStartTime{std::nullopt, 6h+32min}}},
+                     {FixStart{std::nullopt, 6h+32min}}},
                 });
     test_one_precalculated_table_slug(
                 "2019-01-29", {
@@ -1162,7 +1207,7 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                     {all_coord,
                      {FixShiftStartTime{-2min}}},
                     {vp::murmansk_coord,    // empty cell in precalc table, but pAraNam interval is very short
-                     {FixParanEndTime{std::nullopt, 6h+8min}}},
+                     {FixEnd{std::nullopt, 6h+8min}}},
                 });
     test_one_precalculated_table_slug(
                 "2019-04-11", {
@@ -1197,10 +1242,6 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                      {FixRemoveParanStartTime{6h+13min}}},
                 });
     test_one_precalculated_table_slug("2019-04-27");
-}
-
-
-TEST_CASE("precalculated ekAdashIs part 2", "[precalc]") {
     test_one_precalculated_table_slug(
                 "2019-05-13", {
                     {vp::newdelhi_coord,
@@ -1212,8 +1253,8 @@ TEST_CASE("precalculated ekAdashIs part 2", "[precalc]") {
                     {vp::surgut_coord,
                      {FixRemoveParanEndTime{7h+45min}}},
                     {vp::varshava_coord,
-                     {FixParanStartTime{4h+44min+45s, 4h+44min+42s},
-                      FixParanEndTime{4h+45min+20s, 4h+45min+30s}}},
+                     {FixStartSeconds{4h+44min+45s, 4h+44min+42s},
+                      FixEndSeconds{4h+45min+20s, 4h+45min+30s}}},
                     {vp::fredericton_coord,
                      {FixShiftStartTime{+29min}}},
                     {vp::toronto_coord,
