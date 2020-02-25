@@ -78,3 +78,18 @@ TEST_CASE("get tithi") {
 //    JulDays_UT expected{2019, 3, 17, 15.35};
 //    REQUIRE(tithi_start.as_julian_days() == Approx(expected.as_julian_days()).epsilon(0.00000001));
 //}
+
+TEST_CASE("swe gives different sunrises for edge and center of sun disc") {
+    JulDays_UT after{2019_y/March/10};
+    Location loc{23.,45.};
+    auto sunrise_center = [&]() {
+        return vp::Swe{loc}.find_sunrise_v(after);
+    }();
+    auto sunrise_edge = [&]() {
+        return vp::Swe{loc, Swe::Flag::SunriseByDiscEdge}.find_sunrise_v(after);
+    }();
+    REQUIRE(sunrise_edge < sunrise_center);
+    auto diff = date::floor<std::chrono::seconds>(sunrise_center - sunrise_edge);
+    REQUIRE(diff < 10min);
+    REQUIRE(diff >= 1min);
+}

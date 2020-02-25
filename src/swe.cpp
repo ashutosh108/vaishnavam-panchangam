@@ -12,16 +12,13 @@ namespace vp {
 
 namespace detail {
 constexpr int32 ephemeris_flags = SEFLG_SWIEPH;
-constexpr int32 rise_flags = SE_BIT_DISC_CENTER | SE_BIT_NO_REFRACTION;
-//constexpr int32 rise_flags = SE_CALC_RISE;
-// or SE_CALC_RISE | SE_BIT_DISC_CENTER | SE_BIT_NO_REFRACTION | SE_BIT_GEOCTR_NO_ECL_LAT;
 
 constexpr double atmospheric_pressure = 1013.25;
 constexpr double atmospheric_temperature = 15;
 }
 
 std::optional<JulDays_UT> Swe::do_rise_trans(int rise_or_set, JulDays_UT after) const {
-    int32 rsmi = rise_or_set | detail::rise_flags;
+    int32 rsmi = rise_or_set | rise_flags;
     double geopos[3] = {coord.longitude, coord.latitude, 0};
     double trise;
     char serr[AS_MAXCH];
@@ -46,8 +43,21 @@ std::optional<JulDays_UT> Swe::do_rise_trans(int rise_or_set, JulDays_UT after) 
     }
 }
 
-Swe::Swe(Location coord_):coord(coord_)
+// Get proper Sweph rise/set flags from intialization Swe flags.
+// Returned value is to be or-red with SE_CALC_RISE or SE_CALC_SET.
+// Possible flags: SE_BIT_DISC_CENTER, SE_BIT_NO_REFRACTION, SE_BIT_GEOCTR_NO_ECL_LAT
+int32_t Swe::get_rise_flags(Flag flags) {
+    int32_t res = SE_BIT_NO_REFRACTION;
+    if ((flags & Flag::SunriseByDiscMask) == Flag::SunriseByDiscCenter) {
+        res |= SE_BIT_DISC_CENTER;
+    }
+    return res;
+}
+
+Swe::Swe(Location coord_, Flag flags):coord(coord_)
 {
+    rise_flags = get_rise_flags(flags);
+
     // have to use (non-const) char array due to swe_set_ephe_path() strang signature: char * instead of const char *.
     char ephepath[] = "eph";
     swe_set_ephe_path(ephepath);
@@ -66,6 +76,7 @@ Swe::Swe(Swe && other) noexcept
     need_to_close = false;
     std::swap(need_to_close, other.need_to_close);
     std::swap(coord, other.coord);
+    std::swap(rise_flags, other.rise_flags);
 }
 
 Swe &Swe::operator=(Swe && other) noexcept
@@ -73,6 +84,7 @@ Swe &Swe::operator=(Swe && other) noexcept
     need_to_close = false;
     std::swap(need_to_close, other.need_to_close);
     std::swap(coord, other.coord);
+    std::swap(rise_flags, other.rise_flags);
     return *this;
 }
 
@@ -145,6 +157,13 @@ Tithi Swe::get_tithi(JulDays_UT time) const
     double diff = moon - sun;
     if (diff < 0) diff += 360.0;
     return Tithi{diff / (360.0/30)};
+}
+
+Swe::Flag operator&(Swe::Flag lhs, Swe::Flag rhs) {
+    using underlying = std::underlying_type_t<Swe::Flag>;
+    return static_cast<Swe::Flag>(
+                static_cast<underlying>(lhs) &
+                static_cast<underlying>(rhs));
 }
 
 } // namespace swe
