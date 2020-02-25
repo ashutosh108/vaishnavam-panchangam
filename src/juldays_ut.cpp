@@ -155,9 +155,19 @@ date::sys_seconds JulDays_UT::round_to_minute_up() const
     return date::ceil<std::chrono::minutes>(as_sys_time());
 }
 
+date::sys_seconds JulDays_UT::round_to_second_up() const
+{
+    return date::ceil<std::chrono::seconds>(as_sys_time());
+}
+
 date::sys_seconds JulDays_UT::round_to_minute_down() const
 {
     return date::floor<std::chrono::minutes>(as_sys_time());
+}
+
+date::sys_seconds JulDays_UT::round_to_second_down() const
+{
+    return date::floor<std::chrono::seconds>(as_sys_time());
 }
 
 date::zoned_time<double_days> JulDays_UT::as_zoned_time(const date::time_zone * time_zone) const
