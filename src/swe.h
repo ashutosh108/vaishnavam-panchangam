@@ -12,7 +12,7 @@ namespace vp {
 class Swe
 {
 public:
-    Location coord;
+    Location coord{};
 
     Swe(Location coord_);
     ~Swe();
@@ -20,6 +20,8 @@ public:
     // Copying it would allow for muiltiple swe_close() calls.
     Swe(const Swe &) = delete;
     Swe& operator=(const Swe &) = delete;
+    Swe(Swe &&) noexcept;
+    Swe& operator=(Swe &&) noexcept;
     std::optional<JulDays_UT> find_sunrise(JulDays_UT after) const;
     JulDays_UT find_sunrise_v(JulDays_UT after) const;
     std::optional<JulDays_UT> find_sunset(JulDays_UT after) const;
@@ -30,6 +32,7 @@ public:
     Tithi get_tithi(JulDays_UT time) const;
 //    Swe_Time find_tithi_start(Swe_Time after, double tithi);
 private:
+    bool need_to_close = true;
     [[noreturn]] void throw_on_wrong_flags(int out_flags, int in_flags, char *serr) const;
     void do_calc_ut(double jd, int planet, int flags, double *res) const;
     std::optional<JulDays_UT> do_rise_trans(int rise_or_set, JulDays_UT after) const;

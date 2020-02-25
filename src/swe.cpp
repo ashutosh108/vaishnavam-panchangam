@@ -56,7 +56,24 @@ Swe::Swe(Location coord_):coord(coord_)
 
 Swe::~Swe()
 {
-    swe_close();
+    if (need_to_close) {
+        swe_close();
+    }
+}
+
+Swe::Swe(Swe && other) noexcept
+{
+    need_to_close = false;
+    std::swap(need_to_close, other.need_to_close);
+    std::swap(coord, other.coord);
+}
+
+Swe &Swe::operator=(Swe && other) noexcept
+{
+    need_to_close = false;
+    std::swap(need_to_close, other.need_to_close);
+    std::swap(coord, other.coord);
+    return *this;
 }
 
 std::optional<JulDays_UT> Swe::find_sunrise(JulDays_UT after) const

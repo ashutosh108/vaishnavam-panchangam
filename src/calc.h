@@ -15,7 +15,7 @@ namespace vp {
 class Calc
 {
 public:
-    Calc(Location coord);
+    Calc(Swe swe);
     // main interface: get info for nearest future Vrata after given date
     std::optional<Vrata> find_next_vrata(date::year_month_day after) const;
 

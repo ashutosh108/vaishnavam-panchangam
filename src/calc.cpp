@@ -11,7 +11,7 @@
 
 namespace vp {
 
-Calc::Calc(Location coord):swe{coord} {}
+Calc::Calc(Swe swe_):swe(std::move(swe_)) {}
 
 /* Find sunrise during next ekadashi tithi or right after it.
  */
