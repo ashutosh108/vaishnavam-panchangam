@@ -1068,10 +1068,6 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                       FixVrataType{vp::Vrata_Type::With_Atirikta_Dvadashi, vp::Vrata_Type::Ekadashi}}},
                 });
     test_one_precalculated_table_slug("2019-02-12");
-}
-
-
-TEST_CASE("precalculated ekAdashIs part 2", "[precalc]") {
     test_one_precalculated_table_slug(
                 "2019-02-28", {
                     {vp::spb_coord,         // sandigdha: vrata next day
@@ -1201,7 +1197,28 @@ TEST_CASE("precalculated ekAdashIs part 2", "[precalc]") {
                      {FixRemoveParanStartTime{6h+13min}}},
                 });
     test_one_precalculated_table_slug("2019-04-27");
-//    test_one_precalculated_table_slug("2019-05-13");
+}
+
+
+TEST_CASE("precalculated ekAdashIs part 2", "[precalc]") {
+    test_one_precalculated_table_slug(
+                "2019-05-13", {
+                    {vp::newdelhi_coord,
+                     {FixRemoveParanEndTime{8h+15min}}}, // dvAdashI end and 1/5 are close
+                    {vp::manali_coord,
+                     {FixRemoveParanEndTime{8h+15min}}}, // dvAdashI end and 1/5 are close
+                    {vp::kalkuta_coord,
+                     {FixRemoveParanEndTime{8h+15min}}},
+                    {vp::surgut_coord,
+                     {FixRemoveParanEndTime{7h+45min}}},
+                    {vp::varshava_coord,
+                     {FixParanStartTime{4h+44min+45s, 4h+44min+42s},
+                      FixParanEndTime{4h+45min+20s, 4h+45min+30s}}},
+                    {vp::fredericton_coord,
+                     {FixShiftStartTime{+29min}}},
+                    {vp::toronto_coord,
+                     {FixShiftStartTime{+29min}}},
+                });
 //    test_one_precalculated_table_slug("2019-05-28");
 //    test_one_precalculated_table_slug("2019-06-11");
 //    test_one_precalculated_table_slug("2019-06-26");
