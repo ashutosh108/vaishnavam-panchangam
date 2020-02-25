@@ -9,7 +9,7 @@ struct Vrata_Detail {
     Vrata vrata;
     Location location;
     Calc calc;
-    Vrata_Detail(Vrata _vrata, Location _location);
+    Vrata_Detail(Vrata _vrata, Swe swe);
     struct NamedTimePoint {
         std::string name;
         std::optional<JulDays_UT> time_point;

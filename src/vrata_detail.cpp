@@ -4,7 +4,7 @@
 
 namespace vp {
 
-Vrata_Detail::Vrata_Detail(Vrata _vrata, Location _location):vrata(_vrata), location(_location), calc(_location) {
+Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.coord), calc(std::move(swe)) {
     events.push_back({"pAraNam start", vrata.paran.paran_start});
     events.push_back({"pAraNam end", vrata.paran.paran_end});
 
