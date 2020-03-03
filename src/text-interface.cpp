@@ -25,6 +25,7 @@ const std::vector<Location> &LocationDb::locations() {
         { newdelhi_coord },
         { manali_coord },
         { kalkuta_coord },
+        { dushanbe_coord },
         { aktau_coord },
         { perm_coord },
         { ufa_coord },
