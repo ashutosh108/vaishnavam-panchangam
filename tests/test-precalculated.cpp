@@ -1012,18 +1012,19 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                     {vp::murmansk_coord,
                      {FixSkip{}}}, // TODO: "no sunset" cases
                 });
-}
-
-
-TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2018-07-20", {
                     {vp::toronto_coord,
                      {FixEnd{8h + 25min, 8h + 55min}}},
                     {vp::meadowlake_coord,
                      {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::With_Atirikta_Dvadashi},
+                      FixRemoveParanStartTime{10h + 25min},
                       FixEnd{std::nullopt, 6h + 55min}}},
                 });
+}
+
+
+TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug("2018-08-05");
     test_one_precalculated_table_slug(
                 "2018-08-19", {
