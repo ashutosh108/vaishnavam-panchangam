@@ -2,11 +2,11 @@
 [ ] make "simple" output copyable.
 [ ] "copy to clipboard" function (with link to the program)
 [ ] "copy as image to clipboard"
-[ ] make "about" window text copyable
 [ ] "all" option: rethink how it works for simple output. separate thread for calculations + get rid of "calculate" button?
-[ ] add link to pateron to "about" window
+[ ] add link to patreon to "about" window
+[ ] add "check for updates" button to "about" window.
 [ ] get rid of JulDays_Zoned (normal zoned time should work fine instead)
-[ ] allow to change settings: center/edge of disc, SWIEPH/MOSEPH, topo-/geo-centric sunrises. anything else?
+[ ] allow to change settings: center/edge of disc, SWIEPH/MOSEPH, topo-/geo-centric sunrises, atmospheric diffraction. anything else?
 [ ] Vrata class: keep Location inside
 [ ] gcc 7.4 on Linux: why test-main emits lots and lots of empty "\r\n" lines to stderr?
 [ ] precalc: allow colspan=2 cells with combined description of ekAdashI and atiriktA dvAdashI, like 2017-12-11 kophangan
@@ -154,3 +154,4 @@ done:
 [+] fix name: Kiev -> Kiel (this location wasn't exposed in default interface, so unnoticeable for GUI users) [2020-02-23]
 [+] properly determine year for date headers in precalc tables, even on the edge of the year [2020-02-23]
 [+] add Dushanbe to GUI [2020-03-03]
+[+] make "about" window text copyable [2020-03-05]
