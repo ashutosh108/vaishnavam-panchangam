@@ -1,4 +1,3 @@
-[ ] make "simple" output copyable.
 [ ] "copy to clipboard" function (with link to the program)
 [ ] "copy as image to clipboard"
 [ ] "all" option: rethink how it works for simple output. separate thread for calculations + get rid of "calculate" button?
@@ -156,3 +155,4 @@ done:
 [+] make "about" window text copyable [2020-03-05]
 [+] ensure there are no "Paran" and other internal names in detailed output [2020-03-05]
 [+] make detailed output cleaner (no UTC pāraṇam, no unneeded curly braces, clearer vrata type explanation [2020-03-05]
+[+] make "simple" output copyable (each label separately only for now) [2020-03-05]
