@@ -85,7 +85,7 @@ std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
 {
     s << "# " << vd.location.name << "\n";
     s << vd.vrata << ":\n";
-    s << "Paran type: " << vd.vrata.paran.type << '\n';
+    s << vd.vrata.paran.type << '\n';
     auto events = vd.events;
     std::sort(events.begin(), events.end(), [](const Vrata_Detail::NamedTimePoint & left, const Vrata_Detail::NamedTimePoint & right) {
         return left.time_point < right.time_point;
