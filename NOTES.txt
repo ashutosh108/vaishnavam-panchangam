@@ -6,7 +6,6 @@
 [ ] get rid of JulDays_Zoned (normal zoned time should work fine instead)
 [ ] allow to change settings: center/edge of disc, SWIEPH/MOSEPH, topo-/geo-centric sunrises, atmospheric diffraction. anything else?
 [ ] Vrata class: keep Location inside
-[ ] gcc 7.4 on Linux: why test-main emits lots and lots of empty "\r\n" lines to stderr?
 [ ] precalc: allow colspan=2 cells with combined description of ekAdashI and atiriktA dvAdashI, like 2017-12-11 kophangan
 [ ] no suryodaya case (like december in Murmansk): decrease latitude until we get all necessary sunrises, print message that vrata is printed for alternative location.
 [ ] Murmansk 2017-11-27: why can't calculate? Also provide better error message.
@@ -158,3 +157,4 @@ done:
 [+] make "simple" output copyable (each label separately only for now) [2020-03-05]
 [+] move static linking code to separate cmake/<...>.cmake file [2020-03-14]
 [+] properly replace /MT with /MD when static linking [2020-03-14]
+[+] gcc 7.4 on Linux: why test-main emits lots and lots of empty "\r\n" lines to stderr? (re-download tzdata with unix newlines to fix) [2020-03-14]
