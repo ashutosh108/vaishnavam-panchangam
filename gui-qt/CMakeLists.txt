@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 set(VP_QT_GUI_EXE vaishnavam-panchangam)
 
 project(gui-qt LANGUAGES CXX)
@@ -13,11 +10,6 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-
-if (MSVC)
-    # /MT means include msvcrt as static library in the .exe
-    add_compile_options(/MT)
-endif()
 
 # QtCreator supports the following variables for Android, which are identical to qmake Android variables.
 # Check http://doc.qt.io/qt-5/deployment-android.html for more information.
@@ -66,13 +58,7 @@ target_include_directories(${VP_QT_GUI_EXE} PRIVATE ../src)
 install(TARGETS ${VP_QT_GUI_EXE} DESTINATION .)
 set_target_properties(${VP_QT_GUI_EXE} PROPERTIES WIN32_EXECUTABLE YES)
 
-if (MSVC)
-        target_link_options(${VP_QT_GUI_EXE} PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
-else()
-    if (WIN32)
-        target_link_options(${VP_QT_GUI_EXE} PRIVATE -static)
-    endif()
-endif()
+make_project_static(${VP_QT_GUI_EXE})
 
 # GCC 7.x and 8.x: link with stdc++fs library
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0))

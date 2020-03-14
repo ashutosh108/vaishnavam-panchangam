@@ -1,26 +1,16 @@
 cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 project(vaishnavam-panchangam VERSION 0.1 LANGUAGES C CXX)
 option(VP_BUILD_STATIC_EXECUTABLE "build static executable (no .dll or .so dependencies like MSVCRT or libc++)" ON)
 
-# Explicitly set build type to "Debug" by default.
-# In this way linux builds (having empty type by default) will be consistent
-# with windows builds (having "Debug" by default).
-set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type")
+include(cmake/common.cmake)
 
 # static build options should be on the top of CMakeLists.txt file because
 # we use add_compile_options which modifies COMPILE_OPTIONS
 # which in turn affect default target compile options *when the target is declared*.
 # So we better do it before we declare any targets.
 if (VP_BUILD_STATIC_EXECUTABLE)
-    if (MSVC)
-        # /MT means include msvcrt as static library in the .exe
-        add_compile_options(/MT)
-    endif()
+    change_c_cxx_flags_to_static()
 endif()
 
 set(VP_CLI_EXE ${PROJECT_NAME}-cli)
@@ -30,18 +20,8 @@ target_sources(${VP_CLI_EXE} PRIVATE NOTES.txt)
 target_include_directories(${VP_CLI_EXE} PRIVATE src)
 target_link_libraries(${VP_CLI_EXE} PRIVATE swe)
 if (VP_BUILD_STATIC_EXECUTABLE)
-    if (MSVC)
-        target_link_options(${VP_CLI_EXE} PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
-    else()
-        # Add "-static" option only for win32 because in linux glibc -pthread
-        # (required for std::call_once used by tz) and -static are incompatible.
-        # It works fine for gcc in Windows, though.
-        if (WIN32)
-            target_link_options(${VP_CLI_EXE} PRIVATE -static)
-        endif()
-    endif()
+    make_project_static(${VP_CLI_EXE})
 endif()
-
 
 add_library(date INTERFACE)
 add_library(date::date ALIAS date)
@@ -123,68 +103,6 @@ add_custom_target(
     # "$<TARGET_FILE_DIR:vaishnavam-panchangam>/vaishnavam-panchangam.{js,wasm}"
     rsync vaishnavam-panchangam.js vaishnavam-panchangam.wasm ../public_html/index.html 192.168.88.172:public_html/vaishnavam-panchangam/
 )
-
-if(MSVC)
-    set(WARN_FLAGS_NO_WX ${WARN_FLAGS} /permissive- /W4
-        /w14242 /w14254 /w14263 /w14265 /w14287 /we4289 /w14296 /w14311
-        /w14545 /w14546 /w14547 /w14549 /w14555 /w14619 /w14640 /w14826
-        /w14905 /w14906 /w14928)
-    set(WARN_FLAGS ${WARN_FLAGS_NO_WX} /WX)
-else()
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        # GCC >= 4.3
-        if (NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.3))
-            set(WARN_FLAGS ${WARN_FLAGS} -Wsign-conversion)
-        # GCC >= 4.6
-        elseif (NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.6))
-            set(WARN_FLAGS ${WARN_FLAGS} -Wdouble-promotion)
-        # GCC >= 4.8
-        elseif (NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8))
-            set(WARN_FLAGS ${WARN_FLAGS} -Wuseless-cast)
-        # GCC >= 6.0
-        elseif (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.0))
-            set(WARN_FLAGS ${WARN_FLAGS}
-                -Wmisleading-indentation
-                -Wduplicated-cond
-                -Wnull-dereference
-            )
-        # GCC >= 7.0
-        elseif (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 7.0))
-            set(WARN_FLAGS ${WARN_FLAGS} -Wduplicated-branches)
-        endif()
-        # GCC, all versions
-        set(WARN_FLAGS ${WARN_FLAGS}
-            -Wlogical-op
-            -Wpedantic)
-    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        # CLANG >= 3.2
-        if (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 3.2))
-            set(WARN_FLAGS ${WARN_FLAGS} -Wpedantic)
-        # CLANG >= 3.8
-        elseif (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 3.8))
-            set(WARN_FLAGS ${WARN_FLAGS} -Wdouble-promotion)
-        # CLANG >= 8.0
-        elseif (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 8.0))
-            # As of now (Nov 2018) -Wlifetime is only present in the
-            # special branch of clang (not even in trunk!).
-            # So, assume future release 8 (but we don't really know).
-            set(WARN_FLAGS ${WARN_FLAGS} -Wlifetime)
-        endif()
-        # Clang, all versions
-        set(WARN_FLAGS ${WARN_FLAGS} -Wsign-conversion)
-    endif()
-    # Common warnings understood by both GCC and Clang, including old versions.
-    if (CMAKE_CXX_COMPILER_ID MATCHES "^GNU|Clang$")
-        set(WARN_FLAGS ${WARN_FLAGS}
-            -Wall -Wextra -Wshadow
-            -Werror
-            -Wnon-virtual-dtor -pedantic
-            -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual
-            -Wconversion
-            -Wformat=2)
-    endif()
-    SET(WARN_FLAGS_NO_WX ${WARN_FLAGS})
-endif()
 
 # [1910..1919] is VS2017. Avoid /WX for catch2 because catch2
 # emits "no '4800' warning" warnings in MSVC2017 and the maintainer refuses to fix that.

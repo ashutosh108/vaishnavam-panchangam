@@ -156,3 +156,5 @@ done:
 [+] ensure there are no "Paran" and other internal names in detailed output [2020-03-05]
 [+] make detailed output cleaner (no UTC pāraṇam, no unneeded curly braces, clearer vrata type explanation [2020-03-05]
 [+] make "simple" output copyable (each label separately only for now) [2020-03-05]
+[+] move static linking code to separate cmake/<...>.cmake file [2020-03-14]
+[+] properly replace /MT with /MD when static linking [2020-03-14]
