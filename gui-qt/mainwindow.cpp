@@ -101,6 +101,10 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
 
         std::stringstream vrata_date_s;
         vrata_date_s << vrata->date;
+        if (vp::is_atirikta(vrata->type)) {
+            auto next_day = date::year_month_day{date::sys_days{vrata->date} + date::days{1}};
+            vrata_date_s << " and " << next_day;
+        }
         ui->vrataDate->setText(QString::fromStdString(vrata_date_s.str()));
 
         std::string paranTime = vp::ParanFormatter::format(
