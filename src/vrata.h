@@ -37,6 +37,7 @@ struct Vrata {
         : type(_type),
           date(_date),
           paran(_paran){}
+    date::year_month_day local_paran_date();
 };
 
 bool operator==(Vrata const &, Vrata const &);

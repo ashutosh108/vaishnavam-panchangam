@@ -107,6 +107,11 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
         }
         ui->vrataDate->setText(QString::fromStdString(vrata_date_s.str()));
 
+        std::stringstream paran_next_day_s;
+        auto paran_date = vrata->local_paran_date();
+        paran_next_day_s << "Pāraṇam <span style=\" font-size:small;\">(" << paran_date << ")</span>:";
+        ui->paranamNextDay->setText(QString::fromStdString(paran_next_day_s.str()));
+
         std::string paranTime = vp::ParanFormatter::format(
                     vrata->paran,
                     location->timezone_name,
