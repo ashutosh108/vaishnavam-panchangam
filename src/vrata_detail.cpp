@@ -62,7 +62,7 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
             if (dvadashi_end) {
                 auto dvadashi_length = *dvadashi_end - *dvadashi_start;
                 dvadashi_descr += " (" + date::format("%Hh %Mm %Ss long", dvadashi_length) + ")";
-                events.push_back({"dvAdashI quarter", Calc::proportional_time(*dvadashi_start, *dvadashi_end, 0.25)});
+                events.push_back({"dvAdashI's first quarter ends", Calc::proportional_time(*dvadashi_start, *dvadashi_end, 0.25)});
             }
         }
         events.push_back({dvadashi_descr, dvadashi_start});
