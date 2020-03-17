@@ -5,8 +5,12 @@
 namespace vp {
 
 Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.coord), calc(std::move(swe)) {
-    events.push_back({"pAraNam start", vrata.paran.paran_start});
-    events.push_back({"pAraNam end", vrata.paran.paran_end});
+    if (vrata.paran.paran_start) {
+        events.push_back({"pAraNam start", vrata.paran.paran_start});
+    }
+    if (vrata.paran.paran_end) {
+        events.push_back({"pAraNam end", vrata.paran.paran_end});
+    }
 
     JulDays_UT local_midnight = calc.calc_astronomical_midnight(vrata.date);
     auto sunrise = calc.swe.find_sunrise(local_midnight);
