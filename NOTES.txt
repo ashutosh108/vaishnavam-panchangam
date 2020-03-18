@@ -1,7 +1,6 @@
 [ ] "copy to clipboard" function (with link to the program)
 [ ] "copy as image to clipboard"
 [ ] "all" option: rethink how it works for simple output. separate thread for calculations + get rid of "calculate" button?
-[ ] add link to patreon to "about" window
 [ ] add "check for updates" button to "about" window.
 [ ] get rid of JulDays_Zoned (normal zoned time should work fine instead)
 [ ] allow to change settings: center/edge of disc, SWIEPH/MOSEPH, topo-/geo-centric sunrises, atmospheric diffraction. anything else?
@@ -160,3 +159,4 @@ done:
 [+] gcc 7.4 on Linux: why test-main emits lots and lots of empty "\r\n" lines to stderr? (re-download tzdata with unix newlines to fix) [2020-03-14]
 [+] two days fast: clearly state both days in "When:" in Summary [2020-03-17]
 [+] Summary gui: explicitly show pāraṇam date instead of "next day" [2020-03-17]
+[+] add links to github and patreon to "about" window [2020-03-18]

@@ -134,7 +134,9 @@ void MainWindow::showVersionInStatusLine()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, "About", QString::fromStdString(vp::text_ui::program_name_and_version()));
+    QMessageBox::about(this, "About", QString::fromStdString(vp::text_ui::program_name_and_version())
+                       + "<br><br>Download new versions: <a href=\"https://github.com/ashutosh108/vaishnavam-panchangam/releases\">https://github.com/ashutosh108/vaishnavam-panchangam/releases</a>"
+                       "<br><br>Support this program: <a href=\"https://www.patreon.com/vaishnavam_panchangam\">https://www.patreon.com/vaishnavam_panchangam</a>");
 }
 
 void MainWindow::on_actionE_xit_2_triggered()
