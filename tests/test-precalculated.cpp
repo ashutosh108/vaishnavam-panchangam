@@ -1022,15 +1022,16 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                       FixEnd{std::nullopt, 6h + 55min}}},
                 });
     test_one_precalculated_table_slug("2018-08-05");
+    test_one_precalculated_table_slug(
+                "2018-08-19", {
+                    // pAraNam after 1/4 dvAdashI. Difference is probably due to manual calculations and rounding.
+                    {vp::london_coord,
+                     {FixShiftStartTime{-2min}}},
+                });
 }
 
 
 TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
-    test_one_precalculated_table_slug(
-                "2018-08-19", {
-                    {vp::london_coord,
-                     {FixShiftStartTime{-2min}}},
-                });
     test_one_precalculated_table_slug(
                 "2018-08-31", {
                     {vp::kishinev_coord,
