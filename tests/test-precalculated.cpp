@@ -1021,11 +1021,11 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                       FixRemoveParanStartTime{10h + 25min},
                       FixEnd{std::nullopt, 6h + 55min}}},
                 });
+    test_one_precalculated_table_slug("2018-08-05");
 }
 
 
 TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
-    test_one_precalculated_table_slug("2018-08-05");
     test_one_precalculated_table_slug(
                 "2018-08-19", {
                     {vp::london_coord,
