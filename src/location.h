@@ -157,6 +157,8 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location madrid_coord{"Madrid", 40, 24, 0, -3, -41, -0, "Europe/Madrid"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location miami_coord{"Miami", 25, 47, 0, -80, -13, -0, "America/New_York"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location cancun_coord{"Cancun", 21, 9, 38, -86, -50, -51, "America/Cancun"}; // en Wikipedia
+[[maybe_unused]] constexpr Location nicosia_coord{"Nicosia (Cyprus)", 35, 10, 21, 33, 21, 54, "Asia/Nicosia"}; // en Wikipedia
+
 
 
 

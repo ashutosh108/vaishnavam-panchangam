@@ -160,3 +160,4 @@ done:
 [+] two days fast: clearly state both days in "When:" in Summary [2020-03-17]
 [+] Summary gui: explicitly show pāraṇam date instead of "next day" [2020-03-17]
 [+] add links to github and patreon to "about" window [2020-03-18]
+[+] added Nicosia (Cyprus) to available locations [2020-03-19]
