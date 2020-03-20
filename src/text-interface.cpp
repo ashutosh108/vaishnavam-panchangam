@@ -140,12 +140,21 @@ void print_detail_one(date::year_month_day base_date, const char *location_name,
         if (arunodaya_info) {
             auto [arunodaya, arunodaya_half_ghatika_before] = *arunodaya_info;
 
-            o << "arunodaya-1/2ghatika: " << arunodaya_half_ghatika_before
+            o << "arunodaya-1/2ghatika: " << JulDays_Zoned{coord.timezone_name, arunodaya_half_ghatika_before}
             << ' ' << calc.swe.get_tithi(arunodaya_half_ghatika_before) << '\n';
-            o << "arunodaya: " << arunodaya
+            o << "arunodaya: " << JulDays_Zoned{coord.timezone_name, arunodaya}
             << ' ' << calc.swe.get_tithi(arunodaya) << '\n';
         }
-        o << "sunrise: " << *sunrise << ' ' << calc.swe.get_tithi(*sunrise) << '\n';
+        o << "sunrise: " << JulDays_Zoned{coord.timezone_name, *sunrise} << ' ' << calc.swe.get_tithi(*sunrise) << '\n';
+
+        auto sunset = calc.swe.find_sunset(*sunrise);
+        if (sunset) {
+            if (sunset) {
+                auto onefifth = calc.proportional_time(*sunrise, *sunset, 0.2);
+                o << "1/5 of daytime: " << JulDays_Zoned{coord.timezone_name, onefifth} << '\n';
+            }
+            o << "sunset: " << JulDays_Zoned{coord.timezone_name, *sunset} << ' ' << calc.swe.get_tithi(*sunrise) << '\n';
+        }
     }
 }
 

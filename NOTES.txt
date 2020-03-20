@@ -161,3 +161,4 @@ done:
 [+] Summary gui: explicitly show pāraṇam date instead of "next day" [2020-03-17]
 [+] add links to github and patreon to "about" window [2020-03-18]
 [+] added Nicosia (Cyprus) to available locations [2020-03-19]
+[+] cli "-d" mode: print sunset and 1/5 of daytime, print all times in local timezone
