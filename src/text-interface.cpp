@@ -27,6 +27,7 @@ const std::vector<Location> &LocationDb::locations() {
         { kalkuta_coord },
         { dushanbe_coord },
         { aktau_coord },
+        { aktobe_coord },
         { perm_coord },
         { ufa_coord },
         { ekaterinburg_coord },

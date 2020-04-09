@@ -134,6 +134,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location poltava_coord{"Poltava", 49, 34, 0, 34, 34, 0, "Europe/Kiev"};
 [[maybe_unused]] constexpr Location kazan_coord{"Kazan", 55, 47, 0, 49, 6, 0, "Europe/Moscow"};
 [[maybe_unused]] constexpr Location aktau_coord{"Aktau", 43, 39, 0, 51, 9, 0, "Asia/Aqtau"};
+[[maybe_unused]] constexpr Location aktobe_coord{"Aktobe", 50, 18, 0, 57, 10, 0, "Asia/Aqtobe"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location tallin_coord{"Tallinn", 59, 26, 0, 24, 45, 0, "Europe/Tallinn"};
 [[maybe_unused]] constexpr Location jurmala_coord{"Jurmala", 56, 58, 0, 23, 47, 0, "Europe/Riga"};
 [[maybe_unused]] constexpr Location semikarakorsk_coord{"Semikarakorsk", 47, 31, 0, 40, 48, 0, "Europe/Moscow"};
