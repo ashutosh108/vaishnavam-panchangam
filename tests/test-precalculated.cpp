@@ -1173,15 +1173,15 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                      {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::Atirikta_Ekadashi},
                       FixRemoveParanStartTime{13h+15min}}},
                 });
-}
-
-
-TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2019-03-15", {
                     {all_coord,
                      {FixShiftEndTime{+60min}}}, // switch to summer time happened earlier than old table's author expected.
                 });
+}
+
+
+TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2019-03-29", {
                     {vp::tekeli_coord,  // 1/5 of day comes before dvAdashI end, so it's standard pAraNam.
