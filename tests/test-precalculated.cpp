@@ -1039,14 +1039,14 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                      {FixStartSeconds{6h + 40min + 30s, 6h + 40min + 25s}, //rounding
                       FixEndSeconds{6h + 42min + 28s, 6h + 42min + 37s}}}, //actually 6:42:37, but we round down before checks
                 });
+    //    test_one_precalculated_table_slug("2018-09-12"); // TODO: shravaNA dvAdashI
+    //    test_one_precalculated_table_slug("2018-09-22"); // TODO: non-ekadashi tables (ananta-caturdashi here)
+        test_one_precalculated_table_slug("2018-10-03");
+        test_one_precalculated_table_slug("2018-10-18");
 }
 
 
 TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
-//    test_one_precalculated_table_slug("2018-09-12"); // TODO: shravaNA dvAdashI
-//    test_one_precalculated_table_slug("2018-09-22"); // TODO: non-ekadashi tables (ananta-caturdashi here)
-    test_one_precalculated_table_slug("2018-10-03");
-    test_one_precalculated_table_slug("2018-10-18");
     test_one_precalculated_table_slug(
                 "2018-11-01", {
                     {vp::bishkek_coord,
