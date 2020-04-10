@@ -1083,14 +1083,14 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                           FixRemoveParanStartTime{10h+48min}}},
                         {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
                     });
+        test_one_precalculated_table_slug(
+                    "2018-12-29", {
+                        {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
+                    });
 }
 
 
 TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
-    test_one_precalculated_table_slug(
-                "2018-12-29", {
-                    {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
-                });
 //    test_one_precalculated_table_slug("2019-01-09"); // TODO: non-ekAdashI tables (dhanur-vyatipAta-yoga)
     test_one_precalculated_table_slug(
                 "2019-01-13", {
