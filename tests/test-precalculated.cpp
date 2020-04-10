@@ -1110,10 +1110,6 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                       FixVrataType{vp::Vrata_Type::With_Atirikta_Dvadashi, vp::Vrata_Type::Ekadashi}}},
                 });
     test_one_precalculated_table_slug("2019-02-12");
-}
-
-
-TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2019-02-28", {
                     {vp::spb_coord,         // sandigdha: vrata next day
@@ -1177,6 +1173,10 @@ TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
                      {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::Atirikta_Ekadashi},
                       FixRemoveParanStartTime{13h+15min}}},
                 });
+}
+
+
+TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2019-03-15", {
                     {all_coord,
