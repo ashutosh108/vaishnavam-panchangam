@@ -1028,20 +1028,21 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                     {vp::london_coord,
                      {FixShiftStartTime{-2min}}},
                 });
+    test_one_precalculated_table_slug(
+                "2018-08-31", {
+                    {vp::kishinev_coord,
+                     {FixEnd{std::nullopt, 6h + 42min}}}, //obvious typoin percalc: was 6:34 (sunrise) instead of 6:42 (dvAdashI end)
+                    {vp::riga_coord,
+                     {FixStartSeconds{6h + 42min, 6h + 41min + 57s}, //rounding
+                      FixEndSeconds{6h + 42min + 28s, 6h + 42min + 37s}}}, // old panchanga gives 6:42:38, so :28 is a typo, but actual time is 6:42:37.527, so :37
+                    {vp::vilnyus_coord,
+                     {FixStartSeconds{6h + 40min + 30s, 6h + 40min + 25s}, //rounding
+                      FixEndSeconds{6h + 42min + 28s, 6h + 42min + 37s}}}, //actually 6:42:37, but we round down before checks
+                });
 }
 
 
 TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
-    test_one_precalculated_table_slug(
-                "2018-08-31", {
-                    {vp::kishinev_coord,
-                     {FixEnd{std::nullopt, 6h + 42min}}},
-                    {vp::riga_coord,
-                     {FixRemoveParanStartTime{6h + 42min},
-                      FixRemoveParanEndTime{6h + 42min + 28s}}},
-                    {vp::vilnyus_coord,
-                     {FixEndSeconds{6h + 42min + 28s, 6h + 42min + 37s}}}, //actually 6:42:37, but we round down before checks
-                });
 //    test_one_precalculated_table_slug("2018-09-12"); // TODO: shravaNA dvAdashI
 //    test_one_precalculated_table_slug("2018-09-22"); // TODO: non-ekadashi tables (ananta-caturdashi here)
     test_one_precalculated_table_slug("2018-10-03");
