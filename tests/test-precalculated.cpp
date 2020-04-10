@@ -1043,22 +1043,22 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
     //    test_one_precalculated_table_slug("2018-09-22"); // TODO: non-ekadashi tables (ananta-caturdashi here)
         test_one_precalculated_table_slug("2018-10-03");
         test_one_precalculated_table_slug("2018-10-18");
+        test_one_precalculated_table_slug(
+                    "2018-11-01", {
+                        {vp::bishkek_coord,
+                         {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
+                          FixRemoveParanStartTime{9h+17min}}},
+                        {vp::almaata_coord,
+                         {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
+                          FixRemoveParanStartTime{9h+17min}}},
+                        {vp::tekeli_coord,
+                         {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
+                          FixRemoveParanStartTime{9h+17min}}},
+                    });
 }
 
 
 TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
-    test_one_precalculated_table_slug(
-                "2018-11-01", {
-                    {vp::bishkek_coord,
-                     {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
-                      FixRemoveParanStartTime{9h+17min}}},
-                    {vp::almaata_coord,
-                     {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
-                      FixRemoveParanStartTime{9h+17min}}},
-                    {vp::tekeli_coord,
-                     {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
-                      FixRemoveParanStartTime{9h+17min}}},
-                });
     test_one_precalculated_table_slug(
                 "2018-11-17", {
                     {all_coord,
