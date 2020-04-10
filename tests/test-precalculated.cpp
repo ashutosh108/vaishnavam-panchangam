@@ -1109,11 +1109,11 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                      {FixVrataDate{2019_y/January/30, 2019_y/January/31},
                       FixVrataType{vp::Vrata_Type::With_Atirikta_Dvadashi, vp::Vrata_Type::Ekadashi}}},
                 });
+    test_one_precalculated_table_slug("2019-02-12");
 }
 
 
 TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
-    test_one_precalculated_table_slug("2019-02-12");
     test_one_precalculated_table_slug(
                 "2019-02-28", {
                     {vp::spb_coord,         // sandigdha: vrata next day
