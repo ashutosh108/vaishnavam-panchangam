@@ -1039,8 +1039,8 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                      {FixStartSeconds{6h + 40min + 30s, 6h + 40min + 25s}, //rounding
                       FixEndSeconds{6h + 42min + 28s, 6h + 42min + 37s}}}, //actually 6:42:37, but we round down before checks
                 });
-    //    test_one_precalculated_table_slug("2018-09-12"); // TODO: shravaNA dvAdashI
-    //    test_one_precalculated_table_slug("2018-09-22"); // TODO: non-ekadashi tables (ananta-caturdashi here)
+//    test_one_precalculated_table_slug("2018-09-12"); // TODO: shravaNA dvAdashI
+//    test_one_precalculated_table_slug("2018-09-22"); // TODO: non-ekadashi tables (ananta-caturdashi here)
     test_one_precalculated_table_slug("2018-10-03");
     test_one_precalculated_table_slug("2018-10-18");
     test_one_precalculated_table_slug(
@@ -1093,16 +1093,12 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                     {vp::denpasar_coord,
                      {FixStart{std::nullopt, 6h+32min}}},
                 });
-}
-
-
-TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2019-01-29", {
                     // Fredericton *old* Panchangam data:
                     // 2019-01-29 17:23:43 sunset // 10:31:11 night len */7.5=1:24:09
                     // 2019-01-30 06:03:32 ekAdashI start
-                    // 2019-01-30 06:30:45 aruNoraya (sunrise-1/7.5 of night length)
+                    // 2019-01-30 06:30:45 aruNodaya (sunrise-1/7.5 of night length)
                     // 2019-01-30 07:54:54 sunrise1
                     // 2019-01-31 07:32:05 dvAdashI start
                     // 2019-01-31 07:53:44 sunrise2
@@ -1113,6 +1109,10 @@ TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
                      {FixVrataDate{2019_y/January/30, 2019_y/January/31},
                       FixVrataType{vp::Vrata_Type::With_Atirikta_Dvadashi, vp::Vrata_Type::Ekadashi}}},
                 });
+}
+
+
+TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug("2019-02-12");
     test_one_precalculated_table_slug(
                 "2019-02-28", {
