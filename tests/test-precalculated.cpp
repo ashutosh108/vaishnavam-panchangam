@@ -1060,22 +1060,20 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                         {all_coord,
                          {FixShiftStartTime{+1min}}},
                     });
+        test_one_precalculated_table_slug(
+                    "2018-12-01", {
+                        {all_coord,
+                         {FixShiftEndTime{+1min}}},
+                        {vp::murmansk_coord, {FixSkip{}}}, // TODO: no sunrise cases
+                        {vp::kostomuksha_coord,
+                         {FixRemoveParanEndTime{9h+49min}}}, // sunrise is after dvadashi end, so it's standard "1/5" pAraNam there
+                        {vp::tallin_coord,
+                         {FixRemoveParanEndTime{8h+49min}}}, // sunrise is after dvadashi end, so it's standard "1/5" pAraNam there
+                    });
 }
 
 
 TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
-    test_one_precalculated_table_slug(
-                "2018-12-01", {
-                    {all_coord,
-                     {FixShiftEndTime{+1min}}},
-                    {vp::murmansk_coord, {FixSkip{}}}, // TODO: no sunrise cases
-                    {vp::kostomuksha_coord,
-                     {FixRemoveParanEndTime{9h+49min}}}, // sunrise is after dvadashi end, so it's standard "1/5" pAraNam there
-                    {vp::jurmala_coord,
-                     {FixRemoveParanEndTime{8h+49min}}}, // sunrise is after dvadashi end, so it's standard "1/5" pAraNam there
-                    {vp::tallin_coord,
-                     {FixRemoveParanEndTime{8h+49min}}}, // sunrise is after dvadashi end, so it's standard "1/5" pAraNam there
-                });
     test_one_precalculated_table_slug(
                 "2018-12-12", {
                     {all_coord,
