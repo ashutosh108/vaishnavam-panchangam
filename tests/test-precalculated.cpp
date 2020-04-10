@@ -1041,62 +1041,62 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                 });
     //    test_one_precalculated_table_slug("2018-09-12"); // TODO: shravaNA dvAdashI
     //    test_one_precalculated_table_slug("2018-09-22"); // TODO: non-ekadashi tables (ananta-caturdashi here)
-        test_one_precalculated_table_slug("2018-10-03");
-        test_one_precalculated_table_slug("2018-10-18");
-        test_one_precalculated_table_slug(
-                    "2018-11-01", {
-                        {vp::bishkek_coord,
-                         {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
-                          FixRemoveParanStartTime{9h+17min}}},
-                        {vp::almaata_coord,
-                         {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
-                          FixRemoveParanStartTime{9h+17min}}},
-                        {vp::tekeli_coord,
-                         {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
-                          FixRemoveParanStartTime{9h+17min}}},
-                    });
-        test_one_precalculated_table_slug(
-                    "2018-11-17", {
-                        {all_coord,
-                         {FixShiftStartTime{+1min}}},
-                    });
-        test_one_precalculated_table_slug(
-                    "2018-12-01", {
-                        {all_coord,
-                         {FixShiftEndTime{+1min}}},
-                        {vp::murmansk_coord, {FixSkip{}}}, // TODO: no sunrise cases
-                        {vp::kostomuksha_coord,
-                         {FixRemoveParanEndTime{9h+49min}}}, // sunrise is after dvadashi end, so it's standard "1/5" pAraNam there
-                        {vp::tallin_coord,
-                         {FixRemoveParanEndTime{8h+49min}}}, // sunrise is after dvadashi end, so it's standard "1/5" pAraNam there
-                    });
-        test_one_precalculated_table_slug(
-                    "2018-12-12", {
-                        {all_coord,
-                         {FixShiftEndTime{+1min},
-                          FixShiftStartTime{+1min}}},
-                        {vp::samara_coord,
-                         {FixVrataDate{2018_y/December/18, 2018_y/December/19}, // sandigdha moved it one day forward
-                          FixRemoveParanStartTime{11h+48min}}},
-                        {vp::pyatigorsk_coord,
-                         {FixVrataDate{2018_y/December/18, 2018_y/December/19}, // sandigdha moved it one day forward
-                          FixRemoveParanStartTime{10h+48min}}},
-                        {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
-                    });
-        test_one_precalculated_table_slug(
-                    "2018-12-29", {
-                        {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
-                    });
-}
-
-
-TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
+    test_one_precalculated_table_slug("2018-10-03");
+    test_one_precalculated_table_slug("2018-10-18");
+    test_one_precalculated_table_slug(
+                "2018-11-01", {
+                    {vp::bishkek_coord,
+                     {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
+                      FixRemoveParanStartTime{9h+17min}}},
+                    {vp::almaata_coord,
+                     {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
+                      FixRemoveParanStartTime{9h+17min}}},
+                    {vp::tekeli_coord,
+                     {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
+                      FixRemoveParanStartTime{9h+17min}}},
+                });
+    test_one_precalculated_table_slug(
+                "2018-11-17", {
+                    {all_coord,
+                     {FixShiftStartTime{+1min}}},
+                });
+    test_one_precalculated_table_slug(
+                "2018-12-01", {
+                    {all_coord,
+                     {FixShiftEndTime{+1min}}},
+                    {vp::murmansk_coord, {FixSkip{}}}, // TODO: no sunrise cases
+                    {vp::kostomuksha_coord,
+                     {FixRemoveParanEndTime{9h+49min}}}, // sunrise is after dvadashi end, so it's standard "1/5" pAraNam there
+                    {vp::tallin_coord,
+                     {FixRemoveParanEndTime{8h+49min}}}, // sunrise is after dvadashi end, so it's standard "1/5" pAraNam there
+                });
+    test_one_precalculated_table_slug(
+                "2018-12-12", {
+                    {all_coord,
+                     {FixShiftEndTime{+1min},
+                      FixShiftStartTime{+1min}}},
+                    {vp::samara_coord,
+                     {FixVrataDate{2018_y/December/18, 2018_y/December/19}, // sandigdha moved it one day forward
+                      FixRemoveParanStartTime{11h+48min}}},
+                    {vp::pyatigorsk_coord,
+                     {FixVrataDate{2018_y/December/18, 2018_y/December/19}, // sandigdha moved it one day forward
+                      FixRemoveParanStartTime{10h+48min}}},
+                    {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
+                });
+    test_one_precalculated_table_slug(
+                "2018-12-29", {
+                    {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
+                });
 //    test_one_precalculated_table_slug("2019-01-09"); // TODO: non-ekAdashI tables (dhanur-vyatipAta-yoga)
     test_one_precalculated_table_slug(
                 "2019-01-13", {
                     {vp::denpasar_coord,
                      {FixStart{std::nullopt, 6h+32min}}},
                 });
+}
+
+
+TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2019-01-29", {
                     // Fredericton *old* Panchangam data:
