@@ -1244,13 +1244,19 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                     {vp::marsel_coord, // precalc's paran start 06:13 is wrong: it's dvAdashI's 1/4, but it's before sunrise. Actual pAraNam is standard, from sunrise.
                      {FixRemoveParanStartTime{6h+13min}}},
                 });
+    test_one_precalculated_table_slug(
+                "2019-04-27", {
+                    // 2019-05-01 05:14:29.517097 +04 sunrise2
+                    // 2019-05-01 05:14:45.915399 +04 pAraNam start
+                    {vp::ulyanovsk_coord,
+                     {FixStart{std::nullopt, 5h + 15min}}},
+                });
 }
 
 TEST_CASE("precalculacted ekAdashIs interim test (to be moved under [!hide][precalc] tags later)") {
 }
 
 TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
-    test_one_precalculated_table_slug("2019-04-27");
     test_one_precalculated_table_slug(
                 "2019-05-13", {
                     {vp::newdelhi_coord,
