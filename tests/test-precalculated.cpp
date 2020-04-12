@@ -1178,12 +1178,10 @@ TEST_CASE("precalculated ekAdashIs part 1", "[donothide][precalc]") {
                     {all_coord,
                      {FixShiftEndTime{+60min}}}, // switch to summer time happened earlier than old table's author expected.
                 });
-}
-
-
-TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2019-03-29", {
+                    {vp::almaata_coord,  // 1/5 of day comes before dvAdashI end, so it's standard pAraNam.
+                     {FixRemoveParanEndTime{9h+8min}}},
                     {vp::tekeli_coord,  // 1/5 of day comes before dvAdashI end, so it's standard pAraNam.
                      {FixRemoveParanEndTime{9h+8min}}},
                     // ko pha ngan .. petropavlovsk: simple cell rowspan error in precalc table.
@@ -1205,11 +1203,21 @@ TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
                     {vp::petropavlovskkamchatskiy_coord,
                      {FixVrataDate{2019_y/March/31, 2019_y/April/1},
                       FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                    {vp::krasnodar_coord,
+                     {FixStartSeconds{6h + 7min, 6h + 7min + 8s},
+                      FixEndSeconds{6h + 8min, 6h + 8min + 48s}}},
                     {all_coord,
-                     {FixShiftStartTime{-2min}}},
-                    {vp::murmansk_coord,    // empty cell in precalc table, but pAraNam interval is very short
+                     {FixShiftStartTime{-2min}}}, // e.g. 10:15 => 10:13 in Simferopol. Must be typo or manual calculations error of 1/4 of dvAdashI
+                    {vp::staryyoskol_coord,
+                     {FixStartSeconds{6h + 7min, 6h + 6min + 48s},
+                      FixEndSeconds{6h + 8min, 6h + 8min + 48s}}},
+                    {vp::murmansk_coord,    // empty cell in precalc table, but pAraNam interval is quite short (sunrise..end-of-dvAdashI)
                      {FixEnd{std::nullopt, 6h+8min}}},
                 });
+}
+
+
+TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2019-04-11", {
                     {vp::petropavlovskkamchatskiy_coord,
