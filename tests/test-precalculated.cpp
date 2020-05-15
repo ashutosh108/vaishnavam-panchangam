@@ -1261,14 +1261,9 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                     {vp::ulyanovsk_coord,
                      {FixStart{std::nullopt, 5h + 15min}}},
                 });
-}
-
-TEST_CASE("precalculacted ekAdashIs interim test (to be moved under [!hide][precalc] tags later)") {
-}
-
-TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
     test_one_precalculated_table_slug(
                 "2019-05-13", {
+                    // Delhi: 1/5 of daytime (8:14:48) is close to dvadashi start (8:15:xx), so actually we shouldn't specify the paran end time here
                     {vp::newdelhi_coord,
                      {FixRemoveParanEndTime{8h+15min}}}, // dvAdashI end and 1/5 are close
                     {vp::manali_coord,
@@ -1285,6 +1280,12 @@ TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
                     {vp::toronto_coord,
                      {FixShiftStartTime{+29min}}},
                 });
+}
+
+TEST_CASE("precalculacted ekAdashIs interim test (to be moved under [!hide][precalc] tags later)") {
+}
+
+TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
 //    test_one_precalculated_table_slug("2019-05-28");
 //    test_one_precalculated_table_slug("2019-06-11");
 //    test_one_precalculated_table_slug("2019-06-26");
