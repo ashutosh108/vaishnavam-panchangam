@@ -233,12 +233,21 @@ struct Precalculated_Vrata {
           location(location_),
           paranam(paranam_)
     {}
+
+    std::string make_zoned(std::optional<vp::JulDays_UT> jd) const {
+        if (!jd.has_value()) return "(unspecified)";
+        auto zone_ptr = date::locate_zone(location.timezone_name);
+        std::stringstream s;
+        s << jd->as_zoned_time(zone_ptr);
+        return s.str();
+    }
+
     bool operator==(const vp::Vrata_Detail & nowcalc) const {
         UNSCOPED_INFO("comparing: " << date << "<=>" << nowcalc.vrata.date << ";\n"
                       << location.name << "<=>" << nowcalc.location.name << ";\n"
                       << type << "<=>" << nowcalc.vrata.type << ";\n"
-                      << to_str(paranam.start) << "<=>" << nowcalc.vrata.paran.paran_start << ";\n"
-                      << to_str(paranam.end) << "<=>" << nowcalc.vrata.paran.paran_end);
+                      << "S" << to_str(paranam.start) << "<=>" << make_zoned(nowcalc.vrata.paran.paran_start) << ";\n"
+                      << "E" << to_str(paranam.end) << "<=>" << make_zoned(nowcalc.vrata.paran.paran_end));
         if (date != nowcalc.vrata.date || location != nowcalc.location) {
             UNSCOPED_INFO("dates and locations must match, but they don't");
             return false;
@@ -751,6 +760,7 @@ std::ostream & operator<<(std::ostream & stream, std::optional<std::chrono::seco
     return stream;
 }
 
+/* Make time nullopt provided that it's old value matches the expected */
 void remove_time(std::optional<date::zoned_seconds> & time, std::optional<date::zoned_seconds> expected) {
     if (time != expected) {
         std::stringstream s;
