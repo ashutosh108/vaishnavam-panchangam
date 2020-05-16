@@ -56,6 +56,14 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
     ekadashi_start = calc.find_tithi_start(local_midnight-double_days{1.0}, Tithi{Tithi::Ekadashi});
     std::string ekadashi_descr = "ekAdashI start";
     if (ekadashi_start) {
+        auto dashami_start = calc.find_tithi_start(*ekadashi_start-double_days{1.5}, Tithi{Tithi::Dashami});
+        if (dashami_start) {
+            std::string dashami_descr = "dashamI start";
+            auto dashami_length = *ekadashi_start - *dashami_start;
+            dashami_descr += " (" + date::format("%Hh %Mm %Ss long", dashami_length) + ")";
+            events.push_back({dashami_descr, dashami_start});
+        }
+
         auto dvadashi_start = calc.find_tithi_start(*ekadashi_start, Tithi{Tithi::Dvadashi});
         std::string dvadashi_descr = "dvAdashI start";
         if (dvadashi_start) {
