@@ -175,4 +175,9 @@ date::zoned_time<double_days> JulDays_UT::as_zoned_time(const date::time_zone * 
     return date::make_zoned(time_zone, as_sys_time());
 }
 
+std::ostream &operator<<(std::ostream & s, const double_ghatikas & g)
+{
+    return s << g.count() << "gh.";
+}
+
 } // namespace vp

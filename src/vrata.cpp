@@ -144,4 +144,52 @@ date::year_month_day Vrata::local_paran_date()
     return date::year_month_day{date::sys_days{date} + delta};
 }
 
+double_ghatikas Ativrddhatvam::dashami_length() const {
+    return ekadashi_start - dashami_start;
+}
+
+double_ghatikas Ativrddhatvam::ekadashi_length() const {
+    return dvadashi_start - ekadashi_start;
+}
+
+double_ghatikas Ativrddhatvam::dvadashi_length() const {
+    return trayodashi_start - dvadashi_start;
+}
+
+Ativrddhatvam::Ativrddhaadi Ativrddhatvam::ativrddhaadi() const
+{
+    auto l10 = dashami_length().count();
+    auto l11 = ekadashi_length().count();
+    auto l12 = dvadashi_length().count();
+    auto delta1 = l11 - l10;
+    auto delta2 = l12 - l11;
+    if (delta1 > 0 && delta2 > 0 && (delta1 >= 4.0 || delta2 >= 4.0)) {
+        return Ativrddhaadi::ativrddha;
+    }
+    if (delta1 > 0 && delta2 > 0 && (delta1 >= 1.0 || delta2 >= 1.0)) {
+        return Ativrddhaadi::vrddha;
+    }
+    if (delta1 < 0 && delta2 < 0) return Ativrddhaadi::hrasva;
+            return Ativrddhaadi::samyam;
+}
+
+std::ostream &operator<<(std::ostream &s, const Ativrddhatvam::Ativrddhaadi &a)
+{
+    switch (a) {
+    case Ativrddhatvam::Ativrddhaadi::ativrddha:
+        s << "ativRddhA";
+        break;
+    case Ativrddhatvam::Ativrddhaadi::vrddha:
+        s << "vRddhA";
+        break;
+    case Ativrddhatvam::Ativrddhaadi::samyam:
+        s << "samyam";
+        break;
+    case Ativrddhatvam::Ativrddhaadi::hrasva:
+        s << "hrasva";
+        break;
+    }
+    return s;
+}
+
 } // namespace vp

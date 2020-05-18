@@ -2,6 +2,8 @@
 
 #include "calc.h"
 
+#include <iomanip>
+
 namespace vp {
 
 Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.coord), calc(std::move(swe)) {
@@ -54,30 +56,38 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
     // -1.0 to ensure we actually select start time before Ekadashi.
     // Not 100% sure it's enough, but it's working for all test cases so far.
     ekadashi_start = calc.find_tithi_start(local_midnight-double_days{1.0}, Tithi{Tithi::Ekadashi});
-    std::string ekadashi_descr = "ekAdashI start";
+    std::ostringstream ekadashi_descr;
+    ekadashi_descr << "ekAdashI start";
     if (ekadashi_start) {
         auto dashami_start = calc.find_tithi_start(*ekadashi_start-double_days{1.5}, Tithi{Tithi::Dashami});
         if (dashami_start) {
-            std::string dashami_descr = "dashamI start";
-            auto dashami_length = *ekadashi_start - *dashami_start;
-            dashami_descr += " (" + date::format("%Hh %Mm %Ss long", dashami_length) + ")";
-            events.push_back({dashami_descr, dashami_start});
+            std::ostringstream dashami_descr;
+            auto dashami_length = date::round<std::chrono::milliseconds>(*ekadashi_start - *dashami_start);
+            double_ghatikas dashami_length_ghatikas = dashami_length;
+            dashami_descr << "dashamI start (" << date::format("%Hh %Mm %Ss=", dashami_length)
+                          << std::setprecision(3) << std::fixed << dashami_length_ghatikas.count() << "gh long)";
+            events.push_back({dashami_descr.str(), dashami_start});
         }
 
         auto dvadashi_start = calc.find_tithi_start(*ekadashi_start, Tithi{Tithi::Dvadashi});
-        std::string dvadashi_descr = "dvAdashI start";
+        std::ostringstream dvadashi_descr;
+        dvadashi_descr << "dvAdashI start";
         if (dvadashi_start) {
-            auto ekadashi_length = *dvadashi_start - *ekadashi_start;
-            ekadashi_descr += " (" + date::format("%Hh %Mm %Ss long", ekadashi_length) + ")";
+            auto ekadashi_length = date::round<std::chrono::milliseconds>(*dvadashi_start - *ekadashi_start);
+            double_ghatikas ekadashi_length_ghatikas = ekadashi_length;
+            ekadashi_descr << " (" << date::format("%Hh %Mm %Ss=", ekadashi_length)
+                           << std::setprecision(3) << std::fixed << ekadashi_length_ghatikas.count() << "gh long)";
             auto dvadashi_end = calc.find_tithi_start(*dvadashi_start, Tithi{Tithi::Dvadashi_End});
             events.push_back({"dvAdashI end", dvadashi_end});
             if (dvadashi_end) {
-                auto dvadashi_length = *dvadashi_end - *dvadashi_start;
-                dvadashi_descr += " (" + date::format("%Hh %Mm %Ss long", dvadashi_length) + ")";
+                auto dvadashi_length = date::round<std::chrono::milliseconds>(*dvadashi_end - *dvadashi_start);
+                double_ghatikas dvadashi_length_ghatikas = dvadashi_length;
+                dvadashi_descr << " (" << date::format("%Hh %Mm %Ss=", dvadashi_length)
+                               << std::setprecision(3) << std::fixed << dvadashi_length_ghatikas.count() << "gh long)";
                 events.push_back({"dvAdashI's first quarter ends", Calc::proportional_time(*dvadashi_start, *dvadashi_end, 0.25)});
             }
         }
-        events.push_back({dvadashi_descr, dvadashi_start});
+        events.push_back({dvadashi_descr.str(), dvadashi_start});
         if (sunrise) {
             auto sunrise0 = calc.swe.find_sunrise(*sunrise - double_days{1.5});
             if (sunrise0 && *sunrise0 >= *ekadashi_start) {
@@ -90,7 +100,7 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
             }
         }
     }
-    events.push_back({ekadashi_descr, ekadashi_start});
+    events.push_back({ekadashi_descr.str(), ekadashi_start});
 
     if (vrata.ativrddhatvam.has_value()) {
         events.push_back({"sunset0", vrata.ativrddhatvam->prev_sunset});
@@ -104,7 +114,11 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
 std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
 {
     s << "# " << vd.location.name << "\n";
-    s << vd.vrata << ":\n";
+    s << vd.vrata;
+    if (vd.vrata.ativrddhatvam.has_value()) {
+        s << "(" << vd.vrata.ativrddhatvam->ativrddhaadi() << ")";
+    }
+    s << ":\n";
     s << vd.vrata.paran.type << '\n';
     auto events = vd.events;
     std::sort(events.begin(), events.end(), [](const Vrata_Detail::NamedTimePoint & left, const Vrata_Detail::NamedTimePoint & right) {

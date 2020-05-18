@@ -1,4 +1,3 @@
-[ ] vrata: calculate ativRddha/vRddha/samyam/hrasa status for dashamI/ekAdashI/dvAdashI
 [ ] vrata: calculate whether ekAdashI is uposhya (ativRddhAdi timepoint is free from dashamI)
 [ ] Vrata_Detail: mark some events as important (print "*"?)
 [ ] gui: mark important events from Vrata_Detail with bold
@@ -41,6 +40,9 @@
 - {kophangan+kosamui,denpasar,mirny,hab,vlad,ppk} 2019-03-31-01
 [ ] check for location name uniqueness(?)
 [ ] test cases from past Narasimha's calendars (all?)
+[ ] 2020-05-18 Kiev: why pAraNam start is slightly different from sunrise?
+    2020-05-19 05:10:28.949650 EEST sunrise2
+    2020-05-19 05:10:28.949811 EEST pAraNam start
 
 Вопросы, которые хотелось бы прояснить у пан̣д̣итов:
 - насколько важен интервал 1/5 дня для пāран̣а?
@@ -170,3 +172,4 @@ done:
 [+] vrata: calculate timepoints for ativRddha/vRddha/samyam/hrasa status (54gh 40vigh etc) [2020-05-18]
 [+] Vrata_Detail: print |16lipti/1gh/2lipti/1lipti before 4gh before sunrise" timepoints [2020-05-18]
 [+] vrata/ativrddhatvam: calculate dashamI, ekAdashI, dvAdashI, trayodashI start [2020-05-18]
+[+] vrata: calculate ativRddha/vRddha/samyam/hrasa status for dashamI/ekAdashI/dvAdashI (print in detail) [2020-05-19]

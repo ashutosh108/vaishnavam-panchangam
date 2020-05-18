@@ -560,10 +560,8 @@ double_days operator ""_hms(const char *s, const std::size_t size) {
 }
 
 TEST_CASE("ativRddhAdi gives dashamI ekAdashI, dvAdashI and trayodashI start") {
-    using namespace std::chrono_literals;
     Calc calc{kiev_coord};
-    JulDays_UT start{2020_y/May/17};
-    auto sunrise = calc.find_ekadashi_sunrise(start);
+    auto sunrise = calc.find_ekadashi_sunrise(JulDays_UT{2020_y/May/17});
     REQUIRE(sunrise.has_value());
 
     auto ativrddhadi = calc.calc_ativrddhatvam_for_sunrise(*sunrise);
@@ -573,4 +571,50 @@ TEST_CASE("ativRddhAdi gives dashamI ekAdashI, dvAdashI and trayodashI start") {
     REQUIRE(ApproximateJulDays_UT{ativrddhadi->ekadashi_start}   == JulDays_UT{2020_y/May/17, "07:12:45.607582"_hms});
     REQUIRE(ApproximateJulDays_UT{ativrddhadi->dvadashi_start}   == JulDays_UT{2020_y/May/18, "09:39:01.295689"_hms});
     REQUIRE(ApproximateJulDays_UT{ativrddhadi->trayodashi_start} == JulDays_UT{2020_y/May/19, "12:01:51.058179"_hms});
+}
+
+TEST_CASE("ativRddhAdi gives expected dashamI ekAdashI and dvAdashI length") {
+    Calc calc{kiev_coord};
+    auto sunrise = calc.find_ekadashi_sunrise(JulDays_UT{2020_y/May/17});
+    REQUIRE(sunrise.has_value());
+
+    auto ativrddhatvam = calc.calc_ativrddhatvam_for_sunrise(*sunrise);
+
+    REQUIRE(ativrddhatvam.has_value());
+    REQUIRE(ativrddhatvam->dashami_length().count() == Approx{65.805});
+    REQUIRE(ativrddhatvam->ekadashi_length().count() == Approx{66.094});
+    REQUIRE(ativrddhatvam->dvadashi_length().count() == Approx{65.951});
+}
+
+TEST_CASE("ativRddhAdi gives expected status for known cases (samyam)") {
+    Calc calc{kiev_coord};
+    auto sunrise = calc.find_ekadashi_sunrise(JulDays_UT{2020_y/May/17});
+    REQUIRE(sunrise.has_value());
+
+    auto ativrddhatvam = calc.calc_ativrddhatvam_for_sunrise(*sunrise);
+
+    REQUIRE(ativrddhatvam.has_value());
+    REQUIRE(ativrddhatvam->ativrddhaadi() == Ativrddhatvam::Ativrddhaadi::samyam);
+}
+
+TEST_CASE("ativRddhAdi gives expected status for known cases (hrasva)") {
+    Calc calc{kiev_coord};
+    auto sunrise = calc.find_ekadashi_sunrise(JulDays_UT{2020_y/May/25});
+    REQUIRE(sunrise.has_value());
+
+    auto ativrddhatvam = calc.calc_ativrddhatvam_for_sunrise(*sunrise);
+
+    REQUIRE(ativrddhatvam.has_value());
+    REQUIRE(ativrddhatvam->ativrddhaadi() == Ativrddhatvam::Ativrddhaadi::hrasva);
+}
+
+TEST_CASE("ativRddhAdi gives expected status for known cases (vRddha)") {
+    Calc calc{kiev_coord};
+    auto sunrise = calc.find_ekadashi_sunrise(JulDays_UT{2020_y/August/25});
+    REQUIRE(sunrise.has_value());
+
+    auto ativrddhatvam = calc.calc_ativrddhatvam_for_sunrise(*sunrise);
+
+    REQUIRE(ativrddhatvam.has_value());
+    REQUIRE(ativrddhatvam->ativrddhaadi() == Ativrddhatvam::Ativrddhaadi::vrddha);
 }

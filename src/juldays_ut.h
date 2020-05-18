@@ -11,6 +11,10 @@ namespace vp {
 
 using double_hours = std::chrono::duration<double, std::ratio<3600>>;
 using double_days = std::chrono::duration<double, std::ratio<86400>>;
+// these are fixed ghaTikas (24 minutes), as opposed to nighttime-daytime ghaTikas
+using double_ghatikas = std::chrono::duration<double, std::ratio<24*60>>;
+
+std::ostream & operator<<(std::ostream &, const double_ghatikas &);
 
 /* Wrapper class for jd (julian days) as it is understood in the swiss ephemeris library.
  * Very compact class: only one double in size, no virtual functions.

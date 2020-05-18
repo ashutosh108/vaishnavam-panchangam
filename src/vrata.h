@@ -50,10 +50,19 @@ struct Ativrddhatvam {
     JulDays_UT dvadashi_start;
     JulDays_UT trayodashi_start;
 
-    double_days dashami_length();
-    double_days ekadashi_length();
-    double_days dvadashi_length();
+    // describes tithI status for some ekAdashI: ativRddhA, vRddhA, samyam, hrasva
+    enum class Ativrddhaadi {
+        ativrddha, vrddha, samyam, hrasva
+    };
+
+    Ativrddhaadi ativrddhaadi() const;
+
+    double_ghatikas dashami_length() const;
+    double_ghatikas ekadashi_length() const;
+    double_ghatikas dvadashi_length() const;
 };
+
+std::ostream & operator<<(std::ostream & s, const Ativrddhatvam::Ativrddhaadi & a);
 
 struct Vrata {
     Vrata_Type type = Vrata_Type::Ekadashi;
