@@ -170,7 +170,7 @@ Ativrddhatvam::Ativrddhaadi Ativrddhatvam::ativrddhaadi() const
         return Ativrddhaadi::vrddha;
     }
     if (delta1 < 0 && delta2 < 0) return Ativrddhaadi::hrasva;
-            return Ativrddhaadi::samyam;
+    return Ativrddhaadi::samyam;
 }
 
 std::ostream &operator<<(std::ostream &s, const Ativrddhatvam::Ativrddhaadi &a)
