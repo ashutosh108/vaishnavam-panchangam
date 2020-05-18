@@ -24,19 +24,48 @@ bool is_atirikta(Vrata_Type t);
 
 std::ostream &operator<<(std::ostream &o, Vrata_Type const &v);
 
+/*
+ * Helper struct used in Vrata and returned by Calc::calc_ativrddhatvam_for_sunrise():
+ * - whether this particular ekAdashI is ativRddhA, vRddhA, samyam or hrasva
+ *   (per tithinirNayaH shloka 25: ekA''tidvAdashIvRddhau...)
+ * - for each of ativRddhAdi cases: time point which must be clean of dashamI
+ *   tithI in correponding ativRddhAdi case for the whole ekAdashI
+ *   to be considered uposhya ("fastable").
+ */
+struct Ativrddhatvam {
+    JulDays_UT prev_sunset;
+    JulDays_UT sunrise;
+
+    // Timepoints for uposhya status: if dashamI tithI extends after
+    // corresponding time_point, then this ekAdashI is not uposhya
+    // and fast must be moved to the next day.
+    // Otherwise it's clean ekAdashI (and thus uposhya, "fastable").
+    JulDays_UT time_point_54gh_40vigh; // for ativRddhA
+    JulDays_UT time_point_55gh;        // vRddhA
+    JulDays_UT time_point_55gh_50vigh; // samyam
+    JulDays_UT time_point_55gh_55vigh; // hrasva
+};
+
 struct Vrata {
     Vrata_Type type = Vrata_Type::Ekadashi;
     date::year_month_day date;
     Paran paran;
+    std::optional<Ativrddhatvam> ativrddhatvam;
 
+    // used only for tests
     Vrata(date::year_month_day _date) : date(_date){}
+
+    // used only for tests
     Vrata(Vrata_Type _type, date::year_month_day _date)
         : type(_type),
           date(_date){}
-    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran)
+
+    // we always use this constructor for real calculations
+    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran, std::optional<Ativrddhatvam> _ativrddhatvam = std::nullopt)
         : type(_type),
           date(_date),
-          paran(_paran){}
+          paran(_paran),
+          ativrddhatvam(_ativrddhatvam){}
     date::year_month_day local_paran_date();
 };
 

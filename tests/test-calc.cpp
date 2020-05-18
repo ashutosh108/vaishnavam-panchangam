@@ -41,7 +41,7 @@ public:
     ApproximateJulDays_UT(const JulDays_UT & juldays)
         : juldays_(juldays)
     {}
-    bool operator==(const JulDays_UT & other) {
+    bool operator==(const JulDays_UT & other) const {
         return juldays_.raw_julian_days_ut().count() == Approx(other.raw_julian_days_ut().count());
     }
 };
@@ -523,4 +523,21 @@ TEST_CASE("after atiriktA when 1/5 of day fits before end of dvAdashI, pAraNam m
     auto vd = Vrata_Detail{*vrata, aktau_coord};
     CAPTURE(vd);
     REQUIRE(vrata->paran.type == Paran::Type::Standard);
+}
+
+TEST_CASE("ativRddhAdi gives correct sunset, sunris and four time points") {
+    using namespace std::chrono_literals;
+    Calc calc{kiev_coord};
+    JulDays_UT start{2020_y/May/17};
+    auto sunrise = calc.find_ekadashi_sunrise(start);
+    REQUIRE(sunrise.has_value());
+
+    auto ativrddhadi = calc.calc_ativrddhatvam_for_sunrise(*sunrise);
+    REQUIRE(ativrddhadi.has_value());
+    REQUIRE(ativrddhadi->prev_sunset            == JulDays_UT{2020_y/May/17, 17h + 35min + 43.367989s});
+    REQUIRE(ativrddhadi->sunrise                == JulDays_UT{2020_y/May/18,  2h + 11min + 44.341234s});
+    REQUIRE(ativrddhadi->time_point_54gh_40vigh == JulDays_UT{2020_y/May/18,  0h + 40min +  0.168233s});
+    REQUIRE(ativrddhadi->time_point_55gh        == JulDays_UT{2020_y/May/18,  0h + 45min + 44.179040s});
+    REQUIRE(ativrddhadi->time_point_55gh_50vigh == JulDays_UT{2020_y/May/18,  1h +  0min +  4.206039s});
+    REQUIRE(ativrddhadi->time_point_55gh_55vigh == JulDays_UT{2020_y/May/18,  1h +  1min + 30.208751s});
 }

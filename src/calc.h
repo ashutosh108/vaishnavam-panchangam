@@ -34,6 +34,8 @@ public:
     static JulDays_UT proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion);
     JulDays_UT calc_astronomical_midnight(date::year_month_day date) const;
 
+    std::optional<Ativrddhatvam> calc_ativrddhatvam_for_sunrise(JulDays_UT sunrise) const;
+
     vp::Swe swe;
 
 private:
