@@ -44,6 +44,15 @@ struct Ativrddhatvam {
     JulDays_UT time_point_55gh;        // vRddhA
     JulDays_UT time_point_55gh_50vigh; // samyam
     JulDays_UT time_point_55gh_55vigh; // hrasva
+
+    JulDays_UT dashami_start;
+    JulDays_UT ekadashi_start;
+    JulDays_UT dvadashi_start;
+    JulDays_UT trayodashi_start;
+
+    double_days dashami_length();
+    double_days ekadashi_length();
+    double_days dvadashi_length();
 };
 
 struct Vrata {

@@ -42,10 +42,17 @@ public:
         : juldays_(juldays)
     {}
     bool operator==(const JulDays_UT & other) const {
-        return juldays_.raw_julian_days_ut().count() == Approx(other.raw_julian_days_ut().count());
+        constexpr double_days tolerance = 5s;
+        auto delta = juldays_ - other;
+        return (delta > -tolerance) && (delta < tolerance);
     }
+    friend std::ostream & operator<<(std::ostream & s, const ApproximateJulDays_UT & u);
 };
 
+
+std::ostream & operator<<(std::ostream & s, const ApproximateJulDays_UT & u) {
+    return s << "Approx{" << u.juldays_ << "}";
+}
 bool operator==(const Expected_Vrata &e, const Vrata &v) {
     // if "expected" paran_start/end is nullopt, then we don't care
     // about v2's one.
@@ -540,4 +547,30 @@ TEST_CASE("ativRddhAdi gives correct sunset, sunris and four time points") {
     REQUIRE(ativrddhadi->time_point_55gh        == JulDays_UT{2020_y/May/18,  0h + 45min + 44.179040s});
     REQUIRE(ativrddhadi->time_point_55gh_50vigh == JulDays_UT{2020_y/May/18,  1h +  0min +  4.206039s});
     REQUIRE(ativrddhadi->time_point_55gh_55vigh == JulDays_UT{2020_y/May/18,  1h +  1min + 30.208751s});
+}
+
+double_days operator ""_hms(const char *s, const std::size_t size) {
+    if (size != (2 + 1 + 2 + 1 + 2 + 1 + 6)) {
+        throw new std::length_error("expected format: hh:mm:ss.ssssss");
+    }
+    std::istringstream stream{s};
+    std::chrono::microseconds h_m_s;
+    stream >> date::parse("%H:%M:%S", h_m_s);
+    return h_m_s;
+}
+
+TEST_CASE("ativRddhAdi gives dashamI ekAdashI, dvAdashI and trayodashI start") {
+    using namespace std::chrono_literals;
+    Calc calc{kiev_coord};
+    JulDays_UT start{2020_y/May/17};
+    auto sunrise = calc.find_ekadashi_sunrise(start);
+    REQUIRE(sunrise.has_value());
+
+    auto ativrddhadi = calc.calc_ativrddhatvam_for_sunrise(*sunrise);
+
+    REQUIRE(ativrddhadi.has_value());
+    REQUIRE(ApproximateJulDays_UT{ativrddhadi->dashami_start}    == JulDays_UT{2020_y/May/16, "04:53:25.843109"_hms});
+    REQUIRE(ApproximateJulDays_UT{ativrddhadi->ekadashi_start}   == JulDays_UT{2020_y/May/17, "07:12:45.607582"_hms});
+    REQUIRE(ApproximateJulDays_UT{ativrddhadi->dvadashi_start}   == JulDays_UT{2020_y/May/18, "09:39:01.295689"_hms});
+    REQUIRE(ApproximateJulDays_UT{ativrddhadi->trayodashi_start} == JulDays_UT{2020_y/May/19, "12:01:51.058179"_hms});
 }

@@ -169,3 +169,4 @@ done:
 [+] print dashamI tithi length (in Vrata_Detail) [2020-05-16]
 [+] vrata: calculate timepoints for ativRddha/vRddha/samyam/hrasa status (54gh 40vigh etc) [2020-05-18]
 [+] Vrata_Detail: print |16lipti/1gh/2lipti/1lipti before 4gh before sunrise" timepoints [2020-05-18]
+[+] vrata/ativrddhatvam: calculate dashamI, ekAdashI, dvAdashI, trayodashI start [2020-05-18]

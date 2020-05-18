@@ -308,22 +308,34 @@ JulDays_UT Calc::calc_astronomical_midnight(date::year_month_day date) const {
     return JulDays_UT{JulDays_UT{date} - adjustment};
 }
 
-std::optional<Ativrddhatvam> Calc::calc_ativrddhatvam_for_sunrise(JulDays_UT sunrise) const
+std::optional<Ativrddhatvam> Calc::calc_ativrddhatvam_for_sunrise(JulDays_UT sunrise_after_ekadashi) const
 {
-    auto prev_sunset = sunset_before_sunrise(sunrise);
+    auto prev_sunset = sunset_before_sunrise(sunrise_after_ekadashi);
     if (!prev_sunset) return std::nullopt;
 
-    auto night_length = sunrise - *prev_sunset;
+    auto ekadashi_start = find_tithi_start(sunrise_after_ekadashi - double_hours{25.0}, Tithi{Tithi::Ekadashi});
+    if (!ekadashi_start) return std::nullopt;
+    auto dashami_start = find_tithi_start(*ekadashi_start - double_hours{27.0}, Tithi{Tithi::Dashami});
+    if (!dashami_start) return std::nullopt;
+    auto dvadashi_start = find_tithi_start(*ekadashi_start + double_hours{1.0}, Tithi{Tithi::Dvadashi});
+    if (!dvadashi_start) return std::nullopt;
+    auto trayodashi_start = find_tithi_start(*dvadashi_start + double_hours{1.0}, Tithi{Tithi::Trayodashi});
+    if (!trayodashi_start) return std::nullopt;
+
+    auto night_length = sunrise_after_ekadashi - *prev_sunset;
     double_days ghatika = night_length / 30.0;
     double_days vighatika = ghatika / 60.0;
     // Sunrise is 60 ghatikas after last sunrise. So 54gh 40vigh is 60:00-54:40 = 5:20 (5gh20vigh before sunrise).
     // Same for other three time points.
-    auto time_point_54gh_40vigh = sunrise - 5 * ghatika - 20 * vighatika;
-    auto time_point_55gh = sunrise - 5 * ghatika;
-    auto time_point_55gh_50vigh = sunrise - 4 * ghatika - 10 * vighatika;
-    auto time_point_55gh_55vigh = sunrise - 4 * ghatika - 5 * vighatika;
-    return Ativrddhatvam{*prev_sunset, sunrise,
-                time_point_54gh_40vigh, time_point_55gh, time_point_55gh_50vigh, time_point_55gh_55vigh};
+    auto time_point_54gh_40vigh = sunrise_after_ekadashi - 5 * ghatika - 20 * vighatika;
+    auto time_point_55gh = sunrise_after_ekadashi - 5 * ghatika;
+    auto time_point_55gh_50vigh = sunrise_after_ekadashi - 4 * ghatika - 10 * vighatika;
+    auto time_point_55gh_55vigh = sunrise_after_ekadashi - 4 * ghatika - 5 * vighatika;
+    return Ativrddhatvam{
+        *prev_sunset, sunrise_after_ekadashi,
+        time_point_54gh_40vigh, time_point_55gh, time_point_55gh_50vigh, time_point_55gh_55vigh,
+        *dashami_start, *ekadashi_start, *dvadashi_start, *trayodashi_start
+    };
 }
 
 } // namespace vp
