@@ -15,7 +15,7 @@ script:
 - mkdir -p C:/Qt && 7z x qt5.14-static-msvc2017-minimal.zip -oC:/Qt/
 - export PATH=/c/Qt/5.14-static-msvc/bin:$PATH
 - mkdir build
-- cd build && cmake .. -DCMAKE_BUILD_TYPE=Release && cmake --build . --config Release && ./Release/test-main.exe
+- cd build && cmake .. -DCMAKE_BUILD_TYPE=Release && cmake --build . --config Release && ./Release/test-main.exe "*"
 - cmake --build . --target zip
 
 # note: some lines have to be quoted because otherwise ": " in those lines
