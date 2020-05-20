@@ -146,11 +146,7 @@ bool Calc::got_atirikta_dvadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or
 
 /* Main calculation: return next vrata on a given date or after.
  * Determine type of vrata (Ekadashi, either of two Atiriktas, Sandigdha),
- * paran time.
- *
- * TODO: Sometimes we miss ekadashi when it falls on the starting day.
- *       Should probably adjust "after" for local midnight before going on.
- *       Need to find an example and add test.*/
+ * paran time.*/
 std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
 {
     auto midnight = calc_astronomical_midnight(after);
@@ -165,25 +161,31 @@ repeat_with_fixed_start_time:
     auto sunrise = find_ekadashi_sunrise(start_time);
     if (!sunrise) return std::nullopt;
 
-    auto ativrddhatvam = calc_ativrddhatvam_for_sunrise(*sunrise);
-
-    auto arunodaya_info = arunodaya_for_sunrise(*sunrise);
-    if (!arunodaya_info.has_value()) { return{}; }
-
-    auto [arunodaya, ardha_ghatika_before_arunodaya] = *arunodaya_info;
-    auto tithi_arunodaya = swe.get_tithi(arunodaya);
     Vrata_Type type = Vrata_Type::Ekadashi;
-    if ((tithi_arunodaya.is_dashami())) {
-        // purva-viddha Ekadashi, get next sunrise
+    auto ativrddhatvam = calc_ativrddhatvam_for_sunrise(*sunrise);
+    if (!ativrddhatvam.has_value()) { return std::nullopt; }
+    auto tithi_that_must_not_be_dashamI = swe.get_tithi(ativrddhatvam->relevant_timepoint());
+    if (tithi_that_must_not_be_dashamI.is_dashami()) {
         sunrise = next_sunrise(*sunrise);
-        if (!sunrise) { return {}; }
+        if (!sunrise) { return std::nullopt; }
     } else {
-        Tithi tithi_ardha_ghatika_before_arunodaya = swe.get_tithi(ardha_ghatika_before_arunodaya);
-        if (tithi_ardha_ghatika_before_arunodaya.is_dashami()) {
-            type = Vrata_Type::Sandigdha_Ekadashi;
-            // Sandigdha (almost purva-viddha Ekadashi), get next sunrise
+        auto arunodaya_info = arunodaya_for_sunrise(*sunrise);
+        if (!arunodaya_info.has_value()) { return{}; }
+
+        auto [arunodaya, ardha_ghatika_before_arunodaya] = *arunodaya_info;
+        auto tithi_arunodaya = swe.get_tithi(arunodaya);
+        if ((tithi_arunodaya.is_dashami())) {
+            // purva-viddha Ekadashi, get next sunrise
             sunrise = next_sunrise(*sunrise);
             if (!sunrise) { return {}; }
+        } else {
+            Tithi tithi_ardha_ghatika_before_arunodaya = swe.get_tithi(ardha_ghatika_before_arunodaya);
+            if (tithi_ardha_ghatika_before_arunodaya.is_dashami()) {
+                type = Vrata_Type::Sandigdha_Ekadashi;
+                // Sandigdha (almost purva-viddha Ekadashi), get next sunrise
+                sunrise = next_sunrise(*sunrise);
+                if (!sunrise) { return {}; }
+            }
         }
     }
 
@@ -327,13 +329,13 @@ std::optional<Ativrddhatvam> Calc::calc_ativrddhatvam_for_sunrise(JulDays_UT sun
     double_days vighatika = ghatika / 60.0;
     // Sunrise is 60 ghatikas after last sunrise. So 54gh 40vigh is 60:00-54:40 = 5:20 (5gh20vigh before sunrise).
     // Same for other three time points.
-    auto time_point_54gh_40vigh = sunrise_after_ekadashi - 5 * ghatika - 20 * vighatika;
-    auto time_point_55gh = sunrise_after_ekadashi - 5 * ghatika;
-    auto time_point_55gh_50vigh = sunrise_after_ekadashi - 4 * ghatika - 10 * vighatika;
-    auto time_point_55gh_55vigh = sunrise_after_ekadashi - 4 * ghatika - 5 * vighatika;
+    auto time_point_ativrddha_54gh_40vigh = sunrise_after_ekadashi - 5 * ghatika - 20 * vighatika;
+    auto time_point_vrddha_55gh = sunrise_after_ekadashi - 5 * ghatika;
+    auto time_point_samyam_55gh_50vigh = sunrise_after_ekadashi - 4 * ghatika - 10 * vighatika;
+    auto time_point_hrasva_55gh_55vigh = sunrise_after_ekadashi - 4 * ghatika - 5 * vighatika;
     return Ativrddhatvam{
         *prev_sunset, sunrise_after_ekadashi,
-        time_point_54gh_40vigh, time_point_55gh, time_point_55gh_50vigh, time_point_55gh_55vigh,
+        time_point_ativrddha_54gh_40vigh, time_point_vrddha_55gh, time_point_samyam_55gh_50vigh, time_point_hrasva_55gh_55vigh,
         *dashami_start, *ekadashi_start, *dvadashi_start, *trayodashi_start
     };
 }

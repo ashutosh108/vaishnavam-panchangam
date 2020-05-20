@@ -104,10 +104,10 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
 
     if (vrata.ativrddhatvam.has_value()) {
         events.push_back({"sunset0", vrata.ativrddhatvam->prev_sunset});
-        events.push_back({"54gh_40vigh", vrata.ativrddhatvam->time_point_54gh_40vigh});
-        events.push_back({"55gh", vrata.ativrddhatvam->time_point_55gh});
-        events.push_back({"55gh_50vigh", vrata.ativrddhatvam->time_point_55gh_50vigh});
-        events.push_back({"55gh_55vigh", vrata.ativrddhatvam->time_point_55gh_55vigh});
+        events.push_back({"54gh_40vigh (ativRddha)", vrata.ativrddhatvam->time_point_ativrddha_54gh_40vigh});
+        events.push_back({"55gh (vRddha)", vrata.ativrddhatvam->time_point_vrddha_55gh});
+        events.push_back({"55gh_50vigh (samyam)", vrata.ativrddhatvam->time_point_samyam_55gh_50vigh});
+        events.push_back({"55gh_55vigh (hrasva)", vrata.ativrddhatvam->time_point_hrasva_55gh_55vigh});
     }
 }
 

@@ -156,6 +156,22 @@ double_ghatikas Ativrddhatvam::dvadashi_length() const {
     return trayodashi_start - dvadashi_start;
 }
 
+JulDays_UT Ativrddhatvam::relevant_timepoint() const
+{
+    auto a = ativrddhaadi();
+    switch (a) {
+    case Ativrddhatvam::Ativrddhaadi::ativrddha:
+        return time_point_ativrddha_54gh_40vigh;
+    case Ativrddhatvam::Ativrddhaadi::vrddha:
+        return time_point_vrddha_55gh;
+    case Ativrddhatvam::Ativrddhaadi::samyam:
+        return time_point_samyam_55gh_50vigh;
+    case Ativrddhatvam::Ativrddhaadi::hrasva:
+        return time_point_hrasva_55gh_55vigh;
+    }
+    throw std::runtime_error("unknown Ativrddhaadi status: " + std::to_string(static_cast<int>(a)));
+}
+
 Ativrddhatvam::Ativrddhaadi Ativrddhatvam::ativrddhaadi() const
 {
     auto l10 = dashami_length().count();

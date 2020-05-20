@@ -160,11 +160,11 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(v02 == vrata(Calc{kirov_coord}, d));
     REQUIRE(v02 == vrata(Calc{ryazan_coord}, d));
     REQUIRE(v02 == vrata(Calc{moskva_coord}, d));
-    REQUIRE(sandigdha_mar02 == vrata(Calc{spb_coord}, d)); // Sandighdha, differs from Naarasimha's calendar
-    REQUIRE(sandigdha_mar02 == vrata(Calc{murmansk_coord}, d)); // Sandighdha, differs from Naarasimha's calendar
-    REQUIRE(sandigdha_mar02 == vrata(Calc{kostomuksha_coord}, d)); // Sandighdha, differs from Naarasimha's calendar
+    REQUIRE(v02 == vrata(Calc{spb_coord}, d)); // moved +1day because vRddha, differs from Naarasimha's calendar
+    REQUIRE(v02 == vrata(Calc{murmansk_coord}, d)); // moved +1day because vRddha, differs from Naarasimha's calendar
+    REQUIRE(v02 == vrata(Calc{kostomuksha_coord}, d)); // moved +1day because vRddha, differs from Naarasimha's calendar
     REQUIRE(v02 == vrata(Calc{smolensk_coord}, d));
-    REQUIRE(sandigdha_mar02 == vrata(Calc{minsk_coord}, d)); // Sandighdha, differs from Naarasimha's calendar
+    REQUIRE(v02 == vrata(Calc{minsk_coord}, d)); // moved +1day because vRddha, differs from Naarasimha's calendar
     REQUIRE(v02 == vrata(Calc{gomel_coord}, d));
     REQUIRE(v02 == vrata(Calc{harkov_coord}, d));
     REQUIRE(v02 == vrata(Calc{poltava_coord}, d));
@@ -173,14 +173,14 @@ TEST_CASE("Ekadashi 2019-02-28") {
     REQUIRE(v02 == vrata(Calc{kiev_coord}, d));
     REQUIRE(v02 == vrata(Calc{nikolaev_coord}, d));
     REQUIRE(v02 == vrata(Calc{odessa_coord}, d));
-    REQUIRE(sandigdha_mar02 == vrata(Calc{kolomyya_coord}, d)); // Sandighdha, differs from Naarasimha's calendar
+    REQUIRE(v02 == vrata(Calc{kolomyya_coord}, d)); // moved +1day because vRddha, differs from Naarasimha's calendar
     REQUIRE(v02 == vrata(Calc{kishinev_coord}, d));
     Paran paran1415{Paran::Type::From_Quarter_Dvadashi, JulDays_UT{2019_y/March/2, 12h + 14min + 40.513510s}};
     Expected_Vrata v01_paran_after_quarter{Vrata_Type::Ekadashi, 2019_y/March/1, paran1415};
-    REQUIRE(v01_atirikta_ekadashi_std_paran == vrata(Calc{riga_coord}, d));     // > 14:15, differs from Naarasimha's calendar
-    REQUIRE(v01_atirikta_ekadashi_std_paran == vrata(Calc{jurmala_coord}, d));  // > 14:15, differs from Naarasimha's calendar
-    REQUIRE(v01_atirikta_ekadashi_std_paran == vrata(Calc{tallin_coord}, d));   // > 14:15, differs from Naarasimha's calendar
-    REQUIRE(v01_atirikta_ekadashi_std_paran == vrata(Calc{vilnyus_coord}, d));  // > 14:15, differs from Naarasimha's calendar
+    REQUIRE(v02 == vrata(Calc{riga_coord}, d));     // 55gh (vRddha) < ekAdashI start < arddha-ghaTika before aruNodaya0, differs from Naarasimha's calendar
+    REQUIRE(v02 == vrata(Calc{jurmala_coord}, d));  // 55gh (vRddha) < ekAdashI start < arddha-ghaTika before aruNodaya0, differs from Naarasimha's calendar
+    REQUIRE(v02 == vrata(Calc{tallin_coord}, d));   // 55gh (vRddha) < ekAdashI start < arddha-ghaTika before aruNodaya0, differs from Naarasimha's calendar
+    REQUIRE(v02 == vrata(Calc{vilnyus_coord}, d));  // 55gh (vRddha) < ekAdashI start < arddha-ghaTika before aruNodaya0, differs from Naarasimha's calendar
     REQUIRE(v01_atirikta_ekadashi_std_paran == vrata(Calc{varshava_coord}, d)); // > 13:15, differs from Naarasimha's calendar
     REQUIRE(v01_atirikta_dvadashi_std_paran == vrata(Calc{vena_coord}, d)); //atirikta dvadashi
     REQUIRE(v01_atirikta_dvadashi == vrata(Calc{marsel_coord}, d)); //atirikta dvadashi   < 9:14
@@ -302,7 +302,7 @@ TEST_CASE("Ekadashi 2019-03-17") {
         Vrata_Type::Ekadashi,
         2019_y/March/17,
         Paran{Paran::Type::Until_Dvadashi_End, std::nullopt, JulDays_UT{2019_y/March/18, 12h + 13min + 36.459301s}}};
-    Vrata sandigdha_18{Vrata_Type::Sandigdha_Ekadashi, 2019_y/March/18};
+    Vrata v18{Vrata_Type::Ekadashi, 2019_y/March/18};
     REQUIRE(v17 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v17 == vrata(Calc{gokarna_coord}, d));
     REQUIRE(v17 == vrata(Calc{newdelhi_coord}, d));
@@ -327,7 +327,7 @@ TEST_CASE("Ekadashi 2019-03-17") {
     REQUIRE(v17 == vrata(Calc{mirnyy_coord}, d));
     REQUIRE(v17 == vrata(Calc{habarovsk_coord}, d));
     REQUIRE(v17 == vrata(Calc{vladivostok_coord}, d));
-    REQUIRE(sandigdha_18 == vrata(Calc{petropavlovskkamchatskiy_coord}, d)); // caused the code fix
+    REQUIRE(v18 == vrata(Calc{petropavlovskkamchatskiy_coord}, d)); // 55gh_55vigh (hrasva) < dashamI end
     REQUIRE(v17 == vrata(Calc{erevan_coord}, d));
     REQUIRE(v17 == vrata(Calc{tbilisi_coord}, d));
     REQUIRE(v17 == vrata(Calc{samara_coord}, d));
@@ -541,12 +541,12 @@ TEST_CASE("ativRddhAdi gives correct sunset, sunris and four time points") {
 
     auto ativrddhadi = calc.calc_ativrddhatvam_for_sunrise(*sunrise);
     REQUIRE(ativrddhadi.has_value());
-    REQUIRE(ativrddhadi->prev_sunset            == JulDays_UT{2020_y/May/17, 17h + 35min + 43.367989s});
-    REQUIRE(ativrddhadi->sunrise                == JulDays_UT{2020_y/May/18,  2h + 11min + 44.341234s});
-    REQUIRE(ativrddhadi->time_point_54gh_40vigh == JulDays_UT{2020_y/May/18,  0h + 40min +  0.168233s});
-    REQUIRE(ativrddhadi->time_point_55gh        == JulDays_UT{2020_y/May/18,  0h + 45min + 44.179040s});
-    REQUIRE(ativrddhadi->time_point_55gh_50vigh == JulDays_UT{2020_y/May/18,  1h +  0min +  4.206039s});
-    REQUIRE(ativrddhadi->time_point_55gh_55vigh == JulDays_UT{2020_y/May/18,  1h +  1min + 30.208751s});
+    REQUIRE(ativrddhadi->prev_sunset                      == JulDays_UT{2020_y/May/17, 17h + 35min + 43.367989s});
+    REQUIRE(ativrddhadi->sunrise                          == JulDays_UT{2020_y/May/18,  2h + 11min + 44.341234s});
+    REQUIRE(ativrddhadi->time_point_ativrddha_54gh_40vigh == JulDays_UT{2020_y/May/18,  0h + 40min +  0.168233s});
+    REQUIRE(ativrddhadi->time_point_vrddha_55gh           == JulDays_UT{2020_y/May/18,  0h + 45min + 44.179040s});
+    REQUIRE(ativrddhadi->time_point_samyam_55gh_50vigh    == JulDays_UT{2020_y/May/18,  1h +  0min +  4.206039s});
+    REQUIRE(ativrddhadi->time_point_hrasva_55gh_55vigh    == JulDays_UT{2020_y/May/18,  1h +  1min + 30.208751s});
 }
 
 double_days operator ""_hms(const char *s, const std::size_t size) {
@@ -617,4 +617,16 @@ TEST_CASE("ativRddhAdi gives expected status for known cases (vRddha)") {
 
     REQUIRE(ativrddhatvam.has_value());
     REQUIRE(ativrddhatvam->ativrddhaadi() == Ativrddhatvam::Ativrddhaadi::vrddha);
+}
+
+TEST_CASE("ativRddhatvam gives relevant timpoint to be checked for being 'dashamI-free'") {
+    Calc calc{kiev_coord};
+    auto sunrise = calc.find_ekadashi_sunrise(JulDays_UT{2020_y/August/25});
+    REQUIRE(sunrise.has_value());
+
+    auto ativrddhatvam = calc.calc_ativrddhatvam_for_sunrise(*sunrise);
+
+    REQUIRE(ativrddhatvam.has_value());
+    REQUIRE(ativrddhatvam->relevant_timepoint() == JulDays_UT{2020_y/August/28, "01:27:29.550524"_hms});
+    REQUIRE(ativrddhatvam->relevant_timepoint() == ativrddhatvam->time_point_vrddha_55gh);
 }

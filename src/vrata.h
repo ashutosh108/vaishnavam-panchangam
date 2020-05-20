@@ -40,10 +40,10 @@ struct Ativrddhatvam {
     // corresponding time_point, then this ekAdashI is not uposhya
     // and fast must be moved to the next day.
     // Otherwise it's clean ekAdashI (and thus uposhya, "fastable").
-    JulDays_UT time_point_54gh_40vigh; // for ativRddhA
-    JulDays_UT time_point_55gh;        // vRddhA
-    JulDays_UT time_point_55gh_50vigh; // samyam
-    JulDays_UT time_point_55gh_55vigh; // hrasva
+    JulDays_UT time_point_ativrddha_54gh_40vigh; // for ativRddhA
+    JulDays_UT time_point_vrddha_55gh;        // vRddhA
+    JulDays_UT time_point_samyam_55gh_50vigh; // samyam
+    JulDays_UT time_point_hrasva_55gh_55vigh; // hrasva
 
     JulDays_UT dashami_start;
     JulDays_UT ekadashi_start;
@@ -60,6 +60,8 @@ struct Ativrddhatvam {
     double_ghatikas dashami_length() const;
     double_ghatikas ekadashi_length() const;
     double_ghatikas dvadashi_length() const;
+
+    JulDays_UT relevant_timepoint() const;
 };
 
 std::ostream & operator<<(std::ostream & s, const Ativrddhatvam::Ativrddhaadi & a);
