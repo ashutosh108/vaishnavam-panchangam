@@ -137,14 +137,10 @@ void print_detail_one(date::year_month_day base_date, const char *location_name,
     Calc calc{coord};
     auto sunrise = calc.swe.find_sunrise(JulDays_UT{base_date});
     if (sunrise) {
-        auto arunodaya_info = calc.arunodaya_for_sunrise(*sunrise);
-        if (arunodaya_info) {
-            auto [arunodaya, arunodaya_half_ghatika_before] = *arunodaya_info;
-
-            o << "arunodaya-1/2ghatika: " << JulDays_Zoned{coord.timezone_name, arunodaya_half_ghatika_before}
-            << ' ' << calc.swe.get_tithi(arunodaya_half_ghatika_before) << '\n';
-            o << "arunodaya: " << JulDays_Zoned{coord.timezone_name, arunodaya}
-            << ' ' << calc.swe.get_tithi(arunodaya) << '\n';
+        auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
+        if (arunodaya) {
+            o << "arunodaya: " << JulDays_Zoned{coord.timezone_name, *arunodaya}
+            << ' ' << calc.swe.get_tithi(*arunodaya) << '\n';
         }
         o << "sunrise: " << JulDays_Zoned{coord.timezone_name, *sunrise} << ' ' << calc.swe.get_tithi(*sunrise) << '\n';
 

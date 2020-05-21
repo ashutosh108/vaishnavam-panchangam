@@ -206,17 +206,13 @@ std::optional<JulDays_UT> Calc::sunset_before_sunrise(JulDays_UT const sunrise) 
     return swe.find_sunset(back_24hrs);
 }
 
-std::optional<std::pair<JulDays_UT, JulDays_UT>> Calc::arunodaya_for_sunrise(JulDays_UT const sunrise) const
+std::optional<JulDays_UT> Calc::arunodaya_for_sunrise(JulDays_UT const sunrise) const
 {
     auto const prev_sunset = sunset_before_sunrise(sunrise);
     if (!prev_sunset.has_value()) { return{}; }
     constexpr double muhurtas_per_night = (12*60) / 48.0;
     constexpr double proportion_arunodaya = 2 / muhurtas_per_night; // 2/15 = 1/7.5
-    constexpr double proportion_ardha_ghatika_before = 2.25 / muhurtas_per_night; // 2.25/15
-    return std::pair(
-        proportional_time(sunrise, *prev_sunset, proportion_arunodaya),
-        proportional_time(sunrise, *prev_sunset, proportion_ardha_ghatika_before)
-    );
+    return proportional_time(sunrise, *prev_sunset, proportion_arunodaya);
 }
 
 std::optional<JulDays_UT> Calc::find_tithi_start(JulDays_UT const from, Tithi const tithi) const

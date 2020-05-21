@@ -26,7 +26,7 @@ public:
     std::optional<JulDays_UT> find_ekadashi_sunrise(JulDays_UT after) const;
 
     // get arunodaya(= sunrise - night_length/8) for given sunrise
-    std::optional<std::pair<JulDays_UT, JulDays_UT>> arunodaya_for_sunrise(JulDays_UT sunrise) const;
+    std::optional<JulDays_UT> arunodaya_for_sunrise(JulDays_UT sunrise) const;
 
     std::optional<JulDays_UT> find_tithi_start(JulDays_UT, Tithi) const;
     JulDays_UT find_tithi_start_v(JulDays_UT, Tithi) const;

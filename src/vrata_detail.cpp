@@ -18,11 +18,8 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
     auto sunrise = calc.swe.find_sunrise(local_midnight);
     events.push_back({"sunrise1", sunrise});
     if (sunrise) {
-        auto arunodaya_pair = calc.arunodaya_for_sunrise(*sunrise);
-        if (arunodaya_pair) {
-            events.push_back({"aruNodaya1", arunodaya_pair->first});
-            events.push_back({"arddha-ghaTika before aruNodaya1", arunodaya_pair->second});
-        }
+        auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
+        events.push_back({"aruNodaya1", arunodaya});
 
         auto sunset = calc.swe.find_sunset(*sunrise);
         events.push_back({"sunset1", sunset});
@@ -92,11 +89,8 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
             auto sunrise0 = calc.swe.find_sunrise(*sunrise - double_days{1.5});
             if (sunrise0 && *sunrise0 >= *ekadashi_start) {
                 events.push_back({"sunrise0", sunrise0});
-                auto arunodaya_pair = calc.arunodaya_for_sunrise(*sunrise0);
-                if (arunodaya_pair) {
-                    events.push_back({"aruNodaya0", arunodaya_pair->first});
-                    events.push_back({"arddha-ghaTika before aruNodaya0", arunodaya_pair->second});
-                }
+                auto arunodaya = calc.arunodaya_for_sunrise(*sunrise0);
+                events.push_back({"aruNodaya0", arunodaya});
             }
         }
     }

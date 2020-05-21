@@ -100,7 +100,7 @@ TEST_CASE("arunodaya_for_sunrise") {
     Location kiev{50.45, 30.523333};
     auto arunodaya = Calc{kiev}.arunodaya_for_sunrise(JulDays_UT{2019_y/March/2, 4h + 45min + 58.052015s});
     REQUIRE(arunodaya.has_value());
-    REQUIRE(arunodaya->first.round_to_minute_down() == date::sys_days(2019_y/March/2) + 3h + 0min /*+ 17.512880s*/);
+    REQUIRE(arunodaya->round_to_minute_down() == date::sys_days(2019_y/March/2) + 3h + 0min /*+ 17.512880s*/);
 }
 
 Vrata vrata(const Calc &c, date::year_month_day base_date) {

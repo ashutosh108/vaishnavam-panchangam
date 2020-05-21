@@ -174,3 +174,4 @@ done:
 [+] vrata: calculate ativRddha/vRddha/samyam/hrasa status for dashamI/ekAdashI/dvAdashI (print in detail) [2020-05-19]
 [+] calc: use new ativRddhAdi calculations in addition to old "sandigdha" rules (uposhyatvam) [2020-05-20]
 [+] use new ativRddhAdi calculations instead of sandigdha (to ensure that ekAdashI is uposhya) [2020-05-21]
+[+] remove arddha-ghaTika and sandigdha from executable code. They are no longer useful as their purpose is served by ativRddhAdi uposhya calculations. [2020-05-51]
