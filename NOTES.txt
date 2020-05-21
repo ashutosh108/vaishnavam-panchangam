@@ -1,4 +1,3 @@
-[ ] use new ativRddhAdi calculations instead of sandigdha (to ensure that ekAdashI is uposhya)
 [ ] Vrata_Detail: mark some events as important (print "*"?)
 [ ] gui: mark important events from Vrata_Detail with bold
 [ ] "copy to clipboard" function (with link to the program)
@@ -174,3 +173,4 @@ done:
 [+] vrata/ativrddhatvam: calculate dashamI, ekAdashI, dvAdashI, trayodashI start [2020-05-18]
 [+] vrata: calculate ativRddha/vRddha/samyam/hrasa status for dashamI/ekAdashI/dvAdashI (print in detail) [2020-05-19]
 [+] calc: use new ativRddhAdi calculations in addition to old "sandigdha" rules (uposhyatvam) [2020-05-20]
+[+] use new ativRddhAdi calculations instead of sandigdha (to ensure that ekAdashI is uposhya) [2020-05-21]

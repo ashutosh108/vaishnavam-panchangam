@@ -35,16 +35,10 @@ std::ostream &operator<<(std::ostream &o, const Vrata_Type &v)
     switch (v) {
     case Vrata_Type::Ekadashi:
         o << "Śuddhā ekādaśī"; break;
-    case Vrata_Type::Sandigdha_Ekadashi:
-        o << "Ekādaśī fast moved one day forward because ekādaśī tithi starts less than 1/2 ghaṭikā before sūryodaya"; break;
     case Vrata_Type::With_Atirikta_Dvadashi:
         o << "Ekādaśī with atirikta dvādaśī (two days fast)"; break;
-    case Vrata_Type::Sandigdha_With_Atirikta_Dvadashi:
-        o << "Ekādaśī moved one day forward because ekādaśī tithi starts less than 1/2 ghaṭikā before sūryodaya with atiriktā dvādaśī next day (two days fast)"; break;
     case Vrata_Type::Atirikta_Ekadashi:
         o << "Atiriktā ekādaśī (two days fast)"; break;
-    case Vrata_Type::Sandigdha_Atirikta_Ekadashi:
-        o << "Atiriktā ekādaśī moved one day forward because ekādaśī tithi starts less than 1/2 ghaṭikā before sūryodaya (two days fast)"; break;
 //    default:
 //        o << "Vrata#" << static_cast<int>(v);
     }
@@ -119,9 +113,9 @@ const std::vector<std::string> & ekadashi_names_rus()
 
 bool is_atirikta(Vrata_Type type)
 {
-    return type == Vrata_Type::With_Atirikta_Dvadashi || type == Vrata_Type::Sandigdha_With_Atirikta_Dvadashi
+    return type == Vrata_Type::With_Atirikta_Dvadashi
             ||
-            type == Vrata_Type::Atirikta_Ekadashi || type == Vrata_Type::Sandigdha_Atirikta_Ekadashi;
+           type == Vrata_Type::Atirikta_Ekadashi;
 }
 
 bool ekadashi_name_rus_is_valid(const std::string &name)

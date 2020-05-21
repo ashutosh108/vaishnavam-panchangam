@@ -13,11 +13,8 @@ namespace vp {
 
 enum class Vrata_Type {
     Ekadashi,
-    Sandigdha_Ekadashi, // when Ekadashi Tithi starts before Arunodaya, but less than 0.25 muhurtas before.
     With_Atirikta_Dvadashi,
-    Sandigdha_With_Atirikta_Dvadashi,
     Atirikta_Ekadashi,
-    Sandigdha_Atirikta_Ekadashi
 };
 
 bool is_atirikta(Vrata_Type t);

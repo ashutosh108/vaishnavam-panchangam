@@ -145,7 +145,7 @@ bool Calc::got_atirikta_dvadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or
 }
 
 /* Main calculation: return next vrata on a given date or after.
- * Determine type of vrata (Ekadashi, either of two Atiriktas, Sandigdha),
+ * Determine type of vrata (Ekadashi, or either of two Atiriktas),
  * paran time.*/
 std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
 {
@@ -161,32 +161,12 @@ repeat_with_fixed_start_time:
     auto sunrise = find_ekadashi_sunrise(start_time);
     if (!sunrise) return std::nullopt;
 
-    Vrata_Type type = Vrata_Type::Ekadashi;
     auto ativrddhatvam = calc_ativrddhatvam_for_sunrise(*sunrise);
     if (!ativrddhatvam.has_value()) { return std::nullopt; }
     auto tithi_that_must_not_be_dashamI = swe.get_tithi(ativrddhatvam->relevant_timepoint());
     if (tithi_that_must_not_be_dashamI.is_dashami()) {
         sunrise = next_sunrise(*sunrise);
         if (!sunrise) { return std::nullopt; }
-    } else {
-        auto arunodaya_info = arunodaya_for_sunrise(*sunrise);
-        if (!arunodaya_info.has_value()) { return{}; }
-
-        auto [arunodaya, ardha_ghatika_before_arunodaya] = *arunodaya_info;
-        auto tithi_arunodaya = swe.get_tithi(arunodaya);
-        if ((tithi_arunodaya.is_dashami())) {
-            // purva-viddha Ekadashi, get next sunrise
-            sunrise = next_sunrise(*sunrise);
-            if (!sunrise) { return {}; }
-        } else {
-            Tithi tithi_ardha_ghatika_before_arunodaya = swe.get_tithi(ardha_ghatika_before_arunodaya);
-            if (tithi_ardha_ghatika_before_arunodaya.is_dashami()) {
-                type = Vrata_Type::Sandigdha_Ekadashi;
-                // Sandigdha (almost purva-viddha Ekadashi), get next sunrise
-                sunrise = next_sunrise(*sunrise);
-                if (!sunrise) { return {}; }
-            }
-        }
     }
 
     auto vrata_date = get_vrata_date(*sunrise);
@@ -199,35 +179,23 @@ repeat_with_fixed_start_time:
     }
 
     if (got_atirikta_ekadashi(*sunrise)) {
-        if (type == Vrata_Type::Sandigdha_Ekadashi) {
-            type = Vrata_Type::Sandigdha_Atirikta_Ekadashi;
-        } else {
-            type = Vrata_Type::Atirikta_Ekadashi;
-        }
-
         return Vrata{
-                    type,
+                    Vrata_Type::Atirikta_Ekadashi,
                     vrata_date,
                     atirikta_paran(*sunrise),
                     ativrddhatvam};
     }
 
     if (got_atirikta_dvadashi(*sunrise)) {
-        if (type == Vrata_Type::Sandigdha_Ekadashi) {
-            type = Vrata_Type::Sandigdha_With_Atirikta_Dvadashi;
-        } else {
-            type = Vrata_Type::With_Atirikta_Dvadashi;
-        }
-
         return Vrata{
-                    type,
+                    Vrata_Type::With_Atirikta_Dvadashi,
                     vrata_date,
                     atirikta_paran(*sunrise),
                     ativrddhatvam};
     }
 
     return Vrata{
-                type,
+                Vrata_Type::Ekadashi,
                 vrata_date,
                 get_paran(*sunrise),
                 ativrddhatvam};

@@ -252,8 +252,7 @@ struct Precalculated_Vrata {
             UNSCOPED_INFO("dates and locations must match, but they don't");
             return false;
         }
-        // allow mismatch between vrata types when precalc is Ekadashi and now-calc is Sandigdha_Ekadashi
-        if (type != nowcalc.vrata.type && !(type==vp::Vrata_Type::Ekadashi && nowcalc.vrata.type == vp::Vrata_Type::Sandigdha_Ekadashi)) {
+        if (type != nowcalc.vrata.type) {
             UNSCOPED_INFO("vrata types must match, but they don't");
             return false;
         }
@@ -681,10 +680,15 @@ TEST_CASE("precalc parsing: 4. standard ekAdashI with '< end' pAraNam") {
 
 void check_precalculated_vrata(const Precalculated_Vrata & vrata) {
     CAPTURE(vrata);
+    // Start searching one day before precalculated vrata date because our rules for uposhyatvam (ativRddhAdi)
+    // differ with old calculations (arddha-ghaTika before aruNodaya).
+    // So sometimes by our calculations it is clean ekAdashI (so the fast is "today", on the first ekAdashI sunrise)
+    // whereas old rules (incorrectly) state it was dashamI viddhA (so the fast is one day later).
+    date::year_month_day start_date = date::sys_days{vrata.date} - date::days{1};
     // calculate sunrise/sunset by TOP EDGE of sun disc crossing the horizon because
     // the old precalc tables are based on data from "Panchaga" program which used
     // "by edge" setting. Our usual default is "by disc center".
-    auto our_vrata = vp::Calc{vp::Swe{vrata.location, vp::Swe::Flag::SunriseByDiscEdge}}.find_next_vrata(vrata.date);
+    auto our_vrata = vp::Calc{vp::Swe{vrata.location, vp::Swe::Flag::SunriseByDiscEdge}}.find_next_vrata(start_date);
     REQUIRE(our_vrata.has_value());
     auto our_vrata_detail = vp::Vrata_Detail{*our_vrata, vp::Swe{vrata.location, vp::Swe::Flag::SunriseByDiscEdge}};
     REQUIRE(vrata == our_vrata_detail);
@@ -805,7 +809,14 @@ struct VrataFixer {
     std::optional<date::zoned_seconds> replace_hms(std::optional<date::zoned_seconds> zoned, std::optional<std::chrono::seconds> hms) {
         if (zoned.has_value() != hms.has_value()) {
             std::stringstream s;
-            s << "can't replace hms part of '" << zoned << "' with '" << hms << "': one of them doesn't exist";
+            s << "can't replace hms part of '" << zoned << "' with '";
+            if (hms.has_value()) {
+                date::hh_mm_ss<std::chrono::seconds> hms_for_printing{*hms};
+                s << hms_for_printing;
+            } else {
+                s << "(unspecified)";
+            }
+            s << "': one of them doesn't exist";
             throw std::runtime_error(s.str());
         }
         if (!zoned) return std::nullopt;
@@ -934,10 +945,20 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                             {vp::murmansk_coord, {FixSkip{}}}, // TODO: no sunrise cases
                 });
     test_one_precalculated_table_slug(
-                "2018-01-23", {
-                    {all_coord,
-                        {FixShiftEndTime{+1min}}},
-                });
+        "2018-01-23",
+        {
+            {all_coord,
+             {FixShiftEndTime{+1min}}},
+            // london (ativRddhAdi is hrasva):
+            // 2018-01-27 05:32:59.451759 GMT arddha-ghaTika before aruNodaya1
+            // 2018-01-27 05:43:09.707190 GMT 55gh_50vigh (samyam)
+            // 2018-01-27 05:44:57.550097 GMT ekAdashI start (21h 12m 59.496s=53.041gh long)
+            // 2018-01-27 05:45:42.271037 GMT 55gh_55vigh (hrasva)
+            // 2018-01-27 05:48:14.834885 GMT aruNodaya1
+            {vp::london_coord,
+             {FixVrataDate{2018_y/January/28, 2018_y/January/27},
+              FixStart{std::nullopt, 8h + 11min}}},
+        });
 //    test_one_precalculated_table_slug("2018-02-08"); // TODO: joined ekAdashI/atiriktA cells
     test_one_precalculated_table_slug("2018-02-24");
 //    test_one_precalculated_table_slug("2018-03-10"); // TODO: shravaNA dvAdashI
@@ -983,20 +1004,32 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                      {FixSkip{}}},
                 });
     test_one_precalculated_table_slug(
-                "2018-06-07", {
-                    {vp::tbilisi_coord,
-                     {FixRemoveParanEndTime{8h + 33min}}},
-                    {vp::stavropol_coord,
-                     {FixEnd{std::nullopt, 7h + 34min}}},
-                    {vp::staryyoskol_coord,
-                     {FixRemoveParanEndTime{7h + 33min}}}, // 1/5 is a bit before enf of dvAdashI
-                    {vp::murmansk_coord,
-                     {FixSkip{}}}, // TODO: "no sunset" cases
-                    {vp::tallin_coord,
-                     {FixEnd{std::nullopt, 7h + 34min}}},
-                    {all_coord,
-                     {FixShiftEndTime{+1min}}},
-                });
+        "2018-06-07",
+        {
+            {vp::tbilisi_coord,
+             {FixRemoveParanEndTime{8h + 33min}}},
+            {vp::stavropol_coord,
+             {FixEnd{std::nullopt, 7h + 34min}}},
+            {vp::staryyoskol_coord,
+             {FixRemoveParanEndTime{7h + 33min}}}, // 1/5 is a bit before enf of dvAdashI
+            {vp::murmansk_coord,
+             {FixSkip{}}}, // TODO: "no sunset" cases
+            {vp::tallin_coord,
+             {FixEnd{std::nullopt, 7h + 34min}}},
+            {all_coord,
+             {FixShiftEndTime{+1min}}},
+            // fredericton (ativRddhAdi is hrasva):
+            // 2018-06-09 04:23:48.586967 ADT arddha-ghaTika before aruNodaya1
+            // 2018-06-09 04:29:06.180215 ADT ekAdashI start (22h 55m 32.384s=57.314gh long)
+            // 2018-06-09 04:29:27.985529 ADT 55gh_50vigh (samyam)
+            // 2018-06-09 04:30:52.835159 ADT 55gh_55vigh (hrasva)
+            // 2018-06-09 04:32:17.684870 ADT aruNodaya1
+            // ...
+            // 2018-06-10 08:56:59.588587 ADT dvAdashI's first quarter ends
+            {vp::fredericton_coord,
+             {FixVrataDate{2018_y/June/10, 2018_y/June/9},
+              FixStart{std::nullopt, 8h + 57min}}},
+        });
     test_one_precalculated_table_slug(
                 "2018-06-21", {
                     {all_coord,
@@ -1021,17 +1054,29 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                      {FixSkip{}}}, // TODO: "no sunset" cases
                 });
     test_one_precalculated_table_slug(
-                "2018-07-06", {
-                    {vp::mirnyy_coord,
-                     {FixStart{5h + 18min, 6h + 17min}}},
-                    {vp::habarovsk_coord,
-                     {FixVrataDate{2018_y/July/9, 2018_y/July/10}, // date change because we consider it (barely) sandigdha, while precalc table does not
-                      FixRemoveParanStartTime{7h + 18min}}},
-                    {vp::vladivostok_coord,
-                     {FixShiftStartTime{-1min}}},
-                    {vp::murmansk_coord,
-                     {FixSkip{}}}, // TODO: "no sunset" cases
-                });
+        "2018-07-06",
+        {
+            {vp::mirnyy_coord,
+             {FixStart{5h + 18min, 6h + 17min}}},
+            // habarovsk (hrasva):
+            // 2018-07-09 03:57:44.690776 +10 arddha-ghaTika before aruNodaya1
+            // 2018-07-09 04:00:55.573386 +10 ekAdashI start (21h 56m 23.236s=54.849gh long)
+            // 2018-07-09 04:03:13.949702 +10 55gh_50vigh (samyam)
+            // 2018-07-09 04:04:36.264364 +10 55gh_55vigh (hrasva)
+            // 2018-07-09 04:05:58.578783 +10 aruNodaya1
+            // 2018-07-09 05:11:49.682639 +10 sunrise1
+            // 2018-07-09 20:57:22.943251 +10 sunset1
+            // 2018-07-10 01:57:18.809270 +10 dvAdashI start (21h 18m 28.769s=53.270gh long)
+            // 2018-07-10 05:12:41.978473 +10 sunrise2
+            // 2018-07-10 07:16:56.001490 +10 pAraNam start
+            // 2018-07-10 07:16:56.001490 +10 dvAdashI's first quarter ends
+            {vp::habarovsk_coord,
+             {FixShiftStartTime{-1min}}},
+            {vp::vladivostok_coord,
+             {FixShiftStartTime{-1min}}},
+            {vp::murmansk_coord,
+             {FixSkip{}}}, // TODO: "no sunset" cases
+        });
     test_one_precalculated_table_slug(
                 "2018-07-20", {
                     {vp::toronto_coord,
@@ -1041,13 +1086,37 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                       FixRemoveParanStartTime{10h + 25min},
                       FixEnd{std::nullopt, 6h + 55min}}},
                 });
-    test_one_precalculated_table_slug("2018-08-05");
     test_one_precalculated_table_slug(
-                "2018-08-19", {
-                    // pAraNam after 1/4 dvAdashI. Difference is probably due to manual calculations and rounding.
-                    {vp::london_coord,
-                     {FixShiftStartTime{-2min}}},
-                });
+        "2018-08-05",
+        {
+            // vena (ativRddhAdi is hrasva):
+            // 2018-08-07 04:17:14.677403 CEST arddha-ghaTika before aruNodaya1
+            // 2018-08-07 04:22:46.309078 CEST ekAdashI start (21h 22m 53.175s=53.454gh long)
+            // 2018-08-07 04:23:29.139463 CEST 55gh_50vigh (samyam)
+            // 2018-08-07 04:25:02.754888 CEST 55gh_55vigh (hrasva)
+            // 2018-08-07 04:26:36.369991 CEST aruNodaya1
+            // ...
+            // 2018-08-08 06:59:24.819275 CEST dvAdashI's first quarter ends
+            {vp::vena_coord,
+             {FixVrataDate{2018_y/August/8, 2018_y/August/7},
+              FixStart{std::nullopt, 7h + 0min}}},
+        });
+    test_one_precalculated_table_slug(
+        "2018-08-19",
+        {
+            // ufa (ativRddhatva is samyam)
+            // 2018-08-21 04:40:23.937500 +05 arddha-ghaTika before aruNodaya1
+            // 2018-08-21 04:46:43.803232 +05 ekAdashI start (26h 23m 59.310s=66.000gh long)
+            // 2018-08-21 04:46:45.921185 +05 55gh_50vigh (samyam)
+            // 2018-08-21 04:48:21.416986 +05 55gh_55vigh (hrasva)
+            // 2018-08-21 04:49:56.912263 +05 aruNodaya1
+            {vp::ufa_coord,
+             {FixVrataDate{2018_y/August/22, 2018_y/August/21},
+              FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::Atirikta_Ekadashi}}},
+            // pAraNam after 1/4 dvAdashI. Difference is probably due to manual calculations and rounding.
+            {vp::london_coord,
+             {FixShiftStartTime{-2min}}},
+        });
     test_one_precalculated_table_slug(
                 "2018-08-31", {
                     {vp::kishinev_coord,
@@ -1064,17 +1133,25 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
     test_one_precalculated_table_slug("2018-10-03");
     test_one_precalculated_table_slug("2018-10-18");
     test_one_precalculated_table_slug(
-                "2018-11-01", {
-                    {vp::bishkek_coord,
-                     {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
-                      FixRemoveParanStartTime{9h+17min}}},
-                    {vp::almaata_coord,
-                     {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
-                      FixRemoveParanStartTime{9h+17min}}},
-                    {vp::tekeli_coord,
-                     {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
-                      FixRemoveParanStartTime{9h+17min}}},
-                });
+        "2018-11-01",
+        {
+            // bishkek (ativRddhAdi is samyam):
+            // 2018-11-03 05:36:36.737726 +06 arddha-ghaTika before aruNodaya1
+            // 2018-11-03 05:40:24.041462 +06 ekAdashI start (22h 03m 42.798s=55.155gh long)
+            // 2018-11-03 05:45:50.939508 +06 55gh_50vigh (samyam)
+            // 2018-11-03 05:48:09.489913 +06 55gh_55vigh (hrasva)
+            // 2018-11-03 05:50:28.040278 +06 aruNodaya1
+            // So after introducing ativRddhAdi, this fix for Bishkek is no longer needed.
+            // {vp::bishkek_coord,
+            //  {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
+            //   FixRemoveParanStartTime{9h+17min}}},
+            {vp::almaata_coord,
+             {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
+              FixRemoveParanStartTime{9h+17min}}},
+            {vp::tekeli_coord,
+             {FixVrataDate{2018_y/November/3, 2018_y/November/4}, // sandigdha moved it one day forward
+              FixRemoveParanStartTime{9h+17min}}},
+        });
     test_one_precalculated_table_slug(
                 "2018-11-17", {
                     {all_coord,
@@ -1091,18 +1168,58 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                      {FixRemoveParanEndTime{8h+49min}}}, // sunrise is after dvadashi end, so it's standard "1/5" pAraNam there
                 });
     test_one_precalculated_table_slug(
-                "2018-12-12", {
-                    {all_coord,
-                     {FixShiftEndTime{+1min},
-                      FixShiftStartTime{+1min}}},
-                    {vp::samara_coord,
-                     {FixVrataDate{2018_y/December/18, 2018_y/December/19}, // sandigdha moved it one day forward
-                      FixRemoveParanStartTime{11h+48min}}},
-                    {vp::pyatigorsk_coord,
-                     {FixVrataDate{2018_y/December/18, 2018_y/December/19}, // sandigdha moved it one day forward
-                      FixRemoveParanStartTime{10h+48min}}},
-                    {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
-                });
+        "2018-12-12",
+        {
+            {all_coord,
+             {FixShiftEndTime{+1min},
+              FixShiftStartTime{+1min}}},
+            // perm (ativRddhAdi is hrasva):
+            // 2018-12-18 07:23:56.310267 +05 arddha-ghaTika before aruNodaya1
+            // 2018-12-18 07:27:11.265034 +05 ekAdashI start (23h 38m 14.057s=59.093gh long)
+            // 2018-12-18 07:35:45.836252 +05 55gh_50vigh (samyam)
+            // 2018-12-18 07:38:43.217788 +05 55gh_55vigh (hrasva)
+            // 2018-12-18 07:41:40.599365 +05 aruNodaya1
+            // ...
+            // 2018-12-19 12:48:05.889584 +05 dvAdashI's first quarter ends
+            {vp::perm_coord,
+             {FixVrataDate{2018_y/December/19, 2018_y/December/18},
+              FixStart{std::nullopt, 12h + 49min}}},
+            // samara (ativRddhAdi is hrasva):
+            // 2018-12-18 06:25:03.088219 +04 arddha-ghaTika before aruNodaya1
+            // 2018-12-18 06:27:11.265034 +04 ekAdashI start (23h 38m 14.057s=59.093gh long)
+            // 2018-12-18 06:36:08.186845 +04 55gh_50vigh (samyam)
+            // 2018-12-18 06:38:54.461541 +04 55gh_55vigh (hrasva)
+            // 2018-12-18 06:41:40.736278 +04 aruNodaya1
+            // 2018-12-18 08:54:41.920749 +04 sunrise1
+            // 2018-12-18 16:17:18.280910 +04 sunset1
+            // 2018-12-19 06:05:25.321645 +04 dvAdashI start (22h 50m 42.272s=57.113gh long)
+            // 2018-12-19 08:55:23.078683 +04 sunrise2
+            // 2018-12-19 10:23:49.915076 +04 1/5 of day2
+            // 2018-12-19 11:48:05.889584 +04 pAraNam start
+            // 2018-12-19 11:48:05.889584 +04 dvAdashI's first quarter ends
+            // After atidRddhAdi calculations, this fix is no longer necessary.
+            // {vp::samara_coord,
+            //  {FixVrataDate{2018_y/December/18, 2018_y/December/19}, // sandigdha moved it one day forward
+            //   FixRemoveParanStartTime{11h+48min}}},
+            // pyatigorsk (ativRddhAdi is hrasva)
+            // 2018-12-18 05:24:07.243823 MSK arddha-ghaTika before aruNodaya1
+            // 2018-12-18 05:27:11.265034 MSK ekAdashI start (23h 38m 14.057s=59.093gh long)
+            // 2018-12-18 05:34:16.775580 MSK 55gh_50vigh (samyam)
+            // 2018-12-18 05:36:49.158540 MSK 55gh_55vigh (hrasva)
+            // 2018-12-18 05:39:21.541539 MSK aruNodaya1
+            // 2018-12-18 07:41:15.923109 MSK sunrise1
+            // 2018-12-18 16:27:18.344188 MSK sunset1
+            // 2018-12-19 05:05:25.321645 MSK dvAdashI start (22h 50m 42.272s=57.113gh long)
+            // 2018-12-19 07:41:53.046022 MSK sunrise2
+            // 2018-12-19 09:27:02.659595 MSK 1/5 of day2
+            // 2018-12-19 10:48:05.889584 MSK pAraNam start
+            // 2018-12-19 10:48:05.889584 MSK dvAdashI's first quarter ends
+            // After atidRddhAdi calculations, this fix is no longer necessary.
+            // {vp::pyatigorsk_coord,
+            //  {FixVrataDate{2018_y/December/18, 2018_y/December/19}, // sandigdha moved it one day forward
+            //   FixRemoveParanStartTime{10h+48min}}},
+            {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
+        });
     test_one_precalculated_table_slug(
                 "2018-12-29", {
                     {vp::murmansk_coord, {FixSkip{}}}, // TODO: "no sunrise" cases
@@ -1242,35 +1359,75 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                      {FixEnd{std::nullopt, 6h+8min}}},
                 });
     test_one_precalculated_table_slug(
-                "2019-04-11", {
-                    {vp::petropavlovskkamchatskiy_coord,
-                     {FixEnd{7h + 55min, 7h + 56min}}},     // discrepancy reason is not clear
-                    {vp::gomel_coord, // sandigdha moved vrata one day ahead
-                     {FixVrataDate{2019_y/April/15, 2019_y/April/16},
-                      FixRemoveParanStartTime{7h+13min}}},
-                    {all_coord,
-                     {FixShiftStartTime{-4min}}}, // e.g. 07:13 => 07:09 for Minsk (quarter of dvAdashI)
-                    // Kremenchug old Panchangam data:
-                    // 2019-04-15 04:36:08 aruNodaya
-                    // 2019-04-15 04:38:24 ekAdashI start
-                    // 2019-04-15 05:59:45 sunrise0
-                    // 2019-04-16 01:53:15 dvAdashI start
-                    // so even from old data this should have been ekAdashI on 16th, not 15th.
-                    {vp::kremenchug_coord,
-                     {FixVrataDate{2019_y/April/15, 2019_y/April/16},
-                      FixRemoveParanStartTime{7h+13min}}},
-                    {vp::krivoyrog_coord, //sandigdha moved vrata one day ahead
-                     {FixVrataDate{2019_y/April/15, 2019_y/April/16},
-                      FixRemoveParanStartTime{7h+13min}}},
-                    {vp::kiev_coord, //sandigdha moved vrata one day ahead
-                     {FixVrataDate{2019_y/April/15, 2019_y/April/16},
-                      FixRemoveParanStartTime{7h+13min}}},
-                    {vp::nikolaev_coord, //sandigdha moved vrata one day ahead
-                     {FixVrataDate{2019_y/April/15, 2019_y/April/16},
-                      FixRemoveParanStartTime{7h+13min}}},
-                    {vp::marsel_coord, // precalc's paran start 06:13 is wrong: it's dvAdashI's 1/4, but it's before sunrise. Actual pAraNam is standard, from sunrise.
-                     {FixRemoveParanStartTime{6h+13min}}},
-                });
+        "2019-04-11",
+        {
+            {vp::petropavlovskkamchatskiy_coord,
+             {FixEnd{7h + 55min, 7h + 56min}}},     // discrepancy reason is not clear
+            // gomel (ativRddhAdi is hrasva):
+            // 2019-04-15 04:31:13.806077 +03 arddha-ghaTika before aruNodaya1
+            // 2019-04-15 04:38:03.931231 +03 55gh_50vigh (samyam)
+            // 2019-04-15 04:38:23.925893 +03 ekAdashI start (21h 14m 51.571s=53.119gh long)
+            // 2019-04-15 04:39:46.462560 +03 55gh_55vigh (hrasva)
+            // 2019-04-15 04:41:28.994050 +03 aruNodaya1
+            // 2019-04-15 06:03:30.497631 +03 sunrise1
+            // 2019-04-15 19:50:02.871448 +03 sunset1
+            // 2019-04-16 01:53:15.496876 +03 dvAdashI start (21h 02m 51.995s=52.619gh long)
+            // 2019-04-16 06:01:18.089337 +03 sunrise2
+            // 2019-04-16 07:08:58.495517 +03 pAraNam start
+            // 2019-04-16 07:08:58.495517 +03 dvAdashI's first quarter ends
+            // So after ativRddhAdi, this fix is no longer necessary.
+            // {vp::gomel_coord, // sandigdha moved vrata one day ahead
+            //  {FixVrataDate{2019_y/April/15, 2019_y/April/16},
+            //   FixRemoveParanStartTime{7h+13min}}},
+            {all_coord,
+             {FixShiftStartTime{-4min}}}, // e.g. 07:13 => 07:09 for Minsk (quarter of dvAdashI)
+            // Kremenchug old Panchangam data:
+            // 2019-04-15 04:36:08 aruNodaya
+            // 2019-04-15 04:38:24 ekAdashI start
+            // 2019-04-15 05:59:45 sunrise0
+            // 2019-04-16 01:53:15 dvAdashI start
+            // so even from old data this should have been ekAdashI on 16th, not 15th.
+            {vp::kremenchug_coord,
+             {FixVrataDate{2019_y/April/15, 2019_y/April/16},
+              FixRemoveParanStartTime{7h+13min}}},
+            {vp::krivoyrog_coord, //sandigdha moved vrata one day ahead
+             {FixVrataDate{2019_y/April/15, 2019_y/April/16},
+              FixRemoveParanStartTime{7h+13min}}},
+            // kiev (ativRddhAdi is hrasva):
+            // 2019-04-15 04:35:15.669541 EEST arddha-ghaTika before aruNodaya1
+            // 2019-04-15 04:38:23.925893 EEST ekAdashI start (21h 14m 51.571s=53.119gh long)
+            // 2019-04-15 04:42:10.630436 EEST 55gh_50vigh (samyam)
+            // 2019-04-15 04:43:54.370691 EEST 55gh_55vigh (hrasva)
+            // 2019-04-15 04:45:38.111025 EEST aruNodaya1
+            // 2019-04-15 06:08:37.643058 EEST sunrise1
+            // 2019-04-15 19:47:46.215379 EEST sunset1
+            // 2019-04-16 01:53:15.496876 EEST dvAdashI start (21h 02m 51.995s=52.619gh long)
+            // 2019-04-16 06:06:33.781368 EEST sunrise2
+            // 2019-04-16 07:08:58.495517 EEST pAraNam start
+            // 2019-04-16 07:08:58.495517 EEST dvAdashI's first quarter ends
+            // No fix necessary with ativRddhAdi.
+            // {vp::kiev_coord, //sandigdha moved vrata one day ahead
+            //  {FixVrataDate{2019_y/April/15, 2019_y/April/16},
+            //   FixRemoveParanStartTime{7h+13min}}},
+            // nikolaev (ativRddhAdi is hrasva):
+            // 2019-04-15 04:33:41.159492 EEST arddha-ghaTika before aruNodaya1
+            // 2019-04-15 04:38:23.925893 EEST ekAdashI start (21h 14m 51.571s=53.119gh long)
+            // 2019-04-15 04:40:43.580054 EEST 55gh_50vigh (samyam)
+            // 2019-04-15 04:42:29.185194 EEST 55gh_55vigh (hrasva)
+            // 2019-04-15 04:44:14.790495 EEST aruNodaya1
+            // 2019-04-15 06:08:43.838398 EEST sunrise1
+            // 2019-04-15 19:36:27.924510 EEST sunset1
+            // 2019-04-16 01:53:15.496876 EEST dvAdashI start (21h 02m 51.995s=52.619gh long)
+            // 2019-04-16 06:06:53.027452 EEST sunrise2
+            // 2019-04-16 07:08:58.495517 EEST pAraNam start
+            // 2019-04-16 07:08:58.495517 EEST dvAdashI's first quarter ends
+            // No fix necessary with ativRddhAdi.
+            // {vp::nikolaev_coord, //sandigdha moved vrata one day ahead
+            //  {FixVrataDate{2019_y/April/15, 2019_y/April/16},
+            //   FixRemoveParanStartTime{7h+13min}}},
+            {vp::marsel_coord, // precalc's paran start 06:13 is wrong: it's dvAdashI's 1/4, but it's before sunrise. Actual pAraNam is standard, from sunrise.
+             {FixRemoveParanStartTime{6h+13min}}},
+        });
     test_one_precalculated_table_slug(
                 "2019-04-27", {
                     // 2019-05-01 05:14:29.517097 +04 sunrise2
