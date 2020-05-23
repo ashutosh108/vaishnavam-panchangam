@@ -187,16 +187,16 @@ std::ostream &operator<<(std::ostream &s, const Ativrddhatvam::Ativrddhaadi &a)
 {
     switch (a) {
     case Ativrddhatvam::Ativrddhaadi::ativrddha:
-        s << "ativRddhA";
+        s << "ativṛddhiḥ";
         break;
     case Ativrddhatvam::Ativrddhaadi::vrddha:
-        s << "vRddhA";
+        s << "vṛddhiḥ";
         break;
     case Ativrddhatvam::Ativrddhaadi::samyam:
-        s << "samyam";
+        s << "sāmyam";
         break;
     case Ativrddhatvam::Ativrddhaadi::hrasva:
-        s << "hrasva";
+        s << "hrāsaḥ";
         break;
     }
     return s;

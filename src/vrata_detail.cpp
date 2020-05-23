@@ -12,7 +12,7 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
     events.push_back({"**sunrise1**", sunrise});
     if (sunrise) {
         auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
-        events.push_back({"aruNodaya1", arunodaya});
+        events.push_back({"aruṇodaya1", arunodaya});
 
         auto sunset = calc.swe.find_sunset(*sunrise);
         events.push_back({"sunset1", sunset});
@@ -47,34 +47,34 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
     // Not 100% sure it's enough, but it's working for all test cases so far.
     ekadashi_start = calc.find_tithi_start(local_midnight-double_days{1.0}, Tithi{Tithi::Ekadashi});
     std::ostringstream ekadashi_descr;
-    ekadashi_descr << "**ekAdashI start**";
+    ekadashi_descr << "**ekādaśī start**";
     if (ekadashi_start) {
         auto dashami_start = calc.find_tithi_start(*ekadashi_start-double_days{1.5}, Tithi{Tithi::Dashami});
         if (dashami_start) {
             std::ostringstream dashami_descr;
             auto dashami_length = date::round<std::chrono::milliseconds>(*ekadashi_start - *dashami_start);
             double_ghatikas dashami_length_ghatikas = dashami_length;
-            dashami_descr << "dashamI start (" << date::format("%Hh %Mm %Ss=", dashami_length)
+            dashami_descr << "daśamī start (" << date::format("%Hh %Mm %Ss=", dashami_length)
                           << std::setprecision(3) << std::fixed << dashami_length_ghatikas.count() << "gh long)";
             events.push_back({dashami_descr.str(), dashami_start});
         }
 
         auto dvadashi_start = calc.find_tithi_start(*ekadashi_start, Tithi{Tithi::Dvadashi});
         std::ostringstream dvadashi_descr;
-        dvadashi_descr << "dvAdashI start";
+        dvadashi_descr << "dvādaśī start";
         if (dvadashi_start) {
             auto ekadashi_length = date::round<std::chrono::milliseconds>(*dvadashi_start - *ekadashi_start);
             double_ghatikas ekadashi_length_ghatikas = ekadashi_length;
             ekadashi_descr << " (" << date::format("%Hh %Mm %Ss=", ekadashi_length)
                            << std::setprecision(3) << std::fixed << ekadashi_length_ghatikas.count() << "gh long)";
             auto dvadashi_end = calc.find_tithi_start(*dvadashi_start, Tithi{Tithi::Dvadashi_End});
-            events.push_back({"dvAdashI end", dvadashi_end});
+            events.push_back({"dvādaśī end", dvadashi_end});
             if (dvadashi_end) {
                 auto dvadashi_length = date::round<std::chrono::milliseconds>(*dvadashi_end - *dvadashi_start);
                 double_ghatikas dvadashi_length_ghatikas = dvadashi_length;
                 dvadashi_descr << " (" << date::format("%Hh %Mm %Ss=", dvadashi_length)
                                << std::setprecision(3) << std::fixed << dvadashi_length_ghatikas.count() << "gh long)";
-                events.push_back({"dvAdashI's first quarter ends", Calc::proportional_time(*dvadashi_start, *dvadashi_end, 0.25)});
+                events.push_back({"dvādaśī's first quarter ends", Calc::proportional_time(*dvadashi_start, *dvadashi_end, 0.25)});
             }
         }
         events.push_back({dvadashi_descr.str(), dvadashi_start});
@@ -83,7 +83,7 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
             if (sunrise0 && *sunrise0 >= *ekadashi_start) {
                 events.push_back({"sunrise0", sunrise0});
                 auto arunodaya = calc.arunodaya_for_sunrise(*sunrise0);
-                events.push_back({"aruNodaya0", arunodaya});
+                events.push_back({"aruṇodaya0", arunodaya});
             }
         }
     }
@@ -94,23 +94,23 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
         std::string star;
         auto status = vrata.ativrddhatvam->ativrddhaadi();
         star = (status == Ativrddhatvam::Ativrddhaadi::ativrddha) ? "**" : "";
-        events.push_back({"54gh_40vigh (" + star + "ativRddha" + star + ")", vrata.ativrddhatvam->time_point_ativrddha_54gh_40vigh});
+        events.push_back({"54gh_40vigh (" + star + "ativṛddhiḥ" + star + ")", vrata.ativrddhatvam->time_point_ativrddha_54gh_40vigh});
         star = status == Ativrddhatvam::Ativrddhaadi::vrddha ? "**" : "";
-        events.push_back({"55gh (" + star + "vRddha" + star + ")", vrata.ativrddhatvam->time_point_vrddha_55gh});
+        events.push_back({"55gh (" + star + "vṛddhiḥ" + star + ")", vrata.ativrddhatvam->time_point_vrddha_55gh});
         star = status == Ativrddhatvam::Ativrddhaadi::samyam ? "**" : "";
-        events.push_back({"55gh_50vigh (" + star + "samyam" + star + ")", vrata.ativrddhatvam->time_point_samyam_55gh_50vigh});
+        events.push_back({"55gh_50vigh (" + star + "sāmyam" + star + ")", vrata.ativrddhatvam->time_point_samyam_55gh_50vigh});
         star = status == Ativrddhatvam::Ativrddhaadi::hrasva ? "**" : "";
-        events.push_back({"55gh_55vigh (" + star + "hrasva" + star + ")", vrata.ativrddhatvam->time_point_hrasva_55gh_55vigh});
+        events.push_back({"55gh_55vigh (" + star + "hrāsaḥ" + star + ")", vrata.ativrddhatvam->time_point_hrasva_55gh_55vigh});
     }
 
     // push them at the end so after joining duplicate events the "paranam" text would come after "sunrise" etc.
     // e.g. we want to have: yyyy-mm-dd hh:mm:ss.ssss sunrise1, pAraNam start
     // and we don't want to have: yyyy-mm-dd hh:mm:ss.ssss pAraNam start, sunrise1
     if (vrata.paran.paran_start) {
-        events.push_back({"**pAraNam start**", vrata.paran.paran_start});
+        events.push_back({"**pāraṇam start**", vrata.paran.paran_start});
     }
     if (vrata.paran.paran_end) {
-        events.push_back({"**pAraNam end**", vrata.paran.paran_end});
+        events.push_back({"**pāraṇam end**", vrata.paran.paran_end});
     }
 }
 
