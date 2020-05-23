@@ -7,13 +7,6 @@
 namespace vp {
 
 Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.coord), calc(std::move(swe)) {
-    if (vrata.paran.paran_start) {
-        events.push_back({"pAraNam start", vrata.paran.paran_start});
-    }
-    if (vrata.paran.paran_end) {
-        events.push_back({"pAraNam end", vrata.paran.paran_end});
-    }
-
     JulDays_UT local_midnight = calc.calc_astronomical_midnight(vrata.date);
     auto sunrise = calc.swe.find_sunrise(local_midnight);
     events.push_back({"sunrise1", sunrise});
@@ -103,6 +96,28 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
         events.push_back({"55gh_50vigh (samyam)", vrata.ativrddhatvam->time_point_samyam_55gh_50vigh});
         events.push_back({"55gh_55vigh (hrasva)", vrata.ativrddhatvam->time_point_hrasva_55gh_55vigh});
     }
+
+    // push them at the end so after joining duplicate events the "paranam" text would come after "sunrise" etc.
+    // e.g. we want to have: yyyy-mm-dd hh:mm:ss.ssss sunrise1, pAraNam start
+    // and we don't want to have: yyyy-mm-dd hh:mm:ss.ssss pAraNam start, sunrise1
+    if (vrata.paran.paran_start) {
+        events.push_back({"pAraNam start", vrata.paran.paran_start});
+    }
+    if (vrata.paran.paran_end) {
+        events.push_back({"pAraNam end", vrata.paran.paran_end});
+    }
+}
+
+static void merge_consequent_events_with_same_time(std::vector<Vrata_Detail::NamedTimePoint> & events) {
+    for (std::size_t i = 1; i < events.size(); ++i) {
+        auto time1 = events[i-1].time_point;
+        auto time2 = events[i].time_point;
+        // same time for both events. Merge them by appending descriptions via comma.
+        if (time1 == time2) {
+            events[i-1].name += ", " + events[i].name;
+            events.erase(events.begin() + i);
+        }
+    }
 }
 
 std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
@@ -115,9 +130,11 @@ std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
     s << ":\n";
     s << vd.vrata.paran.type << '\n';
     auto events = vd.events;
-    std::sort(events.begin(), events.end(), [](const Vrata_Detail::NamedTimePoint & left, const Vrata_Detail::NamedTimePoint & right) {
+    // stable sort to keep "pAraNam start/end" after corresponding sunrise+ events.
+    std::stable_sort(events.begin(), events.end(), [](const Vrata_Detail::NamedTimePoint & left, const Vrata_Detail::NamedTimePoint & right) {
         return left.time_point < right.time_point;
     });
+    merge_consequent_events_with_same_time(events);
     for (const auto & e : events) {
         if (e.time_point.has_value()) {
             s << JulDays_Zoned{vd.location.timezone_name, *e.time_point} << ' ' << e.name << '\n';

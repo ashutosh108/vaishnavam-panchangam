@@ -156,3 +156,4 @@ done:
 [+] use new ativRddhAdi calculations instead of sandigdha (to ensure that ekAdashI is uposhya) [2020-05-21]
 [+] remove arddha-ghaTika and sandigdha from executable code. They are no longer useful as their purpose is served by ativRddhAdi uposhya calculations. [2020-05-51]
 [+] make Qt5 an optional dependency (so we could build CLI-only version e.g. for wasm tests) [2020-05-23]
+[+] detail: merge "pAraNam start/end" events with matching events (sunrise etc) [2020-05-23]
