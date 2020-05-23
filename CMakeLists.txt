@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
 
 project(vaishnavam-panchangam VERSION 0.1 LANGUAGES C CXX)
 option(VP_BUILD_STATIC_EXECUTABLE "build static executable (no .dll or .so dependencies like MSVCRT or libc++)" ON)
+option(VP_BUILD_QT_GUI "build Qt GUI" ON)
 
 include(cmake/common.cmake)
 
@@ -139,7 +140,9 @@ add_custom_target(
 
 include(CPack)
 
-add_subdirectory(gui-qt)
+if (VP_BUILD_QT_GUI)
+    add_subdirectory(gui-qt)
+endif()
 
 # GCC 7.x and 8.x: link with stdc++fs library
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0))
