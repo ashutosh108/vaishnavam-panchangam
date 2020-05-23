@@ -35,8 +35,6 @@
 двāдащӣм̇ щраван̣опетāм̇ йо нопошйāт суманда-дӿӣх̤ •
 пањча-сам̇ватсара-крьтам̇ пун̣йам̇ тасйа винащйати ••
 «У того недоумка, что не постится на сопряженную со Щраван̣ой двāдащӣ, пун̣ье, пріобретенное за пять лѣт, будет уничтожено» (Крьшн̣āмрьта-махāрн̣авам, 160).
-[ ] two-days ekAdashI
-- {kophangan+kosamui,denpasar,mirny,hab,vlad,ppk} 2019-03-31-01
 [ ] check for location name uniqueness(?)
 [ ] test cases from past Narasimha's calendars (all?)
 [ ] 2020-05-18 Kiev: why pAraNam start is slightly different from sunrise?
@@ -46,9 +44,6 @@
 Вопросы, которые хотелось бы прояснить у пан̣д̣итов:
 - насколько важен интервал 1/5 дня для пāран̣а?
     - Уместно ли давать очень короткий интервал пāран̣а, например, когда начало — после 1/4двāдащӣ, а конец — 1/5 дня? Сейчас есть мысль не указывать конец парана когда он задан 1/5 дня и длительность меньше 1 мухӯрты.
-
-Обнаруженные расхождения с рассылками Нāрасим̇хи:
-- 2019-11-07-08: Narasima says it's atiriktA-dvAdashI, VP says Sandigdha-ekAdashI (with otherwise possible atiriktA-ekAdashI). https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-11-05/
 
 == When compiling with gcc from msys2/mingw32, the .exe depends on
 - libwinpthread-1.dll
@@ -62,22 +57,6 @@ $ cd build
 $ emcmake cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-s ASSERTIONS=1 -s DEMANGLE_SUPPORT=1 -D HAS_THREADS=0 -s DISABLE_EXCEPTION_CATCHING=0" ..
 $ cmake --build .
 $ node test-main.js
-
-  MVP:
-        command line utility:
-                given base time point, calculate next ekadashi:
-                        input:
-                                - base time point (UTC)
-                                - coordinates
-                        output
-                                - date(s) of fasting
-                                - type
-                                        shuddha
-                                        mishra
-                                        atirikta Ekadashi
-                                        atirikta Dvadashi
-                                        suddha Dvadashi (?)
-                                - paran time interval
 
 done:
 [+] ensure that sweph repo actually corresponds to 2.07.01 (bar Perl archives)
