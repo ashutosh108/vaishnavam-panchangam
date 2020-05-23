@@ -158,3 +158,4 @@ done:
 [+] Vrata_Detail: mark some events as important (print "*") [2020-05-23]
 [+] gui: mark important events from Vrata_Detail with bold [2020-05-23]
 [+] write "+1.053gh" etc in ekādaśī start etc. [2020-05-23]
+[+] Vrata_Detail: do not print ativrddhatvam status in the first line [2020-05-23]

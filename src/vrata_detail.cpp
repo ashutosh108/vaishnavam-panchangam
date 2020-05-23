@@ -131,11 +131,7 @@ static void merge_consequent_events_with_same_time(std::vector<Vrata_Detail::Nam
 std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
 {
     s << "# " << vd.location.name << "\n";
-    s << vd.vrata;
-    if (vd.vrata.ativrddhatvam.has_value()) {
-        s << " (" << vd.vrata.ativrddhatvam->ativrddhaadi() << ")";
-    }
-    s << ":\n";
+    s << vd.vrata << ":\n";
     s << vd.vrata.paran.type << '\n';
     auto events = vd.events;
     // stable sort to keep "pAraNam start/end" after corresponding sunrise+ events.
