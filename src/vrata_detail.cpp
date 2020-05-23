@@ -50,11 +50,11 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
     ekadashi_descr << "**ekādaśī start**";
     if (ekadashi_start) {
         auto dashami_start = calc.find_tithi_start(*ekadashi_start-double_days{1.5}, Tithi{Tithi::Dashami});
+        double_ghatikas dashami_length_ghatikas;
         if (dashami_start) {
             std::ostringstream dashami_descr;
-            auto dashami_length = date::round<std::chrono::milliseconds>(*ekadashi_start - *dashami_start);
-            double_ghatikas dashami_length_ghatikas = dashami_length;
-            dashami_descr << "daśamī start (" << date::format("%Hh %Mm %Ss=", dashami_length)
+            dashami_length_ghatikas = *ekadashi_start - *dashami_start;
+            dashami_descr << "daśamī start ("
                           << std::setprecision(3) << std::fixed << dashami_length_ghatikas.count() << "gh long)";
             events.push_back({dashami_descr.str(), dashami_start});
         }
@@ -62,18 +62,20 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
         auto dvadashi_start = calc.find_tithi_start(*ekadashi_start, Tithi{Tithi::Dvadashi});
         std::ostringstream dvadashi_descr;
         dvadashi_descr << "dvādaśī start";
-        if (dvadashi_start) {
-            auto ekadashi_length = date::round<std::chrono::milliseconds>(*dvadashi_start - *ekadashi_start);
-            double_ghatikas ekadashi_length_ghatikas = ekadashi_length;
-            ekadashi_descr << " (" << date::format("%Hh %Mm %Ss=", ekadashi_length)
-                           << std::setprecision(3) << std::fixed << ekadashi_length_ghatikas.count() << "gh long)";
+        if (dashami_start && dvadashi_start) {
+            double_ghatikas ekadashi_length_ghatikas = *dvadashi_start - *ekadashi_start;
+            double_ghatikas ekadashi_delta = ekadashi_length_ghatikas - dashami_length_ghatikas;
+            ekadashi_descr << " ("
+                           << std::setprecision(3) << std::fixed << ekadashi_length_ghatikas.count() << "gh long; "
+                           << std::showpos << "**" << ekadashi_delta.count() << "gh**)";
             auto dvadashi_end = calc.find_tithi_start(*dvadashi_start, Tithi{Tithi::Dvadashi_End});
             events.push_back({"dvādaśī end", dvadashi_end});
             if (dvadashi_end) {
-                auto dvadashi_length = date::round<std::chrono::milliseconds>(*dvadashi_end - *dvadashi_start);
-                double_ghatikas dvadashi_length_ghatikas = dvadashi_length;
-                dvadashi_descr << " (" << date::format("%Hh %Mm %Ss=", dvadashi_length)
-                               << std::setprecision(3) << std::fixed << dvadashi_length_ghatikas.count() << "gh long)";
+                double_ghatikas dvadashi_length_ghatikas = *dvadashi_end - *dvadashi_start;
+                double_ghatikas dvadashi_delta = dvadashi_length_ghatikas - ekadashi_length_ghatikas;
+                dvadashi_descr << " ("
+                               << std::setprecision(3) << std::fixed << dvadashi_length_ghatikas.count() << "gh long; "
+                               << std::showpos << "**" << dvadashi_delta.count() << "gh**)";
                 events.push_back({"dvādaśī's first quarter ends", Calc::proportional_time(*dvadashi_start, *dvadashi_end, 0.25)});
             }
         }

@@ -42,15 +42,17 @@ static QString htmlify_line(const std::string & line) {
     if (res.startsWith("# ")) {
         return "<h1>" + res + "</h1>";
     }
-    auto start = res.indexOf("**");
-    auto end = res.lastIndexOf("**");
-    if (start != -1 && end != -1 && start + 2 <= end) {
-        res =
-            res.mid(0, start)
-            + "<b>"
-            + res.mid(start, end+2 - start)
-            + "</b>"
-            + res.mid(end+2, line.length()-(end+2));
+    int pos = 0;
+    while(1) {
+        auto start = res.indexOf("**", pos);
+        if (start == -1) break;
+        auto end = res.indexOf("**", start+2);
+        if (end == -1) break;
+        // 9 is 2 (length of "**") + 3 (length of "<b>") + 4 (length of "</b>")
+        pos = end + 9;
+        res = res.replace(start, 2, "<b>**");
+        // end+3 because "<b>**" in previous replacement is three chars longer than "**"
+        res = res.replace(end+3, 2, "**</b>");
     }
     return res;
 }
