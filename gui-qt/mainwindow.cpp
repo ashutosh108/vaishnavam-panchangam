@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include <iterator>
 #include <QDate>
 #include <QMessageBox>
 #include <sstream>
@@ -35,6 +36,35 @@ date::sys_days to_sys_days(QDate qd)
         (sys_days{1970_y/January/1} - sys_days{year{-4713}/November/24})};
 }
 
+static QString htmlify_line(const std::string & line) {
+    QString res = QString::fromStdString(line).toHtmlEscaped();
+
+    if (res.startsWith("# ")) {
+        return "<h1>" + res + "</h1>";
+    }
+    auto start = res.indexOf("**");
+    auto end = res.lastIndexOf("**");
+    if (start != -1 && end != -1 && start + 2 <= end) {
+        res =
+            res.mid(0, start)
+            + "<b>"
+            + res.mid(start, end+2 - start)
+            + "</b>"
+            + res.mid(end+2, line.length()-(end+2));
+    }
+    return res;
+}
+
+static QString get_html_from_detail_stream(std::stringstream & s) {
+    QString res;
+    s.seekg(0);
+    for (std::string line; std::getline(s, line);) {
+        res += htmlify_line(line);
+        res += "<br>\n";
+    }
+    return res;
+}
+
 void MainWindow::on_FindNextEkadashi_clicked()
 {
     try {
@@ -49,7 +79,11 @@ void MainWindow::on_FindNextEkadashi_clicked()
             calcOne(date, location_string, s);
         }
 
-        ui->calcResult->setText(QString::fromStdString(s.str()));
+        QString detail_html = get_html_from_detail_stream(s);
+        ui->calcResult->setHtml(detail_html);
+
+//        ui->calcResult->setHtml("<h1>Detail</h1>" + Qt::convertFromPlainText(QString::fromStdString(s.str())));
+//        ui->calcResult->setText(QString::fromStdString(s.str()));
     } catch (std::exception &e) {
         QMessageBox::warning(this, "error", e.what());
     } catch (...) {

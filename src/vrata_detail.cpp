@@ -9,7 +9,7 @@ namespace vp {
 Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.coord), calc(std::move(swe)) {
     JulDays_UT local_midnight = calc.calc_astronomical_midnight(vrata.date);
     auto sunrise = calc.swe.find_sunrise(local_midnight);
-    events.push_back({"sunrise1 *", sunrise});
+    events.push_back({"**sunrise1**", sunrise});
     if (sunrise) {
         auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
         events.push_back({"aruNodaya1", arunodaya});
@@ -47,7 +47,7 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
     // Not 100% sure it's enough, but it's working for all test cases so far.
     ekadashi_start = calc.find_tithi_start(local_midnight-double_days{1.0}, Tithi{Tithi::Ekadashi});
     std::ostringstream ekadashi_descr;
-    ekadashi_descr << "ekAdashI start";
+    ekadashi_descr << "**ekAdashI start**";
     if (ekadashi_start) {
         auto dashami_start = calc.find_tithi_start(*ekadashi_start-double_days{1.5}, Tithi{Tithi::Dashami});
         if (dashami_start) {
@@ -87,31 +87,30 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
             }
         }
     }
-    ekadashi_descr << " *";
     events.push_back({ekadashi_descr.str(), ekadashi_start});
 
     if (vrata.ativrddhatvam.has_value()) {
         events.push_back({"sunset0", vrata.ativrddhatvam->prev_sunset});
         std::string star;
         auto status = vrata.ativrddhatvam->ativrddhaadi();
-        star = (status == Ativrddhatvam::Ativrddhaadi::ativrddha) ? " *" : "";
-        events.push_back({"54gh_40vigh (ativRddha)" + star, vrata.ativrddhatvam->time_point_ativrddha_54gh_40vigh});
-        star = status == Ativrddhatvam::Ativrddhaadi::vrddha ? " *" : "";
-        events.push_back({"55gh (vRddha)" + star, vrata.ativrddhatvam->time_point_vrddha_55gh});
-        star = status == Ativrddhatvam::Ativrddhaadi::samyam ? " *" : "";
-        events.push_back({"55gh_50vigh (samyam)" + star, vrata.ativrddhatvam->time_point_samyam_55gh_50vigh});
-        star = status == Ativrddhatvam::Ativrddhaadi::hrasva ? " *" : "";
-        events.push_back({"55gh_55vigh (hrasva)" + star, vrata.ativrddhatvam->time_point_hrasva_55gh_55vigh});
+        star = (status == Ativrddhatvam::Ativrddhaadi::ativrddha) ? "**" : "";
+        events.push_back({"54gh_40vigh (" + star + "ativRddha" + star + ")", vrata.ativrddhatvam->time_point_ativrddha_54gh_40vigh});
+        star = status == Ativrddhatvam::Ativrddhaadi::vrddha ? "**" : "";
+        events.push_back({"55gh (" + star + "vRddha" + star + ")", vrata.ativrddhatvam->time_point_vrddha_55gh});
+        star = status == Ativrddhatvam::Ativrddhaadi::samyam ? "**" : "";
+        events.push_back({"55gh_50vigh (" + star + "samyam" + star + ")", vrata.ativrddhatvam->time_point_samyam_55gh_50vigh});
+        star = status == Ativrddhatvam::Ativrddhaadi::hrasva ? "**" : "";
+        events.push_back({"55gh_55vigh (" + star + "hrasva" + star + ")", vrata.ativrddhatvam->time_point_hrasva_55gh_55vigh});
     }
 
     // push them at the end so after joining duplicate events the "paranam" text would come after "sunrise" etc.
     // e.g. we want to have: yyyy-mm-dd hh:mm:ss.ssss sunrise1, pAraNam start
     // and we don't want to have: yyyy-mm-dd hh:mm:ss.ssss pAraNam start, sunrise1
     if (vrata.paran.paran_start) {
-        events.push_back({"pAraNam start *", vrata.paran.paran_start});
+        events.push_back({"**pAraNam start**", vrata.paran.paran_start});
     }
     if (vrata.paran.paran_end) {
-        events.push_back({"pAraNam end *", vrata.paran.paran_end});
+        events.push_back({"**pAraNam end**", vrata.paran.paran_end});
     }
 }
 

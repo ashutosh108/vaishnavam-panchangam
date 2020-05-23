@@ -1,5 +1,4 @@
 [ ] add "table" output tab (all primary locations in a single table)
-[ ] gui: mark important events from Vrata_Detail with bold
 [ ] "copy to clipboard" function (with link to the program)
 [ ] "copy as image to clipboard"
 [ ] "all" option: rethink how it works for simple output. separate thread for calculations + get rid of "calculate" button?
@@ -157,3 +156,4 @@ done:
 [+] make Qt5 an optional dependency (so we could build CLI-only version e.g. for wasm tests) [2020-05-23]
 [+] detail: merge "pAraNam start/end" events with matching events (sunrise etc) [2020-05-23]
 [+] Vrata_Detail: mark some events as important (print "*") [2020-05-23]
+[+] gui: mark important events from Vrata_Detail with bold [2020-05-23]
