@@ -10,6 +10,7 @@
 #include "filesystem-fixed.h"
 #include <fstream>
 #include <map>
+#include <unordered_map>
 #include <regex>
 #include <sstream>
 #include <variant>
