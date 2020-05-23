@@ -9,7 +9,7 @@ namespace vp {
 Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.coord), calc(std::move(swe)) {
     JulDays_UT local_midnight = calc.calc_astronomical_midnight(vrata.date);
     auto sunrise = calc.swe.find_sunrise(local_midnight);
-    events.push_back({"sunrise1", sunrise});
+    events.push_back({"sunrise1 *", sunrise});
     if (sunrise) {
         auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
         events.push_back({"aruNodaya1", arunodaya});
@@ -87,24 +87,31 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.co
             }
         }
     }
+    ekadashi_descr << " *";
     events.push_back({ekadashi_descr.str(), ekadashi_start});
 
     if (vrata.ativrddhatvam.has_value()) {
         events.push_back({"sunset0", vrata.ativrddhatvam->prev_sunset});
-        events.push_back({"54gh_40vigh (ativRddha)", vrata.ativrddhatvam->time_point_ativrddha_54gh_40vigh});
-        events.push_back({"55gh (vRddha)", vrata.ativrddhatvam->time_point_vrddha_55gh});
-        events.push_back({"55gh_50vigh (samyam)", vrata.ativrddhatvam->time_point_samyam_55gh_50vigh});
-        events.push_back({"55gh_55vigh (hrasva)", vrata.ativrddhatvam->time_point_hrasva_55gh_55vigh});
+        std::string star;
+        auto status = vrata.ativrddhatvam->ativrddhaadi();
+        star = (status == Ativrddhatvam::Ativrddhaadi::ativrddha) ? " *" : "";
+        events.push_back({"54gh_40vigh (ativRddha)" + star, vrata.ativrddhatvam->time_point_ativrddha_54gh_40vigh});
+        star = status == Ativrddhatvam::Ativrddhaadi::vrddha ? " *" : "";
+        events.push_back({"55gh (vRddha)" + star, vrata.ativrddhatvam->time_point_vrddha_55gh});
+        star = status == Ativrddhatvam::Ativrddhaadi::samyam ? " *" : "";
+        events.push_back({"55gh_50vigh (samyam)" + star, vrata.ativrddhatvam->time_point_samyam_55gh_50vigh});
+        star = status == Ativrddhatvam::Ativrddhaadi::hrasva ? " *" : "";
+        events.push_back({"55gh_55vigh (hrasva)" + star, vrata.ativrddhatvam->time_point_hrasva_55gh_55vigh});
     }
 
     // push them at the end so after joining duplicate events the "paranam" text would come after "sunrise" etc.
     // e.g. we want to have: yyyy-mm-dd hh:mm:ss.ssss sunrise1, pAraNam start
     // and we don't want to have: yyyy-mm-dd hh:mm:ss.ssss pAraNam start, sunrise1
     if (vrata.paran.paran_start) {
-        events.push_back({"pAraNam start", vrata.paran.paran_start});
+        events.push_back({"pAraNam start *", vrata.paran.paran_start});
     }
     if (vrata.paran.paran_end) {
-        events.push_back({"pAraNam end", vrata.paran.paran_end});
+        events.push_back({"pAraNam end *", vrata.paran.paran_end});
     }
 }
 
@@ -125,7 +132,7 @@ std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
     s << "# " << vd.location.name << "\n";
     s << vd.vrata;
     if (vd.vrata.ativrddhatvam.has_value()) {
-        s << "(" << vd.vrata.ativrddhatvam->ativrddhaadi() << ")";
+        s << " (" << vd.vrata.ativrddhatvam->ativrddhaadi() << ")";
     }
     s << ":\n";
     s << vd.vrata.paran.type << '\n';

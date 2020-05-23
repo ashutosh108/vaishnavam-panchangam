@@ -1,5 +1,4 @@
 [ ] add "table" output tab (all primary locations in a single table)
-[ ] Vrata_Detail: mark some events as important (print "*"?)
 [ ] gui: mark important events from Vrata_Detail with bold
 [ ] "copy to clipboard" function (with link to the program)
 [ ] "copy as image to clipboard"
@@ -157,3 +156,4 @@ done:
 [+] remove arddha-ghaTika and sandigdha from executable code. They are no longer useful as their purpose is served by ativRddhAdi uposhya calculations. [2020-05-51]
 [+] make Qt5 an optional dependency (so we could build CLI-only version e.g. for wasm tests) [2020-05-23]
 [+] detail: merge "pAraNam start/end" events with matching events (sunrise etc) [2020-05-23]
+[+] Vrata_Detail: mark some events as important (print "*") [2020-05-23]
