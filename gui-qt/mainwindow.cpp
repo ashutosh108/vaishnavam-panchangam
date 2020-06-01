@@ -36,6 +36,7 @@ date::sys_days to_sys_days(QDate qd)
         (sys_days{1970_y/January/1} - sys_days{year{-4713}/November/24})};
 }
 
+// parse tiny subset of markdown in a single plain text line, return HTML version
 static QString htmlify_line(const std::string & line) {
     QString res = QString::fromStdString(line).toHtmlEscaped();
 
@@ -83,9 +84,6 @@ void MainWindow::on_FindNextEkadashi_clicked()
 
         QString detail_html = get_html_from_detail_stream(s);
         ui->calcResult->setHtml(detail_html);
-
-//        ui->calcResult->setHtml("<h1>Detail</h1>" + Qt::convertFromPlainText(QString::fromStdString(s.str())));
-//        ui->calcResult->setText(QString::fromStdString(s.str()));
     } catch (std::exception &e) {
         QMessageBox::warning(this, "error", e.what());
     } catch (...) {
