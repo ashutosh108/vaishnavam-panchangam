@@ -34,7 +34,12 @@ target_compile_definitions(date INTERFACE HAS_UNCAUGHT_EXCEPTIONS=1)
 add_library(tz STATIC vendor/date/src/tz.cpp)
 add_library(date::tz ALIAS tz)
 target_link_libraries( tz PUBLIC date::date)
-target_compile_definitions(tz PRIVATE HAS_REMOTE_API=0)
+# When INSTALL is defined, tz doesn't require <wordexp.h> which allows us
+# to compile on some platofms. Actual value of INSTALL doesn't matter so much
+# as we override it with set_install() on startup.
+#
+# HAS_REMOTE_API=0 is a hack to avoid requiring curl (and we don't want to require curl yet).
+target_compile_definitions(tz PRIVATE HAS_REMOTE_API=0 INSTALL=.)
 # glibc on linux seem to require -pthread for std::call_once. Approximate that with "not win32".
 if (NOT WIN32)
     find_package(Threads)
