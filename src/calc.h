@@ -9,15 +9,26 @@
 #include "vrata.h"
 
 #include <optional>
+#include <tl/expected.hpp>
 
 namespace vp {
+
+enum class CalcErrorCode {
+    CantFindSunriseAfter,
+    CantFindAtivrddhatvam,
+};
+
+struct CalcError {
+    CalcErrorCode code;
+    JulDays_UT timepoint;
+};
 
 class Calc
 {
 public:
     Calc(Swe swe);
     // main interface: get info for nearest future Vrata after given date
-    std::optional<Vrata> find_next_vrata(date::year_month_day after) const;
+    tl::expected<Vrata, CalcError> find_next_vrata(date::year_month_day after) const;
 
     // Helper functions. They are public for easier testing,
     // but should be considered private otherwise.

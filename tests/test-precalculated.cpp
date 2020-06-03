@@ -620,8 +620,6 @@ std::vector<Precalculated_Vrata> extract_vratas_from_precalculated_table(std::st
             continue;
         }
 
-        // TODO: check that timezone in the table matches our data (move to extract_vrata?)
-
         vratas.push_back(extract_vrata_from_row(row_data, date_headers));
     }
     return vratas;

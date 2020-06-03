@@ -1,7 +1,7 @@
 #ifndef SWE_H
 #define SWE_H
 
-#include <cstdint>
+#include <cstdint> // for int32_t
 #include <optional>
 
 #include "location.h"

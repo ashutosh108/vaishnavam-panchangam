@@ -59,7 +59,7 @@ add_library(swe STATIC
     src/text-interface.cpp
 )
 target_include_directories(swe PRIVATE vendor/sweph/src src)
-target_link_libraries(swe PRIVATE sweph PUBLIC date::tz)
+target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected)
 
 add_library(sweph STATIC
     vendor/sweph/src/swecl.c
@@ -187,3 +187,6 @@ endif()
 set(VP_VERSION "preview ${VP_COMPILATION_DATE} rev ${VP_REV}")
 message(STATUS "VP version ${VP_VERSION}")
 target_compile_definitions(swe PRIVATE VP_VERSION="${VP_VERSION}")
+
+add_library(tl-expected INTERFACE)
+target_include_directories(tl-expected INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/vendor/expected/include)

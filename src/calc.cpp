@@ -4,6 +4,7 @@
 #include <deque>
 #include <iostream>
 #include <optional>
+#include <tl/expected.hpp>
 
 #include "calc.h"
 #include "concat.h"
@@ -147,7 +148,7 @@ bool Calc::got_atirikta_dvadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or
 /* Main calculation: return next vrata on a given date or after.
  * Determine type of vrata (Ekadashi, or either of two Atiriktas),
  * paran time.*/
-std::optional<Vrata> Calc::find_next_vrata(date::year_month_day after) const
+tl::expected<Vrata, CalcError> Calc::find_next_vrata(date::year_month_day after) const
 {
     auto midnight = calc_astronomical_midnight(after);
     auto start_time = midnight - double_days{3.0};
@@ -159,14 +160,14 @@ repeat_with_fixed_start_time:
         throw std::runtime_error(s.str());
     }
     auto sunrise = find_ekadashi_sunrise(start_time);
-    if (!sunrise) return std::nullopt;
+    if (!sunrise) return tl::unexpected{CalcError{CalcErrorCode::CantFindSunriseAfter, start_time}};
 
     auto ativrddhatvam = calc_ativrddhatvam_for_sunrise(*sunrise);
-    if (!ativrddhatvam.has_value()) { return std::nullopt; }
+    if (!ativrddhatvam.has_value()) { return tl::unexpected{CalcError{CalcErrorCode::CantFindAtivrddhatvam, *sunrise}};; }
     auto tithi_that_must_not_be_dashamI = swe.get_tithi(ativrddhatvam->relevant_timepoint());
     if (tithi_that_must_not_be_dashamI.is_dashami()) {
         sunrise = next_sunrise(*sunrise);
-        if (!sunrise) { return std::nullopt; }
+        if (!sunrise) { return tl::unexpected{CalcError{CalcErrorCode::CantFindSunriseAfter, start_time}}; }
     }
 
     auto vrata_date = get_vrata_date(*sunrise);
