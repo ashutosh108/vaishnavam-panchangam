@@ -28,17 +28,15 @@ JulDays_UT Calc::proportional_time(JulDays_UT const t1, JulDays_UT const t2, dou
     return t1 + distance * proportion;
 }
 
+/* get_vrata_date():
+ * Returns the formal date for the vrata i.e. date for the vrata sunrise
+ * in local timezone.
+ */
 date::year_month_day Calc::get_vrata_date(const JulDays_UT sunrise) const
 {
-    // Adjust to make sure that Vrata data is correct in local timezone
-    // (as opposed to *sunrise which is in UTC). We do this by adding an hour
-    // for every 30 degrees of eastern latitude (24 hours for 360 degrees).
-    // This could give wrong date if actual local timezone is quite
-    // different from the "natural" timezone. But until we support proper
-    // timezone, this should work for most cases.
-    double_days adjustment_in_days{swe.coord.longitude * (1.0/360)};
-    JulDays_UT local_sunrise = sunrise + adjustment_in_days;
-    return local_sunrise.year_month_day();
+    auto timezone = date::locate_zone(swe.coord.timezone_name);
+    auto zoned = sunrise.as_zoned_time(timezone);
+    return date::year_month_day{date::floor<date::days>(zoned.get_local_time())};
 }
 
 Paran Calc::get_paran(const JulDays_UT last_fasting_sunrise) const
