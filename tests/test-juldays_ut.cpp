@@ -4,7 +4,6 @@
 
 #include "catch.hpp"
 #include <chrono>
-#include <optional>
 #include <sstream>
 #include "tz-fixed.h"
 
@@ -14,7 +13,7 @@ using namespace std::literals::chrono_literals;
 
 TEST_CASE( "Can create JulDays_UT from double_days" ) {
     const double_days arbitrary_double_days{124.0};
-    JulDays_UT t{arbitrary_double_days};
+    [[maybe_unused]] JulDays_UT t{arbitrary_double_days};
     REQUIRE(true);
 }
 
@@ -120,18 +119,6 @@ TEST_CASE("Can create Juldays_UT from local hh:mm") {
     JulDays_UT jd{local, date::locate_zone("Europe/Moscow")};
     // 0.25 means 00:15am UTC which correposnds to 03:15 Moscow local time
     REQUIRE(JulDays_UT{2019_y/January/1, double_hours{0.25}} == jd);
-}
-
-TEST_CASE("Can output empty optional Juldays_UT") {
-    std::optional<JulDays_UT> jd{};
-    std::stringstream s;
-    s << jd;
-}
-
-TEST_CASE("Can output non-empty optional Juldays_UT") {
-    std::optional<JulDays_UT> jd{double_days{300.0}};
-    std::stringstream s;
-    s << jd;
 }
 
 TEST_CASE("round_to_minute_up() works") {

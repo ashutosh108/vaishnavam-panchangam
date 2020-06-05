@@ -4,7 +4,6 @@
 #include "location.h"
 
 #include <exception>
-#include <optional>
 #include <sstream>
 #include "swephexp.h"
 
@@ -17,7 +16,7 @@ constexpr double atmospheric_pressure = 1013.25;
 constexpr double atmospheric_temperature = 15;
 }
 
-std::optional<JulDays_UT> Swe::do_rise_trans(int rise_or_set, JulDays_UT after) const {
+tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int rise_or_set, JulDays_UT after) const {
     int32 rsmi = rise_or_set | rise_flags;
     double geopos[3] = {coord.longitude, coord.latitude, 0};
     double trise;
@@ -37,7 +36,10 @@ std::optional<JulDays_UT> Swe::do_rise_trans(int rise_or_set, JulDays_UT after) 
     }
 
     if (res_flag == -2) {
-        return std::nullopt;
+        if (rise_or_set == SE_CALC_SET) {
+            return tl::unexpected{CalcError{CalcErrorCode::CantFindSunsetAfter, after}};
+        }
+        return tl::unexpected{CalcError{CalcErrorCode::CantFindSunriseAfter, after}};
     } else {
         return JulDays_UT{double_days{trise}};
     }
@@ -88,32 +90,32 @@ Swe &Swe::operator=(Swe && other) noexcept
     return *this;
 }
 
-std::optional<JulDays_UT> Swe::find_sunrise(JulDays_UT after) const
+tl::expected<JulDays_UT, CalcError> Swe::find_sunrise(JulDays_UT after) const
 {
     return do_rise_trans(SE_CALC_RISE, after);
 }
 
 JulDays_UT Swe::find_sunrise_v(JulDays_UT after) const
 {
-    auto sunrise_or_nullopt = find_sunrise(after);
-    if (!sunrise_or_nullopt) {
+    auto sunrise_or_error = find_sunrise(after);
+    if (!sunrise_or_error) {
         throw std::runtime_error(concat("can't find next sunrise after ", after));
     }
-    return *sunrise_or_nullopt;
+    return *sunrise_or_error;
 }
 
-std::optional<JulDays_UT> Swe::find_sunset(JulDays_UT after) const
+tl::expected<JulDays_UT, CalcError> Swe::find_sunset(JulDays_UT after) const
 {
     return do_rise_trans(SE_CALC_SET, after);
 }
 
 JulDays_UT Swe::find_sunset_v(JulDays_UT after) const
 {
-    auto sunset_or_nullopt = find_sunset(after);
-    if (!sunset_or_nullopt) {
+    auto sunset_or_error = find_sunset(after);
+    if (!sunset_or_error) {
         throw std::runtime_error(concat("can't find sunset after ", after));
     }
-    return *sunset_or_nullopt;
+    return *sunset_or_error;
 }
 
 [[noreturn]] void Swe::throw_on_wrong_flags(int out_flags, int in_flags, char *serr) const {

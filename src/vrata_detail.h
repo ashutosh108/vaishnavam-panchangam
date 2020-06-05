@@ -12,10 +12,10 @@ struct Vrata_Detail {
     Vrata_Detail(Vrata _vrata, Swe swe);
     struct NamedTimePoint {
         std::string name;
-        std::optional<JulDays_UT> time_point;
+        JulDays_UT time_point;
     };
 
-    std::optional<JulDays_UT> ekadashi_start;
+    JulDays_UT ekadashi_start;
     std::vector<NamedTimePoint> events;
 };
 

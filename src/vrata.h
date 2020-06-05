@@ -61,24 +61,43 @@ struct Ativrddhatvam {
     JulDays_UT relevant_timepoint() const;
 };
 
+// For tests where we need to initialize ativrddhatvam and we don't care about
+// it's value, so it's arbitrary.
+[[maybe_unused]] constexpr Ativrddhatvam dummy_ativrddhatvam{
+    JulDays_UT{double_days{0.0}}, //prev_sunset
+    JulDays_UT{double_days{0.0}},    // sunrise;
+
+    JulDays_UT{double_days{0.0}}, // time_point_ativrddha_54gh_40vigh; // for ativRddhA
+    JulDays_UT{double_days{0.0}}, // time_point_vrddha_55gh;        // vRddhA
+    JulDays_UT{double_days{0.0}}, // time_point_samyam_55gh_50vigh; // samyam
+    JulDays_UT{double_days{0.0}}, // time_point_hrasva_55gh_55vigh; // hrasva
+    JulDays_UT{double_days{0.0}}, // dashami_start;
+    JulDays_UT{double_days{0.0}}, // ekadashi_start;
+    JulDays_UT{double_days{0.0}}, // dvadashi_start;
+    JulDays_UT{double_days{0.0}}, // trayodashi_start;
+};
+
 std::ostream & operator<<(std::ostream & s, const Ativrddhatvam::Ativrddhaadi & a);
 
 struct Vrata {
     Vrata_Type type = Vrata_Type::Ekadashi;
     date::year_month_day date;
     Paran paran;
-    std::optional<Ativrddhatvam> ativrddhatvam;
+    Ativrddhatvam ativrddhatvam;
 
     // used only for tests
-    Vrata(date::year_month_day _date) : date(_date){}
+    Vrata(date::year_month_day _date, Ativrddhatvam _ativrddhatvam)
+        : date(_date),
+          ativrddhatvam(_ativrddhatvam){}
 
     // used only for tests
-    Vrata(Vrata_Type _type, date::year_month_day _date)
+    Vrata(Vrata_Type _type, date::year_month_day _date, Ativrddhatvam _ativrddhatvam)
         : type(_type),
-          date(_date){}
+          date(_date),
+          ativrddhatvam(_ativrddhatvam){}
 
     // we always use this constructor for real calculations
-    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran, std::optional<Ativrddhatvam> _ativrddhatvam = std::nullopt)
+    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran, Ativrddhatvam _ativrddhatvam)
         : type(_type),
           date(_date),
           paran(_paran),
