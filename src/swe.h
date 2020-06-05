@@ -24,6 +24,8 @@ struct CalcError {
         :code(_code), timepoint(timepoint_), tithi(tithi_) {}
 };
 
+std::ostream & operator<<(std::ostream & o, const CalcError & err);
+
 class Swe
 {
 public:

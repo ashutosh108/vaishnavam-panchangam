@@ -6,9 +6,6 @@
 #include <QMessageBox>
 #include <sstream>
 
-#include "calc.h"
-#include "juldays_ut.h"
-#include "vrata_detail.h"
 #include "location.h"
 #include "text-interface.h"
 #include "tz-fixed.h"
@@ -123,10 +120,8 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
         return;
     }
 
-    auto vrata = vp::Calc{*location}.find_next_vrata(base_date);
-    if (!vrata.has_value()) {
-        o << location_name << ": calculation error, can't find next Ekadashi. Sorry.\n";
-    } else {
+    auto vrata = vp::text_ui::calc_one(base_date, *location, o);
+    if (vrata.has_value()) {
         ui->locationName->setText(location_string);
 
         std::stringstream vrata_type_s;
@@ -155,9 +150,6 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
                     "<sup>*</sup><br><small><sup>*</sup>");
         paranTime += "</small>";
         ui->paranTime->setText(QString::fromStdString(paranTime));
-
-        vp::Vrata_Detail vd{*vrata, *location};
-        o << vd << "\n\n";
     }
 }
 

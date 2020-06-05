@@ -112,14 +112,17 @@ std::optional<Location> LocationDb::find_coord(const char *location_name) {
     return *found;
 }
 
-void calc_one(date::year_month_day base_date, const char *location_name, Location location, std::ostream &o) {
+tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, Location location, std::ostream &o) {
     auto vrata = Calc{location}.find_next_vrata(base_date);
     if (!vrata.has_value()) {
-        o << location_name << ": calculation error, can't find next Ekadashi. Sorry.\n";
+        o << "# " << location.name << "*\n" <<
+            "Can't find next Ekadashi, sorry.\n" <<
+            "* Error: " << vrata.error() << "\n";
     } else {
         Vrata_Detail vd{*vrata, location};
         o << vd << "\n\n";
     }
+    return vrata;
 }
 
 void calc_one(date::year_month_day base_date, const char * location_name, std::ostream &o) {
@@ -128,7 +131,7 @@ void calc_one(date::year_month_day base_date, const char * location_name, std::o
         o << "Location not found: '" << location_name << "'\n";
         return;
     }
-    calc_one(base_date, location_name, *coord, o);
+    calc_one(base_date, *coord, o);
 }
 
 void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o) {
@@ -166,7 +169,7 @@ void print_detail_one(date::year_month_day base_date, const char * location_name
 
 void calc_all(date::year_month_day d, std::ostream &o) {
     for (auto &l : LocationDb()) {
-        calc_one(d, l.name, l, o);
+        calc_one(d, l, o);
     }
 }
 

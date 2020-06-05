@@ -9,7 +9,6 @@
 [ ] Vrata class: keep Location inside
 [ ] precalc: allow colspan=2 cells with combined description of ekAdashI and atiriktA dvAdashI, like 2017-12-11 kophangan
 [ ] no suryodaya case (like december in Murmansk): decrease latitude until we get all necessary sunrises, print message that vrata is printed for alternative location.
-[ ] Murmansk 2017-11-27: why can't calculate? Also provide better error message.
 [ ] allow entering arbitrary latitude/longitude/timezone
 [ ] location.h/text-interface.h: add all locations automatically (order by longitude?)
 [ ] generic test for pre-calculated ekadashi:
@@ -162,3 +161,4 @@ done:
 [+] Vrata_Detail: do not print ativrddhatvam status in the first line [2020-05-23]
 [+] Calc::find_next_vrata: use "expected" to report calculation failure reason (can't find sunrise etc). [2020-06-03]
 [+] extend "expected" use to all calculations from calc down to swe.cpp [2020-06-05]
+[+] improve error message for no sunrise/sunset cases (like Murmansk 2017-11-27). Also better formatting. [2020-06-05]
