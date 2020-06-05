@@ -26,7 +26,7 @@ std::ostream & operator<<(std::ostream &, const double_ghatikas &);
 class JulDays_UT
 {
 public:
-    explicit JulDays_UT(double_days juldays_ut);
+    constexpr explicit JulDays_UT(double_days juldays_ut) : juldays_ut_(juldays_ut){}
     explicit JulDays_UT(date::year_month_day d, double_hours hours=double_hours{});
     explicit JulDays_UT(date::local_time<double_days> t, const date::time_zone * tz);
     explicit JulDays_UT(date::sys_time<double_days> t);

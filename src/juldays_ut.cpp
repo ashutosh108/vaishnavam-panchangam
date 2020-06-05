@@ -8,10 +8,6 @@
 
 namespace vp {
 
-JulDays_UT::JulDays_UT(double_days juldays_ut) : juldays_ut_(juldays_ut)
-{
-}
-
 JulDays_UT::JulDays_UT(date::year_month_day d, double_hours hours)
 {
     juldays_ut_ = double_days{swe_julday(static_cast<int>(d.year()),
