@@ -46,13 +46,13 @@ public:
 private:
     tl::expected<JulDays_UT, CalcError> sunset_before_sunrise(JulDays_UT const sunrise) const;
     date::year_month_day get_vrata_date(const JulDays_UT sunrise) const;
-    Paran get_paran(const JulDays_UT last_fasting_sunrise) const;
-    Paran atirikta_paran(const JulDays_UT first_fasting_sunrise) const;
+    tl::expected<Paran, CalcError> get_paran(const JulDays_UT last_fasting_sunrise) const;
+    tl::expected<Paran, CalcError> atirikta_paran(const JulDays_UT first_fasting_sunrise) const;
 
     tl::expected<JulDays_UT, CalcError> next_sunrise(JulDays_UT sunrise) const;
     JulDays_UT next_sunrise_v(JulDays_UT sunrise) const;
-    bool got_atirikta_ekadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const;
-    bool got_atirikta_dvadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const;
+    tl::expected<bool, CalcError> got_atirikta_ekadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const;
+    tl::expected<bool, CalcError> got_atirikta_dvadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const;
 };
 
 } // namespace vp

@@ -1,4 +1,3 @@
-[ ] calc/paran, got_atirikta_xxx: allow for the case when we can't get necessary sunrise
 [ ] no suryodaya case (like december in Murmansk): decrease latitude until we get all necessary sunrises, print message that vrata is printed for alternative location.
 [ ] switch from iostreams to fmt
 [ ] add "table" output tab (all primary locations in a single table)
@@ -164,3 +163,4 @@ done:
 [+] extend "expected" use to all calculations from calc down to swe.cpp [2020-06-05]
 [+] improve error message for no sunrise/sunset cases (like Murmansk 2017-11-27). Also better formatting. [2020-06-05]
 [+] Calc::get_vrata_date: use exact timezone instead of longitude-based approximation [2020-06-05]
+[+] calc/paran, got_atirikta_xxx: allow for the case when we can't get necessary sunrise [2020-06-05]
