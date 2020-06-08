@@ -38,9 +38,9 @@ std::ostream &operator <<(std::ostream &s, const Expected_Vrata &v) {
 class ApproximateJulDays_UT {
     JulDays_UT juldays_;
 public:
-    ApproximateJulDays_UT(const JulDays_UT & juldays)
-        : juldays_(juldays)
-    {}
+    template<class ... Types>
+    ApproximateJulDays_UT(Types ...args) : juldays_(args...) {}
+
     bool operator==(const JulDays_UT & other) const {
         constexpr double_days tolerance = 5s;
         auto delta = juldays_ - other;
@@ -48,6 +48,10 @@ public:
     }
     friend std::ostream & operator<<(std::ostream & s, const ApproximateJulDays_UT & u);
 };
+
+bool operator == (const JulDays_UT & left, const ApproximateJulDays_UT & right) {
+    return right == left;
+}
 
 
 std::ostream & operator<<(std::ostream & s, const ApproximateJulDays_UT & u) {
@@ -512,6 +516,16 @@ TEST_CASE("after atiriktA when 1/5 of day fits before end of dvAdashI, pAraNam m
     REQUIRE(vrata->paran.type == Paran::Type::Standard);
 }
 
+double_days operator ""_hms(const char *s, const std::size_t size) {
+    if (size != (2 + 1 + 2 + 1 + 2 + 1 + 6)) {
+        throw new std::length_error("expected format: hh:mm:ss.ssssss");
+    }
+    std::istringstream stream{s};
+    std::chrono::microseconds h_m_s;
+    stream >> date::parse("%H:%M:%S", h_m_s);
+    return h_m_s;
+}
+
 TEST_CASE("ativRddhAdi gives correct sunset, sunris and four time points") {
     using namespace std::chrono_literals;
     Calc calc{kiev_coord};
@@ -521,22 +535,12 @@ TEST_CASE("ativRddhAdi gives correct sunset, sunris and four time points") {
 
     auto ativrddhadi = calc.calc_ativrddhatvam_for_sunrise(*sunrise);
     REQUIRE(ativrddhadi.has_value());
-    REQUIRE(ativrddhadi->prev_sunset                      == JulDays_UT{2020_y/May/17, 17h + 35min + 43.367989s});
-    REQUIRE(ativrddhadi->sunrise                          == JulDays_UT{2020_y/May/18,  2h + 11min + 44.341234s});
-    REQUIRE(ativrddhadi->time_point_ativrddha_54gh_40vigh == JulDays_UT{2020_y/May/18,  0h + 40min +  0.168233s});
-    REQUIRE(ativrddhadi->time_point_vrddha_55gh           == JulDays_UT{2020_y/May/18,  0h + 45min + 44.179040s});
-    REQUIRE(ativrddhadi->time_point_samyam_55gh_50vigh    == JulDays_UT{2020_y/May/18,  1h +  0min +  4.206039s});
-    REQUIRE(ativrddhadi->time_point_hrasva_55gh_55vigh    == JulDays_UT{2020_y/May/18,  1h +  1min + 30.208751s});
-}
-
-double_days operator ""_hms(const char *s, const std::size_t size) {
-    if (size != (2 + 1 + 2 + 1 + 2 + 1 + 6)) {
-        throw new std::length_error("expected format: hh:mm:ss.ssssss");
-    }
-    std::istringstream stream{s};
-    std::chrono::microseconds h_m_s;
-    stream >> date::parse("%H:%M:%S", h_m_s);
-    return h_m_s;
+    REQUIRE(ativrddhadi->prev_sunset                      == ApproximateJulDays_UT{2020_y/May/17, "17:36:09.669959"_hms});
+    REQUIRE(ativrddhadi->sunrise                          == ApproximateJulDays_UT{2020_y/May/18, "02:12:02.827153"_hms});
+    REQUIRE(ativrddhadi->time_point_ativrddha_54gh_40vigh == ApproximateJulDays_UT{2020_y/May/18, "00:40:20.043643"_hms});
+    REQUIRE(ativrddhadi->time_point_vrddha_55gh           == ApproximateJulDays_UT{2020_y/May/18, "00:46:03.967627"_hms});
+    REQUIRE(ativrddhadi->time_point_samyam_55gh_50vigh    == ApproximateJulDays_UT{2020_y/May/18, "01:00:23.777568"_hms});
+    REQUIRE(ativrddhadi->time_point_hrasva_55gh_55vigh    == ApproximateJulDays_UT{2020_y/May/18, "01:01:49.758554"_hms});
 }
 
 TEST_CASE("ativRddhAdi gives dashamI ekAdashI, dvAdashI and trayodashI start") {
@@ -607,7 +611,7 @@ TEST_CASE("ativRddhatvam gives relevant timpoint to be checked for being 'dasham
     auto ativrddhatvam = calc.calc_ativrddhatvam_for_sunrise(*sunrise);
 
     REQUIRE(ativrddhatvam.has_value());
-    REQUIRE(ativrddhatvam->relevant_timepoint() == JulDays_UT{2020_y/August/28, "01:27:29.550524"_hms});
+    REQUIRE(ativrddhatvam->relevant_timepoint() == ApproximateJulDays_UT{2020_y/August/28, "01:27:50.835060"_hms});
     REQUIRE(ativrddhatvam->relevant_timepoint() == ativrddhatvam->time_point_vrddha_55gh);
 }
 
