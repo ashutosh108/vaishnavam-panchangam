@@ -83,7 +83,7 @@ bool operator==(const Expected_Vrata &e, const Vrata &v) {
 
 TEST_CASE("find_ekadashi_sunrise") {
     JulDays_UT start{2019_y/March/9};
-    Location coord{50.45, 30.523333};
+    Location coord{50.45_N, 30.523333_E};
     auto sunrise = Calc{coord}.find_ekadashi_sunrise(start);
     auto expected = date::sys_days(2019_y/March/17) + 4h + 13min/* + 36.270031s*/;
     REQUIRE(sunrise.has_value());
@@ -92,7 +92,7 @@ TEST_CASE("find_ekadashi_sunrise") {
 
 TEST_CASE("Vijaya Ekadashi Kiev 2019") {
     date::year_month_day base_date{2019_y/February/28};
-    Location kiev{50.45, 30.523333};
+    Location kiev{50.45_N, 30.523333_E};
     auto vrata = Calc{kiev}.find_next_vrata(base_date);
     REQUIRE(vrata.has_value());
     REQUIRE(vp::Swe{kiev}.get_tithi(JulDays_UT{vrata->date}).get_paksha() == Paksha::Krishna);
@@ -101,7 +101,7 @@ TEST_CASE("Vijaya Ekadashi Kiev 2019") {
 }
 
 TEST_CASE("arunodaya_for_sunrise") {
-    Location kiev{50.45, 30.523333};
+    Location kiev{50.45_N, 30.523333_E};
     auto arunodaya = Calc{kiev}.arunodaya_for_sunrise(JulDays_UT{2019_y/March/2, 4h + 45min + 58.052015s});
     REQUIRE(arunodaya.has_value());
     REQUIRE(arunodaya->round_to_minute_down() == date::sys_days(2019_y/March/2) + 3h + 0min /*+ 17.512880s*/);

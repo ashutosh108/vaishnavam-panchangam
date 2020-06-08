@@ -9,7 +9,7 @@ using namespace date;
 using namespace vp;
 using namespace std::literals::chrono_literals;
 
-[[maybe_unused]] constexpr Location arbitrary_coord{50.0, 60.0};
+[[maybe_unused]] constexpr Location arbitrary_coord{50.0_N, 60.0_E};
 
 TEST_CASE("Swe default constructor") {
     [[maybe_unused]] Swe s{arbitrary_coord};
@@ -17,7 +17,7 @@ TEST_CASE("Swe default constructor") {
 }
 
 TEST_CASE("find_sunrise()") {
-    Location c{50.45, 30.523333};
+    Location c{50.45_N, 30.523333_E};
     auto sunrise = Swe{c}.find_sunrise(JulDays_UT{2019_y/March/10});
     REQUIRE(sunrise.has_value());
     REQUIRE(sunrise->year_month_day() == 2019_y/March/10);
@@ -25,32 +25,32 @@ TEST_CASE("find_sunrise()") {
 }
 
 TEST_CASE("find_sunrise_v() is callable") {
-    Location c{50.45, 30.523333};
+    Location c{50.45_N, 30.523333_E};
     auto sunrise = Swe{c}.find_sunrise_v(JulDays_UT{2019_y/March/10});
     REQUIRE(sunrise.year_month_day() == 2019_y/March/10);
     REQUIRE(sunrise.hours().count() == Approx(4.4816697389).margin(60./86400)); // 1 minute margin
 }
 
 TEST_CASE("find_sunrise_v() throws when no (imminent) sunrise found") {
-    Location c{"Murmansk", 68, 58, 0, 33, 5, 0}; // fixed here to avoid test changes when we update coords
+    Location c{68'58'00_N, 33'05'00_E, "Murmansk"}; // fixed here to avoid test changes when we update coords
     REQUIRE_THROWS(Swe{c}.find_sunrise_v(JulDays_UT{2019_y/December/1}));
 }
 
 TEST_CASE("find_sunset") {
-    Location c{50.45, 30.523333};
+    Location c{50.45_N, 30.523333_E};
     auto sunset = Swe{c}.find_sunset(JulDays_UT{2019_y/March/10});
     REQUIRE(sunset.has_value());
     REQUIRE(sunset->round_to_minute_down() == date::sys_days(2019_y/March/10) + 15h + 48min /*+ 33.812600s*/);
 }
 
 TEST_CASE("find_sunset_v") {
-    Location c{50.45, 30.523333};
+    Location c{50.45_N, 30.523333_E};
     auto sunset = Swe{c}.find_sunset_v(JulDays_UT{2019_y/March/10});
     REQUIRE(sunset.round_to_minute_down() == date::sys_days(2019_y/March/10) + 15h + 48min /*+ 33.812600s*/);
 }
 
 TEST_CASE("find_sunset_v throws when no (imminent) sunset found") {
-    Location c{"Murmansk", 68, 58, 0, 33, 5, 0}; // fixed here to avoid test changes when we update coords
+    Location c{68'58'00_N, 33'05'00_E, "Murmansk"}; // fixed here to avoid test changes when we update coords
     REQUIRE_THROWS(Swe{c}.find_sunset_v(JulDays_UT{2019_y/December/1}));
 }
 
@@ -81,7 +81,7 @@ TEST_CASE("get tithi") {
 
 TEST_CASE("swe gives different sunrises for edge and center of sun disc") {
     JulDays_UT after{2019_y/March/10};
-    Location loc{23.,45.};
+    Location loc{23.0_N, 45.0_E};
     auto sunrise_center = [&]() {
         return vp::Swe{loc}.find_sunrise_v(after);
     }();

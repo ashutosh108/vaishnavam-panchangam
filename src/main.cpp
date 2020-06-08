@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
         } else {
             double latitude = std::stod(argv[2]);
             double longitude = std::stod(argv[3]);
-            calc_and_report_one(base_date, vp::Location{latitude, longitude});
+            calc_and_report_one(base_date, vp::Location{vp::Latitude{latitude}, vp::Longitude{longitude}});
         }
     }
 }

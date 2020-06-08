@@ -13,7 +13,7 @@ using namespace vp;
 TEST_CASE("Print result is not empty") {
     std::stringstream s;
     Vrata v{2019_y/March/1, dummy_ativrddhatvam};
-    Location c{50.0, 50.0};
+    Location c{50.0_N, 50.0_E};
     Vrata_Detail vd{v, c};
     s << vd;
     REQUIRE(s.str() != "");
