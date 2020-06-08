@@ -6,7 +6,7 @@
 
 namespace vp {
 
-Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.coord), calc(std::move(swe)),
+Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.location), calc(std::move(swe)),
       ekadashi_start(calc.find_tithi_start(calc.calc_astronomical_midnight(vrata.date)-double_days{1.0}, Tithi{Tithi::Ekadashi})) {
     JulDays_UT local_midnight = calc.calc_astronomical_midnight(vrata.date);
 

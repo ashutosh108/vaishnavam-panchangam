@@ -44,7 +44,7 @@ JulDays_UT Calc::proportional_time(JulDays_UT const t1, JulDays_UT const t2, dou
  */
 date::year_month_day Calc::get_vrata_date(const JulDays_UT sunrise) const
 {
-    auto timezone = date::locate_zone(swe.coord.timezone_name);
+    auto timezone = date::locate_zone(swe.location.timezone_name);
     auto zoned = sunrise.as_zoned_time(timezone);
     return date::year_month_day{date::floor<date::days>(zoned.get_local_time())};
 }
@@ -154,7 +154,7 @@ tl::expected<Vrata, CalcError> Calc::find_next_vrata(date::year_month_day after)
 repeat_with_fixed_start_time:
     if (++run_number > 2) {
         std::stringstream s;
-        s << swe.coord.name << " after " << after << " (" << start_time << "): potential eternal loop detected";
+        s << swe.location.name << " after " << after << " (" << start_time << "): potential eternal loop detected";
         throw std::runtime_error(s.str());
     }
     VP_TRY_AUTO(sunrise, find_ekadashi_sunrise(start_time));
@@ -263,7 +263,7 @@ JulDays_UT Calc::find_tithi_start(JulDays_UT const from, Tithi const tithi) cons
 }
 
 JulDays_UT Calc::calc_astronomical_midnight(date::year_month_day date) const {
-    const double_days adjustment{swe.coord.longitude * (1.0/360.0)};
+    const double_days adjustment{swe.location.longitude * (1.0/360.0)};
     return JulDays_UT{date} - adjustment;
 }
 

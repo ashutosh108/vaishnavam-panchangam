@@ -21,7 +21,7 @@ public:
         SunriseByDiscMask = 1,
         Default = SunriseByDiscCenter,
     };
-    Location coord{};
+    Location location{};
 
     Swe(Location coord_, Flag flags=Flag::Default);
     ~Swe();

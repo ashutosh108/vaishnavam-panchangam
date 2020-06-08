@@ -18,7 +18,7 @@ constexpr double atmospheric_temperature = 15;
 
 tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int rise_or_set, JulDays_UT after) const {
     int32 rsmi = rise_or_set | rise_flags;
-    double geopos[3] = {coord.longitude, coord.latitude, 0};
+    double geopos[3] = {location.longitude, location.latitude, 0};
     double trise;
     char serr[AS_MAXCH];
     int32 flags = detail::ephemeris_flags;
@@ -56,14 +56,14 @@ int32_t Swe::get_rise_flags(Flag flags) {
     return res;
 }
 
-Swe::Swe(Location coord_, Flag flags):coord(coord_)
+Swe::Swe(Location coord_, Flag flags):location(coord_)
 {
     rise_flags = get_rise_flags(flags);
 
     // have to use (non-const) char array due to swe_set_ephe_path() strang signature: char * instead of const char *.
     char ephepath[] = "eph";
     swe_set_ephe_path(ephepath);
-    swe_set_topo(coord.longitude, coord.latitude, 0);
+    swe_set_topo(location.longitude, location.latitude, 0);
 }
 
 Swe::~Swe()
@@ -77,7 +77,7 @@ Swe::Swe(Swe && other) noexcept
 {
     need_to_close = false;
     std::swap(need_to_close, other.need_to_close);
-    std::swap(coord, other.coord);
+    std::swap(location, other.location);
     std::swap(rise_flags, other.rise_flags);
 }
 
@@ -85,7 +85,7 @@ Swe &Swe::operator=(Swe && other) noexcept
 {
     need_to_close = false;
     std::swap(need_to_close, other.need_to_close);
-    std::swap(coord, other.coord);
+    std::swap(location, other.location);
     std::swap(rise_flags, other.rise_flags);
     return *this;
 }
