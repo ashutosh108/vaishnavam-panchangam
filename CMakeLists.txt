@@ -57,6 +57,7 @@ add_library(swe STATIC
     src/vrata_detail.h src/vrata_detail.cpp
     src/paran.h src/paran.cpp
     src/text-interface.cpp
+    src/calc-error.cpp
 )
 target_include_directories(swe PRIVATE vendor/sweph/src src)
 target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected)

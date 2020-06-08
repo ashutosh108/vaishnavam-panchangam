@@ -16,21 +16,6 @@ constexpr double atmospheric_pressure = 1013.25;
 constexpr double atmospheric_temperature = 15;
 }
 
-std::ostream & operator<<(std::ostream & o, const CalcError & err) {
-    switch (err.code) {
-    case CalcErrorCode::CantFindSunriseAfter:
-        o << "Can't find sunrise after " << err.timepoint;
-        break;
-    case CalcErrorCode::CantFindSunsetAfter:
-        o << "Can't find sunset after " << err.timepoint;
-        break;
-    case CalcErrorCode::CantFindTithiAfter:
-        o << "Can't find tithi " << err.tithi << " after " << err.timepoint;
-        break;
-    }
-    return o;
-}
-
 tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int rise_or_set, JulDays_UT after) const {
     int32 rsmi = rise_or_set | rise_flags;
     double geopos[3] = {coord.longitude, coord.latitude, 0};
@@ -52,9 +37,9 @@ tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int rise_or_set, JulDays_
 
     if (res_flag == -2) {
         if (rise_or_set == SE_CALC_SET) {
-            return tl::unexpected{CalcError{CalcErrorCode::CantFindSunsetAfter, after}};
+            return tl::unexpected{CantFindSunsetAfter{after}};
         }
-        return tl::unexpected{CalcError{CalcErrorCode::CantFindSunriseAfter, after}};
+        return tl::unexpected{CantFindSunriseAfter{after}};
     } else {
         return JulDays_UT{double_days{trise}};
     }

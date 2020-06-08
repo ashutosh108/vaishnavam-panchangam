@@ -620,8 +620,9 @@ TEST_CASE("ensure we get an error when we search for ekAdashI in Murmansk in the
     auto vrata = Calc{murmansk_coord}.find_next_vrata(date);
     REQUIRE_FALSE(vrata.has_value());
     const auto error = vrata.error();
-    REQUIRE(error.code == CalcErrorCode::CantFindSunriseAfter);
-    REQUIRE(error.timepoint < JulDays_UT{date});
+    REQUIRE(std::holds_alternative<CantFindSunriseAfter>(error));
+    auto e = std::get<CantFindSunriseAfter>(error);
+    REQUIRE(e.after < JulDays_UT{date});
     auto date_minus_4_days = date::year_month_day{date::sys_days{date} - date::days{4}};
-    REQUIRE(error.timepoint > JulDays_UT{date_minus_4_days});
+    REQUIRE(e.after > JulDays_UT{date_minus_4_days});
 }

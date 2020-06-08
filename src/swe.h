@@ -1,30 +1,15 @@
 #ifndef SWE_H
 #define SWE_H
 
+#include "calc-error.h"
+#include "juldays_ut.h"
+#include "location.h"
+#include "tithi.h"
+
 #include <cstdint> // for int32_t
 #include <tl/expected.hpp>
 
-#include "location.h"
-#include "juldays_ut.h"
-#include "tithi.h"
-
 namespace vp {
-
-enum class CalcErrorCode {
-    CantFindSunriseAfter,
-    CantFindSunsetAfter,
-    CantFindTithiAfter,
-};
-
-struct CalcError {
-    CalcErrorCode code;
-    JulDays_UT timepoint;
-    Tithi tithi;
-    CalcError(CalcErrorCode _code, JulDays_UT timepoint_, Tithi tithi_ = Tithi{0.0})
-        :code(_code), timepoint(timepoint_), tithi(tithi_) {}
-};
-
-std::ostream & operator<<(std::ostream & o, const CalcError & err);
 
 class Swe
 {

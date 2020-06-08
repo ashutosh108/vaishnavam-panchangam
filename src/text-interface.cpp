@@ -126,13 +126,13 @@ tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day 
     return vrata;
 }
 
-void calc_and_report_one(date::year_month_day base_date, const char * location_name, std::ostream &o) {
+tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, std::ostream &o) {
     std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
         o << "Location not found: '" << location_name << "'\n";
-        return;
+        return tl::unexpected{CantFindLocation{location_name}};
     }
-    calc_and_report_one(base_date, *coord, o);
+    return calc_and_report_one(base_date, *coord, o);
 }
 
 void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o) {

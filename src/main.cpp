@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
             calc_all(base_date);
         } else if (argc-1 == 2) {
             const char * const location_name = argv[2];
-            calc_and_report_one(base_date, location_name);
+            find_calc_and_report_one(base_date, location_name);
         } else {
             double latitude = std::stod(argv[2]);
             double longitude = std::stod(argv[3]);

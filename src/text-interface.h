@@ -21,7 +21,7 @@ date::year_month_day parse_ymd(const char *s);
 tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location coord, std::ostream &o=std::cout);
 
 // Find next ekAdashI vrata for the named location, report details to the output stream.
-void calc_and_report_one(date::year_month_day base_date, const char * location_name, std::ostream &o=std::cout);
+tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, std::ostream &o=std::cout);
 
 void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o=std::cout);
 void print_detail_one(date::year_month_day base_date, const char * location_name, std::ostream &o=std::cout);
