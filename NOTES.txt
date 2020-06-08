@@ -164,3 +164,5 @@ done:
 [+] improve error message for no sunrise/sunset cases (like Murmansk 2017-11-27). Also better formatting. [2020-06-05]
 [+] Calc::get_vrata_date: use exact timezone instead of longitude-based approximation [2020-06-05]
 [+] calc/paran, got_atirikta_xxx: allow for the case when we can't get necessary sunrise [2020-06-05]
+[+] use constexpr user-defined literals in location.h (like 50'27'00_N, 30'31'24_E) [2020-06-08]
+[+] update Udupi coordinates to be Ananteshvara temple's coordinates [2020-06-08]
