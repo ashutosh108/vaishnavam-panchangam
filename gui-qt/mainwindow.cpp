@@ -120,7 +120,7 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
         return;
     }
 
-    auto vrata = vp::text_ui::calc_one(base_date, *location, o);
+    auto vrata = vp::text_ui::calc_and_report_one(base_date, *location, o);
     if (vrata.has_value()) {
         ui->locationName->setText(location_string);
 
