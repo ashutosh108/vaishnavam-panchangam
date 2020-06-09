@@ -12,7 +12,7 @@ using namespace vp;
 
 TEST_CASE("Print result is not empty") {
     std::stringstream s;
-    Vrata v{2019_y/March/1, dummy_ativrddhatvam};
+    Vrata v{2019_y/March/1};
     Location c{50.0_N, 50.0_E};
     Vrata_Detail vd{v, c};
     s << vd;
@@ -20,7 +20,7 @@ TEST_CASE("Print result is not empty") {
 }
 
 TEST_CASE("we get nearest next ekadashi start for petropavlovsk 2019-03-18") {
-    Vrata v{2019_y/March/18, dummy_ativrddhatvam};
+    Vrata v{2019_y/March/18};
     Vrata_Detail vd{v, petropavlovskkamchatskiy_coord};
     JulDays_UT ekadashi_earliest{2019_y/March/16};
     JulDays_UT ekadashi_latest{2019_y/March/17};

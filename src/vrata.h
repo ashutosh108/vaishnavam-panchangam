@@ -2,8 +2,9 @@
 #define VRATA_H
 
 #include "date-fixed.h"
-#include "paran.h"
 #include "juldays_ut.h"
+#include "location.h"
+#include "paran.h"
 #include "tithi.h"
 
 #include <optional>
@@ -83,24 +84,27 @@ struct Vrata {
     Vrata_Type type = Vrata_Type::Ekadashi;
     date::year_month_day date;
     Paran paran;
+    Location location;
     Ativrddhatvam ativrddhatvam;
 
     // used only for tests
-    Vrata(date::year_month_day _date, Ativrddhatvam _ativrddhatvam)
+    Vrata(date::year_month_day _date, Ativrddhatvam _ativrddhatvam = dummy_ativrddhatvam)
         : date(_date),
           ativrddhatvam(_ativrddhatvam){}
 
     // used only for tests
-    Vrata(Vrata_Type _type, date::year_month_day _date, Ativrddhatvam _ativrddhatvam)
+    Vrata(Vrata_Type _type, date::year_month_day _date, Ativrddhatvam _ativrddhatvam = dummy_ativrddhatvam)
         : type(_type),
           date(_date),
           ativrddhatvam(_ativrddhatvam){}
 
     // we always use this constructor for real calculations
-    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran, Ativrddhatvam _ativrddhatvam)
+    // "dummy" defaults only used in tests.
+    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran, Location _location = dummy_coord, Ativrddhatvam _ativrddhatvam = dummy_ativrddhatvam)
         : type(_type),
           date(_date),
           paran(_paran),
+          location(_location),
           ativrddhatvam(_ativrddhatvam){}
     date::year_month_day local_paran_date();
 };

@@ -167,3 +167,4 @@ done:
 [+] use constexpr user-defined literals in location.h (like 50'27'00_N, 30'31'24_E) [2020-06-08]
 [+] update Udupi coordinates to be Ananteshvara temple's coordinates [2020-06-08]
 [+] no suryodayAdi case (like december in Murmansk): decrease latitude until we get all necessary sunrises [2020-06-09]
+[+] include Location in Vrata [2020-06-09]

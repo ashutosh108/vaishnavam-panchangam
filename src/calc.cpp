@@ -182,6 +182,7 @@ repeat_with_fixed_start_time:
                     Vrata_Type::Atirikta_Ekadashi,
                     vrata_date,
                     *paran,
+                    swe.location,
                     *ativrddhatvam};
     }
 
@@ -192,6 +193,7 @@ repeat_with_fixed_start_time:
                     Vrata_Type::With_Atirikta_Dvadashi,
                     vrata_date,
                     *paran,
+                    swe.location,
                     *ativrddhatvam};
     }
 
@@ -200,6 +202,7 @@ repeat_with_fixed_start_time:
                 Vrata_Type::Ekadashi,
                 vrata_date,
                 *paran,
+                swe.location,
                 *ativrddhatvam};
 }
 

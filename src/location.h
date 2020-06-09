@@ -16,7 +16,7 @@ struct Longitude {
 };
 
 constexpr double int_deg_min_sec_to_double_degrees(const unsigned long long val) {
-    if (val < 1'00 || val > 180'00'00) { throw std::logic_error("Value for degrees must be in 1'00..180'00'00 range"); }
+    if (val > 180'00'00) { throw std::logic_error("Value for degrees must be in 0..180'00'00 range"); }
     int deg = static_cast<int>(val / 10'000);
     if (deg > 180) { throw std::logic_error("degrees part in dd'mm'ss must be in 0..180 range"); }
     int min = (val / 100) % 100;
@@ -204,6 +204,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location nicosia_coord{                 35'10'21_N,  33'21'54_E, "Nicosia (Cyprus)", "Asia/Nicosia"}; // en Wikipedia
 
 
+[[maybe_unused]] constexpr Location dummy_coord{0_N, 0_E, "Dummy location"};
 
 
 

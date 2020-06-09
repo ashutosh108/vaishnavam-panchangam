@@ -114,12 +114,12 @@ Vrata vrata(const Calc &c, date::year_month_day base_date) {
 TEST_CASE("Ekadashi 2019-02-28") {
     // https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-02-28/
     date::year_month_day d{2019_y/February/28};
-    Vrata v01{2019_y/March/1, dummy_ativrddhatvam};
-    Vrata v02{2019_y/March/2, dummy_ativrddhatvam};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}, dummy_ativrddhatvam};
-    Vrata v01_atirikta_dvadashi_std_paran{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Standard}, dummy_ativrddhatvam};
-    Vrata v01_atirikta_ekadashi{Vrata_Type::Atirikta_Ekadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}, dummy_ativrddhatvam};
-    Vrata v01_atirikta_ekadashi_std_paran{Vrata_Type::Atirikta_Ekadashi, 2019_y/March/1, Paran{Paran::Type::Standard}, dummy_ativrddhatvam};
+    Vrata v01{2019_y/March/1};
+    Vrata v02{2019_y/March/2};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}};
+    Vrata v01_atirikta_dvadashi_std_paran{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Standard}};
+    Vrata v01_atirikta_ekadashi{Vrata_Type::Atirikta_Ekadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}};
+    Vrata v01_atirikta_ekadashi_std_paran{Vrata_Type::Atirikta_Ekadashi, 2019_y/March/1, Paran{Paran::Type::Standard}};
     REQUIRE(v02 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v02 == vrata(Calc{gokarna_coord}, d));
     REQUIRE(v02 == vrata(Calc{newdelhi_coord}, d));
@@ -238,8 +238,8 @@ void check_atirikta_at_location(const char * name, const Location & location, co
 
 TEST_CASE("atiriktA-dvAdashI {vena,marsel,madrid,london} 2019-03-01-2 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-02-28/") {
     date::year_month_day d{2019_y/February/28};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}, dummy_ativrddhatvam};
-    Vrata v01_atirikta_dvadashi_std_paran{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Standard}, dummy_ativrddhatvam};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}};
+    Vrata v01_atirikta_dvadashi_std_paran{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Standard}};
 
     check_atirikta_at_location("vena", vena_coord, v01_atirikta_dvadashi_std_paran, d);
     check_atirikta_at_location("marsel", marsel_coord, v01_atirikta_dvadashi, d);
@@ -249,7 +249,7 @@ TEST_CASE("atiriktA-dvAdashI {vena,marsel,madrid,london} 2019-03-01-2 https://ta
 
 TEST_CASE("atiriktA-dvAdashI {aktau, surgut, chelyabinsk, yerevan, tbilisi} 2019-12-07-8 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-12-01/") {
     date::year_month_day d{2019_y/December/6};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/December/7, Paran{Paran::Type::Puccha_Dvadashi}, dummy_ativrddhatvam};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/December/7, Paran{Paran::Type::Puccha_Dvadashi}};
 
     check_atirikta_at_location("aktau", aktau_coord, v01_atirikta_dvadashi, d);
     check_atirikta_at_location("surgut", surgut_coord, v01_atirikta_dvadashi, d);
@@ -261,7 +261,7 @@ TEST_CASE("atiriktA-dvAdashI {aktau, surgut, chelyabinsk, yerevan, tbilisi} 2019
 
 TEST_CASE("atiriktA-dvAdashI {madrid,london} 2019-11-07-8 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-11-05/") {
     date::year_month_day d{2019_y/November/6};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/November/7, Paran{Paran::Type::Standard}, dummy_ativrddhatvam};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/November/7, Paran{Paran::Type::Standard}};
 
     check_atirikta_at_location("madrid", madrid_coord, v01_atirikta_dvadashi, d);
     check_atirikta_at_location("london", london_coord, v01_atirikta_dvadashi, d);
@@ -269,14 +269,14 @@ TEST_CASE("atiriktA-dvAdashI {madrid,london} 2019-11-07-8 https://tatvavadi.ru/p
 
 TEST_CASE("atiriktA-dvAdashI meadowlake 2019-10-08-9 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-10-04/") {
     date::year_month_day d{2019_y/October/6};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/October/8, Paran{Paran::Type::Puccha_Dvadashi}, dummy_ativrddhatvam};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/October/8, Paran{Paran::Type::Puccha_Dvadashi}};
 
     check_atirikta_at_location("meadowlake", meadowlake_coord, v01_atirikta_dvadashi, d);
 }
 
 TEST_CASE("atiriktA-dvAdashI {hab,vlad} 2019-09-09-10 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-09-07/") {
     date::year_month_day d{2019_y/September/6};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/September/9, Paran{Paran::Type::Puccha_Dvadashi}, dummy_ativrddhatvam};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/September/9, Paran{Paran::Type::Puccha_Dvadashi}};
 
     check_atirikta_at_location("habarovsk", habarovsk_coord, v01_atirikta_dvadashi, d);
     check_atirikta_at_location("vladivostok", vladivostok_coord, v01_atirikta_dvadashi, d);
@@ -284,7 +284,7 @@ TEST_CASE("atiriktA-dvAdashI {hab,vlad} 2019-09-09-10 https://tatvavadi.ru/pa,.n
 
 TEST_CASE("atiriktA-dvAdashI {mirny,hab,vlad} 2019-04-30-01 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-04-27/") {
     date::year_month_day d{2019_y/April/30};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, d, Paran{Paran::Type::Puccha_Dvadashi}, dummy_ativrddhatvam};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, d, Paran{Paran::Type::Puccha_Dvadashi}};
 
     check_atirikta_at_location("mirnyy", mirnyy_coord, v01_atirikta_dvadashi, d);
     check_atirikta_at_location("habarovsk", habarovsk_coord, v01_atirikta_dvadashi, d);
@@ -293,19 +293,19 @@ TEST_CASE("atiriktA-dvAdashI {mirny,hab,vlad} 2019-04-30-01 https://tatvavadi.ru
 
 TEST_CASE("atiriktA-ekAdashI {ppk} 2019-04-30-01 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-04-27/") {
     date::year_month_day d{2019_y/April/30};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::Atirikta_Ekadashi, d, Paran{Paran::Type::Puccha_Dvadashi}, dummy_ativrddhatvam};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::Atirikta_Ekadashi, d, Paran{Paran::Type::Puccha_Dvadashi}};
 
     check_atirikta_at_location("petropavlovskkamchatskiy", petropavlovskkamchatskiy_coord, v01_atirikta_dvadashi, d);
 }
 
 TEST_CASE("Ekadashi 2019-03-17") {
     date::year_month_day d{2019_y/March/15};
-    Vrata v17{2019_y/March/17, dummy_ativrddhatvam};
+    Vrata v17{2019_y/March/17};
     Expected_Vrata v17_paran_before{
         Vrata_Type::Ekadashi,
         2019_y/March/17,
         Paran{Paran::Type::Until_Dvadashi_End, std::nullopt, JulDays_UT{2019_y/March/18, 12h + 13min + 36.459301s}}};
-    Vrata v18{Vrata_Type::Ekadashi, 2019_y/March/18, dummy_ativrddhatvam};
+    Vrata v18{Vrata_Type::Ekadashi, 2019_y/March/18};
     REQUIRE(v17 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v17 == vrata(Calc{gokarna_coord}, d));
     REQUIRE(v17 == vrata(Calc{newdelhi_coord}, d));
