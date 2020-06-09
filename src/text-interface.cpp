@@ -112,9 +112,41 @@ std::optional<Location> LocationDb::find_coord(const char *location_name) {
     return *found;
 }
 
+// try decreasing latitude until we get all necessary sunrises/sunsets
+tl::expected<vp::Vrata, vp::CalcError> decrease_latitude_and_find_vrata(date::year_month_day base_date, Location location) {
+    auto l = location;
+    l.name = "Custom location";
+    while (1) {
+        l.latitude -= 1.0;
+        auto vrata = Calc{l}.find_next_vrata(base_date);
+        // Return if have actually found vrata.
+        // Also return if we ran down to low enough latitudes so that it doesn't
+        // make sense to decrease it further; just report whatever error we got in that case.
+        if (vrata || l.latitude <= 60.0) return vrata;
+    }
+}
+
+tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, Location location) {
+    // Use immediately-called lambda to ensure Calc is destroyed before more
+    // will be created in decrease_latitude_and_find_vrata()
+    auto vrata = [&](){
+        return Calc{location}.find_next_vrata(base_date);
+    }();
+    if (vrata) return vrata;
+
+    auto e = vrata.error();
+    // if we are in the northern areas and the error is that we can't find sunrise or sunset, then try decreasing latitude until it's OK.
+    if ((std::holds_alternative<CantFindSunriseAfter>(e) || std::holds_alternative<CantFindSunsetAfter>(e)) && location.latitude > 60.0) {
+        return decrease_latitude_and_find_vrata(base_date, location);
+    }
+    // Otherwise return whatever error we've got.
+    return vrata;
+}
+
+
 // Find next ekAdashI vrata for the named location, report details to the output stream.
 tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location location, std::ostream &o) {
-    auto vrata = Calc{location}.find_next_vrata(base_date);
+    auto vrata = calc_one(base_date, location);
     if (!vrata.has_value()) {
         o << "# " << location.name << "*\n" <<
             "Can't find next Ekadashi, sorry.\n" <<

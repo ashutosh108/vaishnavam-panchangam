@@ -1,4 +1,4 @@
-[ ] no suryodaya case (like december in Murmansk): decrease latitude until we get all necessary sunrises, print message that vrata is printed for alternative location.
+[ ] no suryodayAdi case: print message that vrata is printed for alternative location.
 [ ] switch from iostreams to fmt
 [ ] add "table" output tab (all primary locations in a single table)
 [ ] "copy to clipboard" function (with link to the program)
@@ -166,3 +166,4 @@ done:
 [+] calc/paran, got_atirikta_xxx: allow for the case when we can't get necessary sunrise [2020-06-05]
 [+] use constexpr user-defined literals in location.h (like 50'27'00_N, 30'31'24_E) [2020-06-08]
 [+] update Udupi coordinates to be Ananteshvara temple's coordinates [2020-06-08]
+[+] no suryodayAdi case (like december in Murmansk): decrease latitude until we get all necessary sunrises [2020-06-09]

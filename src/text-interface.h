@@ -18,6 +18,7 @@ namespace vp::text_ui {
 void change_to_data_dir(const char* argv0);
 
 date::year_month_day parse_ymd(const char *s);
+tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, Location location);
 tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location coord, std::ostream &o=std::cout);
 
 // Find next ekAdashI vrata for the named location, report details to the output stream.
