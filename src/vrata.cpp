@@ -138,6 +138,16 @@ date::year_month_day Vrata::local_paran_date()
     return date::year_month_day{date::sys_days{date} + delta};
 }
 
+std::string Vrata::location_name() const
+{
+    std::stringstream s;
+    s << location.name;
+    if (location.latitude_adjusted) {
+        s << " (adjusted to " << location.latitude << " " << location.longitude << ")";
+    }
+    return s.str();
+}
+
 double_ghatikas Ativrddhatvam::dashami_length() const {
     return ekadashi_start - dashami_start;
 }

@@ -21,4 +21,8 @@ TEST_CASE("no sunset: we decrease latitude until we get all necessary sunrises/s
     auto date = 2020_y/June/3;
     auto vrata = vp::text_ui::calc_one(date, vp::murmansk_coord);
     REQUIRE(vrata.has_value());
+
+    // expect location name to contain "adjusted" because there is no sunset in the original location at those dates.
+    auto location_name = vrata->location_name();
+    REQUIRE(location_name.find("adjusted") != std::string::npos);
 }

@@ -67,6 +67,11 @@ struct Location
     double latitude, longitude;
     const char *timezone_name;
     const char *name;
+
+    // If true, then the latitude has been decreased until we found location
+    // where sunrises/sunsets do exist.
+    bool latitude_adjusted = false;
+
     explicit constexpr Location(Latitude lat = Latitude{0.0}, Longitude lng = Longitude{0.0},
                                 const char * _name = "Custom Location",
                                 const char * _timezone_name="UTC")

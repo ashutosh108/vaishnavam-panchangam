@@ -107,6 +107,7 @@ struct Vrata {
           location(_location),
           ativrddhatvam(_ativrddhatvam){}
     date::year_month_day local_paran_date();
+    std::string location_name() const;
 };
 
 bool operator==(Vrata const &, Vrata const &);

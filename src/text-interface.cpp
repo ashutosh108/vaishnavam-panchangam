@@ -115,7 +115,7 @@ std::optional<Location> LocationDb::find_coord(const char *location_name) {
 // try decreasing latitude until we get all necessary sunrises/sunsets
 tl::expected<vp::Vrata, vp::CalcError> decrease_latitude_and_find_vrata(date::year_month_day base_date, Location location) {
     auto l = location;
-    l.name = "Custom location";
+    l.latitude_adjusted = true;
     while (1) {
         l.latitude -= 1.0;
         auto vrata = Calc{l}.find_next_vrata(base_date);
@@ -148,7 +148,7 @@ tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, 
 tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location location, std::ostream &o) {
     auto vrata = calc_one(base_date, location);
     if (!vrata.has_value()) {
-        o << "# " << location.name << "*\n" <<
+        o << "# " << vrata->location_name() << "*\n" <<
             "Can't find next Ekadashi, sorry.\n" <<
             "* Error: " << vrata.error() << "\n";
     } else {

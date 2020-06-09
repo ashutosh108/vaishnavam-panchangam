@@ -116,7 +116,7 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
 
     auto vrata = vp::text_ui::find_calc_and_report_one(base_date, location_name, o);
     if (vrata.has_value()) {
-        ui->locationName->setText(location_string);
+        ui->locationName->setText(QString::fromStdString(vrata->location_name()));
 
         std::stringstream vrata_type_s;
         vrata_type_s << vrata->type;
