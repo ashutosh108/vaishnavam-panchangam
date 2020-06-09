@@ -114,13 +114,7 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
     QByteArray location_as_bytearray = location_string.toLocal8Bit();
     char * location_name = location_as_bytearray.data();
 
-    std::optional<vp::Location> location = vp::text_ui::LocationDb::find_coord(location_name);
-    if (!location) {
-        o << "Location not found: '" << location_name << "'\n";
-        return;
-    }
-
-    auto vrata = vp::text_ui::calc_and_report_one(base_date, *location, o);
+    auto vrata = vp::text_ui::find_calc_and_report_one(base_date, location_name, o);
     if (vrata.has_value()) {
         ui->locationName->setText(location_string);
 
@@ -143,7 +137,7 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
 
         std::string paranTime = vp::ParanFormatter::format(
                     vrata->paran,
-                    location->timezone_name,
+                    vrata->location.timezone_name,
                     "%H:%M<span style=\"font-size:small;\">:%S</span>",
                     "–",
                     "%H:%M<span style=\"font-size:small;\">:%S</span>",
