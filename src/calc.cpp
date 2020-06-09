@@ -266,7 +266,7 @@ JulDays_UT Calc::find_tithi_start(JulDays_UT const from, Tithi const tithi) cons
 }
 
 JulDays_UT Calc::calc_astronomical_midnight(date::year_month_day date) const {
-    const double_days adjustment{swe.location.longitude * (1.0/360.0)};
+    const double_days adjustment{swe.location.longitude.longitude * (1.0/360.0)};
     return JulDays_UT{date} - adjustment;
 }
 

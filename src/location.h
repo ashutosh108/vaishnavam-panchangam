@@ -2,8 +2,9 @@
 #define LOCATION_H
 
 #include <cstring>
+#include <iostream>
 #include <string_view>
-#include <tuple>
+#include <tuple> // for std::tie() in comparison operators.
 
 namespace vp {
 
@@ -14,6 +15,9 @@ struct Latitude {
 struct Longitude {
     double longitude;
 };
+
+std::ostream & operator <<(std::ostream & o, const Latitude & latitude);
+std::ostream & operator <<(std::ostream & o, const Longitude & longitude);
 
 constexpr double int_deg_min_sec_to_double_degrees(const unsigned long long val) {
     if (val > 180'00'00) { throw std::logic_error("Value for degrees must be in 0..180'00'00 range"); }
@@ -64,7 +68,8 @@ constexpr Longitude operator ""_W(const long double lng) {
 
 struct Location
 {
-    double latitude, longitude;
+    Latitude latitude;
+    Longitude longitude;
     const char *timezone_name;
     const char *name;
 
@@ -75,14 +80,16 @@ struct Location
     explicit constexpr Location(Latitude lat = Latitude{0.0}, Longitude lng = Longitude{0.0},
                                 const char * _name = "Custom Location",
                                 const char * _timezone_name="UTC")
-        : latitude(lat.latitude),
-          longitude(lng.longitude),
+        : latitude(lat),
+          longitude(lng),
           timezone_name(_timezone_name),
           name(_name) {}
 };
 
+std::ostream & operator <<(std::ostream & o, const Location & location);
+
 inline bool operator==(const Location & one, const Location & other) {
-    return one.latitude == other.latitude && one.longitude == other.longitude && std::strcmp(one.timezone_name, other.timezone_name) == 0 && std::strcmp(one.name, other.name) == 0;
+    return one.latitude.latitude == other.latitude.latitude && one.longitude.longitude == other.longitude.longitude && std::strcmp(one.timezone_name, other.timezone_name) == 0 && std::strcmp(one.name, other.name) == 0;
 }
 
 inline bool operator!=(const Location & one, const Location & other) {
@@ -95,8 +102,8 @@ inline bool operator<(const Location & one, const Location & two) {
     std::string_view one_name{one.name};
     std::string_view two_name{two.name};
     return
-            std::tie(one.latitude, one.longitude, one_tz, one_name) <
-            std::tie(two.latitude, two.longitude, two_tz, two_name);
+            std::tie(one.latitude.latitude, one.longitude.longitude, one_tz, one_name) <
+            std::tie(two.latitude.latitude, two.longitude.longitude, two_tz, two_name);
 }
 
 

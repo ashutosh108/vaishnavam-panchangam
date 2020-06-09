@@ -1,4 +1,6 @@
+[ ] make sure all relevant sunrise/sunsets are reported for no-sunset Murmansk cases
 [ ] switch from iostreams to fmt
+[ ] switch from std::regex to some other, saner and faster, regex library.
 [ ] add "table" output tab (all primary locations in a single table)
 [ ] "copy to clipboard" function (with link to the program)
 [ ] "copy as image to clipboard"
@@ -168,3 +170,4 @@ done:
 [+] no suryodayAdi case (like december in Murmansk): decrease latitude until we get all necessary sunrises [2020-06-09]
 [+] include Location in Vrata [2020-06-09]
 [+] no suryodayAdi case: print message that vrata is printed for alternative location [2020-06-09]
+[+] format latitude/longitude as DD°MM'SS"N etc (in Qt gui and in "adjusted location name") [2020-06-09]

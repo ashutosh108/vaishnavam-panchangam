@@ -176,7 +176,15 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
     auto location_arr = location_name.toUtf8();
     auto location = vp::text_ui::LocationDb().find_coord(location_arr.data());
     if (!location.has_value()) return;
-    ui->latitude->setText(QString::number(location->latitude));
-    ui->longitude->setText(QString::number(location->longitude));
+    {
+        std::stringstream s;
+        s << location->latitude;
+        ui->latitude->setText(QString::fromStdString(s.str()));
+    }
+    {
+        std::stringstream s;
+        s << location->longitude;
+        ui->longitude->setText(QString::fromStdString(s.str()));
+    }
     ui->timezone->setText(location->timezone_name);
 }

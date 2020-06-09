@@ -52,7 +52,7 @@ add_library(swe STATIC
     src/swe.h src/swe.cpp
     src/calc.h src/calc.cpp
     src/tithi.h src/tithi.cpp
-    src/location.h
+    src/location.h src/location.cpp
     src/vrata.h src/vrata.cpp
     src/vrata_detail.h src/vrata_detail.cpp
     src/paran.h src/paran.cpp
