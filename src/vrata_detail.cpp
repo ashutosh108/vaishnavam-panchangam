@@ -12,6 +12,15 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.lo
 
     auto sunrise = calc.swe.find_sunrise(local_midnight);
     if (sunrise) {
+        auto sunrise0 = calc.swe.find_sunrise(*sunrise - double_days{1.5});
+        if (sunrise0 && *sunrise0 >= ekadashi_start) {
+            events.push_back({"sunrise0", *sunrise0});
+            auto arunodaya = calc.arunodaya_for_sunrise(*sunrise0);
+            if (arunodaya) {
+                events.push_back({"aruṇodaya0", *arunodaya});
+            }
+        }
+
         events.push_back({"**sunrise1**", *sunrise});
         auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
         if (arunodaya) {
@@ -47,47 +56,31 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.lo
         }
     }
 
-    // -1.0 to ensure we actually select start time before Ekadashi.
-    // Not 100% sure it's enough, but it's working for all test cases so far.
-    ekadashi_start = calc.find_tithi_start(local_midnight-double_days{1.0}, Tithi{Tithi::Ekadashi});
-    std::ostringstream ekadashi_descr;
-    ekadashi_descr << "**ekādaśī start**";
-    auto dashami_start = calc.find_tithi_start(ekadashi_start-double_days{1.5}, Tithi{Tithi::Dashami});
-    double_ghatikas dashami_length_ghatikas;
+    const double_ghatikas dashami_length_ghatikas = vrata.ativrddhatvam.ekadashi_start - vrata.ativrddhatvam.dashami_start;
     std::ostringstream dashami_descr;
-    dashami_length_ghatikas = ekadashi_start - dashami_start;
     dashami_descr << "daśamī start ("
                   << std::setprecision(3) << std::fixed << dashami_length_ghatikas.count() << "gh long)";
-    events.push_back({dashami_descr.str(), dashami_start});
+    events.push_back({dashami_descr.str(), vrata.ativrddhatvam.dashami_start});
 
-    auto dvadashi_start = calc.find_tithi_start(ekadashi_start, Tithi{Tithi::Dvadashi});
-    std::ostringstream dvadashi_descr;
-    dvadashi_descr << "dvādaśī start";
-    double_ghatikas ekadashi_length_ghatikas = dvadashi_start - ekadashi_start;
-    double_ghatikas ekadashi_delta = ekadashi_length_ghatikas - dashami_length_ghatikas;
-    ekadashi_descr << " ("
+    const double_ghatikas ekadashi_length_ghatikas = vrata.ativrddhatvam.dvadashi_start - vrata.ativrddhatvam.ekadashi_start;
+    const double_ghatikas ekadashi_delta = ekadashi_length_ghatikas - dashami_length_ghatikas;
+    std::ostringstream ekadashi_descr;
+    ekadashi_descr << "**ekādaśī start** ("
                    << std::setprecision(3) << std::fixed << ekadashi_length_ghatikas.count() << "gh long; "
                    << std::showpos << "**" << ekadashi_delta.count() << "gh**)";
-    auto dvadashi_end = calc.find_tithi_start(dvadashi_start, Tithi{Tithi::Dvadashi_End});
-    events.push_back({"dvādaśī end", dvadashi_end});
-    double_ghatikas dvadashi_length_ghatikas = dvadashi_end - dvadashi_start;
-    double_ghatikas dvadashi_delta = dvadashi_length_ghatikas - ekadashi_length_ghatikas;
-    dvadashi_descr << " ("
+    events.push_back({ekadashi_descr.str(), ekadashi_start});
+
+    const double_ghatikas dvadashi_length_ghatikas = vrata.ativrddhatvam.trayodashi_start - vrata.ativrddhatvam.dvadashi_start;
+    const double_ghatikas dvadashi_delta = dvadashi_length_ghatikas - ekadashi_length_ghatikas;
+    std::ostringstream dvadashi_descr;
+    dvadashi_descr << "dvādaśī start ("
                    << std::setprecision(3) << std::fixed << dvadashi_length_ghatikas.count() << "gh long; "
                    << std::showpos << "**" << dvadashi_delta.count() << "gh**)";
-    events.push_back({"dvādaśī's first quarter ends", Calc::proportional_time(dvadashi_start, dvadashi_end, 0.25)});
-    events.push_back({dvadashi_descr.str(), dvadashi_start});
-    if (sunrise) {
-        auto sunrise0 = calc.swe.find_sunrise(*sunrise - double_days{1.5});
-        if (sunrise0 && *sunrise0 >= ekadashi_start) {
-            events.push_back({"sunrise0", *sunrise0});
-            auto arunodaya = calc.arunodaya_for_sunrise(*sunrise0);
-            if (arunodaya) {
-                events.push_back({"aruṇodaya0", *arunodaya});
-            }
-        }
-    }
-    events.push_back({ekadashi_descr.str(), ekadashi_start});
+    events.push_back({dvadashi_descr.str(), vrata.ativrddhatvam.dvadashi_start});
+
+    events.push_back({"dvādaśī's first quarter ends", Calc::proportional_time(vrata.ativrddhatvam.dvadashi_start, vrata.ativrddhatvam.trayodashi_start, 0.25)});
+
+    events.push_back({"dvādaśī end", vrata.ativrddhatvam.trayodashi_start});
 
     events.push_back({"sunset0", vrata.ativrddhatvam.prev_sunset});
     std::string star;
