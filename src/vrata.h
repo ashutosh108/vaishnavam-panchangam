@@ -7,6 +7,7 @@
 #include "paran.h"
 #include "tithi.h"
 
+#include <limits>
 #include <optional>
 #include <ostream>
 
@@ -85,7 +86,15 @@ struct Vrata {
     date::year_month_day date;
     Paran paran;
     Location location;
-    Ativrddhatvam ativrddhatvam;
+    Ativrddhatvam ativrddhatvam = dummy_ativrddhatvam;
+
+    static constexpr double nan = std::numeric_limits<double>::quiet_NaN();
+    JulDays_UT ekadashi_sunrise{double_days{nan}};
+    JulDays_UT vrata_sunrise{double_days{nan}};
+    JulDays_UT sunrise2{double_days{nan}};    // second vrata sunrise (≈dvādaśī)
+    JulDays_UT sunrise3{double_days{nan}};    // third vrata sunrise (≈trayodaśī)
+
+    Vrata(){}
 
     // used only for tests
     Vrata(date::year_month_day _date, Ativrddhatvam _ativrddhatvam = dummy_ativrddhatvam)

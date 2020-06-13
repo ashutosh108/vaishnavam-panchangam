@@ -115,12 +115,10 @@ JulDays_UT Calc::next_sunrise_v(JulDays_UT sunrise) const {
  * This function assumes that if first sunrise is ekAdashI, then it's shuddhA-ekAdashI.
  * Otherwise the sunrise under consideration would have been "next sunrise" already.
  */
-tl::expected<bool, CalcError> Calc::got_atirikta_ekadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const
+bool Calc::got_atirikta_ekadashi(const Vrata & vrata) const
 {
-    VP_TRY_AUTO(second_sunrise, next_sunrise(sunrise_on_shuddha_ekadashi_or_next_one));
-
-    Tithi tithi_on_first_sunrise = swe.get_tithi(sunrise_on_shuddha_ekadashi_or_next_one);
-    Tithi tithi_on_second_sunrise = swe.get_tithi(*second_sunrise);
+    Tithi tithi_on_first_sunrise = swe.get_tithi(vrata.vrata_sunrise);
+    Tithi tithi_on_second_sunrise = swe.get_tithi(vrata.sunrise2);
     return tithi_on_first_sunrise.is_ekadashi() && tithi_on_second_sunrise.is_ekadashi();
 }
 
@@ -128,14 +126,24 @@ tl::expected<bool, CalcError> Calc::got_atirikta_ekadashi(const JulDays_UT sunri
  * If yes, then adjust the sunrise to be next day's sunrise
  * (because it has to be the sunrise of last fastiung day).
  */
-tl::expected<bool, CalcError> Calc::got_atirikta_dvadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const
+bool Calc::got_atirikta_dvadashi(const Vrata & vrata) const
 {
-    VP_TRY_AUTO(second_sunrise, next_sunrise(sunrise_on_shuddha_ekadashi_or_next_one));
-    VP_TRY_AUTO(third_sunrise, next_sunrise(*second_sunrise));
-
-    Tithi tithi_on_second_sunrise = swe.get_tithi(*second_sunrise);
-    Tithi tithi_on_third_sunrise = swe.get_tithi(*third_sunrise);
+    Tithi tithi_on_second_sunrise = swe.get_tithi(vrata.sunrise2);
+    Tithi tithi_on_third_sunrise = swe.get_tithi(vrata.sunrise3);
     return tithi_on_second_sunrise.is_dvadashi() && tithi_on_third_sunrise.is_dvadashi();
+}
+
+Vrata_Type Calc::calc_vrata_type(const Vrata &vrata) const
+{
+    if (got_atirikta_ekadashi(vrata)) {
+        return Vrata_Type::Atirikta_Ekadashi;
+    }
+
+    if (got_atirikta_dvadashi(vrata)) {
+        return Vrata_Type::With_Atirikta_Dvadashi;
+    }
+
+    return Vrata_Type::Ekadashi;
 }
 
 /* Main calculation: return next vrata on a given date or after.
@@ -151,22 +159,27 @@ tl::expected<Vrata, CalcError> Calc::find_next_vrata(date::year_month_day after)
     auto midnight = calc_astronomical_midnight(after);
     auto start_time = midnight - double_days{3.0};
     int run_number = 0;
+    Vrata vrata{};
 repeat_with_fixed_start_time:
     if (++run_number > 2) {
         std::stringstream s;
         s << swe.location.name << " after " << after << " (" << start_time << "): potential eternal loop detected";
         throw std::runtime_error(s.str());
     }
-    VP_TRY_AUTO(sunrise, find_ekadashi_sunrise(start_time));
-
-    VP_TRY_AUTO(ativrddhatvam, calc_ativrddhatvam_for_sunrise(*sunrise));
-    auto tithi_that_must_not_be_dashamI = swe.get_tithi(ativrddhatvam->relevant_timepoint());
-    if (tithi_that_must_not_be_dashamI.is_dashami()) {
-        sunrise = next_sunrise(*sunrise);
-        if (!sunrise) { return tl::unexpected{sunrise.error()}; }
+    {
+        VP_TRY_AUTO(sunrise, find_ekadashi_sunrise(start_time));
+        vrata.ekadashi_sunrise = *sunrise;
+        vrata.vrata_sunrise = *sunrise;
     }
 
-    auto vrata_date = get_vrata_date(*sunrise);
+    VP_TRY_AUTO(ativrddhatvam, calc_ativrddhatvam_for_sunrise(vrata.ekadashi_sunrise));
+    auto tithi_that_must_not_be_dashamI = swe.get_tithi(ativrddhatvam->relevant_timepoint());
+    if (tithi_that_must_not_be_dashamI.is_dashami()) {
+        VP_TRY_AUTO(sunrise, next_sunrise(vrata.ekadashi_sunrise));
+        vrata.vrata_sunrise = *sunrise;
+    }
+
+    auto vrata_date = get_vrata_date(vrata.vrata_sunrise);
 
     // if we found vrata before the requested date, then those -3days in the beginning were too much of an adjustment.
     // so we restart without that 3 days offset.
@@ -175,35 +188,27 @@ repeat_with_fixed_start_time:
         goto repeat_with_fixed_start_time;
     }
 
-    VP_TRY_AUTO(got_ati_eka, got_atirikta_ekadashi(*sunrise));
-    if (*got_ati_eka) {
-        VP_TRY_AUTO(paran, atirikta_paran(*sunrise));
-        return Vrata{
-                    Vrata_Type::Atirikta_Ekadashi,
-                    vrata_date,
-                    *paran,
-                    swe.location,
-                    *ativrddhatvam};
-    }
+    vrata.date = vrata_date;
+    vrata.location = swe.location;
+    vrata.ativrddhatvam = *ativrddhatvam;
 
-    VP_TRY_AUTO(got_ati_dva, got_atirikta_dvadashi(*sunrise));
-    if (*got_ati_dva) {
-        VP_TRY_AUTO(paran, atirikta_paran(*sunrise));
-        return Vrata{
-                    Vrata_Type::With_Atirikta_Dvadashi,
-                    vrata_date,
-                    *paran,
-                    swe.location,
-                    *ativrddhatvam};
-    }
+    VP_TRY_AUTO(second_sunrise, next_sunrise(vrata.vrata_sunrise));
+    vrata.sunrise2 = *second_sunrise;
 
-    VP_TRY_AUTO(paran, get_paran(*sunrise));
-    return Vrata{
-                Vrata_Type::Ekadashi,
-                vrata_date,
-                *paran,
-                swe.location,
-                *ativrddhatvam};
+    VP_TRY_AUTO(third_sunrise, next_sunrise(vrata.sunrise2));
+    vrata.sunrise3 = *third_sunrise;
+
+    vrata.type = calc_vrata_type(vrata);
+
+    if (is_atirikta(vrata.type)) {
+        VP_TRY_AUTO(paran, atirikta_paran(vrata.vrata_sunrise));
+        vrata.paran = *paran;
+        return vrata;
+    } else {
+        VP_TRY_AUTO(paran, get_paran(vrata.vrata_sunrise));
+        vrata.paran = *paran;
+        return vrata;
+    }
 }
 
 tl::expected<JulDays_UT, CalcError> Calc::sunset_before_sunrise(JulDays_UT const sunrise) const {

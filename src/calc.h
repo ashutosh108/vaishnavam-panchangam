@@ -51,8 +51,9 @@ private:
 
     tl::expected<JulDays_UT, CalcError> next_sunrise(JulDays_UT sunrise) const;
     JulDays_UT next_sunrise_v(JulDays_UT sunrise) const;
-    tl::expected<bool, CalcError> got_atirikta_ekadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const;
-    tl::expected<bool, CalcError> got_atirikta_dvadashi(const JulDays_UT sunrise_on_shuddha_ekadashi_or_next_one) const;
+    bool got_atirikta_ekadashi(const Vrata & vrata) const;
+    bool got_atirikta_dvadashi(const Vrata & vrata) const;
+    Vrata_Type calc_vrata_type(const Vrata & vrata) const;
 };
 
 } // namespace vp
