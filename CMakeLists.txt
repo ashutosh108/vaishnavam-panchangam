@@ -54,7 +54,7 @@ add_library(swe STATIC
     src/tithi.h src/tithi.cpp
     src/location.h src/location.cpp
     src/vrata.h src/vrata.cpp
-    src/vrata_detail.h src/vrata_detail.cpp
+    src/vrata_detail_printer.h src/vrata_detail_printer.cpp
     src/paran.h src/paran.cpp
     src/text-interface.cpp
     src/calc-error.cpp
@@ -88,7 +88,7 @@ add_executable(test-main
     tests/test-location.cpp
     tests/test-date.cpp
     tests/test-vrata.cpp
-    tests/test-vrata-detail.cpp
+    tests/test-vrata-detail-printer.cpp
     tests/test-paran.cpp
     tests/test-text-interface.cpp
     tests/html-parser.cpp tests/test-html-parser.cpp

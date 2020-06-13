@@ -3,7 +3,7 @@
 #include "juldays_ut.h"
 #include "paran.h"
 #include "swe.h"
-#include "vrata_detail.h"
+#include "vrata_detail_printer.h"
 
 #include "catch.hpp"
 #include <chrono>

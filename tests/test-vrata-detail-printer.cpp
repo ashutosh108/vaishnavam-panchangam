@@ -1,7 +1,7 @@
 #include "date-fixed.h"
 #include "location.h"
 #include "vrata.h"
-#include "vrata_detail.h"
+#include "vrata_detail_printer.h"
 
 #include "catch.hpp"
 #include <sstream>

@@ -1,7 +1,7 @@
 #include "text-interface.h"
 
 #include "calc.h"
-#include "vrata_detail.h"
+#include "vrata_detail_printer.h"
 
 #include <cstring>
 #include <iomanip>
