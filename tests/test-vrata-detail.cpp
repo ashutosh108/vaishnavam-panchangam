@@ -18,12 +18,3 @@ TEST_CASE("Print result is not empty") {
     s << vd;
     REQUIRE(s.str() != "");
 }
-
-TEST_CASE("we get nearest next ekadashi start for petropavlovsk 2019-03-18") {
-    Vrata v{2019_y/March/18};
-    Vrata_Detail vd{v, petropavlovskkamchatskiy_coord};
-    JulDays_UT ekadashi_earliest{2019_y/March/16};
-    JulDays_UT ekadashi_latest{2019_y/March/17};
-    REQUIRE(vd.ekadashi_start > ekadashi_earliest);
-    REQUIRE(vd.ekadashi_start < ekadashi_latest);
-}

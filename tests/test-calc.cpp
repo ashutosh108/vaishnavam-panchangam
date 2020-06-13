@@ -626,3 +626,12 @@ TEST_CASE("ensure we get an error when we search for ekAdashI in Murmansk in the
     auto date_minus_4_days = date::year_month_day{date::sys_days{date} - date::days{4}};
     REQUIRE(e.after > JulDays_UT{date_minus_4_days});
 }
+
+TEST_CASE("we get nearest next ekadashi start for petropavlovsk 2019-03-18") {
+    auto vrata = Calc{petropavlovskkamchatskiy_coord}.find_next_vrata(2019_y/March/18);
+    REQUIRE(vrata.has_value());
+    JulDays_UT ekadashi_earliest{2019_y/March/16};
+    JulDays_UT ekadashi_latest{2019_y/March/17};
+    REQUIRE(vrata->ativrddhatvam.ekadashi_start > ekadashi_earliest);
+    REQUIRE(vrata->ativrddhatvam.ekadashi_start < ekadashi_latest);
+}

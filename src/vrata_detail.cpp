@@ -6,14 +6,13 @@
 
 namespace vp {
 
-Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.location), calc(std::move(swe)),
-      ekadashi_start(calc.find_tithi_start(calc.calc_astronomical_midnight(vrata.date)-double_days{1.0}, Tithi{Tithi::Ekadashi})) {
+Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.location), calc(std::move(swe)) {
     JulDays_UT local_midnight = calc.calc_astronomical_midnight(vrata.date);
 
     auto sunrise = calc.swe.find_sunrise(local_midnight);
     if (sunrise) {
         auto sunrise0 = calc.swe.find_sunrise(*sunrise - double_days{1.5});
-        if (sunrise0 && *sunrise0 >= ekadashi_start) {
+        if (sunrise0 && *sunrise0 >= vrata.ativrddhatvam.ekadashi_start) {
             events.push_back({"sunrise0", *sunrise0});
             auto arunodaya = calc.arunodaya_for_sunrise(*sunrise0);
             if (arunodaya) {
@@ -68,7 +67,7 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.lo
     ekadashi_descr << "**ekādaśī start** ("
                    << std::setprecision(3) << std::fixed << ekadashi_length_ghatikas.count() << "gh long; "
                    << std::showpos << "**" << ekadashi_delta.count() << "gh**)";
-    events.push_back({ekadashi_descr.str(), ekadashi_start});
+    events.push_back({ekadashi_descr.str(), vrata.ativrddhatvam.ekadashi_start});
 
     const double_ghatikas dvadashi_length_ghatikas = vrata.ativrddhatvam.trayodashi_start - vrata.ativrddhatvam.dvadashi_start;
     const double_ghatikas dvadashi_delta = dvadashi_length_ghatikas - ekadashi_length_ghatikas;

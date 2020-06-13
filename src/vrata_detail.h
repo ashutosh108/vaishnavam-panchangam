@@ -15,7 +15,6 @@ struct Vrata_Detail {
         JulDays_UT time_point;
     };
 
-    JulDays_UT ekadashi_start;
     std::vector<NamedTimePoint> events;
 };
 
