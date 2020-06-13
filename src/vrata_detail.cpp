@@ -6,7 +6,7 @@
 
 namespace vp {
 
-Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), location(swe.location), calc(std::move(swe)) {
+Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), calc(std::move(swe)) {
     JulDays_UT local_midnight = calc.calc_astronomical_midnight(vrata.date);
 
     auto sunrise = calc.swe.find_sunrise(local_midnight);
@@ -128,7 +128,7 @@ std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
     });
     merge_consequent_events_with_same_time(events);
     for (const auto & e : events) {
-        s << JulDays_Zoned{vd.location.timezone_name, e.time_point} << ' ' << e.name << '\n';
+        s << JulDays_Zoned{vd.vrata.location.timezone_name, e.time_point} << ' ' << e.name << '\n';
     }
     return s;
 }

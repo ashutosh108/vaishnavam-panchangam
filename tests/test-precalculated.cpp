@@ -245,11 +245,11 @@ struct Precalculated_Vrata {
 
     bool operator==(const vp::Vrata_Detail & nowcalc) const {
         UNSCOPED_INFO("comparing: " << date << "<=>" << nowcalc.vrata.date << ";\n"
-                      << location.name << "<=>" << nowcalc.location.name << ";\n"
+                      << location.name << "<=>" << nowcalc.vrata.location.name << ";\n"
                       << type << "<=>" << nowcalc.vrata.type << ";\n"
                       << "S" << to_str(paranam.start) << "<=>" << make_zoned(nowcalc.vrata.paran.paran_start) << ";\n"
                       << "E" << to_str(paranam.end) << "<=>" << make_zoned(nowcalc.vrata.paran.paran_end));
-        if (date != nowcalc.vrata.date || location != nowcalc.location) {
+        if (date != nowcalc.vrata.date || location != nowcalc.vrata.location) {
             UNSCOPED_INFO("dates and locations must match, but they don't");
             return false;
         }
