@@ -7,7 +7,6 @@ namespace vp {
 
 struct Vrata_Detail {
     Vrata vrata;
-    Calc calc;
     Vrata_Detail(Vrata _vrata, Swe swe);
     struct NamedTimePoint {
         std::string name;

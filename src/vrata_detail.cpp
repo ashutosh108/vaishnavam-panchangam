@@ -6,7 +6,8 @@
 
 namespace vp {
 
-Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), calc(std::move(swe)) {
+Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata) {
+    const Calc calc{std::move(swe)};
     JulDays_UT local_midnight = calc.calc_astronomical_midnight(vrata.date);
 
     auto sunrise = calc.swe.find_sunrise(local_midnight);
@@ -83,7 +84,7 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata), calc(std::move(
 
     events.push_back({"sunset0", vrata.ativrddhatvam.prev_sunset});
     std::string star;
-    auto status = vrata.ativrddhatvam.ativrddhaadi();
+    const auto status = vrata.ativrddhatvam.ativrddhaadi();
     star = (status == Ativrddhatvam::Ativrddhaadi::ativrddha) ? "**" : "";
     events.push_back({"54gh_40vigh (" + star + "ativṛddhiḥ" + star + ")", vrata.ativrddhatvam.time_point_ativrddha_54gh_40vigh});
     star = status == Ativrddhatvam::Ativrddhaadi::vrddha ? "**" : "";
