@@ -243,7 +243,7 @@ struct Precalculated_Vrata {
         return s.str();
     }
 
-    bool operator==(const vp::Vrata_Detail & nowcalc) const {
+    bool operator==(const vp::Vrata_Detail_Printer & nowcalc) const {
         UNSCOPED_INFO("comparing: " << date << "<=>" << nowcalc.vrata.date << ";\n"
                       << location.name << "<=>" << nowcalc.vrata.location.name << ";\n"
                       << type << "<=>" << nowcalc.vrata.type << ";\n"
@@ -689,7 +689,7 @@ void check_precalculated_vrata(const Precalculated_Vrata & vrata) {
     // "by edge" setting. Our usual default is "by disc center".
     auto our_vrata = vp::Calc{vp::Swe{vrata.location, vp::Swe::Flag::SunriseByDiscEdge}}.find_next_vrata(start_date);
     REQUIRE(our_vrata.has_value());
-    auto our_vrata_detail = vp::Vrata_Detail{*our_vrata, vp::Swe{vrata.location, vp::Swe::Flag::SunriseByDiscEdge}};
+    auto our_vrata_detail = vp::Vrata_Detail_Printer{*our_vrata, vp::Swe{vrata.location, vp::Swe::Flag::SunriseByDiscEdge}};
     REQUIRE(vrata == our_vrata_detail);
 }
 

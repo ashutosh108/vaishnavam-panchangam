@@ -6,7 +6,7 @@
 
 namespace vp {
 
-Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata) {
+Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata, Swe swe):vrata(_vrata) {
     const Calc calc{std::move(swe)};
     JulDays_UT local_midnight = calc.calc_astronomical_midnight(vrata.date);
 
@@ -105,7 +105,7 @@ Vrata_Detail::Vrata_Detail(Vrata _vrata, Swe swe):vrata(_vrata) {
     }
 }
 
-static void merge_consequent_events_with_same_time(std::vector<Vrata_Detail::NamedTimePoint> & events) {
+static void merge_consequent_events_with_same_time(std::vector<Vrata_Detail_Printer::NamedTimePoint> & events) {
     for (std::size_t i = 1; i < events.size(); ++i) {
         auto time1 = events[i-1].time_point;
         auto time2 = events[i].time_point;
@@ -117,14 +117,14 @@ static void merge_consequent_events_with_same_time(std::vector<Vrata_Detail::Nam
     }
 }
 
-std::ostream &operator<<(std::ostream &s, const Vrata_Detail &vd)
+std::ostream &operator<<(std::ostream &s, const Vrata_Detail_Printer &vd)
 {
     s << "# " << vd.vrata.location_name() << "\n";
     s << vd.vrata << ":\n";
     s << vd.vrata.paran.type << '\n';
     auto events = vd.events;
     // stable sort to keep "pAraNam start/end" after corresponding sunrise+ events.
-    std::stable_sort(events.begin(), events.end(), [](const Vrata_Detail::NamedTimePoint & left, const Vrata_Detail::NamedTimePoint & right) {
+    std::stable_sort(events.begin(), events.end(), [](const Vrata_Detail_Printer::NamedTimePoint & left, const Vrata_Detail_Printer::NamedTimePoint & right) {
         return left.time_point < right.time_point;
     });
     merge_consequent_events_with_same_time(events);

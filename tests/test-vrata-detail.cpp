@@ -14,7 +14,7 @@ TEST_CASE("Print result is not empty") {
     std::stringstream s;
     Vrata v{2019_y/March/1};
     Location c{50.0_N, 50.0_E};
-    Vrata_Detail vd{v, c};
+    Vrata_Detail_Printer vd{v, c};
     s << vd;
     REQUIRE(s.str() != "");
 }

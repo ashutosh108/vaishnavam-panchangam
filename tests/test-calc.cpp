@@ -503,7 +503,7 @@ TEST_CASE("Surgut 2019-12-07 gets paranam time +2days after atiriktA as it shoul
     REQUIRE(vrata.has_value());
     auto expected_ymd = 2019_y/December/9;
     date::year_month_day local_ymd{date::floor<date::days>(vrata->paran.paran_start->as_zoned_time(date::locate_zone(surgut_coord.timezone_name)).get_local_time())};
-    CAPTURE(Vrata_Detail{*vrata, surgut_coord});
+    CAPTURE(Vrata_Detail_Printer{*vrata, surgut_coord});
     REQUIRE(expected_ymd == local_ymd);
 }
 
@@ -511,7 +511,7 @@ TEST_CASE("after atiriktA when 1/5 of day fits before end of dvAdashI, pAraNam m
     auto vrata = Calc{aktau_coord}.find_next_vrata(2018_y/August/21);
     REQUIRE(vrata.has_value());
     REQUIRE(vrata->date == 2018_y/August/21);
-    auto vd = Vrata_Detail{*vrata, aktau_coord};
+    auto vd = Vrata_Detail_Printer{*vrata, aktau_coord};
     CAPTURE(vd);
     REQUIRE(vrata->paran.type == Paran::Type::Standard);
 }

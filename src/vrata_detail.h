@@ -5,9 +5,9 @@
 
 namespace vp {
 
-struct Vrata_Detail {
+struct Vrata_Detail_Printer {
     Vrata vrata;
-    Vrata_Detail(Vrata _vrata, Swe swe);
+    Vrata_Detail_Printer(Vrata _vrata, Swe swe);
     struct NamedTimePoint {
         std::string name;
         JulDays_UT time_point;
@@ -16,7 +16,7 @@ struct Vrata_Detail {
     std::vector<NamedTimePoint> events;
 };
 
-std::ostream &operator<<(std::ostream &s, Vrata_Detail const &vd);
+std::ostream &operator<<(std::ostream &s, Vrata_Detail_Printer const &vd);
 
 } // namespace vp
 

@@ -152,7 +152,7 @@ tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day 
             "Can't find next Ekadashi, sorry.\n" <<
             "* Error: " << vrata.error() << "\n";
     } else {
-        Vrata_Detail vd{*vrata, location};
+        Vrata_Detail_Printer vd{*vrata, location};
         o << vd << "\n\n";
     }
     return vrata;
