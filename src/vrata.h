@@ -43,6 +43,7 @@ struct Ativrddhatvam {
     JulDays_UT time_point_vrddha_55gh;        // vRddhA
     JulDays_UT time_point_samyam_55gh_50vigh; // samyam
     JulDays_UT time_point_hrasva_55gh_55vigh; // hrasva
+    JulDays_UT time_point_arunodaya;          // 56gh = 4gh before sūryodaya
 
     JulDays_UT dashami_start;
     JulDays_UT ekadashi_start;
@@ -73,6 +74,7 @@ struct Ativrddhatvam {
     JulDays_UT{double_days{0.0}}, // time_point_vrddha_55gh;        // vRddhA
     JulDays_UT{double_days{0.0}}, // time_point_samyam_55gh_50vigh; // samyam
     JulDays_UT{double_days{0.0}}, // time_point_hrasva_55gh_55vigh; // hrasva
+    JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // time_point_arunodaya;
     JulDays_UT{double_days{0.0}}, // dashami_start;
     JulDays_UT{double_days{0.0}}, // ekadashi_start;
     JulDays_UT{double_days{0.0}}, // dvadashi_start;

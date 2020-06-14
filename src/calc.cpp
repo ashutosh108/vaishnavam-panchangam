@@ -282,9 +282,11 @@ Ativrddhatvam Calc::calc_ativrddhatvam_for_sunrise(const Vrata & vrata) const
     auto time_point_vrddha_55gh = vrata.sunrise1 - 5 * ghatika;
     auto time_point_samyam_55gh_50vigh = vrata.sunrise1 - 4 * ghatika - 10 * vighatika;
     auto time_point_hrasva_55gh_55vigh = vrata.sunrise1 - 4 * ghatika - 5 * vighatika;
+    const auto time_point_arunodaya = vrata.sunrise1 - 4 * ghatika;
     return Ativrddhatvam{
         vrata.sunset0, vrata.sunrise1,
         time_point_ativrddha_54gh_40vigh, time_point_vrddha_55gh, time_point_samyam_55gh_50vigh, time_point_hrasva_55gh_55vigh,
+        time_point_arunodaya,
         dashami_start, ekadashi_start, dvadashi_start, trayodashi_start
     };
 }

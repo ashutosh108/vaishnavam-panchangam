@@ -1,4 +1,6 @@
-[ ] make sure all relevant sunrise/sunsets are reported for no-sunset Murmansk cases
+[ ] Vrata_Detail_Printer: print second date for two-days fasts (atiriktAs)
+[ ] Vrata: keep calculation details in separate struct
+[ ] Vrata: unify calculation details with ativrddhatvam struct
 [ ] switch from iostreams to fmt
 [ ] switch from std::regex to some other, saner and faster, regex library.
 [ ] add "table" output tab (all primary locations in a single table)
@@ -153,7 +155,7 @@ done:
 [+] vrata: calculate ativRddha/vRddha/samyam/hrasa status for dashamI/ekAdashI/dvAdashI (print in detail) [2020-05-19]
 [+] calc: use new ativRddhAdi calculations in addition to old "sandigdha" rules (uposhyatvam) [2020-05-20]
 [+] use new ativRddhAdi calculations instead of sandigdha (to ensure that ekAdashI is uposhya) [2020-05-21]
-[+] remove arddha-ghaTika and sandigdha from executable code. They are no longer useful as their purpose is served by ativRddhAdi uposhya calculations. [2020-05-51]
+[+] remove arddha-ghaTika and sandigdha from executable code. They are no longer useful as their purpose is served by ativRddhAdi uposhya calculations. [2020-05-21]
 [+] make Qt5 an optional dependency (so we could build CLI-only version e.g. for wasm tests) [2020-05-23]
 [+] detail: merge "pAraNam start/end" events with matching events (sunrise etc) [2020-05-23]
 [+] Vrata_Detail: mark some events as important (print "*") [2020-05-23]
@@ -171,3 +173,5 @@ done:
 [+] include Location in Vrata [2020-06-09]
 [+] no suryodayAdi case: print message that vrata is printed for alternative location [2020-06-09]
 [+] format latitude/longitude as DD°MM'SS"N etc (in Qt gui and in "adjusted location name") [2020-06-09]
+[+] make sure all relevant sunrise/sunsets are reported for no-sunset Murmansk cases [2020-06-14]
+[+] Vrata_Detail_Printer: remove Calc and Swe [2020-06-14]

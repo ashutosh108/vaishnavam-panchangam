@@ -7,7 +7,7 @@ namespace vp {
 
 struct Vrata_Detail_Printer {
     Vrata vrata;
-    Vrata_Detail_Printer(Vrata _vrata, Swe swe);
+    Vrata_Detail_Printer(Vrata _vrata);
     struct NamedTimePoint {
         std::string name;
         JulDays_UT time_point;

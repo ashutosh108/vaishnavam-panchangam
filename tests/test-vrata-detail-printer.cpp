@@ -1,5 +1,6 @@
 #include "date-fixed.h"
 #include "location.h"
+#include "text-interface.h"
 #include "vrata.h"
 #include "vrata_detail_printer.h"
 
@@ -9,12 +10,22 @@
 
 using namespace date;
 using namespace vp;
+using Catch::Matchers::Contains;
 
 TEST_CASE("Print result is not empty") {
     std::stringstream s;
-    Vrata v{2019_y/March/1};
-    Location c{50.0_N, 50.0_E};
-    Vrata_Detail_Printer vd{v, c};
-    s << vd;
+    const auto vrata = vp::text_ui::calc_and_report_one(2020_y/June/14, Location{50.0_N, 50.0_E}, s);
     REQUIRE(s.str() != "");
+}
+
+TEST_CASE("aruNodaya is given in the Vrata_Detail_Printer in generic case") {
+    std::stringstream s;
+    const auto vrata = vp::text_ui::calc_and_report_one(2020_y/June/14, Location{50.0_N, 50.0_E}, s);
+    REQUIRE_THAT(s.str(), Contains("aruṇodaya"));
+}
+
+TEST_CASE("aruNodaya is given in the Vrata_Detail_Printer in extreme north case (summer)") {
+    std::stringstream s;
+    const auto vrata = vp::text_ui::calc_and_report_one(2020_y/June/14, Location{70.0_N, 50.0_E}, s);
+    REQUIRE_THAT(s.str(), Contains("aruṇodaya"));
 }

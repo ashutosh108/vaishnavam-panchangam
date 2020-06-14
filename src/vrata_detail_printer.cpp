@@ -6,14 +6,9 @@
 
 namespace vp {
 
-Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata, Swe swe):vrata(_vrata) {
-    const Calc calc{std::move(swe)};
-
+Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata):vrata(_vrata) {
     events.push_back({"**sunrise1**", vrata.sunrise1});
-    auto arunodaya = calc.arunodaya_for_sunrise(vrata.sunrise1);
-    if (arunodaya) {
-        events.push_back({"aruṇodaya1", *arunodaya});
-    }
+    events.push_back({"aruṇodaya1", vrata.ativrddhatvam.time_point_arunodaya});
 
     events.push_back({"sunrise2", vrata.sunrise2});
     events.push_back({"sunset2", vrata.sunset2});
