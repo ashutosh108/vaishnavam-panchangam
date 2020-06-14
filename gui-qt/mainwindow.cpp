@@ -40,6 +40,12 @@ static QString htmlify_line(const std::string & line) {
     if (res.startsWith("# ")) {
         return "<h1>" + res + "</h1>";
     }
+
+    // Highlight the second half or "on YYYY-MM-DD & YYYY-MM-DD" with red
+    // Note: when changing this regex, be careful to not confuse "(" and ")"
+    // of raw string literal syntax and of regexp itself.
+    res.replace(QRegularExpression{R"~((on \d\d\d\d-\d\d-\d\d )(\S{1,10} \d\d\d\d-\d\d-\d\d))~"}, "\\1<span style=\"color:red\">\\2</span>");
+
     int pos = 0;
     while(1) {
         auto start = res.indexOf("**", pos);
