@@ -15,10 +15,18 @@
 // check if we have got an error and return that error,
 // if necessary. Otherwise, continue.
 #define VP_TRY_AUTO(var_name, assign_to)                \
-    auto var_name = assign_to;                          \
+    const auto var_name = assign_to;                    \
     if (!var_name.has_value()) {                        \
         return tl::unexpected{var_name.error()};        \
     }
+
+#define VP_TRY(existing_var_name, assign_to) {          \
+    auto tmp = assign_to;                               \
+    if (!tmp.has_value()) {                             \
+        return tl::unexpected{tmp.error()};             \
+    }                                                   \
+    existing_var_name = *tmp;                           \
+}
 
 namespace vp {
 
@@ -49,17 +57,15 @@ date::year_month_day Calc::get_vrata_date(const JulDays_UT sunrise) const
     return date::year_month_day{date::floor<date::days>(zoned.get_local_time())};
 }
 
-tl::expected<Paran, CalcError> Calc::get_paran(const JulDays_UT last_fasting_sunrise) const
+Paran Calc::get_paran(const Vrata & vrata) const
 {
     std::optional<JulDays_UT> paran_start, paran_end;
-    VP_TRY_AUTO(paran_sunrise, next_sunrise(last_fasting_sunrise));
-    VP_TRY_AUTO(paran_sunset, swe.find_sunset(*paran_sunrise));
-    paran_start = *paran_sunrise;
-    paran_end = proportional_time(*paran_sunrise, *paran_sunset, 0.2);
+    paran_start = vrata.sunrise2;
+    paran_end = proportional_time(vrata.sunrise2, vrata.sunset2, 0.2);
 
     Paran::Type type{Paran::Type::Standard};
 
-    auto dvadashi_start = find_tithi_start(last_fasting_sunrise-double_days{1.0}, Tithi{Tithi::Dvadashi});
+    auto dvadashi_start = find_tithi_start(vrata.sunrise1-double_days{1.0}, Tithi{Tithi::Dvadashi});
     auto dvadashi_end = find_tithi_start(dvadashi_start, Tithi{Tithi::Dvadashi_End});
     // paran start should never be before the end of Dvadashi's first quarter
     auto dvadashi_quarter = proportional_time(dvadashi_start, dvadashi_end, 0.25);
@@ -83,17 +89,14 @@ tl::expected<Paran, CalcError> Calc::get_paran(const JulDays_UT last_fasting_sun
     return paran;
 }
 
-tl::expected<Paran, CalcError> Calc::atirikta_paran(const JulDays_UT first_fasting_sunrise) const
+Paran Calc::atirikta_paran(const Vrata & vrata) const
 {
-    VP_TRY_AUTO(second_fasting_sunrise, next_sunrise(first_fasting_sunrise));
-    VP_TRY_AUTO(paran_sunrise, next_sunrise(*second_fasting_sunrise));
-    VP_TRY_AUTO(paran_sunset, swe.find_sunset(*paran_sunrise));
-    auto fifth_of_paran_daytime = proportional_time(*paran_sunrise, *paran_sunset, 0.2);
-    auto dvadashi_end = find_tithi_start(*paran_sunrise, Tithi{Tithi::Dvadashi_End});
+    auto fifth_of_paran_daytime = proportional_time(vrata.sunrise3, vrata.sunset3, 0.2);
+    auto dvadashi_end = find_tithi_start(vrata.sunrise3, Tithi{Tithi::Dvadashi_End});
     if (fifth_of_paran_daytime < dvadashi_end) {
-        return Paran{Paran::Type::Standard, *paran_sunrise, fifth_of_paran_daytime};
+        return Paran{Paran::Type::Standard, vrata.sunrise3, fifth_of_paran_daytime};
     }
-    return Paran{Paran::Type::Puccha_Dvadashi, *paran_sunrise, dvadashi_end};
+    return Paran{Paran::Type::Puccha_Dvadashi, vrata.sunrise3, dvadashi_end};
 }
 
 tl::expected<JulDays_UT, CalcError> Calc::next_sunrise(JulDays_UT sunrise) const {
@@ -117,7 +120,7 @@ JulDays_UT Calc::next_sunrise_v(JulDays_UT sunrise) const {
  */
 bool Calc::got_atirikta_ekadashi(const Vrata & vrata) const
 {
-    Tithi tithi_on_first_sunrise = swe.get_tithi(vrata.vrata_sunrise);
+    Tithi tithi_on_first_sunrise = swe.get_tithi(vrata.sunrise1);
     Tithi tithi_on_second_sunrise = swe.get_tithi(vrata.sunrise2);
     return tithi_on_first_sunrise.is_ekadashi() && tithi_on_second_sunrise.is_ekadashi();
 }
@@ -166,20 +169,18 @@ repeat_with_fixed_start_time:
         s << swe.location.name << " after " << after << " (" << start_time << "): potential eternal loop detected";
         throw std::runtime_error(s.str());
     }
-    {
-        VP_TRY_AUTO(sunrise, find_ekadashi_sunrise(start_time));
-        vrata.ekadashi_sunrise = *sunrise;
-        vrata.vrata_sunrise = *sunrise;
-    }
+    VP_TRY(vrata.ekadashi_sunrise, find_ekadashi_sunrise(start_time));
+    vrata.sunrise1 = vrata.ekadashi_sunrise;
 
-    VP_TRY_AUTO(ativrddhatvam, calc_ativrddhatvam_for_sunrise(vrata.ekadashi_sunrise));
-    auto tithi_that_must_not_be_dashamI = swe.get_tithi(ativrddhatvam->relevant_timepoint());
+    VP_TRY(vrata.sunset0, sunset_before_sunrise(vrata.sunrise1));
+
+    vrata.ativrddhatvam = calc_ativrddhatvam_for_sunrise(vrata);
+    auto tithi_that_must_not_be_dashamI = swe.get_tithi(vrata.ativrddhatvam.relevant_timepoint());
     if (tithi_that_must_not_be_dashamI.is_dashami()) {
-        VP_TRY_AUTO(sunrise, next_sunrise(vrata.ekadashi_sunrise));
-        vrata.vrata_sunrise = *sunrise;
+        VP_TRY(vrata.sunrise1, next_sunrise(vrata.ekadashi_sunrise));
     }
 
-    auto vrata_date = get_vrata_date(vrata.vrata_sunrise);
+    auto vrata_date = get_vrata_date(vrata.sunrise1);
 
     // if we found vrata before the requested date, then those -3days in the beginning were too much of an adjustment.
     // so we restart without that 3 days offset.
@@ -190,25 +191,16 @@ repeat_with_fixed_start_time:
 
     vrata.date = vrata_date;
     vrata.location = swe.location;
-    vrata.ativrddhatvam = *ativrddhatvam;
 
-    VP_TRY_AUTO(second_sunrise, next_sunrise(vrata.vrata_sunrise));
-    vrata.sunrise2 = *second_sunrise;
-
-    VP_TRY_AUTO(third_sunrise, next_sunrise(vrata.sunrise2));
-    vrata.sunrise3 = *third_sunrise;
+    VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1));
+    VP_TRY(vrata.sunset2, swe.find_sunset(vrata.sunrise2));
+    VP_TRY(vrata.sunrise3, next_sunrise(vrata.sunrise2));
+    VP_TRY(vrata.sunset3, swe.find_sunset(vrata.sunrise3));
 
     vrata.type = calc_vrata_type(vrata);
+    vrata.paran = is_atirikta(vrata.type) ? atirikta_paran(vrata) : get_paran(vrata);
 
-    if (is_atirikta(vrata.type)) {
-        VP_TRY_AUTO(paran, atirikta_paran(vrata.vrata_sunrise));
-        vrata.paran = *paran;
-        return vrata;
-    } else {
-        VP_TRY_AUTO(paran, get_paran(vrata.vrata_sunrise));
-        vrata.paran = *paran;
-        return vrata;
-    }
+    return vrata;
 }
 
 tl::expected<JulDays_UT, CalcError> Calc::sunset_before_sunrise(JulDays_UT const sunrise) const {
@@ -218,8 +210,7 @@ tl::expected<JulDays_UT, CalcError> Calc::sunset_before_sunrise(JulDays_UT const
 
 tl::expected<JulDays_UT, CalcError> Calc::arunodaya_for_sunrise(JulDays_UT const sunrise) const
 {
-    auto const prev_sunset = sunset_before_sunrise(sunrise);
-    if (!prev_sunset.has_value()) { return prev_sunset; }
+    VP_TRY_AUTO(prev_sunset, sunset_before_sunrise(sunrise));
     constexpr double muhurtas_per_night = (12*60) / 48.0;
     constexpr double proportion_arunodaya = 2 / muhurtas_per_night; // 2/15 = 1/7.5
     return proportional_time(sunrise, *prev_sunset, proportion_arunodaya);
@@ -275,26 +266,24 @@ JulDays_UT Calc::calc_astronomical_midnight(date::year_month_day date) const {
     return JulDays_UT{date} - adjustment;
 }
 
-tl::expected<Ativrddhatvam, CalcError> Calc::calc_ativrddhatvam_for_sunrise(JulDays_UT sunrise_after_ekadashi) const
+Ativrddhatvam Calc::calc_ativrddhatvam_for_sunrise(const Vrata & vrata) const
 {
-    VP_TRY_AUTO(prev_sunset, sunset_before_sunrise(sunrise_after_ekadashi));
-
-    auto ekadashi_start = find_tithi_start(sunrise_after_ekadashi - double_hours{25.0}, Tithi{Tithi::Ekadashi});
+    auto ekadashi_start = find_tithi_start(vrata.sunrise1 - double_hours{25.0}, Tithi{Tithi::Ekadashi});
     auto dashami_start = find_tithi_start(ekadashi_start - double_hours{27.0}, Tithi{Tithi::Dashami});
     auto dvadashi_start = find_tithi_start(ekadashi_start + double_hours{1.0}, Tithi{Tithi::Dvadashi});
     auto trayodashi_start = find_tithi_start(dvadashi_start + double_hours{1.0}, Tithi{Tithi::Trayodashi});
 
-    auto night_length = sunrise_after_ekadashi - *prev_sunset;
+    auto night_length = vrata.sunrise1 - vrata.sunset0;
     double_days ghatika = night_length / 30.0;
     double_days vighatika = ghatika / 60.0;
     // Sunrise is 60 ghatikas after last sunrise. So 54gh 40vigh is 60:00-54:40 = 5:20 (5gh20vigh before sunrise).
     // Same for other three time points.
-    auto time_point_ativrddha_54gh_40vigh = sunrise_after_ekadashi - 5 * ghatika - 20 * vighatika;
-    auto time_point_vrddha_55gh = sunrise_after_ekadashi - 5 * ghatika;
-    auto time_point_samyam_55gh_50vigh = sunrise_after_ekadashi - 4 * ghatika - 10 * vighatika;
-    auto time_point_hrasva_55gh_55vigh = sunrise_after_ekadashi - 4 * ghatika - 5 * vighatika;
+    auto time_point_ativrddha_54gh_40vigh = vrata.sunrise1 - 5 * ghatika - 20 * vighatika;
+    auto time_point_vrddha_55gh = vrata.sunrise1 - 5 * ghatika;
+    auto time_point_samyam_55gh_50vigh = vrata.sunrise1 - 4 * ghatika - 10 * vighatika;
+    auto time_point_hrasva_55gh_55vigh = vrata.sunrise1 - 4 * ghatika - 5 * vighatika;
     return Ativrddhatvam{
-        *prev_sunset, sunrise_after_ekadashi,
+        vrata.sunset0, vrata.sunrise1,
         time_point_ativrddha_54gh_40vigh, time_point_vrddha_55gh, time_point_samyam_55gh_50vigh, time_point_hrasva_55gh_55vigh,
         dashami_start, ekadashi_start, dvadashi_start, trayodashi_start
     };

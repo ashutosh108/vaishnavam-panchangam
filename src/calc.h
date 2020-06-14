@@ -39,15 +39,15 @@ public:
     static JulDays_UT proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion);
     JulDays_UT calc_astronomical_midnight(date::year_month_day date) const;
 
-    tl::expected<Ativrddhatvam, CalcError> calc_ativrddhatvam_for_sunrise(JulDays_UT sunrise) const;
+    Ativrddhatvam calc_ativrddhatvam_for_sunrise(const Vrata & vrata) const;
 
     vp::Swe swe;
 
 private:
     tl::expected<JulDays_UT, CalcError> sunset_before_sunrise(JulDays_UT const sunrise) const;
     date::year_month_day get_vrata_date(const JulDays_UT sunrise) const;
-    tl::expected<Paran, CalcError> get_paran(const JulDays_UT last_fasting_sunrise) const;
-    tl::expected<Paran, CalcError> atirikta_paran(const JulDays_UT first_fasting_sunrise) const;
+    Paran get_paran(const Vrata & vrata) const;
+    Paran atirikta_paran(const Vrata & vrata) const;
 
     tl::expected<JulDays_UT, CalcError> next_sunrise(JulDays_UT sunrise) const;
     JulDays_UT next_sunrise_v(JulDays_UT sunrise) const;

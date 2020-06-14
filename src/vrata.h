@@ -90,9 +90,12 @@ struct Vrata {
 
     static constexpr double nan = std::numeric_limits<double>::quiet_NaN();
     JulDays_UT ekadashi_sunrise{double_days{nan}};
-    JulDays_UT vrata_sunrise{double_days{nan}};
-    JulDays_UT sunrise2{double_days{nan}};    // second vrata sunrise (≈dvādaśī)
-    JulDays_UT sunrise3{double_days{nan}};    // third vrata sunrise (≈trayodaśī)
+    JulDays_UT sunset0{double_days{nan}};
+    JulDays_UT sunrise1{double_days{nan}};      // on the first day of vrata (ekādaśī or dvādaśī)
+    JulDays_UT sunrise2{double_days{nan}};      // on second day after vrata start (≈dvādaśī)
+    JulDays_UT sunset2{double_days{nan}};       // on second day after vrata start (≈dvādaśī)
+    JulDays_UT sunrise3{double_days{nan}};      // on third day after vrata start (≈trayodaśī)
+    JulDays_UT sunset3{double_days{nan}};       // on third day after vrata start (≈trayodaśī)
 
     Vrata(){}
 
