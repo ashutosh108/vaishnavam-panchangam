@@ -176,3 +176,4 @@ done:
 [+] Vrata_Detail_Printer: remove Calc and Swe [2020-06-14]
 [+] Vrata_Detail_Printer: print second date for two-days fasts (atiriktAs) [2020-06-14]
 [+] Qt GUI: hightlight "YYYY-MM-DD & YYYY-MM-DD" for two-days fasts [2020-06-14]
+[+] write atiriktā ekādaśī as '... with atiriktā ekādaśī' [2020-06-14]

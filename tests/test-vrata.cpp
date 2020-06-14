@@ -7,6 +7,7 @@
 using namespace date;
 using namespace vp;
 using namespace std::literals::chrono_literals;
+using Catch::Matchers::Contains;
 
 TEST_CASE("Can compare Vrata") {
     Vrata v1{2019_y/March/19};
@@ -33,4 +34,10 @@ TEST_CASE("Can create with \"before this time\" paran") {
 TEST_CASE("ekadashi_name_rus_is_valid") {
     REQUIRE(ekadashi_name_rus_is_valid("Шат̣-тилā"));
     REQUIRE(ekadashi_name_rus_is_valid("Шат̣тилā"));
+}
+
+TEST_CASE("atirikta ekAdashI is written as 'with atiriktā ekādaśī'") {
+    std::stringstream s;
+    s << Vrata_Type::Atirikta_Ekadashi;
+    REQUIRE_THAT(s.str(), Contains("with atiriktā ekādaśī"));
 }
