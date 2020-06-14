@@ -41,9 +41,9 @@ std::ostream &operator<<(std::ostream &o, const Vrata_Type &v)
     case Vrata_Type::Ekadashi:
         o << "Śuddhā ekādaśī"; break;
     case Vrata_Type::With_Atirikta_Dvadashi:
-        o << "Ekādaśī with atiriktā dvādaśī (two days fast)"; break;
+        o << "Ekādaśī with Atiriktā dvādaśī (two days fast)"; break;
     case Vrata_Type::Atirikta_Ekadashi:
-        o << "Ekādaśī with atiriktā ekādaśī (two days fast)"; break;
+        o << "Ekādaśī with Atiriktā ekādaśī (two days fast)"; break;
 //    default:
 //        o << "Vrata#" << static_cast<int>(v);
     }
