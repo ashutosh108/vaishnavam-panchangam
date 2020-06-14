@@ -36,14 +36,20 @@ TEST_CASE("ekadashi_name_rus_is_valid") {
     REQUIRE(ekadashi_name_rus_is_valid("Шат̣тилā"));
 }
 
-TEST_CASE("atirikta ekAdashI is written as 'with atiriktā ekādaśī'") {
+TEST_CASE("atirikta ekAdashI is written as 'with Atiriktā Ekādaśī'") {
     std::stringstream s;
-    s << Vrata_Type::Atirikta_Ekadashi;
-    REQUIRE_THAT(s.str(), Contains("with Atiriktā ekādaśī"));
+    s << Vrata_Type::With_Atirikta_Ekadashi;
+    REQUIRE_THAT(s.str(), Contains("with Atiriktā Ekādaśī"));
 }
 
 TEST_CASE("atirikta dvAdashI is written from capital 'A'") {
     std::stringstream s;
     s << Vrata_Type::With_Atirikta_Dvadashi;
-    REQUIRE_THAT(s.str(), Contains("with Atiriktā dvādaśī"));
+    REQUIRE_THAT(s.str(), Contains("with Atiriktā Dvādaśī"));
+}
+
+TEST_CASE("Śuddhā Ekādaśī is written as initial-caps") {
+    std::stringstream s;
+    s << Vrata_Type::Ekadashi;
+    REQUIRE_THAT(s.str(), Contains("Śuddhā Ekādaśī"));
 }

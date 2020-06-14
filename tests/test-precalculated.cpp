@@ -402,7 +402,7 @@ Paranam parse_precalc_paranam(std::string s, date::year_month_day date, const ch
 
 bool is_atirikta(const std::string & prev_cell_text, const std::string & cell_text, /*out*/ vp::Vrata_Type & type) {
     if (cell_text.find("Атириктā экāдащӣ") != std::string::npos) {
-        type = vp::Vrata_Type::Atirikta_Ekadashi;
+        type = vp::Vrata_Type::With_Atirikta_Ekadashi;
         return true;
     } else if (cell_text.find("Атириктā двāдащӣ") != std::string::npos) {
         type = vp::Vrata_Type::With_Atirikta_Dvadashi;
@@ -411,7 +411,7 @@ bool is_atirikta(const std::string & prev_cell_text, const std::string & cell_te
     // e.g. https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-03-29/ ko phan gan:
     // "pApamocanI ekAdashI" in both cells.
     if (prev_cell_text == cell_text) {
-        type = vp::Vrata_Type::Atirikta_Ekadashi;
+        type = vp::Vrata_Type::With_Atirikta_Ekadashi;
         return true;
     }
     return false;
@@ -1111,7 +1111,7 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
             // 2018-08-21 04:49:56.912263 +05 aruNodaya1
             {vp::ufa_coord,
              {FixVrataDate{2018_y/August/22, 2018_y/August/21},
-              FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::Atirikta_Ekadashi}}},
+              FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::With_Atirikta_Ekadashi}}},
             // pAraNam after 1/4 dvAdashI. Difference is probably due to manual calculations and rounding.
             {vp::london_coord,
              {FixShiftStartTime{-2min}}},
@@ -1313,7 +1313,7 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                     // 2019-03-02 06:34:39 dvAdashI start
                     // So it looks like by old data it also should have been atiriktA ekAdashI.
                     {vp::varshava_coord,
-                     {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::Atirikta_Ekadashi},
+                     {FixVrataType{vp::Vrata_Type::Ekadashi, vp::Vrata_Type::With_Atirikta_Ekadashi},
                       FixRemoveParanStartTime{13h+15min}}},
                 });
     test_one_precalculated_table_slug(
@@ -1330,22 +1330,22 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                     // ko pha ngan .. petropavlovsk: simple cell rowspan error in precalc table.
                     {vp::kophangan_coord,
                      {FixVrataDate{2019_y/March/31, 2019_y/April/1},
-                      FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                      FixVrataType{vp::Vrata_Type::With_Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
                     {vp::denpasar_coord,
                      {FixVrataDate{2019_y/March/31, 2019_y/April/1},
-                      FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                      FixVrataType{vp::Vrata_Type::With_Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
                     {vp::mirnyy_coord,
                      {FixVrataDate{2019_y/March/31, 2019_y/April/1},
-                      FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                      FixVrataType{vp::Vrata_Type::With_Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
                     {vp::habarovsk_coord,
                      {FixVrataDate{2019_y/March/31, 2019_y/April/1},
-                      FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                      FixVrataType{vp::Vrata_Type::With_Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
                     {vp::vladivostok_coord,
                      {FixVrataDate{2019_y/March/31, 2019_y/April/1},
-                      FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                      FixVrataType{vp::Vrata_Type::With_Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
                     {vp::petropavlovskkamchatskiy_coord,
                      {FixVrataDate{2019_y/March/31, 2019_y/April/1},
-                      FixVrataType{vp::Vrata_Type::Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
+                      FixVrataType{vp::Vrata_Type::With_Atirikta_Ekadashi, vp::Vrata_Type::Ekadashi}}},
                     {vp::krasnodar_coord,
                      {FixStartSeconds{6h + 7min, 6h + 7min + 8s},
                       FixEndSeconds{6h + 8min, 6h + 8min + 48s}}},

@@ -118,8 +118,8 @@ TEST_CASE("Ekadashi 2019-02-28") {
     Vrata v02{2019_y/March/2};
     Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}};
     Vrata v01_atirikta_dvadashi_std_paran{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Paran{Paran::Type::Standard}};
-    Vrata v01_atirikta_ekadashi{Vrata_Type::Atirikta_Ekadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}};
-    Vrata v01_atirikta_ekadashi_std_paran{Vrata_Type::Atirikta_Ekadashi, 2019_y/March/1, Paran{Paran::Type::Standard}};
+    Vrata v01_atirikta_ekadashi{Vrata_Type::With_Atirikta_Ekadashi, 2019_y/March/1, Paran{Paran::Type::Puccha_Dvadashi}};
+    Vrata v01_atirikta_ekadashi_std_paran{Vrata_Type::With_Atirikta_Ekadashi, 2019_y/March/1, Paran{Paran::Type::Standard}};
     REQUIRE(v02 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v02 == vrata(Calc{gokarna_coord}, d));
     REQUIRE(v02 == vrata(Calc{newdelhi_coord}, d));
@@ -293,7 +293,7 @@ TEST_CASE("atiriktA-dvAdashI {mirny,hab,vlad} 2019-04-30-01 https://tatvavadi.ru
 
 TEST_CASE("atiriktA-ekAdashI {ppk} 2019-04-30-01 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-04-27/") {
     date::year_month_day d{2019_y/April/30};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::Atirikta_Ekadashi, d, Paran{Paran::Type::Puccha_Dvadashi}};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Ekadashi, d, Paran{Paran::Type::Puccha_Dvadashi}};
 
     check_atirikta_at_location("petropavlovskkamchatskiy", petropavlovskkamchatskiy_coord, v01_atirikta_dvadashi, d);
 }

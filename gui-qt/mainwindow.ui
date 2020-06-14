@@ -178,7 +178,7 @@
          <item>
           <widget class="QPushButton" name="FindNextEkadashi">
            <property name="text">
-            <string>Find next ekādaśī</string>
+            <string>Find next Ekādaśī</string>
            </property>
           </widget>
          </item>

@@ -139,7 +139,7 @@ bool Calc::got_atirikta_dvadashi(const Vrata & vrata) const
 Vrata_Type Calc::calc_vrata_type(const Vrata &vrata) const
 {
     if (got_atirikta_ekadashi(vrata)) {
-        return Vrata_Type::Atirikta_Ekadashi;
+        return Vrata_Type::With_Atirikta_Ekadashi;
     }
 
     if (got_atirikta_dvadashi(vrata)) {

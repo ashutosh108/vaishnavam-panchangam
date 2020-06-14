@@ -30,7 +30,7 @@ Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata):vrata(_vrata) {
     const double_ghatikas ekadashi_length_ghatikas = vrata.ativrddhatvam.dvadashi_start - vrata.ativrddhatvam.ekadashi_start;
     const double_ghatikas ekadashi_delta = ekadashi_length_ghatikas - dashami_length_ghatikas;
     std::ostringstream ekadashi_descr;
-    ekadashi_descr << "**ekādaśī start** ("
+    ekadashi_descr << "**Ekādaśī start** ("
                    << std::setprecision(3) << std::fixed << ekadashi_length_ghatikas.count() << "gh long; "
                    << std::showpos << "**" << ekadashi_delta.count() << "gh**)";
     events.push_back({ekadashi_descr.str(), vrata.ativrddhatvam.ekadashi_start});
@@ -38,14 +38,14 @@ Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata):vrata(_vrata) {
     const double_ghatikas dvadashi_length_ghatikas = vrata.ativrddhatvam.trayodashi_start - vrata.ativrddhatvam.dvadashi_start;
     const double_ghatikas dvadashi_delta = dvadashi_length_ghatikas - ekadashi_length_ghatikas;
     std::ostringstream dvadashi_descr;
-    dvadashi_descr << "dvādaśī start ("
+    dvadashi_descr << "Dvādaśī start ("
                    << std::setprecision(3) << std::fixed << dvadashi_length_ghatikas.count() << "gh long; "
                    << std::showpos << "**" << dvadashi_delta.count() << "gh**)";
     events.push_back({dvadashi_descr.str(), vrata.ativrddhatvam.dvadashi_start});
 
-    events.push_back({"dvādaśī's first quarter ends", Calc::proportional_time(vrata.ativrddhatvam.dvadashi_start, vrata.ativrddhatvam.trayodashi_start, 0.25)});
+    events.push_back({"Dvādaśī's first quarter ends", Calc::proportional_time(vrata.ativrddhatvam.dvadashi_start, vrata.ativrddhatvam.trayodashi_start, 0.25)});
 
-    events.push_back({"dvādaśī end", vrata.ativrddhatvam.trayodashi_start});
+    events.push_back({"Dvādaśī end", vrata.ativrddhatvam.trayodashi_start});
 
     events.push_back({"sunset0", vrata.sunset0});
     std::string star;

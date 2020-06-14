@@ -28,11 +28,11 @@ std::ostream &operator<<(std::ostream &s, const Paran::Type &t)
     case Paran::Type::Standard:
         s << "Standard pāraṇam: from sunrise until 1/5 of day-time"; break;
     case Paran::Type::Until_Dvadashi_End:
-        s << "Pāraṇam before the end of dvādaśī"; break;
+        s << "Pāraṇam before the end of Dvādaśī"; break;
     case Paran::Type::From_Quarter_Dvadashi:
-        s << "Pāraṇam after the first ¼ of dvādaśī"; break;
+        s << "Pāraṇam after the first ¼ of Dvādaśī"; break;
     case Paran::Type::Puccha_Dvadashi:
-        s << "Pāraṇam within puccha-dvādaśī"; break;
+        s << "Pāraṇam within puccha Dvādaśī"; break;
     }
     return s;
 }

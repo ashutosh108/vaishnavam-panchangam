@@ -39,11 +39,11 @@ std::ostream &operator<<(std::ostream &o, const Vrata_Type &v)
 {
     switch (v) {
     case Vrata_Type::Ekadashi:
-        o << "Śuddhā ekādaśī"; break;
+        o << "Śuddhā Ekādaśī"; break;
     case Vrata_Type::With_Atirikta_Dvadashi:
-        o << "Ekādaśī with Atiriktā dvādaśī (two days fast)"; break;
-    case Vrata_Type::Atirikta_Ekadashi:
-        o << "Ekādaśī with Atiriktā ekādaśī (two days fast)"; break;
+        o << "Ekādaśī with Atiriktā Dvādaśī (two days fast)"; break;
+    case Vrata_Type::With_Atirikta_Ekadashi:
+        o << "Ekādaśī with Atiriktā Ekādaśī (two days fast)"; break;
 //    default:
 //        o << "Vrata#" << static_cast<int>(v);
     }
@@ -120,7 +120,7 @@ bool is_atirikta(Vrata_Type type)
 {
     return type == Vrata_Type::With_Atirikta_Dvadashi
             ||
-           type == Vrata_Type::Atirikta_Ekadashi;
+           type == Vrata_Type::With_Atirikta_Ekadashi;
 }
 
 bool ekadashi_name_rus_is_valid(const std::string &name)

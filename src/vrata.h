@@ -15,8 +15,8 @@ namespace vp {
 
 enum class Vrata_Type {
     Ekadashi,
+    With_Atirikta_Ekadashi,
     With_Atirikta_Dvadashi,
-    Atirikta_Ekadashi,
 };
 
 bool is_atirikta(Vrata_Type t);
@@ -66,7 +66,7 @@ struct Vrata_Time_Points {
 
 // For tests where we need to initialize ativrddhatvam and we don't care about
 // it's value, so it's arbitrary.
-[[maybe_unused]] constexpr Vrata_Time_Points dummy_ativrddhatvam{
+[[maybe_unused]] constexpr Vrata_Time_Points dummy_vrata_time_points{
     JulDays_UT{double_days{0.0}}, //prev_sunset
     JulDays_UT{double_days{0.0}},    // sunrise;
 
@@ -88,33 +88,31 @@ struct Vrata {
     date::year_month_day date;
     Paran paran;
     Location location;
-    Vrata_Time_Points ativrddhatvam = dummy_ativrddhatvam;
+    Vrata_Time_Points ativrddhatvam = dummy_vrata_time_points;
 
     static constexpr double nan = std::numeric_limits<double>::quiet_NaN();
     JulDays_UT ekadashi_sunrise{double_days{nan}};
     JulDays_UT sunset0{double_days{nan}};
-    JulDays_UT sunrise1{double_days{nan}};      // on the first day of vrata (ekādaśī or dvādaśī)
-    JulDays_UT sunrise2{double_days{nan}};      // on second day after vrata start (≈dvādaśī)
-    JulDays_UT sunset2{double_days{nan}};       // on second day after vrata start (≈dvādaśī)
-    JulDays_UT sunrise3{double_days{nan}};      // on third day after vrata start (≈trayodaśī)
-    JulDays_UT sunset3{double_days{nan}};       // on third day after vrata start (≈trayodaśī)
+    JulDays_UT sunrise1{double_days{nan}};      // on the first day of vrata (Ekādaśī or Dvādaśī)
+    JulDays_UT sunrise2{double_days{nan}};      // on second day after vrata start (≈Dvādaśī)
+    JulDays_UT sunset2{double_days{nan}};       // on second day after vrata start (≈Dvādaśī)
+    JulDays_UT sunrise3{double_days{nan}};      // on third day after vrata start (≈Trayodaśī)
+    JulDays_UT sunset3{double_days{nan}};       // on third day after vrata start (≈Trayodaśī)
 
     Vrata(){}
 
     // used only for tests
-    Vrata(date::year_month_day _date, Vrata_Time_Points _ativrddhatvam = dummy_ativrddhatvam)
-        : date(_date),
-          ativrddhatvam(_ativrddhatvam){}
+    Vrata(date::year_month_day _date)
+        : date(_date){}
 
     // used only for tests
-    Vrata(Vrata_Type _type, date::year_month_day _date, Vrata_Time_Points _ativrddhatvam = dummy_ativrddhatvam)
+    Vrata(Vrata_Type _type, date::year_month_day _date)
         : type(_type),
-          date(_date),
-          ativrddhatvam(_ativrddhatvam){}
+          date(_date){}
 
     // we always use this constructor for real calculations
     // "dummy" defaults only used in tests.
-    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran, Location _location = dummy_coord, Vrata_Time_Points _ativrddhatvam = dummy_ativrddhatvam)
+    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran, Location _location = dummy_coord, Vrata_Time_Points _ativrddhatvam = dummy_vrata_time_points)
         : type(_type),
           date(_date),
           paran(_paran),
