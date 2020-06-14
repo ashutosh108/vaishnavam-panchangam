@@ -153,35 +153,35 @@ std::string Vrata::location_name() const
     return s.str();
 }
 
-double_ghatikas Ativrddhatvam::dashami_length() const {
+double_ghatikas Vrata_Time_Points::dashami_length() const {
     return ekadashi_start - dashami_start;
 }
 
-double_ghatikas Ativrddhatvam::ekadashi_length() const {
+double_ghatikas Vrata_Time_Points::ekadashi_length() const {
     return dvadashi_start - ekadashi_start;
 }
 
-double_ghatikas Ativrddhatvam::dvadashi_length() const {
+double_ghatikas Vrata_Time_Points::dvadashi_length() const {
     return trayodashi_start - dvadashi_start;
 }
 
-JulDays_UT Ativrddhatvam::relevant_timepoint() const
+JulDays_UT Vrata_Time_Points::relevant_timepoint() const
 {
     auto a = ativrddhaadi();
     switch (a) {
-    case Ativrddhatvam::Ativrddhaadi::ativrddha:
+    case Vrata_Time_Points::Ativrddhaadi::ativrddha:
         return time_point_ativrddha_54gh_40vigh;
-    case Ativrddhatvam::Ativrddhaadi::vrddha:
+    case Vrata_Time_Points::Ativrddhaadi::vrddha:
         return time_point_vrddha_55gh;
-    case Ativrddhatvam::Ativrddhaadi::samyam:
+    case Vrata_Time_Points::Ativrddhaadi::samyam:
         return time_point_samyam_55gh_50vigh;
-    case Ativrddhatvam::Ativrddhaadi::hrasva:
+    case Vrata_Time_Points::Ativrddhaadi::hrasva:
         return time_point_hrasva_55gh_55vigh;
     }
     throw std::runtime_error("unknown Ativrddhaadi status: " + std::to_string(static_cast<int>(a)));
 }
 
-Ativrddhatvam::Ativrddhaadi Ativrddhatvam::ativrddhaadi() const
+Vrata_Time_Points::Ativrddhaadi Vrata_Time_Points::ativrddhaadi() const
 {
     auto l10 = dashami_length().count();
     auto l11 = ekadashi_length().count();
@@ -198,19 +198,19 @@ Ativrddhatvam::Ativrddhaadi Ativrddhatvam::ativrddhaadi() const
     return Ativrddhaadi::samyam;
 }
 
-std::ostream &operator<<(std::ostream &s, const Ativrddhatvam::Ativrddhaadi &a)
+std::ostream &operator<<(std::ostream &s, const Vrata_Time_Points::Ativrddhaadi &a)
 {
     switch (a) {
-    case Ativrddhatvam::Ativrddhaadi::ativrddha:
+    case Vrata_Time_Points::Ativrddhaadi::ativrddha:
         s << "ativṛddhiḥ";
         break;
-    case Ativrddhatvam::Ativrddhaadi::vrddha:
+    case Vrata_Time_Points::Ativrddhaadi::vrddha:
         s << "vṛddhiḥ";
         break;
-    case Ativrddhatvam::Ativrddhaadi::samyam:
+    case Vrata_Time_Points::Ativrddhaadi::samyam:
         s << "sāmyam";
         break;
-    case Ativrddhatvam::Ativrddhaadi::hrasva:
+    case Vrata_Time_Points::Ativrddhaadi::hrasva:
         s << "hrāsaḥ";
         break;
     }

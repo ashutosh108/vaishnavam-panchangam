@@ -31,7 +31,7 @@ std::ostream &operator<<(std::ostream &o, Vrata_Type const &v);
  *   tithI in correponding ativRddhAdi case for the whole ekAdashI
  *   to be considered uposhya ("fastable").
  */
-struct Ativrddhatvam {
+struct Vrata_Time_Points {
     JulDays_UT prev_sunset;
     JulDays_UT sunrise;
 
@@ -66,7 +66,7 @@ struct Ativrddhatvam {
 
 // For tests where we need to initialize ativrddhatvam and we don't care about
 // it's value, so it's arbitrary.
-[[maybe_unused]] constexpr Ativrddhatvam dummy_ativrddhatvam{
+[[maybe_unused]] constexpr Vrata_Time_Points dummy_ativrddhatvam{
     JulDays_UT{double_days{0.0}}, //prev_sunset
     JulDays_UT{double_days{0.0}},    // sunrise;
 
@@ -81,14 +81,14 @@ struct Ativrddhatvam {
     JulDays_UT{double_days{0.0}}, // trayodashi_start;
 };
 
-std::ostream & operator<<(std::ostream & s, const Ativrddhatvam::Ativrddhaadi & a);
+std::ostream & operator<<(std::ostream & s, const Vrata_Time_Points::Ativrddhaadi & a);
 
 struct Vrata {
     Vrata_Type type = Vrata_Type::Ekadashi;
     date::year_month_day date;
     Paran paran;
     Location location;
-    Ativrddhatvam ativrddhatvam = dummy_ativrddhatvam;
+    Vrata_Time_Points ativrddhatvam = dummy_ativrddhatvam;
 
     static constexpr double nan = std::numeric_limits<double>::quiet_NaN();
     JulDays_UT ekadashi_sunrise{double_days{nan}};
@@ -102,19 +102,19 @@ struct Vrata {
     Vrata(){}
 
     // used only for tests
-    Vrata(date::year_month_day _date, Ativrddhatvam _ativrddhatvam = dummy_ativrddhatvam)
+    Vrata(date::year_month_day _date, Vrata_Time_Points _ativrddhatvam = dummy_ativrddhatvam)
         : date(_date),
           ativrddhatvam(_ativrddhatvam){}
 
     // used only for tests
-    Vrata(Vrata_Type _type, date::year_month_day _date, Ativrddhatvam _ativrddhatvam = dummy_ativrddhatvam)
+    Vrata(Vrata_Type _type, date::year_month_day _date, Vrata_Time_Points _ativrddhatvam = dummy_ativrddhatvam)
         : type(_type),
           date(_date),
           ativrddhatvam(_ativrddhatvam){}
 
     // we always use this constructor for real calculations
     // "dummy" defaults only used in tests.
-    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran, Location _location = dummy_coord, Ativrddhatvam _ativrddhatvam = dummy_ativrddhatvam)
+    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran, Location _location = dummy_coord, Vrata_Time_Points _ativrddhatvam = dummy_ativrddhatvam)
         : type(_type),
           date(_date),
           paran(_paran),

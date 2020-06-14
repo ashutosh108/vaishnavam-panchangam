@@ -50,13 +50,13 @@ Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata):vrata(_vrata) {
     events.push_back({"sunset0", vrata.sunset0});
     std::string star;
     const auto status = vrata.ativrddhatvam.ativrddhaadi();
-    star = (status == Ativrddhatvam::Ativrddhaadi::ativrddha) ? "**" : "";
+    star = (status == Vrata_Time_Points::Ativrddhaadi::ativrddha) ? "**" : "";
     events.push_back({"54gh_40vigh (" + star + "ativṛddhiḥ" + star + ")", vrata.ativrddhatvam.time_point_ativrddha_54gh_40vigh});
-    star = status == Ativrddhatvam::Ativrddhaadi::vrddha ? "**" : "";
+    star = status == Vrata_Time_Points::Ativrddhaadi::vrddha ? "**" : "";
     events.push_back({"55gh (" + star + "vṛddhiḥ" + star + ")", vrata.ativrddhatvam.time_point_vrddha_55gh});
-    star = status == Ativrddhatvam::Ativrddhaadi::samyam ? "**" : "";
+    star = status == Vrata_Time_Points::Ativrddhaadi::samyam ? "**" : "";
     events.push_back({"55gh_50vigh (" + star + "sāmyam" + star + ")", vrata.ativrddhatvam.time_point_samyam_55gh_50vigh});
-    star = status == Ativrddhatvam::Ativrddhaadi::hrasva ? "**" : "";
+    star = status == Vrata_Time_Points::Ativrddhaadi::hrasva ? "**" : "";
     events.push_back({"55gh_55vigh (" + star + "hrāsaḥ" + star + ")", vrata.ativrddhatvam.time_point_hrasva_55gh_55vigh});
 
     // push them at the end so after joining duplicate events the "paranam" text would come after "sunrise" etc.

@@ -571,7 +571,7 @@ TEST_CASE("ativRddhAdi gives expected status for known cases (samyam)") {
 
     auto ativrddhatvam = vrata->ativrddhatvam;
 
-    REQUIRE(ativrddhatvam.ativrddhaadi() == Ativrddhatvam::Ativrddhaadi::samyam);
+    REQUIRE(ativrddhatvam.ativrddhaadi() == Vrata_Time_Points::Ativrddhaadi::samyam);
 }
 
 TEST_CASE("ativRddhAdi gives expected status for known cases (hrasva)") {
@@ -580,14 +580,14 @@ TEST_CASE("ativRddhAdi gives expected status for known cases (hrasva)") {
 
     auto ativrddhatvam = vrata->ativrddhatvam;
 
-    REQUIRE(ativrddhatvam.ativrddhaadi() == Ativrddhatvam::Ativrddhaadi::hrasva);
+    REQUIRE(ativrddhatvam.ativrddhaadi() == Vrata_Time_Points::Ativrddhaadi::hrasva);
 }
 
 TEST_CASE("ativRddhAdi gives expected status for known cases (vRddha)") {
     auto vrata = Calc{kiev_coord}.find_next_vrata(2020_y/August/25);
     REQUIRE(vrata.has_value());
 
-    REQUIRE(vrata->ativrddhatvam.ativrddhaadi() == Ativrddhatvam::Ativrddhaadi::vrddha);
+    REQUIRE(vrata->ativrddhatvam.ativrddhaadi() == Vrata_Time_Points::Ativrddhaadi::vrddha);
 }
 
 TEST_CASE("ativRddhatvam gives relevant timpoint to be checked for being 'dashamI-free'") {

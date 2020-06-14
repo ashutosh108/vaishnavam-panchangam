@@ -266,7 +266,7 @@ JulDays_UT Calc::calc_astronomical_midnight(date::year_month_day date) const {
     return JulDays_UT{date} - adjustment;
 }
 
-Ativrddhatvam Calc::calc_ativrddhatvam_for_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const
+Vrata_Time_Points Calc::calc_ativrddhatvam_for_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const
 {
     auto ekadashi_start = find_tithi_start(sunrise1 - double_hours{25.0}, Tithi{Tithi::Ekadashi});
     auto dashami_start = find_tithi_start(ekadashi_start - double_hours{27.0}, Tithi{Tithi::Dashami});
@@ -283,7 +283,7 @@ Ativrddhatvam Calc::calc_ativrddhatvam_for_sunset_and_sunrise(JulDays_UT sunset0
     auto time_point_samyam_55gh_50vigh = sunrise1 - 4 * ghatika - 10 * vighatika;
     auto time_point_hrasva_55gh_55vigh = sunrise1 - 4 * ghatika - 5 * vighatika;
     const auto time_point_arunodaya = sunrise1 - 4 * ghatika;
-    return Ativrddhatvam{
+    return Vrata_Time_Points{
         sunset0, sunrise1,
         time_point_ativrddha_54gh_40vigh, time_point_vrddha_55gh, time_point_samyam_55gh_50vigh, time_point_hrasva_55gh_55vigh,
         time_point_arunodaya,
