@@ -27,7 +27,12 @@ bool operator!=(const Vrata &v1, const Vrata &v2)
 
 std::ostream &operator<<(std::ostream &o, const Vrata &v)
 {
-    return o << v.type << " on " << v.date;
+    o << v.type << " on " << v.date;
+    if (is_atirikta(v.type)) {
+        date::year_month_day date2 = date::sys_days{v.date} + date::days{1};
+        o << " & " << date2;
+    }
+    return o;
 }
 
 std::ostream &operator<<(std::ostream &o, const Vrata_Type &v)

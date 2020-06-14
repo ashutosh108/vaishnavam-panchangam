@@ -1,4 +1,4 @@
-[ ] Vrata_Detail_Printer: print second date for two-days fasts (atiriktAs)
+[ ] Qt GUI: hightlight "YYYY-MM-DD & YYYY-MM-DD" for two-days fasts
 [ ] Vrata: keep calculation details in separate struct
 [ ] Vrata: unify calculation details with ativrddhatvam struct
 [ ] switch from iostreams to fmt
@@ -175,3 +175,4 @@ done:
 [+] format latitude/longitude as DD°MM'SS"N etc (in Qt gui and in "adjusted location name") [2020-06-09]
 [+] make sure all relevant sunrise/sunsets are reported for no-sunset Murmansk cases [2020-06-14]
 [+] Vrata_Detail_Printer: remove Calc and Swe [2020-06-14]
+[+] Vrata_Detail_Printer: print second date for two-days fasts (atiriktAs) [2020-06-14]
