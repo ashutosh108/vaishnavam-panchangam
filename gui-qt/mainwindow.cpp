@@ -34,7 +34,7 @@ date::sys_days to_sys_days(QDate qd)
 }
 
 // parse tiny subset of markdown in a single plain text line, return HTML version
-static QString htmlify_line(const std::string & line) {
+QString htmlify_line(const std::string & line) {
     QString res = QString::fromStdString(line).toHtmlEscaped();
 
     if (res.startsWith("# ")) {

@@ -59,7 +59,7 @@ add_library(swe STATIC
     src/text-interface.cpp
     src/calc-error.cpp
 )
-target_include_directories(swe PRIVATE vendor/sweph/src src)
+target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)
 target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected)
 
 add_library(sweph STATIC

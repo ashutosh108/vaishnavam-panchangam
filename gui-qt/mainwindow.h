@@ -34,4 +34,7 @@ private:
     void showVersionInStatusLine();
     void clearLocationData();
 };
+
+QString htmlify_line(const std::string & line);
+
 #endif // MAINWINDOW_H

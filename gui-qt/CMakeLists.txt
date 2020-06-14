@@ -29,28 +29,32 @@ find_package(Qt5 COMPONENTS Widgets Core REQUIRED)
 
 set(TS_FILES gui-qt_en_US.ts)
 
-if(ANDROID)
-  add_library(${VP_QT_GUI_EXE} SHARED
-    main.cpp
+add_library(mainwindow STATIC
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
+)
+#target_include_directories(mainwindow PUBLIC ../src)
+target_link_libraries(mainwindow PUBLIC
+    Qt5::Widgets
+    swe
+)
+
+if(ANDROID)
+  add_library(${VP_QT_GUI_EXE} SHARED
+    main.cpp
 #    ${TS_FILES}
   )
 else()
   add_executable(${VP_QT_GUI_EXE}
     main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
     #${TS_FILES}
   )
 endif()
 
 #add_definitions(-DQT_STATICPLUGIN)
 target_link_libraries(${VP_QT_GUI_EXE} PRIVATE
-    Qt5::Widgets
-    swe
+    mainwindow
 )
 target_include_directories(${VP_QT_GUI_EXE} PRIVATE ../src)
 
