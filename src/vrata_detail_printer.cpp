@@ -8,52 +8,22 @@ namespace vp {
 
 Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata, Swe swe):vrata(_vrata) {
     const Calc calc{std::move(swe)};
-    JulDays_UT local_midnight = calc.calc_astronomical_midnight(vrata.date);
 
-    auto sunrise = calc.swe.find_sunrise(local_midnight);
-    if (sunrise) {
-        auto sunrise0 = calc.swe.find_sunrise(*sunrise - double_days{1.5});
-        if (sunrise0 && *sunrise0 >= vrata.ativrddhatvam.ekadashi_start) {
-            events.push_back({"sunrise0", *sunrise0});
-            auto arunodaya = calc.arunodaya_for_sunrise(*sunrise0);
-            if (arunodaya) {
-                events.push_back({"aruṇodaya0", *arunodaya});
-            }
-        }
+    events.push_back({"**sunrise1**", vrata.sunrise1});
+    auto arunodaya = calc.arunodaya_for_sunrise(vrata.sunrise1);
+    if (arunodaya) {
+        events.push_back({"aruṇodaya1", *arunodaya});
+    }
 
-        events.push_back({"**sunrise1**", *sunrise});
-        auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
-        if (arunodaya) {
-            events.push_back({"aruṇodaya1", *arunodaya});
-        }
-
-        auto sunset = calc.swe.find_sunset(*sunrise);
-        if (sunset) {
-            events.push_back({"sunset1", *sunset});
-            auto sunrise2 = calc.swe.find_sunrise(*sunset);
-            if (sunrise2) {
-                events.push_back({"sunrise2", *sunrise2});
-                auto sunset2 = calc.swe.find_sunset(*sunrise2);
-                if (sunset2) {
-                    events.push_back({"sunset2", *sunset2});
-                    auto fifth_of_day2 = calc.proportional_time(*sunrise2, *sunset2, 0.2);
-                    events.push_back({"1/5 of day2", fifth_of_day2});
-                    if (vrata.type == Vrata_Type::With_Atirikta_Dvadashi
-                        || vrata.type == Vrata_Type::Atirikta_Ekadashi) {
-                        auto sunrise3 = calc.swe.find_sunrise(*sunset2);
-                        if (sunrise3) {
-                            events.push_back({"sunrise3", *sunrise3});
-                            auto sunset3 = calc.swe.find_sunset(*sunrise3);
-                            if (sunset3) {
-                                events.push_back({"sunset3", *sunset3});
-                                auto fifth_of_day3 = calc.proportional_time(*sunrise3, *sunset3, 0.2);
-                                events.push_back({"1/5 of day3", fifth_of_day3});
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    events.push_back({"sunrise2", vrata.sunrise2});
+    events.push_back({"sunset2", vrata.sunset2});
+    auto fifth_of_day2 = Calc::proportional_time(vrata.sunrise2, vrata.sunset2, 0.2);
+    events.push_back({"1/5 of day2", fifth_of_day2});
+    if (is_atirikta(vrata.type)) {
+        events.push_back({"sunrise3", vrata.sunrise3});
+        events.push_back({"sunset3", vrata.sunset3});
+        auto fifth_of_day3 = Calc::proportional_time(vrata.sunrise3, vrata.sunset3, 0.2);
+        events.push_back({"1/5 of day3", fifth_of_day3});
     }
 
     const double_ghatikas dashami_length_ghatikas = vrata.ativrddhatvam.ekadashi_start - vrata.ativrddhatvam.dashami_start;
@@ -82,7 +52,7 @@ Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata, Swe swe):vrata(_vrata) 
 
     events.push_back({"dvādaśī end", vrata.ativrddhatvam.trayodashi_start});
 
-    events.push_back({"sunset0", vrata.ativrddhatvam.prev_sunset});
+    events.push_back({"sunset0", vrata.sunset0});
     std::string star;
     const auto status = vrata.ativrddhatvam.ativrddhaadi();
     star = (status == Ativrddhatvam::Ativrddhaadi::ativrddha) ? "**" : "";
