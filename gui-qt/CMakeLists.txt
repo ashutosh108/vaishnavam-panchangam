@@ -80,3 +80,12 @@ endif()
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0))
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVP_USE_EXPERIMENTAL_FILESYSTEM")
 endif()
+
+# cmp0076: The target_sources() command converts relative paths to absolute.
+cmake_policy(SET CMP0076 NEW)
+
+# cmp0079: target_link_libraries() allows use with targets in other directories.
+cmake_policy(SET CMP0079 NEW)
+
+target_sources(test-main PRIVATE mainwindow.test.cpp)
+target_link_libraries(test-main PUBLIC mainwindow)
