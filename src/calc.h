@@ -46,8 +46,8 @@ public:
 private:
     tl::expected<JulDays_UT, CalcError> sunset_before_sunrise(JulDays_UT const sunrise) const;
     date::year_month_day get_vrata_date(const JulDays_UT sunrise) const;
-    Paran get_paran(const Vrata & vrata) const;
-    Paran atirikta_paran(const Vrata & vrata) const;
+    Paran get_paran(const JulDays_UT sunrise2, const JulDays_UT sunset2, const JulDays_UT dvadashi_start, const JulDays_UT dvadashi_end) const;
+    Paran atirikta_paran(const JulDays_UT sunrise3, const JulDays_UT sunset3, const JulDays_UT dvadashi_end) const;
 
     tl::expected<JulDays_UT, CalcError> next_sunrise(JulDays_UT sunrise) const;
     JulDays_UT next_sunrise_v(JulDays_UT sunrise) const;

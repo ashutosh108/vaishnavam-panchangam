@@ -82,7 +82,10 @@ repeat_with_fixed_start_time:
     VP_TRY(vrata.sunset3, swe.find_sunset(vrata.sunrise3));
 
     vrata.type = calc_vrata_type(vrata);
-    vrata.paran = is_atirikta(vrata.type) ? atirikta_paran(vrata) : get_paran(vrata);
+    vrata.paran = is_atirikta(vrata.type) ?
+        atirikta_paran(vrata.sunrise3, vrata.sunset3, vrata.times.trayodashi_start)
+    :
+        get_paran(vrata.sunrise2, vrata.sunset2, vrata.times.dvadashi_start, vrata.times.trayodashi_start);
 
     return vrata;
 }
@@ -196,16 +199,14 @@ JulDays_UT Calc::proportional_time(JulDays_UT const t1, JulDays_UT const t2, dou
     return t1 + distance * proportion;
 }
 
-Paran Calc::get_paran(const Vrata & vrata) const
+Paran Calc::get_paran(const JulDays_UT sunrise2, const JulDays_UT sunset2, const JulDays_UT dvadashi_start, const JulDays_UT dvadashi_end) const
 {
     std::optional<JulDays_UT> paran_start, paran_end;
-    paran_start = vrata.sunrise2;
-    paran_end = proportional_time(vrata.sunrise2, vrata.sunset2, 0.2);
+    paran_start = sunrise2;
+    paran_end = proportional_time(sunrise2, sunset2, 0.2);
 
     Paran::Type type{Paran::Type::Standard};
 
-    auto dvadashi_start = find_tithi_start(vrata.sunrise1-double_days{1.0}, Tithi{Tithi::Dvadashi});
-    auto dvadashi_end = find_tithi_start(dvadashi_start, Tithi{Tithi::Dvadashi_End});
     // paran start should never be before the end of Dvadashi's first quarter
     auto dvadashi_quarter = proportional_time(dvadashi_start, dvadashi_end, 0.25);
     if (paran_start < dvadashi_quarter) {
@@ -228,14 +229,13 @@ Paran Calc::get_paran(const Vrata & vrata) const
     return paran;
 }
 
-Paran Calc::atirikta_paran(const Vrata & vrata) const
+Paran Calc::atirikta_paran(const JulDays_UT sunrise3, const JulDays_UT sunset3, const JulDays_UT dvadashi_end) const
 {
-    auto fifth_of_paran_daytime = proportional_time(vrata.sunrise3, vrata.sunset3, 0.2);
-    auto dvadashi_end = find_tithi_start(vrata.sunrise3, Tithi{Tithi::Dvadashi_End});
+    auto fifth_of_paran_daytime = proportional_time(sunrise3, sunset3, 0.2);
     if (fifth_of_paran_daytime < dvadashi_end) {
-        return Paran{Paran::Type::Standard, vrata.sunrise3, fifth_of_paran_daytime};
+        return Paran{Paran::Type::Standard, sunrise3, fifth_of_paran_daytime};
     }
-    return Paran{Paran::Type::Puccha_Dvadashi, vrata.sunrise3, dvadashi_end};
+    return Paran{Paran::Type::Puccha_Dvadashi, sunrise3, dvadashi_end};
 }
 
 tl::expected<JulDays_UT, CalcError> Calc::arunodaya_for_sunrise(JulDays_UT const sunrise) const
