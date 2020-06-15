@@ -32,7 +32,7 @@ std::ostream &operator<<(std::ostream &s, const Paran::Type &t)
     case Paran::Type::From_Quarter_Dvadashi:
         s << "Pāraṇam after the first ¼ of Dvādaśī"; break;
     case Paran::Type::Puccha_Dvadashi:
-        s << "Pāraṇam within puccha Dvādaśī"; break;
+        s << "Pāraṇam within Puccha-Dvādaśī"; break;
     }
     return s;
 }

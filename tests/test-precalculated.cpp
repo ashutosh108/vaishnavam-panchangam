@@ -972,7 +972,7 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                     {vp::kremenchug_coord,
                      // case manually verified by Ashutosha on 2020-02-21 and confirmed by Narasimha:
                      // the reason for difference is the underlying data difference. Old Panchangam gives sunrise < dvadashi_end
-                     // (thus brief interval of pAraNam in dvAdashI puccha), and new data are sunrise > dvadashi, so standard pAraNam.
+                     // (thus brief interval of pAraNam in Puccha-Dvādaśī), and new data are sunrise > dvadashi, so standard pAraNam.
                      {FixShiftStartTime{+6s},
                       FixShiftEndTime{+42s}}},
                     {vp::fredericton_coord,
