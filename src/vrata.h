@@ -32,9 +32,6 @@ std::ostream &operator<<(std::ostream &o, Vrata_Type const &v);
  *   to be considered uposhya ("fastable").
  */
 struct Vrata_Time_Points {
-    JulDays_UT prev_sunset;
-    JulDays_UT sunrise;
-
     // Timepoints for uposhya status: if dashamI tithI extends after
     // corresponding time_point, then this ekAdashI is not uposhya
     // and fast must be moved to the next day.
@@ -61,15 +58,12 @@ struct Vrata_Time_Points {
     double_ghatikas ekadashi_length() const;
     double_ghatikas dvadashi_length() const;
 
-    JulDays_UT relevant_timepoint() const;
+    JulDays_UT ativrddhaditvam_timepoint() const;
 };
 
 // For tests where we need to initialize ativrddhatvam and we don't care about
 // it's value, so it's arbitrary.
 [[maybe_unused]] constexpr Vrata_Time_Points dummy_vrata_time_points{
-    JulDays_UT{double_days{0.0}}, //prev_sunset
-    JulDays_UT{double_days{0.0}},    // sunrise;
-
     JulDays_UT{double_days{0.0}}, // time_point_ativrddha_54gh_40vigh; // for ativRddhA
     JulDays_UT{double_days{0.0}}, // time_point_vrddha_55gh;        // vRddhA
     JulDays_UT{double_days{0.0}}, // time_point_samyam_55gh_50vigh; // samyam

@@ -165,7 +165,7 @@ double_ghatikas Vrata_Time_Points::dvadashi_length() const {
     return trayodashi_start - dvadashi_start;
 }
 
-JulDays_UT Vrata_Time_Points::relevant_timepoint() const
+JulDays_UT Vrata_Time_Points::ativrddhaditvam_timepoint() const
 {
     auto a = ativrddhaadi();
     switch (a) {
@@ -183,18 +183,18 @@ JulDays_UT Vrata_Time_Points::relevant_timepoint() const
 
 Vrata_Time_Points::Ativrddhaadi Vrata_Time_Points::ativrddhaadi() const
 {
-    auto l10 = dashami_length().count();
-    auto l11 = ekadashi_length().count();
-    auto l12 = dvadashi_length().count();
-    auto delta1 = l11 - l10;
-    auto delta2 = l12 - l11;
-    if (delta1 > 0 && delta2 > 0 && (delta1 >= 4.0 || delta2 >= 4.0)) {
+    const double_ghatikas l10 = dashami_length();
+    const double_ghatikas l11 = ekadashi_length();
+    const double_ghatikas l12 = dvadashi_length();
+    const double delta1 = (l11 - l10).count();
+    const double delta2 = (l12 - l11).count();
+    if (delta1 > 0.0 && delta2 > 0.0 && (delta1 >= 4.0 || delta2 >= 4.0)) {
         return Ativrddhaadi::ativrddha;
     }
-    if (delta1 > 0 && delta2 > 0 && (delta1 >= 1.0 || delta2 >= 1.0)) {
+    if (delta1 > 0.0 && delta2 > 0.0 && (delta1 >= 1.0 || delta2 >= 1.0)) {
         return Ativrddhaadi::vrddha;
     }
-    if (delta1 < 0 && delta2 < 0) return Ativrddhaadi::hrasva;
+    if (delta1 < 0.0 && delta2 < 0.0) return Ativrddhaadi::hrasva;
     return Ativrddhaadi::samyam;
 }
 

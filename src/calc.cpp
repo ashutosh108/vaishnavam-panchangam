@@ -59,7 +59,7 @@ repeat_with_fixed_start_time:
     VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1));
 
     vrata.times = calc_key_times_from_sunset_and_sunrise(vrata.sunset0, vrata.sunrise1);
-    auto tithi_that_must_not_be_dashamI = swe.get_tithi(vrata.times.relevant_timepoint());
+    auto tithi_that_must_not_be_dashamI = swe.get_tithi(vrata.times.ativrddhaditvam_timepoint());
     if (tithi_that_must_not_be_dashamI.is_dashami()) {
         vrata.sunrise1 = vrata.sunrise2;
         VP_TRY(vrata.sunset0, sunset_before_sunrise(vrata.sunrise1));
@@ -140,7 +140,6 @@ Vrata_Time_Points Calc::calc_key_times_from_sunset_and_sunrise(JulDays_UT sunset
     auto time_point_hrasva_55gh_55vigh = sunrise1 - 4 * ghatika - 5 * vighatika;
     const auto time_point_arunodaya = sunrise1 - 4 * ghatika;
     return Vrata_Time_Points{
-        sunset0, sunrise1,
         time_point_ativrddha_54gh_40vigh, time_point_vrddha_55gh, time_point_samyam_55gh_50vigh, time_point_hrasva_55gh_55vigh,
         time_point_arunodaya,
         dashami_start, ekadashi_start, dvadashi_start, trayodashi_start
