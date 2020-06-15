@@ -88,16 +88,18 @@ struct Vrata {
     date::year_month_day date;
     Paran paran;
     Location location;
-    Vrata_Time_Points ativrddhatvam = dummy_vrata_time_points;
+    Vrata_Time_Points times = dummy_vrata_time_points;
 
     static constexpr double nan = std::numeric_limits<double>::quiet_NaN();
-    JulDays_UT ekadashi_sunrise{double_days{nan}};
-    JulDays_UT sunset0{double_days{nan}};
-    JulDays_UT sunrise1{double_days{nan}};      // on the first day of vrata (Ekādaśī or Dvādaśī)
-    JulDays_UT sunrise2{double_days{nan}};      // on second day after vrata start (≈Dvādaśī)
-    JulDays_UT sunset2{double_days{nan}};       // on second day after vrata start (≈Dvādaśī)
-    JulDays_UT sunrise3{double_days{nan}};      // on third day after vrata start (≈Trayodaśī)
-    JulDays_UT sunset3{double_days{nan}};       // on third day after vrata start (≈Trayodaśī)
+    static constexpr double_days nan_days = double_days{nan};
+    JulDays_UT sunset_before_ekadashi_sunrise{nan_days};
+    JulDays_UT ekadashi_sunrise{nan_days};
+    JulDays_UT sunset0{nan_days};
+    JulDays_UT sunrise1{nan_days};      // on the first day of vrata (Ekādaśī or Dvādaśī)
+    JulDays_UT sunrise2{nan_days};      // on second day after vrata start (≈Dvādaśī)
+    JulDays_UT sunset2{nan_days};       // on second day after vrata start (≈Dvādaśī)
+    JulDays_UT sunrise3{nan_days};      // on third day after vrata start (≈Trayodaśī)
+    JulDays_UT sunset3{nan_days};       // on third day after vrata start (≈Trayodaśī)
 
     Vrata(){}
 
@@ -112,12 +114,12 @@ struct Vrata {
 
     // we always use this constructor for real calculations
     // "dummy" defaults only used in tests.
-    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran, Location _location = dummy_coord, Vrata_Time_Points _ativrddhatvam = dummy_vrata_time_points)
+    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran, Location _location = dummy_coord, Vrata_Time_Points _times = dummy_vrata_time_points)
         : type(_type),
           date(_date),
           paran(_paran),
           location(_location),
-          ativrddhatvam(_ativrddhatvam){}
+          times(_times){}
     date::year_month_day local_paran_date();
     std::string location_name() const;
 };

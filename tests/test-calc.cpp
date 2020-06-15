@@ -531,13 +531,12 @@ TEST_CASE("ativRddhAdi gives correct sunset, sunris and four time points") {
     auto vrata = calc.find_next_vrata(2020_y/May/17);
     REQUIRE(vrata.has_value());
 
-    auto ativrddhadi = vrata->ativrddhatvam;
-    REQUIRE(ativrddhadi.prev_sunset                      == ApproximateJulDays_UT{2020_y/May/17, "17:36:09.669959"_hms});
-    REQUIRE(ativrddhadi.sunrise                          == ApproximateJulDays_UT{2020_y/May/18, "02:12:02.827153"_hms});
-    REQUIRE(ativrddhadi.time_point_ativrddha_54gh_40vigh == ApproximateJulDays_UT{2020_y/May/18, "00:40:20.043643"_hms});
-    REQUIRE(ativrddhadi.time_point_vrddha_55gh           == ApproximateJulDays_UT{2020_y/May/18, "00:46:03.967627"_hms});
-    REQUIRE(ativrddhadi.time_point_samyam_55gh_50vigh    == ApproximateJulDays_UT{2020_y/May/18, "01:00:23.777568"_hms});
-    REQUIRE(ativrddhadi.time_point_hrasva_55gh_55vigh    == ApproximateJulDays_UT{2020_y/May/18, "01:01:49.758554"_hms});
+    REQUIRE(vrata->times.prev_sunset                      == ApproximateJulDays_UT{2020_y/May/17, "17:36:09.669959"_hms});
+    REQUIRE(vrata->times.sunrise                          == ApproximateJulDays_UT{2020_y/May/18, "02:12:02.827153"_hms});
+    REQUIRE(vrata->times.time_point_ativrddha_54gh_40vigh == ApproximateJulDays_UT{2020_y/May/18, "00:40:20.043643"_hms});
+    REQUIRE(vrata->times.time_point_vrddha_55gh           == ApproximateJulDays_UT{2020_y/May/18, "00:46:03.967627"_hms});
+    REQUIRE(vrata->times.time_point_samyam_55gh_50vigh    == ApproximateJulDays_UT{2020_y/May/18, "01:00:23.777568"_hms});
+    REQUIRE(vrata->times.time_point_hrasva_55gh_55vigh    == ApproximateJulDays_UT{2020_y/May/18, "01:01:49.758554"_hms});
 }
 
 TEST_CASE("ativRddhAdi gives dashamI ekAdashI, dvAdashI and trayodashI start") {
@@ -545,12 +544,10 @@ TEST_CASE("ativRddhAdi gives dashamI ekAdashI, dvAdashI and trayodashI start") {
     auto vrata = calc.find_next_vrata(2020_y/May/17);
     REQUIRE(vrata.has_value());
 
-    auto ativrddhadi = vrata->ativrddhatvam;
-
-    REQUIRE(ApproximateJulDays_UT{ativrddhadi.dashami_start}    == JulDays_UT{2020_y/May/16, "04:53:25.843109"_hms});
-    REQUIRE(ApproximateJulDays_UT{ativrddhadi.ekadashi_start}   == JulDays_UT{2020_y/May/17, "07:12:45.607582"_hms});
-    REQUIRE(ApproximateJulDays_UT{ativrddhadi.dvadashi_start}   == JulDays_UT{2020_y/May/18, "09:39:01.295689"_hms});
-    REQUIRE(ApproximateJulDays_UT{ativrddhadi.trayodashi_start} == JulDays_UT{2020_y/May/19, "12:01:51.058179"_hms});
+    REQUIRE(ApproximateJulDays_UT{vrata->times.dashami_start}    == JulDays_UT{2020_y/May/16, "04:53:25.843109"_hms});
+    REQUIRE(ApproximateJulDays_UT{vrata->times.ekadashi_start}   == JulDays_UT{2020_y/May/17, "07:12:45.607582"_hms});
+    REQUIRE(ApproximateJulDays_UT{vrata->times.dvadashi_start}   == JulDays_UT{2020_y/May/18, "09:39:01.295689"_hms});
+    REQUIRE(ApproximateJulDays_UT{vrata->times.trayodashi_start} == JulDays_UT{2020_y/May/19, "12:01:51.058179"_hms});
 }
 
 TEST_CASE("ativRddhAdi gives expected dashamI ekAdashI and dvAdashI length") {
@@ -558,44 +555,38 @@ TEST_CASE("ativRddhAdi gives expected dashamI ekAdashI and dvAdashI length") {
     auto vrata = calc.find_next_vrata(2020_y/May/17);
     REQUIRE(vrata.has_value());
 
-    auto ativrddhatvam = vrata->ativrddhatvam;
-
-    REQUIRE(ativrddhatvam.dashami_length().count() == Approx{65.805});
-    REQUIRE(ativrddhatvam.ekadashi_length().count() == Approx{66.094});
-    REQUIRE(ativrddhatvam.dvadashi_length().count() == Approx{65.951});
+    REQUIRE(vrata->times.dashami_length().count() == Approx{65.805});
+    REQUIRE(vrata->times.ekadashi_length().count() == Approx{66.094});
+    REQUIRE(vrata->times.dvadashi_length().count() == Approx{65.951});
 }
 
 TEST_CASE("ativRddhAdi gives expected status for known cases (samyam)") {
     auto vrata = Calc{kiev_coord}.find_next_vrata(2020_y/May/17);
     REQUIRE(vrata.has_value());
 
-    auto ativrddhatvam = vrata->ativrddhatvam;
-
-    REQUIRE(ativrddhatvam.ativrddhaadi() == Vrata_Time_Points::Ativrddhaadi::samyam);
+    REQUIRE(vrata->times.ativrddhaadi() == Vrata_Time_Points::Ativrddhaadi::samyam);
 }
 
 TEST_CASE("ativRddhAdi gives expected status for known cases (hrasva)") {
     auto vrata = Calc{kiev_coord}.find_next_vrata(2020_y/May/25);
     REQUIRE(vrata.has_value());
 
-    auto ativrddhatvam = vrata->ativrddhatvam;
-
-    REQUIRE(ativrddhatvam.ativrddhaadi() == Vrata_Time_Points::Ativrddhaadi::hrasva);
+    REQUIRE(vrata->times.ativrddhaadi() == Vrata_Time_Points::Ativrddhaadi::hrasva);
 }
 
 TEST_CASE("ativRddhAdi gives expected status for known cases (vRddha)") {
     auto vrata = Calc{kiev_coord}.find_next_vrata(2020_y/August/25);
     REQUIRE(vrata.has_value());
 
-    REQUIRE(vrata->ativrddhatvam.ativrddhaadi() == Vrata_Time_Points::Ativrddhaadi::vrddha);
+    REQUIRE(vrata->times.ativrddhaadi() == Vrata_Time_Points::Ativrddhaadi::vrddha);
 }
 
 TEST_CASE("ativRddhatvam gives relevant timpoint to be checked for being 'dashamI-free'") {
     auto vrata = Calc{kiev_coord}.find_next_vrata(2020_y/August/25);
     REQUIRE(vrata.has_value());
 
-    REQUIRE(vrata->ativrddhatvam.relevant_timepoint() == ApproximateJulDays_UT{2020_y/August/28, "01:27:50.835060"_hms});
-    REQUIRE(vrata->ativrddhatvam.relevant_timepoint() == vrata->ativrddhatvam.time_point_vrddha_55gh);
+    REQUIRE(vrata->times.relevant_timepoint() == ApproximateJulDays_UT{2020_y/August/28, "01:27:50.835060"_hms});
+    REQUIRE(vrata->times.relevant_timepoint() == vrata->times.time_point_vrddha_55gh);
 }
 
 TEST_CASE("ensure we get an error when we search for ekAdashI in Murmansk in the summer (with no sunset)") {
@@ -615,6 +606,6 @@ TEST_CASE("we get nearest next ekadashi start for petropavlovsk 2019-03-18") {
     REQUIRE(vrata.has_value());
     JulDays_UT ekadashi_earliest{2019_y/March/16};
     JulDays_UT ekadashi_latest{2019_y/March/17};
-    REQUIRE(vrata->ativrddhatvam.ekadashi_start > ekadashi_earliest);
-    REQUIRE(vrata->ativrddhatvam.ekadashi_start < ekadashi_latest);
+    REQUIRE(vrata->times.ekadashi_start > ekadashi_earliest);
+    REQUIRE(vrata->times.ekadashi_start < ekadashi_latest);
 }

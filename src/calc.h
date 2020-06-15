@@ -39,7 +39,7 @@ public:
     static JulDays_UT proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion);
     JulDays_UT calc_astronomical_midnight(date::year_month_day date) const;
 
-    Vrata_Time_Points calc_ativrddhatvam_for_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const;
+    Vrata_Time_Points calc_key_times_from_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const;
 
     vp::Swe swe;
 

@@ -54,13 +54,15 @@ repeat_with_fixed_start_time:
     }
     VP_TRY(vrata.sunrise1, find_ekadashi_sunrise(start_time));
     vrata.ekadashi_sunrise = vrata.sunrise1;
-    VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1));
     VP_TRY(vrata.sunset0, sunset_before_sunrise(vrata.sunrise1));
+    vrata.sunset_before_ekadashi_sunrise = vrata.sunset0;
+    VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1));
 
-    vrata.ativrddhatvam = calc_ativrddhatvam_for_sunset_and_sunrise(vrata.sunset0, vrata.sunrise1);
-    auto tithi_that_must_not_be_dashamI = swe.get_tithi(vrata.ativrddhatvam.relevant_timepoint());
+    vrata.times = calc_key_times_from_sunset_and_sunrise(vrata.sunset0, vrata.sunrise1);
+    auto tithi_that_must_not_be_dashamI = swe.get_tithi(vrata.times.relevant_timepoint());
     if (tithi_that_must_not_be_dashamI.is_dashami()) {
         vrata.sunrise1 = vrata.sunrise2;
+        VP_TRY(vrata.sunset0, sunset_before_sunrise(vrata.sunrise1));
         VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1));
     }
 
@@ -120,7 +122,7 @@ tl::expected<JulDays_UT, CalcError> Calc::sunset_before_sunrise(JulDays_UT const
     return swe.find_sunset(back_24hrs);
 }
 
-Vrata_Time_Points Calc::calc_ativrddhatvam_for_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const
+Vrata_Time_Points Calc::calc_key_times_from_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const
 {
     auto ekadashi_start = find_tithi_start(sunrise1 - double_hours{25.0}, Tithi{Tithi::Ekadashi});
     auto dashami_start = find_tithi_start(ekadashi_start - double_hours{27.0}, Tithi{Tithi::Dashami});
