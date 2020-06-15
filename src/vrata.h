@@ -19,7 +19,12 @@ enum class Vrata_Type {
     With_Atirikta_Dvadashi,
 };
 
-bool is_atirikta(Vrata_Type t);
+constexpr inline bool is_atirikta(Vrata_Type type)
+{
+    return type == Vrata_Type::With_Atirikta_Dvadashi
+           ||
+           type == Vrata_Type::With_Atirikta_Ekadashi;
+}
 
 std::ostream &operator<<(std::ostream &o, Vrata_Type const &v);
 

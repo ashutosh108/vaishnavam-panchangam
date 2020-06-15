@@ -116,13 +116,6 @@ const std::vector<std::string> & ekadashi_names_rus()
     return static_names;
 }
 
-bool is_atirikta(Vrata_Type type)
-{
-    return type == Vrata_Type::With_Atirikta_Dvadashi
-            ||
-           type == Vrata_Type::With_Atirikta_Ekadashi;
-}
-
 bool ekadashi_name_rus_is_valid(const std::string &name)
 {
     static std::unordered_set<std::string> valid_names = []() {
