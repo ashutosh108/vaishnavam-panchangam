@@ -533,10 +533,10 @@ TEST_CASE("ativRddhAdi gives correct sunset, sunris and four time points") {
 
     REQUIRE(vrata->sunset_before_ekadashi_sunrise         == ApproximateJulDays_UT{2020_y/May/17, "17:36:09.669959"_hms});
     REQUIRE(vrata->ekadashi_sunrise                       == ApproximateJulDays_UT{2020_y/May/18, "02:12:02.827153"_hms});
-    REQUIRE(vrata->times.time_point_ativrddha_54gh_40vigh == ApproximateJulDays_UT{2020_y/May/18, "00:40:20.043643"_hms});
-    REQUIRE(vrata->times.time_point_vrddha_55gh           == ApproximateJulDays_UT{2020_y/May/18, "00:46:03.967627"_hms});
-    REQUIRE(vrata->times.time_point_samyam_55gh_50vigh    == ApproximateJulDays_UT{2020_y/May/18, "01:00:23.777568"_hms});
-    REQUIRE(vrata->times.time_point_hrasva_55gh_55vigh    == ApproximateJulDays_UT{2020_y/May/18, "01:01:49.758554"_hms});
+    REQUIRE(vrata->times.ativrddha_54gh_40vigh == ApproximateJulDays_UT{2020_y/May/18, "00:40:20.043643"_hms});
+    REQUIRE(vrata->times.vrddha_55gh           == ApproximateJulDays_UT{2020_y/May/18, "00:46:03.967627"_hms});
+    REQUIRE(vrata->times.samyam_55gh_50vigh    == ApproximateJulDays_UT{2020_y/May/18, "01:00:23.777568"_hms});
+    REQUIRE(vrata->times.hrasva_55gh_55vigh    == ApproximateJulDays_UT{2020_y/May/18, "01:01:49.758554"_hms});
 }
 
 TEST_CASE("ativRddhAdi gives dashamI ekAdashI, dvAdashI and trayodashI start") {
@@ -586,7 +586,7 @@ TEST_CASE("ativRddhatvam gives relevant timpoint to be checked for being 'dasham
     REQUIRE(vrata.has_value());
 
     REQUIRE(vrata->times.ativrddhaditvam_timepoint() == ApproximateJulDays_UT{2020_y/August/28, "01:27:50.835060"_hms});
-    REQUIRE(vrata->times.ativrddhaditvam_timepoint() == vrata->times.time_point_vrddha_55gh);
+    REQUIRE(vrata->times.ativrddhaditvam_timepoint() == vrata->times.vrddha_55gh);
 }
 
 TEST_CASE("ensure we get an error when we search for ekAdashI in Murmansk in the summer (with no sunset)") {

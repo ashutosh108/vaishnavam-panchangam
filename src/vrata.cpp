@@ -170,13 +170,13 @@ JulDays_UT Vrata_Time_Points::ativrddhaditvam_timepoint() const
     auto a = ativrddhaadi();
     switch (a) {
     case Vrata_Time_Points::Ativrddhaadi::ativrddha:
-        return time_point_ativrddha_54gh_40vigh;
+        return ativrddha_54gh_40vigh;
     case Vrata_Time_Points::Ativrddhaadi::vrddha:
-        return time_point_vrddha_55gh;
+        return vrddha_55gh;
     case Vrata_Time_Points::Ativrddhaadi::samyam:
-        return time_point_samyam_55gh_50vigh;
+        return samyam_55gh_50vigh;
     case Vrata_Time_Points::Ativrddhaadi::hrasva:
-        return time_point_hrasva_55gh_55vigh;
+        return hrasva_55gh_55vigh;
     }
     throw std::runtime_error("unknown Ativrddhaadi status: " + std::to_string(static_cast<int>(a)));
 }

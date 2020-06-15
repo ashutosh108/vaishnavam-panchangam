@@ -36,11 +36,11 @@ struct Vrata_Time_Points {
     // corresponding time_point, then this ekAdashI is not uposhya
     // and fast must be moved to the next day.
     // Otherwise it's clean ekAdashI (and thus uposhya, "fastable").
-    JulDays_UT time_point_ativrddha_54gh_40vigh; // for ativRddhA
-    JulDays_UT time_point_vrddha_55gh;        // vRddhA
-    JulDays_UT time_point_samyam_55gh_50vigh; // samyam
-    JulDays_UT time_point_hrasva_55gh_55vigh; // hrasva
-    JulDays_UT time_point_arunodaya;          // 56gh = 4gh before sūryodaya
+    JulDays_UT ativrddha_54gh_40vigh; // for ativRddhA
+    JulDays_UT vrddha_55gh;        // vRddhA
+    JulDays_UT samyam_55gh_50vigh; // samyam
+    JulDays_UT hrasva_55gh_55vigh; // hrasva
+    JulDays_UT arunodaya;          // 56gh = 4gh before sūryodaya
 
     JulDays_UT dashami_start;
     JulDays_UT ekadashi_start;
@@ -64,15 +64,15 @@ struct Vrata_Time_Points {
 // For tests where we need to initialize ativrddhatvam and we don't care about
 // it's value, so it's arbitrary.
 [[maybe_unused]] constexpr Vrata_Time_Points dummy_vrata_time_points{
-    JulDays_UT{double_days{0.0}}, // time_point_ativrddha_54gh_40vigh; // for ativRddhA
-    JulDays_UT{double_days{0.0}}, // time_point_vrddha_55gh;        // vRddhA
-    JulDays_UT{double_days{0.0}}, // time_point_samyam_55gh_50vigh; // samyam
-    JulDays_UT{double_days{0.0}}, // time_point_hrasva_55gh_55vigh; // hrasva
-    JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // time_point_arunodaya;
-    JulDays_UT{double_days{0.0}}, // dashami_start;
-    JulDays_UT{double_days{0.0}}, // ekadashi_start;
-    JulDays_UT{double_days{0.0}}, // dvadashi_start;
-    JulDays_UT{double_days{0.0}}, // trayodashi_start;
+    JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // ativrddha_54gh_40vigh;
+    JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // vrddha_55gh;
+    JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // samyam_55gh_50vigh;
+    JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // hrasva_55gh_55vigh;
+    JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // arunodaya;
+    JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // dashami_start;
+    JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // ekadashi_start;
+    JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // dvadashi_start;
+    JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // trayodashi_start;
 };
 
 std::ostream & operator<<(std::ostream & s, const Vrata_Time_Points::Ativrddhaadi & a);
@@ -84,8 +84,7 @@ struct Vrata {
     Location location;
     Vrata_Time_Points times = dummy_vrata_time_points;
 
-    static constexpr double nan = std::numeric_limits<double>::quiet_NaN();
-    static constexpr double_days nan_days = double_days{nan};
+    static constexpr double_days nan_days = double_days{std::numeric_limits<double>::quiet_NaN()};
     JulDays_UT sunset_before_ekadashi_sunrise{nan_days};
     JulDays_UT ekadashi_sunrise{nan_days};
     JulDays_UT sunset0{nan_days};

@@ -66,16 +66,15 @@ repeat_with_fixed_start_time:
         VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1));
     }
 
-    auto vrata_date = get_vrata_date(vrata.sunrise1);
+    vrata.date = get_vrata_date(vrata.sunrise1);
 
     // if we found vrata before the requested date, then those -3days in the beginning were too much of an adjustment.
     // so we restart without that 3 days offset.
-    if (vrata_date < after) {
+    if (vrata.date < after) {
         start_time = midnight;
         goto repeat_with_fixed_start_time;
     }
 
-    vrata.date = vrata_date;
     vrata.location = swe.location;
 
     VP_TRY(vrata.sunset2, swe.find_sunset(vrata.sunrise2));
@@ -124,20 +123,20 @@ tl::expected<JulDays_UT, CalcError> Calc::sunset_before_sunrise(JulDays_UT const
 
 Vrata_Time_Points Calc::calc_key_times_from_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const
 {
-    auto ekadashi_start = find_tithi_start(sunrise1 - double_hours{25.0}, Tithi{Tithi::Ekadashi});
-    auto dashami_start = find_tithi_start(ekadashi_start - double_hours{27.0}, Tithi{Tithi::Dashami});
-    auto dvadashi_start = find_tithi_start(ekadashi_start + double_hours{1.0}, Tithi{Tithi::Dvadashi});
-    auto trayodashi_start = find_tithi_start(dvadashi_start + double_hours{1.0}, Tithi{Tithi::Trayodashi});
+    const auto ekadashi_start = find_tithi_start(sunrise1 - double_hours{25.0}, Tithi{Tithi::Ekadashi});
+    const auto dashami_start = find_tithi_start(ekadashi_start - double_hours{27.0}, Tithi{Tithi::Dashami});
+    const auto dvadashi_start = find_tithi_start(ekadashi_start + double_hours{1.0}, Tithi{Tithi::Dvadashi});
+    const auto trayodashi_start = find_tithi_start(dvadashi_start + double_hours{1.0}, Tithi{Tithi::Trayodashi});
 
-    auto night_length = sunrise1 - sunset0;
-    double_days ghatika = night_length / 30.0;
-    double_days vighatika = ghatika / 60.0;
+    const double_days night_length = sunrise1 - sunset0;
+    const double_days ghatika = night_length / 30.0;
+    const double_days vighatika = ghatika / 60.0;
     // Sunrise is 60 ghatikas after last sunrise. So 54gh 40vigh is 60:00-54:40 = 5:20 (5gh20vigh before sunrise).
     // Same for other three time points.
-    auto time_point_ativrddha_54gh_40vigh = sunrise1 - 5 * ghatika - 20 * vighatika;
-    auto time_point_vrddha_55gh = sunrise1 - 5 * ghatika;
-    auto time_point_samyam_55gh_50vigh = sunrise1 - 4 * ghatika - 10 * vighatika;
-    auto time_point_hrasva_55gh_55vigh = sunrise1 - 4 * ghatika - 5 * vighatika;
+    const auto time_point_ativrddha_54gh_40vigh = sunrise1 - 5 * ghatika - 20 * vighatika;
+    const auto time_point_vrddha_55gh = sunrise1 - 5 * ghatika;
+    const auto time_point_samyam_55gh_50vigh = sunrise1 - 4 * ghatika - 10 * vighatika;
+    const auto time_point_hrasva_55gh_55vigh = sunrise1 - 4 * ghatika - 5 * vighatika;
     const auto time_point_arunodaya = sunrise1 - 4 * ghatika;
     return Vrata_Time_Points{
         time_point_ativrddha_54gh_40vigh, time_point_vrddha_55gh, time_point_samyam_55gh_50vigh, time_point_hrasva_55gh_55vigh,
