@@ -32,123 +32,6 @@ namespace vp {
 
 Calc::Calc(Swe swe_):swe(std::move(swe_)) {}
 
-/* Find sunrise during next ekadashi tithi or right after it.
- */
-tl::expected<JulDays_UT, CalcError> Calc::find_ekadashi_sunrise(JulDays_UT after) const
-{
-    const auto ekadashi = find_tithi_start(after, Tithi{Tithi::Ekadashi});
-
-    return swe.find_sunrise(ekadashi);
-}
-
-JulDays_UT Calc::proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion) {
-    double_days distance = t2 - t1;
-    return t1 + distance * proportion;
-}
-
-/* get_vrata_date():
- * Returns the formal date for the vrata i.e. date for the vrata sunrise
- * in local timezone.
- */
-date::year_month_day Calc::get_vrata_date(const JulDays_UT sunrise) const
-{
-    auto timezone = date::locate_zone(swe.location.timezone_name);
-    auto zoned = sunrise.as_zoned_time(timezone);
-    return date::year_month_day{date::floor<date::days>(zoned.get_local_time())};
-}
-
-Paran Calc::get_paran(const Vrata & vrata) const
-{
-    std::optional<JulDays_UT> paran_start, paran_end;
-    paran_start = vrata.sunrise2;
-    paran_end = proportional_time(vrata.sunrise2, vrata.sunset2, 0.2);
-
-    Paran::Type type{Paran::Type::Standard};
-
-    auto dvadashi_start = find_tithi_start(vrata.sunrise1-double_days{1.0}, Tithi{Tithi::Dvadashi});
-    auto dvadashi_end = find_tithi_start(dvadashi_start, Tithi{Tithi::Dvadashi_End});
-    // paran start should never be before the end of Dvadashi's first quarter
-    auto dvadashi_quarter = proportional_time(dvadashi_start, dvadashi_end, 0.25);
-    if (paran_start < dvadashi_quarter) {
-        paran_start = dvadashi_quarter;
-        if (paran_end <= paran_start) {
-            paran_end = std::nullopt;
-        }
-        type = Paran::Type::From_Quarter_Dvadashi;
-    }
-
-    if (paran_end) {
-        // paran end should never be before Dvadashi's end
-        if (dvadashi_end > *paran_start && dvadashi_end < *paran_end) {
-            paran_end = std::min(*paran_end, dvadashi_end);
-            type = Paran::Type::Until_Dvadashi_End;
-        }
-    }
-
-    Paran paran{type, paran_start, paran_end};
-    return paran;
-}
-
-Paran Calc::atirikta_paran(const Vrata & vrata) const
-{
-    auto fifth_of_paran_daytime = proportional_time(vrata.sunrise3, vrata.sunset3, 0.2);
-    auto dvadashi_end = find_tithi_start(vrata.sunrise3, Tithi{Tithi::Dvadashi_End});
-    if (fifth_of_paran_daytime < dvadashi_end) {
-        return Paran{Paran::Type::Standard, vrata.sunrise3, fifth_of_paran_daytime};
-    }
-    return Paran{Paran::Type::Puccha_Dvadashi, vrata.sunrise3, dvadashi_end};
-}
-
-tl::expected<JulDays_UT, CalcError> Calc::next_sunrise(JulDays_UT sunrise) const {
-    return swe.find_sunrise(sunrise + double_days{0.001});
-}
-
-JulDays_UT Calc::next_sunrise_v(JulDays_UT sunrise) const {
-    auto sunrise_or_nullopt = next_sunrise(sunrise);
-    if (!sunrise_or_nullopt) {
-        std::stringstream s;
-        s << "can't get next sunrise after " << sunrise;
-        throw std::runtime_error(s.str());
-    }
-
-    return *sunrise_or_nullopt;
-}
-
-/* Find out if we have "atiriktA ekAdashI" situation (shuddha ekAdashI encompasses two sunrises).
- * This function assumes that if first sunrise is ekAdashI, then it's shuddhA-ekAdashI.
- * Otherwise the sunrise under consideration would have been "next sunrise" already.
- */
-bool Calc::got_atirikta_ekadashi(const Vrata & vrata) const
-{
-    Tithi tithi_on_first_sunrise = swe.get_tithi(vrata.sunrise1);
-    Tithi tithi_on_second_sunrise = swe.get_tithi(vrata.sunrise2);
-    return tithi_on_first_sunrise.is_ekadashi() && tithi_on_second_sunrise.is_ekadashi();
-}
-
-/* Find out if we have "atiriktA dvAdashI" situation (dvadashI encompasses two sunrises).
- * If yes, then adjust the sunrise to be next day's sunrise
- * (because it has to be the sunrise of last fastiung day).
- */
-bool Calc::got_atirikta_dvadashi(const Vrata & vrata) const
-{
-    Tithi tithi_on_second_sunrise = swe.get_tithi(vrata.sunrise2);
-    Tithi tithi_on_third_sunrise = swe.get_tithi(vrata.sunrise3);
-    return tithi_on_second_sunrise.is_dvadashi() && tithi_on_third_sunrise.is_dvadashi();
-}
-
-Vrata_Type Calc::calc_vrata_type(const Vrata &vrata) const
-{
-    if (got_atirikta_ekadashi(vrata)) {
-        return Vrata_Type::With_Atirikta_Ekadashi;
-    }
-
-    if (got_atirikta_dvadashi(vrata)) {
-        return Vrata_Type::With_Atirikta_Dvadashi;
-    }
-
-    return Vrata_Type::Ekadashi;
-}
-
 /* Main calculation: return next vrata on a given date or after.
  * Determine type of vrata (Ekadashi, or either of two Atiriktas),
  * paran time.
@@ -203,9 +86,156 @@ repeat_with_fixed_start_time:
     return vrata;
 }
 
+JulDays_UT Calc::calc_astronomical_midnight(date::year_month_day date) const {
+    const double_days adjustment{swe.location.longitude.longitude * (1.0/360.0)};
+    return JulDays_UT{date} - adjustment;
+}
+
+/* Find sunrise during next ekadashi tithi or right after it.
+ */
+tl::expected<JulDays_UT, CalcError> Calc::find_ekadashi_sunrise(JulDays_UT after) const
+{
+    const auto ekadashi = find_tithi_start(after, Tithi{Tithi::Ekadashi});
+
+    return swe.find_sunrise(ekadashi);
+}
+
+tl::expected<JulDays_UT, CalcError> Calc::next_sunrise(JulDays_UT sunrise) const {
+    return swe.find_sunrise(sunrise + double_days{0.001});
+}
+
+JulDays_UT Calc::next_sunrise_v(JulDays_UT sunrise) const {
+    auto sunrise_or_nullopt = next_sunrise(sunrise);
+    if (!sunrise_or_nullopt) {
+        std::stringstream s;
+        s << "can't get next sunrise after " << sunrise;
+        throw std::runtime_error(s.str());
+    }
+
+    return *sunrise_or_nullopt;
+}
+
 tl::expected<JulDays_UT, CalcError> Calc::sunset_before_sunrise(JulDays_UT const sunrise) const {
     JulDays_UT back_24hrs{sunrise - double_days{1.0}};
     return swe.find_sunset(back_24hrs);
+}
+
+Vrata_Time_Points Calc::calc_ativrddhatvam_for_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const
+{
+    auto ekadashi_start = find_tithi_start(sunrise1 - double_hours{25.0}, Tithi{Tithi::Ekadashi});
+    auto dashami_start = find_tithi_start(ekadashi_start - double_hours{27.0}, Tithi{Tithi::Dashami});
+    auto dvadashi_start = find_tithi_start(ekadashi_start + double_hours{1.0}, Tithi{Tithi::Dvadashi});
+    auto trayodashi_start = find_tithi_start(dvadashi_start + double_hours{1.0}, Tithi{Tithi::Trayodashi});
+
+    auto night_length = sunrise1 - sunset0;
+    double_days ghatika = night_length / 30.0;
+    double_days vighatika = ghatika / 60.0;
+    // Sunrise is 60 ghatikas after last sunrise. So 54gh 40vigh is 60:00-54:40 = 5:20 (5gh20vigh before sunrise).
+    // Same for other three time points.
+    auto time_point_ativrddha_54gh_40vigh = sunrise1 - 5 * ghatika - 20 * vighatika;
+    auto time_point_vrddha_55gh = sunrise1 - 5 * ghatika;
+    auto time_point_samyam_55gh_50vigh = sunrise1 - 4 * ghatika - 10 * vighatika;
+    auto time_point_hrasva_55gh_55vigh = sunrise1 - 4 * ghatika - 5 * vighatika;
+    const auto time_point_arunodaya = sunrise1 - 4 * ghatika;
+    return Vrata_Time_Points{
+        sunset0, sunrise1,
+        time_point_ativrddha_54gh_40vigh, time_point_vrddha_55gh, time_point_samyam_55gh_50vigh, time_point_hrasva_55gh_55vigh,
+        time_point_arunodaya,
+        dashami_start, ekadashi_start, dvadashi_start, trayodashi_start
+    };
+}
+
+/* get_vrata_date():
+ * Returns the formal date for the vrata i.e. date for the vrata sunrise
+ * in local timezone.
+ */
+date::year_month_day Calc::get_vrata_date(const JulDays_UT sunrise) const
+{
+    auto timezone = date::locate_zone(swe.location.timezone_name);
+    auto zoned = sunrise.as_zoned_time(timezone);
+    return date::year_month_day{date::floor<date::days>(zoned.get_local_time())};
+}
+
+Vrata_Type Calc::calc_vrata_type(const Vrata &vrata) const
+{
+    if (got_atirikta_ekadashi(vrata)) {
+        return Vrata_Type::With_Atirikta_Ekadashi;
+    }
+
+    if (got_atirikta_dvadashi(vrata)) {
+        return Vrata_Type::With_Atirikta_Dvadashi;
+    }
+
+    return Vrata_Type::Ekadashi;
+}
+
+/* Find out if we have "atiriktA ekAdashI" situation (shuddha ekAdashI encompasses two sunrises).
+ * This function assumes that if first sunrise is ekAdashI, then it's shuddhA-ekAdashI.
+ * Otherwise the sunrise under consideration would have been "next sunrise" already.
+ */
+bool Calc::got_atirikta_ekadashi(const Vrata & vrata) const
+{
+    Tithi tithi_on_first_sunrise = swe.get_tithi(vrata.sunrise1);
+    Tithi tithi_on_second_sunrise = swe.get_tithi(vrata.sunrise2);
+    return tithi_on_first_sunrise.is_ekadashi() && tithi_on_second_sunrise.is_ekadashi();
+}
+
+/* Find out if we have "atiriktA dvAdashI" situation (dvadashI encompasses two sunrises).
+ * If yes, then adjust the sunrise to be next day's sunrise
+ * (because it has to be the sunrise of last fastiung day).
+ */
+bool Calc::got_atirikta_dvadashi(const Vrata & vrata) const
+{
+    Tithi tithi_on_second_sunrise = swe.get_tithi(vrata.sunrise2);
+    Tithi tithi_on_third_sunrise = swe.get_tithi(vrata.sunrise3);
+    return tithi_on_second_sunrise.is_dvadashi() && tithi_on_third_sunrise.is_dvadashi();
+}
+
+JulDays_UT Calc::proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion) {
+    double_days distance = t2 - t1;
+    return t1 + distance * proportion;
+}
+
+Paran Calc::get_paran(const Vrata & vrata) const
+{
+    std::optional<JulDays_UT> paran_start, paran_end;
+    paran_start = vrata.sunrise2;
+    paran_end = proportional_time(vrata.sunrise2, vrata.sunset2, 0.2);
+
+    Paran::Type type{Paran::Type::Standard};
+
+    auto dvadashi_start = find_tithi_start(vrata.sunrise1-double_days{1.0}, Tithi{Tithi::Dvadashi});
+    auto dvadashi_end = find_tithi_start(dvadashi_start, Tithi{Tithi::Dvadashi_End});
+    // paran start should never be before the end of Dvadashi's first quarter
+    auto dvadashi_quarter = proportional_time(dvadashi_start, dvadashi_end, 0.25);
+    if (paran_start < dvadashi_quarter) {
+        paran_start = dvadashi_quarter;
+        if (paran_end <= paran_start) {
+            paran_end = std::nullopt;
+        }
+        type = Paran::Type::From_Quarter_Dvadashi;
+    }
+
+    if (paran_end) {
+        // paran end should never be before Dvadashi's end
+        if (dvadashi_end > *paran_start && dvadashi_end < *paran_end) {
+            paran_end = std::min(*paran_end, dvadashi_end);
+            type = Paran::Type::Until_Dvadashi_End;
+        }
+    }
+
+    Paran paran{type, paran_start, paran_end};
+    return paran;
+}
+
+Paran Calc::atirikta_paran(const Vrata & vrata) const
+{
+    auto fifth_of_paran_daytime = proportional_time(vrata.sunrise3, vrata.sunset3, 0.2);
+    auto dvadashi_end = find_tithi_start(vrata.sunrise3, Tithi{Tithi::Dvadashi_End});
+    if (fifth_of_paran_daytime < dvadashi_end) {
+        return Paran{Paran::Type::Standard, vrata.sunrise3, fifth_of_paran_daytime};
+    }
+    return Paran{Paran::Type::Puccha_Dvadashi, vrata.sunrise3, dvadashi_end};
 }
 
 tl::expected<JulDays_UT, CalcError> Calc::arunodaya_for_sunrise(JulDays_UT const sunrise) const
@@ -259,36 +289,6 @@ JulDays_UT Calc::find_tithi_start(JulDays_UT const from, Tithi const tithi) cons
         }
     }
     return time;
-}
-
-JulDays_UT Calc::calc_astronomical_midnight(date::year_month_day date) const {
-    const double_days adjustment{swe.location.longitude.longitude * (1.0/360.0)};
-    return JulDays_UT{date} - adjustment;
-}
-
-Vrata_Time_Points Calc::calc_ativrddhatvam_for_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const
-{
-    auto ekadashi_start = find_tithi_start(sunrise1 - double_hours{25.0}, Tithi{Tithi::Ekadashi});
-    auto dashami_start = find_tithi_start(ekadashi_start - double_hours{27.0}, Tithi{Tithi::Dashami});
-    auto dvadashi_start = find_tithi_start(ekadashi_start + double_hours{1.0}, Tithi{Tithi::Dvadashi});
-    auto trayodashi_start = find_tithi_start(dvadashi_start + double_hours{1.0}, Tithi{Tithi::Trayodashi});
-
-    auto night_length = sunrise1 - sunset0;
-    double_days ghatika = night_length / 30.0;
-    double_days vighatika = ghatika / 60.0;
-    // Sunrise is 60 ghatikas after last sunrise. So 54gh 40vigh is 60:00-54:40 = 5:20 (5gh20vigh before sunrise).
-    // Same for other three time points.
-    auto time_point_ativrddha_54gh_40vigh = sunrise1 - 5 * ghatika - 20 * vighatika;
-    auto time_point_vrddha_55gh = sunrise1 - 5 * ghatika;
-    auto time_point_samyam_55gh_50vigh = sunrise1 - 4 * ghatika - 10 * vighatika;
-    auto time_point_hrasva_55gh_55vigh = sunrise1 - 4 * ghatika - 5 * vighatika;
-    const auto time_point_arunodaya = sunrise1 - 4 * ghatika;
-    return Vrata_Time_Points{
-        sunset0, sunrise1,
-        time_point_ativrddha_54gh_40vigh, time_point_vrddha_55gh, time_point_samyam_55gh_50vigh, time_point_hrasva_55gh_55vigh,
-        time_point_arunodaya,
-        dashami_start, ekadashi_start, dvadashi_start, trayodashi_start
-    };
 }
 
 } // namespace vp
