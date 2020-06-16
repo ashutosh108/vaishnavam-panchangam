@@ -10,3 +10,6 @@
 [submodule "vendor/tinyfsm"]
 	path = vendor/tinyfsm
 	url = https://github.com/digint/tinyfsm.git
+[submodule "vendor/fmt"]
+	path = vendor/fmt
+	url = https://github.com/fmtlib/fmt

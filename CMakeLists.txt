@@ -60,7 +60,7 @@ add_library(swe STATIC
     src/calc-error.cpp
 )
 target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)
-target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected)
+target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected fmt::fmt)
 
 add_library(sweph STATIC
     vendor/sweph/src/swecl.c
@@ -191,3 +191,5 @@ target_compile_definitions(swe PRIVATE VP_VERSION="${VP_VERSION}")
 
 add_library(tl-expected INTERFACE)
 target_include_directories(tl-expected INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/vendor/expected/include)
+
+add_subdirectory(vendor/fmt)

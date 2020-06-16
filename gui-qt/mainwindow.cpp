@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include <fmt/format.h>
+#include <fmt/ostream.h>
 #include <iterator>
 #include <QDate>
 #include <QMessageBox>
@@ -126,22 +128,17 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
     if (vrata.has_value()) {
         ui->locationName->setText(QString::fromStdString(vrata->location_name()));
 
-        std::stringstream vrata_type_s;
-        vrata_type_s << vrata->type;
-        ui->vrataType->setText(QString::fromStdString(vrata_type_s.str()));
+        ui->vrataType->setText(QString::fromStdString(fmt::to_string(vrata->type)));
 
-        std::stringstream vrata_date_s;
-        vrata_date_s << vrata->date;
+        fmt::memory_buffer buf;
+        fmt::format_to(buf, "{}", vrata->date);
         if (vp::is_atirikta(vrata->type)) {
             auto next_day = date::year_month_day{date::sys_days{vrata->date} + date::days{1}};
-            vrata_date_s << " and " << next_day;
+            fmt::format_to(buf, " and {}", next_day);
         }
-        ui->vrataDate->setText(QString::fromStdString(vrata_date_s.str()));
+        ui->vrataDate->setText(QString::fromStdString(fmt::to_string(buf)));
 
-        std::stringstream paran_next_day_s;
-        auto paran_date = vrata->local_paran_date();
-        paran_next_day_s << "Pāraṇam <span style=\" font-size:small;\">(" << paran_date << ")</span>:";
-        ui->paranamNextDay->setText(QString::fromStdString(paran_next_day_s.str()));
+        ui->paranamNextDay->setText(QString::fromStdString(fmt::format("Pāraṇam <span style=\" font-size:small;\">({})</span>:", vrata->local_paran_date())));
 
         std::string paranTime = vp::ParanFormatter::format(
                     vrata->paran,
@@ -184,15 +181,7 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
     auto location_arr = location_name.toUtf8();
     auto location = vp::text_ui::LocationDb().find_coord(location_arr.data());
     if (!location.has_value()) return;
-    {
-        std::stringstream s;
-        s << location->latitude;
-        ui->latitude->setText(QString::fromStdString(s.str()));
-    }
-    {
-        std::stringstream s;
-        s << location->longitude;
-        ui->longitude->setText(QString::fromStdString(s.str()));
-    }
+    ui->latitude->setText(QString::fromStdString(fmt::to_string(location->latitude)));
+    ui->longitude->setText(QString::fromStdString(fmt::to_string(location->longitude)));
     ui->timezone->setText(location->timezone_name);
 }

@@ -38,6 +38,7 @@ add_library(mainwindow STATIC
 target_link_libraries(mainwindow PUBLIC
     Qt5::Widgets
     swe
+    fmt::fmt
 )
 
 if(ANDROID)

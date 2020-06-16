@@ -7,6 +7,7 @@
 #include "paran.h"
 #include "tithi.h"
 
+#include <fmt/format.h>
 #include <limits>
 #include <optional>
 #include <ostream>
@@ -132,5 +133,22 @@ const std::vector<std::string> & ekadashi_names_rus();
 bool ekadashi_name_rus_is_valid(const std::string & name);
 
 } // namespace vp
+
+template<>
+struct fmt::formatter<vp::Vrata_Type> : fmt::formatter<std::string_view> {
+    template <typename FormatContext>
+    auto format(vp::Vrata_Type vrata, FormatContext & ctx) {
+        std::string_view name = "unknown";
+        switch (vrata) {
+        case vp::Vrata_Type::Ekadashi:
+            name = "Śuddhā Ekādaśī"; break;
+        case vp::Vrata_Type::With_Atirikta_Dvadashi:
+            name = "Ekādaśī with Atiriktā Dvādaśī (two days fast)"; break;
+        case vp::Vrata_Type::With_Atirikta_Ekadashi:
+            name = "Ekādaśī with Atiriktā Ekādaśī (two days fast)"; break;
+        }
+        return fmt::formatter<std::string_view>::format(name, ctx);
+    }
+};
 
 #endif // VRATA_H
