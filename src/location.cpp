@@ -1,5 +1,6 @@
 #include "location.h"
 
+#include <cmath> // std::round
 #include <iomanip>
 
 namespace vp {
