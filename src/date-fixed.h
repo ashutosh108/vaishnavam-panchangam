@@ -17,9 +17,9 @@ struct fmt::formatter<date::year_month_day> {
 
     template<typename FormatContext>
     auto format(const date::year_month_day & ymd, FormatContext & ctx) {
-        const int year = (int)ymd.year();
-        const unsigned month = (unsigned)ymd.month();
-        const unsigned day = (unsigned)ymd.day();
+        const int year = static_cast<int>(ymd.year());
+        const unsigned month = static_cast<unsigned>(ymd.month());
+        const unsigned day = static_cast<unsigned>(ymd.day());
         return fmt::format_to(ctx.out(), "{:04}-{:02}-{:02}", year, month, day);
     }
 };
