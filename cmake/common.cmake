@@ -67,7 +67,7 @@ macro(common_init)
         # Common warnings understood by both GCC and Clang, including old versions.
         if (CMAKE_CXX_COMPILER_ID MATCHES "^GNU|Clang$")
             set(WARN_FLAGS ${WARN_FLAGS}
-                -Wall -Wextra -Wshadow
+                -Wall -Wextra
                 -Werror
                 -Wnon-virtual-dtor -pedantic
                 -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual
