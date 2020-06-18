@@ -25,3 +25,14 @@ TEST_CASE("Can compare Date for equality") {
     REQUIRE(d1 == d2);
     REQUIRE(d1 != d3);
 }
+
+TEST_CASE("Can print year_month_day using fmt::to_string()") {
+    const date::year_month_day d{20_y/March/6};
+    auto s = fmt::to_string(d);
+    REQUIRE(s == "0020-03-06");
+}
+
+TEST_CASE("Can print year_month_day using fmt::format()") {
+    const date::year_month_day d{20_y/March/6};
+    REQUIRE(fmt::format("{}", d) == "0020-03-06");
+}
