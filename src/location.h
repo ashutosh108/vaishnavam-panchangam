@@ -21,13 +21,13 @@ std::ostream & operator <<(std::ostream & o, const Longitude & longitude);
 
 constexpr double int_deg_min_sec_to_double_degrees(const unsigned long long val) {
     if (val > 180'00'00) { throw std::logic_error("Value for degrees must be in 0..180'00'00 range"); }
-    int deg = static_cast<int>(val / 10'000);
+    auto deg = static_cast<int>(val / 10'000);
     if (deg > 180) { throw std::logic_error("degrees part in dd'mm'ss must be in 0..180 range"); }
-    int min = (val / 100) % 100;
+    auto min = static_cast<int>((val / 100) % 100);
     if (min > 59) { throw std::logic_error("minutes part in dd'mm'ss must be in 0..59 range"); }
-    int sec = val % 100;
+    auto sec = static_cast<int>(val % 100);
     if (sec > 59) { throw std::logic_error("seconds part in dd'mm'ss must be in 0..59 range"); }
-    return deg + min/60.0 + sec/3600.0;
+    return deg + static_cast<double>(min)/60.0 + static_cast<double>(sec)/3600.0;
 }
 
 constexpr Latitude operator ""_N(const unsigned long long lat) {
