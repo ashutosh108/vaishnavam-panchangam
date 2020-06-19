@@ -1,7 +1,5 @@
 #include "juldays_ut.h"
 
-#include "disable-warning.h"
-
 #include "catch.hpp"
 #include <chrono>
 #include <sstream>
@@ -17,10 +15,8 @@ TEST_CASE( "Can create JulDays_UT from double_days" ) {
     REQUIRE(true);
 }
 
-TEST_CASE ("Pretty print JulDays_UT") {
-    std::stringstream s;
-    s << JulDays_UT{double_days{2458552.686736239120364}};
-    REQUIRE(s.str() == "2019-03-10 04:28:54.011060 UTC");
+TEST_CASE ("Pretty print JulDays_UT with fmt") {
+    REQUIRE(fmt::to_string(JulDays_UT{double_days{2458552.686736239120364}}) == "2019-03-10 04:28:54.011060 UTC");
 }
 
 TEST_CASE ("raw_julian_days_ut") {
@@ -29,15 +25,12 @@ TEST_CASE ("raw_julian_days_ut") {
 }
 
 TEST_CASE ("construct from Y, m, d") {
-    std::stringstream s;
-    s << JulDays_UT{2019_y/March/10};
-    REQUIRE(s.str() == "2019-03-10 00:00:00.000000 UTC");
+    REQUIRE(fmt::to_string(JulDays_UT{2019_y/March/10}) == "2019-03-10 00:00:00.000000 UTC");
 }
 
 TEST_CASE ("construct from Y, m, d, hours") {
-    std::stringstream s;
-    s << JulDays_UT{2019_y/March/10, double_hours{5.25}};
-    REQUIRE(s.str() == "2019-03-10 05:15:00.000000 UTC");
+    auto d = JulDays_UT{2019_y/March/10, double_hours{5.25}};
+    REQUIRE(fmt::to_string(d) == "2019-03-10 05:15:00.000000 UTC");
 }
 
 TEST_CASE("hours matter") {

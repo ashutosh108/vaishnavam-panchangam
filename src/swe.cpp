@@ -1,10 +1,8 @@
 #include "swe.h"
 
-#include "concat.h"
 #include "location.h"
 
 #include <exception>
-#include <sstream>
 #include "swephexp.h"
 
 namespace vp {
@@ -99,7 +97,7 @@ JulDays_UT Swe::find_sunrise_v(JulDays_UT after) const
 {
     auto sunrise_or_error = find_sunrise(after);
     if (!sunrise_or_error) {
-        throw std::runtime_error(concat("can't find next sunrise after ", after));
+        throw std::runtime_error(fmt::format("can't find next sunrise after {}", after));
     }
     return *sunrise_or_error;
 }
@@ -113,7 +111,7 @@ JulDays_UT Swe::find_sunset_v(JulDays_UT after) const
 {
     auto sunset_or_error = find_sunset(after);
     if (!sunset_or_error) {
-        throw std::runtime_error(concat("can't find sunset after ", after));
+        throw std::runtime_error(fmt::format("can't find sunset after ", after));
     }
     return *sunset_or_error;
 }
@@ -122,9 +120,7 @@ JulDays_UT Swe::find_sunset_v(JulDays_UT after) const
     if (out_flags == ERR) {
         throw std::runtime_error(serr);
     } else {
-        std::stringstream s;
-        s << "return flags != input flags (" << out_flags << "!=" << in_flags << ")";
-        throw std::runtime_error(s.str());
+        throw std::runtime_error(fmt::format("return flags != input flags ({}!={})", out_flags, in_flags));
     }
 }
 

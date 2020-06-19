@@ -1,6 +1,7 @@
 #include "location.h"
 
 #include "catch.hpp"
+#include <fmt/format.h>
 #include <sstream>
 
 using namespace vp;
@@ -17,10 +18,7 @@ TEST_CASE("Location degrees, minutes, seconds constructor") {
 }
 
 void test_location_print(Latitude lat, Longitude lng, std::string_view expected) {
-    Location l{lat, lng};
-    std::stringstream s;
-    s << l;
-    REQUIRE(s.str() == expected);
+    REQUIRE(fmt::to_string(Location{lat, lng}) == expected);
 }
 
 TEST_CASE("Location prints coordinates nicely, with unicode etc") {

@@ -13,9 +13,7 @@ TEST_CASE("Date keeps year, month and day") {
 }
 
 TEST_CASE("Printing date") {
-    std::stringstream s;
-    s << date::year_month_day{2019_y/March/19};
-    REQUIRE(s.str() == "2019-03-19");
+    REQUIRE(fmt::to_string(date::year_month_day{2019_y/March/19}) == "2019-03-19");
 }
 
 TEST_CASE("Can compare Date for equality") {

@@ -1,8 +1,9 @@
 #ifndef LOCATION_H
 #define LOCATION_H
 
+#include <cmath> // fabs
 #include <cstring>
-#include <iostream>
+#include <fmt/format.h>
 #include <string_view>
 #include <tuple> // for std::tie() in comparison operators.
 
@@ -15,9 +16,6 @@ struct Latitude {
 struct Longitude {
     double longitude;
 };
-
-std::ostream & operator <<(std::ostream & o, const Latitude & latitude);
-std::ostream & operator <<(std::ostream & o, const Longitude & longitude);
 
 constexpr double int_deg_min_sec_to_double_degrees(const unsigned long long val) {
     if (val > 180'00'00) { throw std::logic_error("Value for degrees must be in 0..180'00'00 range"); }
@@ -85,8 +83,6 @@ struct Location
           timezone_name(_timezone_name),
           name(_name) {}
 };
-
-std::ostream & operator <<(std::ostream & o, const Location & location);
 
 inline bool operator==(const Location & one, const Location & other) {
     return one.latitude.latitude == other.latitude.latitude && one.longitude.longitude == other.longitude.longitude && std::strcmp(one.timezone_name, other.timezone_name) == 0 && std::strcmp(one.name, other.name) == 0;
@@ -221,5 +217,43 @@ inline bool operator<(const Location & one, const Location & two) {
 
 
 } // namespace vp
+
+namespace {
+template<typename Out>
+inline auto print_deg_min_sec(const Out & out, double degrees) {
+    const int sec_total = static_cast<int>(std::round(degrees * 3600.0));
+    const int sec = sec_total % 60;
+    const int min_remain = (sec_total-sec) / 60;
+    const int min = min_remain % 60;
+    int deg = (min_remain - min) / 60;
+    return fmt::format_to(out, "{}°{:02}′{:02}″", deg, min, sec);
+}
+}
+
+template<>
+struct fmt::formatter<vp::Latitude> : fmt::formatter<string_view> {
+    template<typename FormatContext>
+    auto format(const vp::Latitude & lat, FormatContext & ctx) {
+        print_deg_min_sec(ctx.out(), std::fabs(lat.latitude));
+        return fmt::format_to(ctx.out(), "{}", lat.latitude >= 0 ? 'N' : 'S');
+    }
+};
+
+template<>
+struct fmt::formatter<vp::Longitude> : fmt::formatter<string_view> {
+    template<typename FormatContext>
+    auto format(const vp::Longitude & lng, FormatContext & ctx) {
+        print_deg_min_sec(ctx.out(), std::fabs(lng.longitude));
+        return fmt::format_to(ctx.out(), "{}", lng.longitude >= 0 ? 'E' : 'W');
+    }
+};
+
+template<>
+struct fmt::formatter<vp::Location> : fmt::formatter<string_view> {
+    template<typename FormatContext>
+    auto format(const vp::Location & l, FormatContext & ctx) {
+        return fmt::format_to(ctx.out(), "{}, {}", l.latitude, l.longitude);
+    }
+};
 
 #endif // LOCATION_H

@@ -138,7 +138,7 @@ template<>
 struct fmt::formatter<vp::Vrata_Type> : fmt::formatter<std::string_view> {
     template <typename FormatContext>
     auto format(vp::Vrata_Type vrata, FormatContext & ctx) {
-        std::string_view name = "unknown";
+        const char * name = "unknown";
         switch (vrata) {
         case vp::Vrata_Type::Ekadashi:
             name = "Śuddhā Ekādaśī"; break;
@@ -147,7 +147,7 @@ struct fmt::formatter<vp::Vrata_Type> : fmt::formatter<std::string_view> {
         case vp::Vrata_Type::With_Atirikta_Ekadashi:
             name = "Ekādaśī with Atiriktā Ekādaśī (two days fast)"; break;
         }
-        return fmt::formatter<std::string_view>::format(name, ctx);
+        return fmt::format_to(ctx.out(), "{}", name);
     }
 };
 

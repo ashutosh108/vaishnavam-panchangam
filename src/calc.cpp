@@ -2,12 +2,10 @@
 #include <cassert>
 #include <cmath>
 #include <deque>
-#include <iostream>
 #include <optional>
 #include <tl/expected.hpp>
 
 #include "calc.h"
-#include "concat.h"
 #include "swe.h"
 
 // VP_TRY_AUTO: declare auto var, assign given value to it.
@@ -48,9 +46,7 @@ tl::expected<Vrata, CalcError> Calc::find_next_vrata(date::year_month_day after)
     Vrata vrata{};
 repeat_with_fixed_start_time:
     if (++run_number > 2) {
-        std::stringstream s;
-        s << swe.location.name << " after " << after << " (" << start_time << "): potential eternal loop detected";
-        throw std::runtime_error(s.str());
+        throw std::runtime_error(fmt::format("find_next_vrata @{} after {} ({}): potential eternal loop detected", swe.location.name, after, start_time));
     }
     VP_TRY(vrata.sunrise1, find_ekadashi_sunrise(start_time));
     vrata.ekadashi_sunrise = vrata.sunrise1;
@@ -111,9 +107,7 @@ tl::expected<JulDays_UT, CalcError> Calc::next_sunrise(JulDays_UT sunrise) const
 JulDays_UT Calc::next_sunrise_v(JulDays_UT sunrise) const {
     auto sunrise_or_nullopt = next_sunrise(sunrise);
     if (!sunrise_or_nullopt) {
-        std::stringstream s;
-        s << "can't get next sunrise after " << sunrise;
-        throw std::runtime_error(s.str());
+        throw std::runtime_error(fmt::format("can't get next sunrise after {}", sunrise));
     }
 
     return *sunrise_or_nullopt;

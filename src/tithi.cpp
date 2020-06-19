@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <fmt/core.h>
 #include <ostream>
 #include <sstream>
 
@@ -46,9 +47,7 @@ std::ostream &operator <<(std::ostream &o, Tithi const & t) {
 Tithi::Tithi(double _tithi) : tithi(_tithi)
 {
     if (tithi < 0 || tithi >= 30) {
-        std::stringstream s;
-        s << "Wrong tithi value: " << tithi;
-        throw std::range_error(s.str());
+        throw std::range_error(fmt::format("Wrong tithi value: {}", tithi));
     }
 }
 

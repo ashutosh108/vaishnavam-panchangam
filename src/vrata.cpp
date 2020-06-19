@@ -138,12 +138,10 @@ date::year_month_day Vrata::local_paran_date()
 
 std::string Vrata::location_name() const
 {
-    std::stringstream s;
-    s << location.name;
     if (location.latitude_adjusted) {
-        s << " (adjusted to " << location.latitude << " " << location.longitude << ")";
+        return fmt::format("{} (adjusted to {} {})", location.name, location.latitude, location.longitude);
     }
-    return s.str();
+    return location.name;
 }
 
 double_ghatikas Vrata_Time_Points::dashami_length() const {

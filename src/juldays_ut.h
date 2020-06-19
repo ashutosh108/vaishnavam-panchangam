@@ -69,4 +69,14 @@ double_days operator -(const JulDays_UT &, const JulDays_UT &);
 
 } // namespace vp
 
+template<>
+struct fmt::formatter<vp::JulDays_UT> {
+    template<typename ParseContext>
+    auto parse(ParseContext & ctx) { return ctx.begin(); }
+    template<typename FormatContext>
+    auto format(const vp::JulDays_UT & d, FormatContext & ctx) -> decltype(ctx.out()) {
+        return fmt::format_to(ctx.out(), "{} {} UTC", d.year_month_day(), date::hh_mm_ss(d.hours()));
+    }
+};
+
 #endif // JulDays_UT_H_INCLUDED
