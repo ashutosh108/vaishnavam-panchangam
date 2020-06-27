@@ -1,3 +1,4 @@
+[ ] re-enable -Wshadow (create fmt-fixed to disable those warnings for fmt)
 [ ] switch from iostreams to fmt
 [ ] switch from std::regex to some other, saner and faster, regex library.
 [ ] add "table" output tab (all primary locations in a single table)

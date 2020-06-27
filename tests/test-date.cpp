@@ -34,3 +34,9 @@ TEST_CASE("Can print year_month_day using fmt::format()") {
     const date::year_month_day d{20_y/March/6};
     REQUIRE(fmt::format("{}", d) == "0020-03-06");
 }
+
+TEST_CASE("can print local_time with fmt") {
+    using namespace std::chrono_literals;
+    auto t = date::local_time<std::chrono::seconds>(date::local_days{20_y/June/7} + 5h);
+    REQUIRE(fmt::to_string(t) == "0020-06-07 05:00:00.000000");
+}
