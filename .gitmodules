@@ -12,4 +12,4 @@
 	url = https://github.com/digint/tinyfsm.git
 [submodule "vendor/fmt"]
 	path = vendor/fmt
-	url = https://github.com/ashutosh108/fmt
+	url = https://github.com/fmtlib/fmt
