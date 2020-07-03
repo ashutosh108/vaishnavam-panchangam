@@ -47,12 +47,11 @@ struct fmt::formatter<date::local_time<Duration>> {
 
     template<typename FormatContext>
     auto format(const date::local_time<Duration> & t, FormatContext & ctx) {
-        auto daypoint = date::floor<date::days>(t);
+        const auto daypoint = date::floor<date::days>(t);
         const auto ymd = date::year_month_day{daypoint};
-        const auto tod = date::make_time(t - daypoint);
+        const auto tod = date::hh_mm_ss{t - daypoint};
         return fmt::format_to(ctx.out(), "{} {}", ymd, tod);
     }
 };
 
 #endif // #ifndef VP_DATE_FIXED_H
-

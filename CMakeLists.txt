@@ -87,6 +87,7 @@ add_executable(test-main
     tests/test-tithi.cpp
     tests/test-location.cpp
     tests/test-date.cpp
+    tests/test-tz.cpp
     tests/test-vrata.cpp
     tests/test-vrata-detail-printer.cpp
     tests/test-paran.cpp

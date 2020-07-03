@@ -79,4 +79,16 @@ struct fmt::formatter<vp::JulDays_UT> {
     }
 };
 
+template<>
+struct fmt::formatter<vp::JulDays_Zoned> {
+    template<typename ParseContext>
+    auto parse(ParseContext & ctx) { return ctx.begin(); }
+    template<typename FormatContext>
+    auto format(const vp::JulDays_Zoned & t, FormatContext & ctx) -> decltype(ctx.out()) {
+        const auto timezone = date::locate_zone(t.timezone_name_);
+        const auto z = t.t_.as_zoned_time(timezone);
+        return fmt::format_to(ctx.out(), "{}", z);
+    }
+};
+
 #endif // JulDays_UT_H_INCLUDED

@@ -102,9 +102,8 @@ TEST_CASE("Can substract JulDays_UT from JulDays_UT") {
 }
 
 TEST_CASE("Pretty-print zoned time") {
-    std::stringstream s;
-    s << JulDays_Zoned{"Europe/Kiev", JulDays_UT{2019_y/March/10, double_hours{4.5}}};
-    REQUIRE(s.str() == "2019-03-10 06:30:00.000000 EET");
+    const auto t = JulDays_Zoned{"Europe/Kiev", JulDays_UT{2019_y/March/10, double_hours{4.5}}};
+    REQUIRE(fmt::to_string(t) == "2019-03-10 06:30:00.000000 EET");
 }
 
 TEST_CASE("Can create Juldays_UT from local hh:mm") {
