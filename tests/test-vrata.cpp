@@ -2,7 +2,6 @@
 
 #include "catch.hpp"
 #include "date-fixed.h"
-#include <sstream>
 
 using namespace date;
 using namespace vp;
@@ -20,9 +19,7 @@ TEST_CASE("Can compare Vrata") {
 }
 
 TEST_CASE("Can print vrata") {
-    std::stringstream s;
-    s << Vrata{2019_y/March/19};
-    REQUIRE_FALSE(s.str().empty());
+    REQUIRE(!fmt::to_string(Vrata{2019_y/March/19}).empty());
 }
 
 TEST_CASE("Can create with \"before this time\" paran") {
@@ -37,19 +34,13 @@ TEST_CASE("ekadashi_name_rus_is_valid") {
 }
 
 TEST_CASE("atirikta ekAdashI is written as 'with Atiriktā Ekādaśī'") {
-    std::stringstream s;
-    s << Vrata_Type::With_Atirikta_Ekadashi;
-    REQUIRE_THAT(s.str(), Contains("with Atiriktā Ekādaśī"));
+    REQUIRE_THAT(fmt::to_string(Vrata_Type::With_Atirikta_Ekadashi), Contains("with Atiriktā Ekādaśī"));
 }
 
 TEST_CASE("atirikta dvAdashI is written from capital 'A'") {
-    std::stringstream s;
-    s << Vrata_Type::With_Atirikta_Dvadashi;
-    REQUIRE_THAT(s.str(), Contains("with Atiriktā Dvādaśī"));
+    REQUIRE_THAT(fmt::to_string(Vrata_Type::With_Atirikta_Dvadashi), Contains("with Atiriktā Dvādaśī"));
 }
 
 TEST_CASE("Śuddhā Ekādaśī is written as initial-caps") {
-    std::stringstream s;
-    s << Vrata_Type::Ekadashi;
-    REQUIRE_THAT(s.str(), Contains("Śuddhā Ekādaśī"));
+    REQUIRE_THAT(fmt::to_string(Vrata_Type::Ekadashi), Contains("Śuddhā Ekādaśī"));
 }

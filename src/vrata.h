@@ -151,4 +151,17 @@ struct fmt::formatter<vp::Vrata_Type> : fmt::formatter<std::string_view> {
     }
 };
 
+template<>
+struct fmt::formatter<vp::Vrata> : fmt::formatter<std::string_view> {
+    template <typename FormatContext>
+    auto format(const vp::Vrata & v, FormatContext & ctx) {
+        fmt::format_to(ctx.out(), "{} on {}", v.type, v.date);
+        if (is_atirikta(v.type)) {
+            date::year_month_day date2 = date::sys_days{v.date} + date::days{1};
+            fmt::format_to(ctx.out(), " & {}", date2);
+        }
+        return ctx.out();
+    }
+};
+
 #endif // VRATA_H
