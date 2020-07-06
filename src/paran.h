@@ -3,6 +3,7 @@
 
 #include "juldays_ut.h"
 
+#include <fmt/format.h>
 #include <optional>
 #include <ostream>
 #include <tuple>
@@ -46,5 +47,28 @@ public:
 };
 
 } // namespace vp
+
+template<>
+struct fmt::formatter<vp::Paran::Type> {
+    template<typename ParseContext>
+    auto parse(ParseContext & ctx) {
+        return ctx.begin();
+    }
+
+    template<typename FormatContext>
+    auto format(const vp::Paran::Type & t, FormatContext & ctx) {
+        switch (t) {
+        case vp::Paran::Type::Standard:
+            return fmt::format_to(ctx.out(), "Standard pāraṇam: from sunrise until 1/5 of day-time"); break;
+        case vp::Paran::Type::Until_Dvadashi_End:
+            return fmt::format_to(ctx.out(), "Pāraṇam before the end of Dvādaśī"); break;
+        case vp::Paran::Type::From_Quarter_Dvadashi:
+            return fmt::format_to(ctx.out(), "Pāraṇam after the first ¼ of Dvādaśī"); break;
+        case vp::Paran::Type::Puccha_Dvadashi:
+            return fmt::format_to(ctx.out(), "Pāraṇam within Puccha-Dvādaśī"); break;
+        }
+        return fmt::format_to(ctx.out(), "Unknown Pāraṇam type: {}", static_cast<int>(t));
+    }
+};
 
 #endif // PARAN_H

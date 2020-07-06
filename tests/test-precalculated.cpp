@@ -26,7 +26,7 @@ std::string slurp_file(const fs::path & filename) {
         throw std::system_error(errno, std::system_category(), "can't open file '" + filename.string() + "'");
     }
 
-    std::stringstream sstr;
+    std::ostringstream sstr;
     sstr << f.rdbuf();
     return sstr.str();
 }
@@ -54,7 +54,7 @@ date::month_day decode_month_day(const std::string& s) {
     std::string month_str;
     int day;
     {
-        std::stringstream stream{s};
+        std::istringstream stream{s};
         stream >> day >> month_str;
     }
     auto iter = month_map.find(month_str);
@@ -127,40 +127,30 @@ TEST_CASE("get_ekadashi_name works") {
 
 std::ostream & operator<<(std::ostream & s, const std::optional<date::sys_seconds> & t) {
     if (t) {
-        s << date::format("%Y-%m-%d %H:%M:%S %Z", *t);
-    } else {
-        s << "unspecified";
+        return s << date::format("%Y-%m-%d %H:%M:%S %Z", *t);
     }
-    return s;
+    return s << "unspecified";
 }
 
 std::ostream & operator<<(std::ostream & s, const std::optional<date::zoned_seconds> & t) {
     if (t) {
-        s << date::format("%Y-%m-%d %H:%M:%S %Z", *t);
-    } else {
-        s << "unspecified";
+        return s << date::format("%Y-%m-%d %H:%M:%S %Z", *t);
     }
-    return s;
+    return s << "unspecified";
 }
 
 std::string to_str(const std::optional<date::sys_seconds> t) {
-    std::stringstream s;
     if (t) {
-        s << date::format("%Y-%m-%d %H:%M:%S %Z", *t);
-    } else {
-        s << "unspecified";
+        return date::format("%Y-%m-%d %H:%M:%S %Z", *t);
     }
-    return s.str();
+    return "unspecified";
 }
 
 std::string to_str(const std::optional<date::zoned_seconds> t) {
-    std::stringstream s;
     if (t) {
-        s << date::format("%Y-%m-%d %H:%M:%S %Z", *t);
-    } else {
-        s << "unspecified";
+        return date::format("%Y-%m-%d %H:%M:%S %Z", *t);
     }
-    return s.str();
+    return "unspecified";
 }
 
 struct Paranam {
@@ -238,9 +228,7 @@ struct Precalculated_Vrata {
     std::string make_zoned(std::optional<vp::JulDays_UT> jd) const {
         if (!jd.has_value()) return "(unspecified)";
         auto zone_ptr = date::locate_zone(location.timezone_name);
-        std::stringstream s;
-        s << jd->as_zoned_time(zone_ptr);
-        return s.str();
+        return fmt::to_string(jd->as_zoned_time(zone_ptr));
     }
 
     bool operator==(const vp::Vrata_Detail_Printer & nowcalc) const {

@@ -1,7 +1,10 @@
 #ifndef TITHI_H
 #define TITHI_H
 
+#include <cassert>
+#include <fmt/format.h>
 #include <ostream>
+#include <string_view>
 
 namespace vp {
 
@@ -43,5 +46,45 @@ Tithi operator +(Tithi const &, double);
 Tithi operator -(Tithi const &, double);
 
 } // namespace vp
+
+template<>
+struct fmt::formatter<vp::Tithi> : fmt::formatter<std::string_view> {
+    template<typename FormatContext>
+    auto format(const vp::Tithi & t, FormatContext & ctx) {
+        using namespace std::string_view_literals;
+        assert(t.tithi >= 0 && t.tithi < 30);
+        constexpr const static string_view tithi_names[] = {
+            "Pratipat"sv,
+            "Dvitiya"sv,
+            "Tritiya"sv,
+            "Chaturthi"sv,
+            "Panchami"sv,
+            "Shashthi"sv,
+            "Saptami"sv,
+            "Ashtami"sv,
+            "Navami"sv,
+            "Dashami"sv,
+            "Ekadashi"sv,
+            "Dvadashi"sv,
+            "Trayodashi"sv,
+            "Chaturdashi"sv
+        };
+        int int_tithi = static_cast<int>(t.tithi);
+        if (int_tithi < 15) {
+            if (int_tithi < 14) {
+                fmt::format_to(ctx.out(), "Shukla {}", tithi_names[int_tithi]);
+            } else {
+                fmt::format_to(ctx.out(), "Purnima");
+            }
+        } else {
+            if (int_tithi < 29) {
+                fmt::format_to(ctx.out(), "Krishna {}", tithi_names[int_tithi-15]);
+            } else {
+                fmt::format_to(ctx.out(), "Amavasya");
+            }
+        }
+        return fmt::format_to(ctx.out(), "({:.2g})", t.tithi - int_tithi);
+    }
+};
 
 #endif // TITHI_H

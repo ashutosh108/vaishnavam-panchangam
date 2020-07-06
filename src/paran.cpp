@@ -46,27 +46,26 @@ std::string ParanFormatter::format(const Paran &paran,
                                    )
 {
     auto timezone = date::locate_zone(timezone_name);
-    std::stringstream paran_s;
+    fmt::memory_buffer buf;
     if (paran.paran_start.has_value()) {
         auto rounded_up = date::ceil<std::chrono::seconds>(paran.paran_start->as_sys_time());
         auto zoned = date::make_zoned(timezone, rounded_up);
-        paran_s << date::format(paran_start_format, zoned);
+        fmt::format_to(buf, "{}", date::format(paran_start_format, zoned));
     } else {
-        paran_s << "...";
+        fmt::format_to(buf, "...");
     }
-    paran_s << separator;
+    fmt::format_to(buf, "{}", separator);
     if (paran.paran_end.has_value()) {
         auto rounded_down = date::floor<std::chrono::seconds>(paran.paran_end->as_sys_time());
         auto zoned = date::make_zoned(timezone, rounded_down);
-        paran_s << date::format(paran_end_format, zoned);
+        fmt::format_to(buf, "{}", date::format(paran_end_format, zoned));
     } else {
-        paran_s << "...";
+        fmt::format_to(buf, "...");
     }
     if (paran_type_separator != nullptr) {
-        paran_s << paran_type_separator << paran.type;
+        fmt::format_to(buf, "{}{}", paran_type_separator, paran.type);
     }
-    std::string paran_string = paran_s.str();
-    return paran_string;
+    return fmt::to_string(buf);
 }
 
 } // namespace vp

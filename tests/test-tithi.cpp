@@ -1,7 +1,7 @@
 #include "tithi.h"
 
 #include "catch.hpp"
-#include <sstream>
+#include <fmt/format.h>
 
 using namespace vp;
 
@@ -11,27 +11,19 @@ TEST_CASE("Paksha") {
 }
 
 TEST_CASE("Tithi pretty-printing: Shukla Dvadashi") {
-    std::stringstream s;
-    s << Tithi{11.3};
-    REQUIRE(s.str() == "Shukla Dvadashi(0.3)");
+    REQUIRE(fmt::to_string(Tithi{11.3}) == "Shukla Dvadashi(0.3)");
 }
 
 TEST_CASE("Tithi pretty-printing: Krishna Ekadashi") {
-    std::stringstream s;
-    s << Tithi{15+10.4};
-    REQUIRE(s.str() == "Krishna Ekadashi(0.4)");
+    REQUIRE(fmt::to_string(Tithi{15+10.4}) == "Krishna Ekadashi(0.4)");
 }
 
 TEST_CASE("Tithi pretty-printing: Purnima") {
-    std::stringstream s;
-    s << Tithi{14.7};
-    REQUIRE(s.str() == "Purnima(0.7)");
+    REQUIRE(fmt::to_string(Tithi{14.7}) == "Purnima(0.7)");
 }
 
 TEST_CASE("Tithi pretty-printing: Amavasya") {
-    std::stringstream s;
-    s << Tithi{15+14.8};
-    REQUIRE(s.str() == "Amavasya(0.8)");
+    REQUIRE(fmt::to_string(Tithi{15+14.8}) == "Amavasya(0.8)");
 }
 
 TEST_CASE("throws on values below zero") {
