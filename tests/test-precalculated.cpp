@@ -23,7 +23,7 @@ std::string slurp_file(const fs::path & filename) {
     std::ifstream f;
     f.open(filename);
     if (!f) {
-        throw std::system_error(errno, std::system_category(), "can't open file '" + filename.string() + "'");
+        throw std::system_error(errno, std::system_category(), fmt::format("can't open file '{}'", filename.string()));
     }
 
     std::ostringstream sstr;
@@ -59,7 +59,7 @@ date::month_day decode_month_day(const std::string& s) {
     }
     auto iter = month_map.find(month_str);
     if (iter == month_map.end()) {
-        throw std::domain_error("can't parse month_day string '" + s + "' (" + std::to_string(day) + " " + month_str + ")");
+        throw std::domain_error(fmt::format("can't parse month_day string '{}' ({} {})", s, day, month_str));
     }
     return iter->second / day;
 }
@@ -125,33 +125,16 @@ TEST_CASE("get_ekadashi_name works") {
     REQUIRE(get_ekadashi_name(", Варӯтӿинӣ экāдащӣ, ") == "Варӯтӿинӣ");
 }
 
-std::ostream & operator<<(std::ostream & s, const std::optional<date::sys_seconds> & t) {
-    if (t) {
-        return s << date::format("%Y-%m-%d %H:%M:%S %Z", *t);
+template<typename SomeTimeType>
+struct fmt::formatter<std::optional<SomeTimeType>> : fmt::formatter<std::string_view> {
+    template<typename FormatContext>
+    auto format(const std::optional<SomeTimeType> & t, FormatContext & ctx) {
+        if (!t.has_value()) {
+            return fmt::format_to(ctx.out(), "unspecified");
+        }
+        return fmt::format_to(ctx.out(), "{}", *t);
     }
-    return s << "unspecified";
-}
-
-std::ostream & operator<<(std::ostream & s, const std::optional<date::zoned_seconds> & t) {
-    if (t) {
-        return s << date::format("%Y-%m-%d %H:%M:%S %Z", *t);
-    }
-    return s << "unspecified";
-}
-
-std::string to_str(const std::optional<date::sys_seconds> t) {
-    if (t) {
-        return date::format("%Y-%m-%d %H:%M:%S %Z", *t);
-    }
-    return "unspecified";
-}
-
-std::string to_str(const std::optional<date::zoned_seconds> t) {
-    if (t) {
-        return date::format("%Y-%m-%d %H:%M:%S %Z", *t);
-    }
-    return "unspecified";
-}
+};
 
 struct Paranam {
     enum class Precision {
@@ -232,11 +215,22 @@ struct Precalculated_Vrata {
     }
 
     bool operator==(const vp::Vrata_Detail_Printer & nowcalc) const {
-        UNSCOPED_INFO("comparing: " << date << "<=>" << nowcalc.vrata.date << ";\n"
-                      << location.name << "<=>" << nowcalc.vrata.location.name << ";\n"
-                      << type << "<=>" << nowcalc.vrata.type << ";\n"
-                      << "S" << to_str(paranam.start) << "<=>" << make_zoned(nowcalc.vrata.paran.paran_start) << ";\n"
-                      << "E" << to_str(paranam.end) << "<=>" << make_zoned(nowcalc.vrata.paran.paran_end));
+        using namespace fmt::literals;
+        UNSCOPED_INFO(fmt::format(
+            "comparing: {date}<=>{nowcalc_date};\n"
+            "{location_name}<=>{nowcalc_location_name};\n"
+            "{type}<=>{nowcalc_type};\n"
+            "S{paranam_start}<=>{nowcalc_paranam_start};\n"
+            "E{paranam_end}<=>{nowcalc_paranam_end}",
+            "date"_a = date, "nowcalc_date"_a = nowcalc.vrata.date,
+            "location_name"_a = location.name,
+            "nowcalc_location_name"_a = nowcalc.vrata.location.name,
+            "type"_a = type,
+            "nowcalc_type"_a = nowcalc.vrata.type,
+            "paranam_start"_a = paranam.start,
+            "nowcalc_paranam_start"_a = make_zoned(nowcalc.vrata.paran.paran_start),
+            "paranam_end"_a = paranam.end,
+            "nowcalc_paranam_end"_a = make_zoned(nowcalc.vrata.paran.paran_end)));
         if (date != nowcalc.vrata.date || location != nowcalc.vrata.location) {
             UNSCOPED_INFO("dates and locations must match, but they don't");
             return false;
@@ -251,10 +245,12 @@ struct Precalculated_Vrata {
         }
         if (nowcalc.vrata.paran.type == vp::Paran::Type::Standard) {
             if (paranam.start) {
-                UNSCOPED_INFO("in case of standard paranam, start time must not be set, but it's=" << to_str(paranam.start));
+                UNSCOPED_INFO(
+                    fmt::format("in case of standard paranam, start time must not be set, but it's={}", paranam.start));
             }
             if (paranam.end) {
-                UNSCOPED_INFO("in case of standard paranam, end time must not be set, but it's=" << to_str(paranam.end));
+                UNSCOPED_INFO(
+                    fmt::format("in case of standard paranam, end time must not be set, but it's={}", paranam.end));
             }
             return !paranam.start && !paranam.end;
         }
@@ -279,7 +275,7 @@ struct Precalculated_Vrata {
             return true;
         }
         if (nowcalc.vrata.paran.type == vp::Paran::Type::Puccha_Dvadashi || nowcalc.vrata.paran.type == vp::Paran::Type::Until_Dvadashi_End) {
-            UNSCOPED_INFO("paran type: " << nowcalc.vrata.paran.type);
+            UNSCOPED_INFO(fmt::format("paran type: {}", nowcalc.vrata.paran.type));
             // "<HH:MM" might have start time and MUST have end time
             if (!paranam.end) {
                 UNSCOPED_INFO("pAraNam end must be set");
@@ -295,7 +291,6 @@ struct Precalculated_Vrata {
         }
         throw std::runtime_error("unknown situation in comparison");
     }
-    friend std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v);
 };
 
 bool operator==(const Precalculated_Vrata & one, const Precalculated_Vrata & other) {
@@ -304,18 +299,22 @@ bool operator==(const Precalculated_Vrata & one, const Precalculated_Vrata & oth
             && one.paranam == other.paranam;
 }
 
-std::ostream & operator<<(std::ostream & s, const Precalculated_Vrata & v) {
-    return s << v.type << "@" << v.location.name << " on " << v.date <<
-                ", pAraNam: " << v.paranam.start <<
-                ".." << v.paranam.end;
-}
+template<>
+struct fmt::formatter<Precalculated_Vrata> : fmt::formatter<std::string_view> {
+    template<typename FormatContext>
+    auto format(const Precalculated_Vrata & v, FormatContext & ctx) {
+        return fmt::format_to(
+            ctx.out(), "{}@{} on {}, pAraNam: {}..{}",
+            v.type, v.location.name, v.date, v.paranam.start, v.paranam.end);
+    }
+};
 
 std::chrono::seconds h_m_s_from_string(const std::string & s) {
     std::istringstream stream{s};
     std::chrono::seconds h_m_s;
     stream >> date::parse("%H:%M", h_m_s);
     if (!stream.good()) {
-        throw std::runtime_error{"can't parse '" + s + "' as HH:MM"};
+        throw std::runtime_error{fmt::format("can't parse '{}' as HH:MM", s)};
     }
 
     // if there are more characters to read, they must be ":SS"
@@ -323,12 +322,12 @@ std::chrono::seconds h_m_s_from_string(const std::string & s) {
         std::chrono::seconds sec;
         stream >> date::parse(":%S", sec);
         if (!stream.good() || stream.rdbuf()->in_avail() != 0) {
-            throw std::runtime_error{"can't parse '" + s + "' as HH:MM:SS"};
+            throw std::runtime_error{fmt::format("can't parse '{}' as HH:MM:SS", s)};
         }
         h_m_s += sec;
     }
     if (h_m_s >= 24h) {
-        throw std::runtime_error("HH:MM[:SS] is 24 hours or more: '" + s + "'");
+        throw std::runtime_error(fmt::format("HH:MM[:SS] is 24 hours or more: '{}'", s));
     }
     return h_m_s;
 }
@@ -362,7 +361,7 @@ Paranam parse_precalc_paranam(std::string s, date::year_month_day date, const ch
             auto start_sec_empty = match[2].length() == 0;
             auto end_sec_empty = match[4].length() == 0;
             if (start_sec_empty != end_sec_empty) {
-                throw std::runtime_error(":SS (seconds) of start and end must be either both set or both empty: " + s);
+                throw std::runtime_error(fmt::format(":SS (seconds) of start and end must be either both set or both empty: {}", s));
             }
             auto time_zone = date::locate_zone(timezone_name);
             auto start_zoned = date::make_zoned(time_zone, date::local_days(date) + start_h_m_s);
@@ -385,7 +384,7 @@ Paranam parse_precalc_paranam(std::string s, date::year_month_day date, const ch
             return {std::nullopt, end_zoned};
         }
     }
-    throw std::runtime_error("can't parse paran time '" + s + "'");
+    throw std::runtime_error(fmt::format("can't parse paran time '{}'", s));
 }
 
 bool is_atirikta(const std::string & prev_cell_text, const std::string & cell_text, /*out*/ vp::Vrata_Type & type) {
@@ -555,7 +554,7 @@ vp::Location find_location_by_name_rus(const std::string & name) {
         return pair.first == name;
     });
     if (iter == rus_locations.end()) {
-        throw std::runtime_error("location '" + name + "' is not known in test data, aborting");
+        throw std::runtime_error(fmt::format("location {}' is not known in test data, aborting", name));
     }
     return iter->second;
 }
@@ -742,30 +741,18 @@ using FixVariant = std::variant<
 
 using Fixes = std::map<vp::Location, std::vector<FixVariant>>;
 
-std::ostream & operator<<(std::ostream & stream, std::optional<std::chrono::seconds> sec) {
-    if (sec) {
-        stream << *sec;
-    } else {
-        stream << "unspecified";
-    }
-    return stream;
-}
-
 /* Make time nullopt provided that it's old value matches the expected */
 void remove_time(std::optional<date::zoned_seconds> & time, std::optional<date::zoned_seconds> expected) {
     if (time != expected) {
-        std::stringstream s;
-        s << "can't remove " << expected << " in " << time << ": HH:MM:SS do not match";
-        throw std::runtime_error(s.str());
+        throw std::runtime_error(fmt::format("can't remove {} in {}: HH:MM:SS do not match", expected, time));
     }
     time = std::nullopt;
 }
 
 void replace_time(std::optional<date::zoned_seconds> & time, std::optional<date::zoned_seconds> expected, date::zoned_seconds new_time) {
     if (time != expected) {
-        std::stringstream s;
-        s << "can't replace " << expected << "=>" << new_time << " in " << time << ": HH:MM:SS do not match";
-        throw std::runtime_error(s.str());
+        throw std::runtime_error(fmt::format("can't replace {}=>{} in {}: HH:MM:SS do not match",
+                                             expected, new_time, time));
     }
     time = new_time;
 }
@@ -795,16 +782,8 @@ struct VrataFixer {
     }
     std::optional<date::zoned_seconds> replace_hms(std::optional<date::zoned_seconds> zoned, std::optional<std::chrono::seconds> hms) {
         if (zoned.has_value() != hms.has_value()) {
-            std::stringstream s;
-            s << "can't replace hms part of '" << zoned << "' with '";
-            if (hms.has_value()) {
-                date::hh_mm_ss<std::chrono::seconds> hms_for_printing{*hms};
-                s << hms_for_printing;
-            } else {
-                s << "(unspecified)";
-            }
-            s << "': one of them doesn't exist";
-            throw std::runtime_error(s.str());
+            std::optional<date::hh_mm_ss<std::chrono::seconds>> hms_for_printing{hms};
+            throw std::runtime_error(fmt::format("can't replace hms part of '{}' with '{}': one of them doesn't exist", zoned, hms_for_printing));
         }
         if (!zoned) return std::nullopt;
         auto time_zone = zoned->get_time_zone();
@@ -847,17 +826,15 @@ struct VrataFixer {
     }
     void operator()(const FixVrataDate & fix) {
         if (vrata.date != fix.expected) {
-            std::stringstream out;
-            out << vrata.date << ": can't replace '" << fix.expected << "' by '" << fix.new_date << "': dates don't match";
-            throw std::runtime_error(out.str());
+            throw std::runtime_error(fmt::format("{}: can't replace '{}' by '{}': dates don't match",
+                                                 vrata.date, fix.expected, fix.new_date));
         }
         vrata.date = fix.new_date;
     }
     void operator()(const FixVrataType & fix) {
         if (vrata.type != fix.expected) {
-            std::stringstream out;
-            out << vrata.type << ": can't replace " << fix.expected << " by " << fix.new_type<< "': types don't match";
-            throw std::runtime_error(out.str());
+            throw std::runtime_error(fmt::format("{}: can't replace {} by {}': types don't match",
+                                                 vrata.type, fix.expected, fix.new_type));
         }
         vrata.type = fix.new_type;
     }
