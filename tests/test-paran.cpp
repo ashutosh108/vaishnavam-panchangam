@@ -37,8 +37,7 @@ TEST_CASE("\"before\" parans with different times are not equal") {
 
 TEST_CASE("Can print paran") {
     std::ostringstream s;
-    s << Paran{};
-    REQUIRE(s.str() != "");
+    REQUIRE(fmt::to_string(Paran{}) != "");
 }
 
 TEST_CASE("Can compare paran types") {

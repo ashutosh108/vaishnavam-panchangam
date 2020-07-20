@@ -27,12 +27,7 @@ public:
 };
 
 std::ostream &operator <<(std::ostream &s, const Expected_Vrata &v) {
-    s << v.type;
-    {
-        s << "{" << v.date;
-        s << ", " << v.paran << "}";
-    }
-    return s;
+    return s << fmt::format("{}{{{}, {}}}", v.type, v.date, v.paran);
 }
 
 class ApproximateJulDays_UT {

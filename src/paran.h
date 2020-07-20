@@ -5,7 +5,7 @@
 
 #include <fmt/format.h>
 #include <optional>
-#include <ostream>
+#include <string_view>
 #include <tuple>
 
 namespace vp {
@@ -24,15 +24,11 @@ public:
     bool operator!=(Paran const &other) const {
         return !(*this == other);
     }
-    std::ostream& operator<<(std::ostream &o) const;
 
     Type type;
     std::optional<JulDays_UT> paran_start{};
     std::optional<JulDays_UT> paran_end{};
 };
-
-std::ostream & operator<<(std::ostream &o, Paran const &p);
-std::ostream & operator<<(std::ostream &o, Paran::Type const &t);
 
 class ParanFormatter {
 public:
@@ -49,12 +45,7 @@ public:
 } // namespace vp
 
 template<>
-struct fmt::formatter<vp::Paran::Type> {
-    template<typename ParseContext>
-    auto parse(ParseContext & ctx) {
-        return ctx.begin();
-    }
-
+struct fmt::formatter<vp::Paran::Type> : fmt::formatter<std::string_view> {
     template<typename FormatContext>
     auto format(const vp::Paran::Type & t, FormatContext & ctx) {
         switch (t) {
@@ -68,6 +59,22 @@ struct fmt::formatter<vp::Paran::Type> {
             return fmt::format_to(ctx.out(), "Pāraṇam within Puccha-Dvādaśī"); break;
         }
         return fmt::format_to(ctx.out(), "Unknown Pāraṇam type: {}", static_cast<int>(t));
+    }
+};
+
+template<>
+struct fmt::formatter<vp::Paran> : fmt::formatter<std::string_view> {
+    template<typename FormatCtx>
+    auto format(const vp::Paran & p, FormatCtx & ctx) {
+        fmt::format_to(ctx.out(), "{}{{", p.type);
+        if (p.paran_start.has_value()) {
+            fmt::format_to(ctx.out(), "{}", *p.paran_start);
+        }
+        fmt::format_to(ctx.out(), "..");
+        if (p.paran_end.has_value()) {
+            fmt::format_to(ctx.out(), "{}", *p.paran_end);
+        }
+        return fmt::format_to(ctx.out(), "}}");
     }
 };
 
