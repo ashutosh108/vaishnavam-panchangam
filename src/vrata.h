@@ -10,7 +10,6 @@
 #include <fmt/format.h>
 #include <limits>
 #include <optional>
-#include <ostream>
 
 namespace vp {
 
@@ -26,8 +25,6 @@ constexpr inline bool is_atirikta(Vrata_Type type)
            ||
            type == Vrata_Type::With_Atirikta_Ekadashi;
 }
-
-std::ostream &operator<<(std::ostream &o, Vrata_Type const &v);
 
 /*
  * Helper struct used in Vrata and returned by Calc::calc_ativrddhatvam_for_sunrise():
@@ -81,8 +78,6 @@ struct Vrata_Time_Points {
     JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // trayodashi_start;
 };
 
-std::ostream & operator<<(std::ostream & s, const Vrata_Time_Points::Ativrddhaadi & a);
-
 struct Vrata {
     Vrata_Type type = Vrata_Type::Ekadashi;
     date::year_month_day date;
@@ -125,7 +120,6 @@ struct Vrata {
 
 bool operator==(Vrata const &, Vrata const &);
 bool operator!=(Vrata const &, Vrata const &);
-std::ostream &operator<<(std::ostream &o, Vrata const &v);
 
 // ref to static vector of all known ekAdashI names in English, capitalized. E.g. "Varūthinī"
 const std::vector<std::string> & ekadashi_names();

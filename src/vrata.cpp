@@ -25,31 +25,6 @@ bool operator!=(const Vrata &v1, const Vrata &v2)
     return !(v1 == v2);
 }
 
-std::ostream &operator<<(std::ostream &o, const Vrata &v)
-{
-    o << v.type << " on " << v.date;
-    if (is_atirikta(v.type)) {
-        date::year_month_day date2 = date::sys_days{v.date} + date::days{1};
-        o << " & " << date2;
-    }
-    return o;
-}
-
-std::ostream &operator<<(std::ostream &o, const Vrata_Type &v)
-{
-    switch (v) {
-    case Vrata_Type::Ekadashi:
-        o << "Śuddhā Ekādaśī"; break;
-    case Vrata_Type::With_Atirikta_Dvadashi:
-        o << "Ekādaśī with Atiriktā Dvādaśī (two days fast)"; break;
-    case Vrata_Type::With_Atirikta_Ekadashi:
-        o << "Ekādaśī with Atiriktā Ekādaśī (two days fast)"; break;
-//    default:
-//        o << "Vrata#" << static_cast<int>(v);
-    }
-    return o;
-}
-
 const std::vector<std::string> & ekadashi_names()
 {
     static const std::vector<std::string> static_names{
@@ -187,25 +162,6 @@ Vrata_Time_Points::Ativrddhaadi Vrata_Time_Points::ativrddhaadi() const
     }
     if (delta1 < 0.0 && delta2 < 0.0) return Ativrddhaadi::hrasva;
     return Ativrddhaadi::samyam;
-}
-
-std::ostream &operator<<(std::ostream &s, const Vrata_Time_Points::Ativrddhaadi &a)
-{
-    switch (a) {
-    case Vrata_Time_Points::Ativrddhaadi::ativrddha:
-        s << "ativṛddhiḥ";
-        break;
-    case Vrata_Time_Points::Ativrddhaadi::vrddha:
-        s << "vṛddhiḥ";
-        break;
-    case Vrata_Time_Points::Ativrddhaadi::samyam:
-        s << "sāmyam";
-        break;
-    case Vrata_Time_Points::Ativrddhaadi::hrasva:
-        s << "hrāsaḥ";
-        break;
-    }
-    return s;
 }
 
 } // namespace vp

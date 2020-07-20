@@ -34,7 +34,7 @@ class ApproximateJulDays_UT {
     JulDays_UT juldays_;
 public:
     template<class ... Types>
-    ApproximateJulDays_UT(Types ...args) : juldays_(args...) {}
+    explicit ApproximateJulDays_UT(Types ...args) : juldays_(args...) {}
 
     bool operator==(const JulDays_UT & other) const {
         constexpr double_days tolerance = 5s;
@@ -204,7 +204,7 @@ bool operator==(const NamedVrata &expected, const Vrata & actual) {
 }
 
 std::ostream & operator<<(std::ostream & s, const NamedVrata &nv) {
-    return s << nv.name << ": " << nv.vrata;
+    return s << fmt::format("{}: {}", nv.name, nv.vrata);
 }
 
 void check_atirikta_at_location(const char * name, const Location & location, const Vrata & expected_vrata, date::year_month_day date) {
