@@ -2,7 +2,6 @@
 
 #include "catch.hpp"
 #include "date-fixed.h"
-#include <sstream>
 
 using namespace date;
 using namespace vp;
@@ -36,7 +35,6 @@ TEST_CASE("\"before\" parans with different times are not equal") {
 }
 
 TEST_CASE("Can print paran") {
-    std::ostringstream s;
     REQUIRE(fmt::to_string(Paran{}) != "");
 }
 
