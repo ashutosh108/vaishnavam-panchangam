@@ -70,33 +70,4 @@ Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata):vrata(_vrata) {
     }
 }
 
-static void merge_consequent_events_with_same_time(std::vector<Vrata_Detail_Printer::NamedTimePoint> & events) {
-    for (std::size_t i = 1; i < events.size(); ++i) {
-        auto time1 = events[i-1].time_point;
-        auto time2 = events[i].time_point;
-        // same time for both events. Merge them by appending descriptions via comma.
-        if (time1 == time2) {
-            events[i-1].name += ", " + events[i].name;
-            events.erase(events.begin() + i);
-        }
-    }
-}
-
-std::ostream &operator<<(std::ostream &s, const Vrata_Detail_Printer &vd)
-{
-    s << "# " << vd.vrata.location_name() << "\n";
-    s << vd.vrata << ":\n";
-    s << vd.vrata.paran.type << '\n';
-    auto events = vd.events;
-    // stable sort to keep "pAraNam start/end" after corresponding sunrise+ events.
-    std::stable_sort(events.begin(), events.end(), [](const Vrata_Detail_Printer::NamedTimePoint & left, const Vrata_Detail_Printer::NamedTimePoint & right) {
-        return left.time_point < right.time_point;
-    });
-    merge_consequent_events_with_same_time(events);
-    for (const auto & e : events) {
-        s << JulDays_Zoned{vd.vrata.location.timezone_name, e.time_point} << ' ' << e.name << '\n';
-    }
-    return s;
-}
-
 } // namespace vp

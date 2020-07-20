@@ -155,7 +155,7 @@ tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day 
                          vrata.error());
     } else {
         Vrata_Detail_Printer vd{*vrata};
-        o << vd << "\n\n";
+        o << fmt::format("{}\n\n", vd);
     }
     return vrata;
 }
