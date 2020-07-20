@@ -3,7 +3,6 @@
 
 #include <cassert>
 #include <fmt/format.h>
-#include <ostream>
 #include <string_view>
 
 namespace vp {
@@ -40,7 +39,6 @@ struct Tithi {
     double delta_to_nearest_tithi(Tithi) const;
 };
 
-std::ostream &operator <<(std::ostream &o, Tithi const & t);
 double operator -(Tithi const &, Tithi const &);
 Tithi operator +(Tithi const &, double);
 Tithi operator -(Tithi const &, double);

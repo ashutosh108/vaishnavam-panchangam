@@ -1,6 +1,6 @@
-#include <iostream>
 #include <chrono>
 #include <cstring>
+#include <fmt/format.h>
 
 #include "text-interface.h"
 
@@ -13,12 +13,13 @@
 using namespace vp::text_ui;
 
 void print_usage() {
-    std::cout << program_name_and_version() << '\n';
-    std::cout << "USAGE:\n";
-    std::cout << "vaishnavam-panchangam YYYY-MM-DD latitude longitude\n";
-    std::cout << "vaishnavam-panchangam YYYY-MM-DD location-name\n";
-    std::cout << "\n";
-    std::cout << "    latitude and longitude are given as decimal degrees (e.g. 30.7)\n";
+    fmt::print("{}\n"
+               "USAGE:\n"
+               "vaishnavam-panchangam YYYY-MM-DD latitude longitude\n"
+               "vaishnavam-panchangam YYYY-MM-DD location-name\n"
+               "\n"
+               "    latitude and longitude are given as decimal degrees (e.g. 30.7)\n",
+               program_name_and_version());
 }
 
 int main(int argc, char *argv[])
