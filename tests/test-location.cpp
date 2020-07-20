@@ -2,7 +2,6 @@
 
 #include "catch.hpp"
 #include <fmt/format.h>
-#include <sstream>
 
 using namespace vp;
 

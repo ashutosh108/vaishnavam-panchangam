@@ -1,4 +1,3 @@
-#include <iostream>
 #include <QApplication>
 #include <QDir>
 #include <QMessageBox>

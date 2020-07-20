@@ -1,7 +1,6 @@
 #include "date-fixed.h"
 
 #include "catch.hpp"
-#include <sstream>
 
 using namespace date;
 

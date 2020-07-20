@@ -3,7 +3,6 @@
 #include <cassert>
 #include <cctype>
 #include <cstdlib>
-#include <iostream>
 #include <regex>
 
 std::optional<html::Token> html::TokenStream::next_token()

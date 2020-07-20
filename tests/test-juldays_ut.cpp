@@ -2,7 +2,6 @@
 
 #include "catch.hpp"
 #include <chrono>
-#include <sstream>
 #include "tz-fixed.h"
 
 using namespace date;

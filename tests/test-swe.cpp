@@ -3,7 +3,6 @@
 #include "catch.hpp"
 #include <chrono>
 #include "date-fixed.h"
-#include <sstream>
 
 using namespace date;
 using namespace vp;
