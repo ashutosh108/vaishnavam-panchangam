@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <chrono>
-#include <iomanip>
 #include "swephexp.h"
 #include "tz-fixed.h"
 
@@ -73,12 +72,6 @@ date::sys_time<double_hours> JulDays_UT::as_sys_time() const
     double hours;
     swe_revjul(juldays_ut_.count(), SE_GREG_CAL, &year, &month, &day, &hours);
     return date::sys_days{date::year{year}/month/day} + double_hours{hours};
-}
-
-std::ostream &operator<<(std::ostream &os, JulDays_UT const &t) {
-    os << t.year_month_day() << ' ';
-    os << date::hh_mm_ss(t.hours()) << " UTC";
-    return os;
 }
 
 JulDays_UT operator +(const JulDays_UT &t, double_days delta)

@@ -4,8 +4,6 @@
 #include "date-fixed.h"
 #include "tz-fixed.h"
 
-#include <ostream>
-
 namespace vp {
 
 using double_hours = std::chrono::duration<double, std::ratio<3600>>;
@@ -57,7 +55,6 @@ public:
         t_(t), timezone_name_(timezone_name) {}
 };
 
-std::ostream &operator<<(std::ostream &os, JulDays_UT const &t);
 JulDays_UT operator +(const JulDays_UT &, double_days);
 JulDays_UT operator -(const JulDays_UT &, double_days);
 

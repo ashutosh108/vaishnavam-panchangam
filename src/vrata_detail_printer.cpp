@@ -2,8 +2,6 @@
 
 #include "calc.h"
 
-#include <iomanip>
-
 namespace vp {
 
 Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata):vrata(_vrata) {
@@ -22,42 +20,39 @@ Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata):vrata(_vrata) {
     }
 
     const double_ghatikas dashami_length_ghatikas = vrata.times.ekadashi_start - vrata.times.dashami_start;
-    std::ostringstream dashami_descr;
-    dashami_descr << "daśamī start ("
-                  << std::setprecision(3) << std::fixed << dashami_length_ghatikas.count() << "gh long)";
-    events.push_back({dashami_descr.str(), vrata.times.dashami_start});
+    events.push_back({fmt::format("daśamī start ({:.3f}gh long)", dashami_length_ghatikas.count()), vrata.times.dashami_start});
 
     const double_ghatikas ekadashi_length_ghatikas = vrata.times.dvadashi_start - vrata.times.ekadashi_start;
     const double_ghatikas ekadashi_delta = ekadashi_length_ghatikas - dashami_length_ghatikas;
-    std::ostringstream ekadashi_descr;
-    ekadashi_descr << "**Ekādaśī start** ("
-                   << std::setprecision(3) << std::fixed << ekadashi_length_ghatikas.count() << "gh long; "
-                   << std::showpos << "**" << ekadashi_delta.count() << "gh**)";
-    events.push_back({ekadashi_descr.str(), vrata.times.ekadashi_start});
+    events.push_back({fmt::format(
+                          "**Ekādaśī start** ({:.3f}gh long; **{:+.3f}gh**)",
+                          ekadashi_length_ghatikas.count(),
+                          ekadashi_delta.count()),
+                      vrata.times.ekadashi_start});
 
     const double_ghatikas dvadashi_length_ghatikas = vrata.times.trayodashi_start - vrata.times.dvadashi_start;
     const double_ghatikas dvadashi_delta = dvadashi_length_ghatikas - ekadashi_length_ghatikas;
-    std::ostringstream dvadashi_descr;
-    dvadashi_descr << "Dvādaśī start ("
-                   << std::setprecision(3) << std::fixed << dvadashi_length_ghatikas.count() << "gh long; "
-                   << std::showpos << "**" << dvadashi_delta.count() << "gh**)";
-    events.push_back({dvadashi_descr.str(), vrata.times.dvadashi_start});
+    events.push_back({fmt::format(
+                          "Dvādaśī start ({:.3f}gh long; **{:+.3f}gh**)",
+                          dvadashi_length_ghatikas.count(),
+                          dvadashi_delta.count()),
+                      vrata.times.dvadashi_start});
 
     events.push_back({"Dvādaśī's first quarter ends", Calc::proportional_time(vrata.times.dvadashi_start, vrata.times.trayodashi_start, 0.25)});
 
     events.push_back({"Dvādaśī end", vrata.times.trayodashi_start});
 
     events.push_back({"sunset0", vrata.sunset0});
-    std::string star;
+    const char * star;
     const auto status = vrata.times.ativrddhaadi();
-    star = (status == Vrata_Time_Points::Ativrddhaadi::ativrddha) ? "**" : "";
-    events.push_back({"54gh_40vigh (" + star + "ativṛddhiḥ" + star + ")", vrata.times.ativrddha_54gh_40vigh});
+    star = status == Vrata_Time_Points::Ativrddhaadi::ativrddha ? "**" : "";
+    events.push_back({fmt::format("54gh_40vigh ({0}ativṛddhiḥ{0})", star), vrata.times.ativrddha_54gh_40vigh});
     star = status == Vrata_Time_Points::Ativrddhaadi::vrddha ? "**" : "";
-    events.push_back({"55gh (" + star + "vṛddhiḥ" + star + ")", vrata.times.vrddha_55gh});
+    events.push_back({fmt::format("55gh ({0}vṛddhiḥ{0})", star), vrata.times.vrddha_55gh});
     star = status == Vrata_Time_Points::Ativrddhaadi::samyam ? "**" : "";
-    events.push_back({"55gh_50vigh (" + star + "sāmyam" + star + ")", vrata.times.samyam_55gh_50vigh});
+    events.push_back({fmt::format("55gh_50vigh ({0}sāmyam{0})", star), vrata.times.samyam_55gh_50vigh});
     star = status == Vrata_Time_Points::Ativrddhaadi::hrasva ? "**" : "";
-    events.push_back({"55gh_55vigh (" + star + "hrāsaḥ" + star + ")", vrata.times.hrasva_55gh_55vigh});
+    events.push_back({fmt::format("55gh_55vigh ({0}hrāsaḥ{0})", star), vrata.times.hrasva_55gh_55vigh});
 
     // push them at the end so after joining duplicate events the "paranam" text would come after "sunrise" etc.
     // e.g. we want to have: yyyy-mm-dd hh:mm:ss.ssss sunrise1, pAraNam start

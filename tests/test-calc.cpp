@@ -50,8 +50,9 @@ bool operator == (const JulDays_UT & left, const ApproximateJulDays_UT & right) 
 
 
 std::ostream & operator<<(std::ostream & s, const ApproximateJulDays_UT & u) {
-    return s << "Approx{" << u.juldays_ << "}";
+    return s << fmt::format("Approx{{{}}}", u.juldays_);
 }
+
 bool operator==(const Expected_Vrata &e, const Vrata &v) {
     // if "expected" paran_start/end is nullopt, then we don't care
     // about v2's one.
