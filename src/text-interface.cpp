@@ -4,7 +4,6 @@
 #include "vrata_detail_printer.h"
 
 #include <cstring>
-#include <iomanip>
 #include <iostream>
 
 using namespace vp;
