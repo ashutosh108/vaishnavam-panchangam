@@ -116,7 +116,6 @@ void MainWindow::calcAll(date::year_month_day base_date, std::ostream &o)
     for (auto &l : vp::text_ui::LocationDb()) {
         calcOne(base_date, l.name, o);
     }
-//    vp::text_ui::calc_all(base_date, o);
 }
 
 void MainWindow::calcOne(date::year_month_day base_date, QString location_string, std::ostream &o)
@@ -130,13 +129,12 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
 
         ui->vrataType->setText(QString::fromStdString(fmt::to_string(vrata->type)));
 
-        fmt::memory_buffer buf;
-        fmt::format_to(buf, "{}", vrata->date);
         if (vp::is_atirikta(vrata->type)) {
             auto next_day = date::year_month_day{date::sys_days{vrata->date} + date::days{1}};
-            fmt::format_to(buf, " and {}", next_day);
+            ui->vrataDate->setText(QString::fromStdString(fmt::format("{} and {}", vrata->date, next_day)));
+        } else {
+            ui->vrataDate->setText(QString::fromStdString(fmt::to_string(vrata->date)));
         }
-        ui->vrataDate->setText(QString::fromStdString(fmt::to_string(buf)));
 
         ui->paranamNextDay->setText(QString::fromStdString(fmt::format("Pāraṇam <span style=\" font-size:small;\">({})</span>:", vrata->local_paran_date())));
 

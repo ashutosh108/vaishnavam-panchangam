@@ -148,9 +148,11 @@ tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, 
 tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location location, std::ostream &o) {
     auto vrata = calc_one(base_date, location);
     if (!vrata.has_value()) {
-        o << "# " << vrata->location_name() << "*\n" <<
-            "Can't find next Ekadashi, sorry.\n" <<
-            "* Error: " << vrata.error() << "\n";
+        o << fmt::format("# {}*\n"
+                         "Can't find next Ekadashi, sorry.\n"
+                         "* Error: {}\n",
+                         vrata->location_name(),
+                         vrata.error());
     } else {
         Vrata_Detail_Printer vd{*vrata};
         o << vd << "\n\n";
@@ -161,32 +163,38 @@ tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day 
 tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, std::ostream &o) {
     std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
-        o << "Location not found: '" << location_name << "'\n";
+        o << fmt::format("Location not found: '{}'\n", location_name);
         return tl::unexpected{CantFindLocation{location_name}};
     }
     return calc_and_report_one(base_date, *coord, o);
 }
 
 void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o) {
-    o << location_name << ' ' << base_date << '\n';
-    o << "<to be implemented>\n";
+    o << fmt::format("{} {}\n"
+                     "<to be implemented>\n",
+                     location_name, base_date);
     Calc calc{coord};
     auto sunrise = calc.swe.find_sunrise(JulDays_UT{base_date});
     if (sunrise) {
         auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
         if (arunodaya) {
-            o << "arunodaya: " << JulDays_Zoned{coord.timezone_name, *arunodaya}
-            << ' ' << calc.swe.get_tithi(*arunodaya) << '\n';
+            o << fmt::format("arunodaya: {} {}\n",
+                             JulDays_Zoned{coord.timezone_name, *arunodaya},
+                             calc.swe.get_tithi(*arunodaya));
         }
-        o << "sunrise: " << JulDays_Zoned{coord.timezone_name, *sunrise} << ' ' << calc.swe.get_tithi(*sunrise) << '\n';
+        o << fmt::format("sunrise: {} {}\n",
+                         JulDays_Zoned{coord.timezone_name, *sunrise},
+                         calc.swe.get_tithi(*sunrise));
 
         auto sunset = calc.swe.find_sunset(*sunrise);
         if (sunset) {
             if (sunset) {
                 auto onefifth = calc.proportional_time(*sunrise, *sunset, 0.2);
-                o << "1/5 of daytime: " << JulDays_Zoned{coord.timezone_name, onefifth} << '\n';
+                o << fmt::format("1/5 of daytime: {}\n", JulDays_Zoned{coord.timezone_name, onefifth});
             }
-            o << "sunset: " << JulDays_Zoned{coord.timezone_name, *sunset} << ' ' << calc.swe.get_tithi(*sunrise) << '\n';
+            o << fmt::format("sunset: {} {}\n",
+                             JulDays_Zoned{coord.timezone_name, *sunset},
+                             calc.swe.get_tithi(*sunrise));
         }
     }
 }
@@ -194,7 +202,7 @@ void print_detail_one(date::year_month_day base_date, const char *location_name,
 void print_detail_one(date::year_month_day base_date, const char * location_name, std::ostream &o) {
     std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
-        o << "Location not found: '" << location_name << "'\n";
+        o << fmt::format("Location not found: '{}'\n", location_name);
         return;
     }
     print_detail_one(base_date, location_name, *coord, o);

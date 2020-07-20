@@ -4,7 +4,9 @@
 #include "juldays_ut.h"
 #include "tithi.h"
 
+#include <fmt/format.h>
 #include <string>
+#include <string_view>
 #include <variant>
 
 namespace vp {
@@ -23,8 +25,21 @@ struct CantFindLocation {
 
 using CalcError = std::variant<CantFindSunriseAfter, CantFindSunsetAfter, CantFindLocation>;
 
-std::ostream & operator<<(std::ostream & o, const CalcError & err);
-
 } // namespace vp
+
+template<>
+struct fmt::formatter<vp::CalcError> : fmt::formatter<std::string_view> {
+    template<typename FormatCtx>
+    auto format(const vp::CalcError & err, FormatCtx & ctx) {
+        if (std::holds_alternative<vp::CantFindSunriseAfter>(err)) {
+            return fmt::format_to(ctx.out(), "Can't find sunrise after {}", std::get<vp::CantFindSunriseAfter>(err).after);
+        } else if (std::holds_alternative<vp::CantFindSunsetAfter>(err)) {
+            return fmt::format_to(ctx.out(), "Can't find sunset after {}", std::get<vp::CantFindSunsetAfter>(err).after);
+        } else if (std::holds_alternative<vp::CantFindLocation>(err)) {
+            return fmt::format_to(ctx.out(), "Can't find given location \"{}\" by name", std::get<vp::CantFindLocation>(err).location_name);
+        }
+        throw std::runtime_error("Internal error: unknown variant in CalcError");
+    }
+};
 
 #endif // CALCERROR_H
