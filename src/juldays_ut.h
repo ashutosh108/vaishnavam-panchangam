@@ -13,8 +13,6 @@ using double_days = std::chrono::duration<double, std::ratio<86400>>;
 // these are fixed ghaTikas (24 minutes), as opposed to nighttime-daytime ghaTikas
 using double_ghatikas = std::chrono::duration<double, std::ratio<24*60>>;
 
-std::ostream & operator<<(std::ostream &, const double_ghatikas &);
-
 /* Wrapper class for jd (julian days) as it is understood in the swiss ephemeris library.
  * Very compact class: only one double in size, no virtual functions.
  * Provides value semantics, though maybe not all operations implemented for the lack of necessity.
@@ -60,7 +58,6 @@ public:
 };
 
 std::ostream &operator<<(std::ostream &os, JulDays_UT const &t);
-std::ostream &operator<<(std::ostream &os, JulDays_Zoned const &t);
 JulDays_UT operator +(const JulDays_UT &, double_days);
 JulDays_UT operator -(const JulDays_UT &, double_days);
 

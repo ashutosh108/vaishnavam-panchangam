@@ -81,11 +81,6 @@ std::ostream &operator<<(std::ostream &os, JulDays_UT const &t) {
     return os;
 }
 
-std::ostream &operator<<(std::ostream &os, JulDays_Zoned const &t) {
-    auto timezone = date::locate_zone(t.timezone_name_);
-    return os << t.t_.as_zoned_time(timezone);
-}
-
 JulDays_UT operator +(const JulDays_UT &t, double_days delta)
 {
     return JulDays_UT{t.raw_julian_days_ut() + delta};
@@ -161,11 +156,6 @@ date::sys_seconds JulDays_UT::round_to_second_down() const
 date::zoned_time<double_days> JulDays_UT::as_zoned_time(const date::time_zone * time_zone) const
 {
     return date::make_zoned(time_zone, as_sys_time());
-}
-
-std::ostream &operator<<(std::ostream & s, const double_ghatikas & g)
-{
-    return s << g.count() << "gh.";
 }
 
 } // namespace vp
