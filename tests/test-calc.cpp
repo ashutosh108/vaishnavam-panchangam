@@ -9,6 +9,7 @@
 #include <chrono>
 #include <condition_variable>
 #include "date-fixed.h"
+#include <fmt/ostream.h>
 #include <sstream>
 #include "tz-fixed.h"
 
@@ -27,7 +28,8 @@ public:
 };
 
 std::ostream &operator <<(std::ostream &s, const Expected_Vrata &v) {
-    return s << fmt::format("{}{{{}, {}}}", v.type, v.date, v.paran);
+    fmt::print(s, "{}{{{}, {}}}", v.type, v.date, v.paran);
+    return s;
 }
 
 class ApproximateJulDays_UT {
@@ -41,17 +43,16 @@ public:
         auto delta = juldays_ - other;
         return (delta > -tolerance) && (delta < tolerance);
     }
-    friend std::ostream & operator<<(std::ostream & s, const ApproximateJulDays_UT & u);
+    friend std::ostream & operator<<(std::ostream & s, const ApproximateJulDays_UT & u) {
+        fmt::print(s, "Approx{{{}}}", u.juldays_);
+        return s;
+    }
 };
 
 bool operator == (const JulDays_UT & left, const ApproximateJulDays_UT & right) {
     return right == left;
 }
 
-
-std::ostream & operator<<(std::ostream & s, const ApproximateJulDays_UT & u) {
-    return s << fmt::format("Approx{{{}}}", u.juldays_);
-}
 
 bool operator==(const Expected_Vrata &e, const Vrata &v) {
     // if "expected" paran_start/end is nullopt, then we don't care
@@ -204,7 +205,8 @@ bool operator==(const NamedVrata &expected, const Vrata & actual) {
 }
 
 std::ostream & operator<<(std::ostream & s, const NamedVrata &nv) {
-    return s << fmt::format("{}: {}", nv.name, nv.vrata);
+    fmt::print(s, "{}: {}", nv.name, nv.vrata);
+    return s;
 }
 
 void check_atirikta_at_location(const char * name, const Location & location, const Vrata & expected_vrata, date::year_month_day date) {

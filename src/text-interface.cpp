@@ -4,6 +4,7 @@
 #include "vrata_detail_printer.h"
 
 #include <cstring>
+#include <fmt/ostream.h>
 #include <iostream>
 
 using namespace vp;
@@ -147,14 +148,15 @@ tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, 
 tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location location, std::ostream &o) {
     auto vrata = calc_one(base_date, location);
     if (!vrata.has_value()) {
-        o << fmt::format("# {}*\n"
-                         "Can't find next Ekadashi, sorry.\n"
-                         "* Error: {}\n",
-                         vrata->location_name(),
-                         vrata.error());
+        fmt::print(o,
+                   "# {}*\n"
+                   "Can't find next Ekadashi, sorry.\n"
+                   "* Error: {}\n",
+                   vrata->location_name(),
+                   vrata.error());
     } else {
         Vrata_Detail_Printer vd{*vrata};
-        o << fmt::format("{}\n\n", vd);
+        fmt::print(o, "{}\n\n", vd);
     }
     return vrata;
 }
@@ -162,38 +164,39 @@ tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day 
 tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, std::ostream &o) {
     std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
-        o << fmt::format("Location not found: '{}'\n", location_name);
+        fmt::print(o, "Location not found: '{}'\n", location_name);
         return tl::unexpected{CantFindLocation{location_name}};
     }
     return calc_and_report_one(base_date, *coord, o);
 }
 
 void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o) {
-    o << fmt::format("{} {}\n"
-                     "<to be implemented>\n",
-                     location_name, base_date);
+    fmt::print(o,
+               "{} {}\n"
+               "<to be implemented>\n",
+               location_name, base_date);
     Calc calc{coord};
     auto sunrise = calc.swe.find_sunrise(JulDays_UT{base_date});
     if (sunrise) {
         auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
         if (arunodaya) {
-            o << fmt::format("arunodaya: {} {}\n",
-                             JulDays_Zoned{coord.timezone_name, *arunodaya},
-                             calc.swe.get_tithi(*arunodaya));
+            fmt::print(o, "arunodaya: {} {}\n",
+                JulDays_Zoned{coord.timezone_name, *arunodaya},
+                calc.swe.get_tithi(*arunodaya));
         }
-        o << fmt::format("sunrise: {} {}\n",
-                         JulDays_Zoned{coord.timezone_name, *sunrise},
-                         calc.swe.get_tithi(*sunrise));
+        fmt::print(o, "sunrise: {} {}\n",
+                   JulDays_Zoned{coord.timezone_name, *sunrise},
+                   calc.swe.get_tithi(*sunrise));
 
         auto sunset = calc.swe.find_sunset(*sunrise);
         if (sunset) {
             if (sunset) {
                 auto onefifth = calc.proportional_time(*sunrise, *sunset, 0.2);
-                o << fmt::format("1/5 of daytime: {}\n", JulDays_Zoned{coord.timezone_name, onefifth});
+                fmt::print(o, "1/5 of daytime: {}\n", JulDays_Zoned{coord.timezone_name, onefifth});
             }
-            o << fmt::format("sunset: {} {}\n",
-                             JulDays_Zoned{coord.timezone_name, *sunset},
-                             calc.swe.get_tithi(*sunrise));
+            fmt::print(o, "sunset: {} {}\n",
+                       JulDays_Zoned{coord.timezone_name, *sunset},
+                       calc.swe.get_tithi(*sunrise));
         }
     }
 }
@@ -201,7 +204,7 @@ void print_detail_one(date::year_month_day base_date, const char *location_name,
 void print_detail_one(date::year_month_day base_date, const char * location_name, std::ostream &o) {
     std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
-        o << fmt::format("Location not found: '{}'\n", location_name);
+        fmt::print(o, "Location not found: '{}'\n", location_name);
         return;
     }
     print_detail_one(base_date, location_name, *coord, o);
