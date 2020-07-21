@@ -5,6 +5,11 @@
 #include <cstdlib>
 #include <regex>
 
+inline std::string_view s_view(const std::string::const_iterator & iter, std::string::size_type size) {
+    if (size == 0) return {};
+    return {&*iter, size};
+}
+
 std::optional<html::Token> html::TokenStream::next_token()
 {
     enum class State {
@@ -67,9 +72,9 @@ std::optional<html::Token> html::TokenStream::next_token()
         trail_size = static_cast<std::string::size_type>(iter - trail_start);
     }
 
-    std::string_view tag_name(&(*tag_name_start), tag_name_size);
-    std::string_view attributes(&(*attributes_start), attributes_size);
-    std::string_view trail(&(*trail_start), trail_size);
+    std::string_view tag_name = s_view(tag_name_start, tag_name_size);
+    std::string_view attributes = s_view(attributes_start, attributes_size);
+    std::string_view trail = s_view(trail_start, trail_size);
 
     if (tag_name.empty()) {
         return std::nullopt;
