@@ -3,7 +3,6 @@
 
 #include <chrono>
 #include "filesystem-fixed.h"
-#include <iostream>
 #include <optional>
 #include <tl/expected.hpp>
 
@@ -17,16 +16,16 @@ namespace vp::text_ui {
 /* Change dir to the directory with eph and tzdata data files (usually it's .exe dir) */
 void change_to_data_dir(const char* argv0);
 
-date::year_month_day parse_ymd(const char *s);
+date::year_month_day parse_ymd(const std::string_view s);
 tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, Location location);
-tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location coord, std::ostream &o=std::cout);
+tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf);
 
-// Find next ekAdashI vrata for the named location, report details to the output stream.
-tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, std::ostream &o=std::cout);
+// Find next ekAdashI vrata for the named location, report details to the output buffer.
+tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf);
 
-void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o=std::cout);
-void print_detail_one(date::year_month_day base_date, const char * location_name, std::ostream &o=std::cout);
-void calc_all(date::year_month_day d, std::ostream &o=std::cout);
+void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, fmt::memory_buffer & buf);
+void print_detail_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf);
+void calc_all(date::year_month_day d);
 std::string version();
 std::string program_name_and_version();
 

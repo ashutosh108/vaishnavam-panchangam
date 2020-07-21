@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "date-fixed.h"
+#include <fmt/core.h>
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -29,12 +30,12 @@ private:
     Ui::MainWindow *ui;
     void setupLocationsComboBox();
     void setDateToToday();
-    void calcAll(date::year_month_day base_date, std::ostream & o);
-    void calcOne(date::year_month_day base_date, QString location, std::ostream & o);
+    void calcAll(date::year_month_day base_date, fmt::memory_buffer & buf);
+    void calcOne(date::year_month_day base_date, QString location, fmt::memory_buffer & buf);
     void showVersionInStatusLine();
     void clearLocationData();
 };
 
-QString htmlify_line(const std::string & line);
+QString htmlify_line(const std::string_view & line);
 
 #endif // MAINWINDOW_H

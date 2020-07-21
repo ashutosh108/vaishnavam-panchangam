@@ -26,3 +26,13 @@ TEST_CASE("no sunset: we decrease latitude until we get all necessary sunrises/s
     auto location_name = vrata->location_name();
     REQUIRE(location_name.find("adjusted") != std::string::npos);
 }
+
+TEST_CASE("parse_ymd works in normal case") {
+    using namespace date::literals;
+    REQUIRE(vp::text_ui::parse_ymd("2020-11-12") == 2020_y/nov/12);
+}
+
+TEST_CASE("parse_ymd returns some old date when given non-date string") {
+    using namespace date::literals;
+    REQUIRE(vp::text_ui::parse_ymd("non-date string") == date::year_month_day{});
+}

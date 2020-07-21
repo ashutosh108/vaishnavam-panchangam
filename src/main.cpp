@@ -36,7 +36,9 @@ int main(int argc, char *argv[])
         }
         auto base_date = parse_ymd(argv[2]);
         const char * const location_name = argv[3];
-        print_detail_one(base_date, location_name);
+        fmt::memory_buffer buf;
+        print_detail_one(base_date, location_name, buf);
+        fmt::print("{}", std::string_view{buf.data(), buf.size()});
     } else {
         if (argc-1 != 1 && argc-1 != 2 && argc-1 != 3) {
             print_usage();
@@ -48,11 +50,15 @@ int main(int argc, char *argv[])
             calc_all(base_date);
         } else if (argc-1 == 2) {
             const char * const location_name = argv[2];
-            find_calc_and_report_one(base_date, location_name);
+            fmt::memory_buffer buf;
+            find_calc_and_report_one(base_date, location_name, buf);
+            fmt::print("{}", std::string_view{buf.data(), buf.size()});
         } else {
             double latitude = std::stod(argv[2]);
             double longitude = std::stod(argv[3]);
-            calc_and_report_one(base_date, vp::Location{vp::Latitude{latitude}, vp::Longitude{longitude}});
+            fmt::memory_buffer buf;
+            calc_and_report_one(base_date, vp::Location{vp::Latitude{latitude}, vp::Longitude{longitude}}, buf);
+            fmt::print("{}", std::string_view{buf.data(), buf.size()});
         }
     }
 }

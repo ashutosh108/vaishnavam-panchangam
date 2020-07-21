@@ -5,7 +5,6 @@
 #include <iterator>
 #include <QDate>
 #include <QMessageBox>
-#include <sstream>
 
 #include "location.h"
 #include "text-interface.h"
@@ -35,8 +34,8 @@ date::sys_days to_sys_days(QDate qd)
 }
 
 // parse tiny subset of markdown in a single plain text line, return HTML version
-QString htmlify_line(const std::string & line) {
-    QString res = QString::fromStdString(line).toHtmlEscaped();
+QString htmlify_line(const std::string_view & line) {
+    QString res = QString::fromUtf8(line.data(), line.size()).toHtmlEscaped();
 
     if (res.startsWith("# ")) {
         return "<h1>" + res + "</h1>";
@@ -64,13 +63,17 @@ QString htmlify_line(const std::string & line) {
     return res;
 }
 
-static QString get_html_from_detail_stream(std::stringstream & s) {
+static QString get_html_from_detail_view(const std::string_view & s) {
     QString res;
-    s.seekg(0);
-    for (std::string line; std::getline(s, line);) {
-        res += htmlify_line(line);
-        res += "<br>\n";
+    for (auto first = s.data(), second = s.data(), last = first + s.size(); second != last && first != last; first = second + 1) {
+        second = std::find(first, last, '\n');
+
+        if (first != second) {
+            res += htmlify_line(std::string_view{first, static_cast<std::string::size_type>(second - first)});
+            res += "<br>\n";
+        }
     }
+
     return res;
 }
 
@@ -81,14 +84,14 @@ void MainWindow::on_FindNextEkadashi_clicked()
 
         auto location_string = ui->locationComboBox->currentText();
 
-        std::stringstream s;
+        fmt::memory_buffer buf;
         if (location_string == "all") {
-            calcAll(date, s);
+            calcAll(date, buf);
         } else {
-            calcOne(date, location_string, s);
+            calcOne(date, location_string, buf);
         }
 
-        QString detail_html = get_html_from_detail_stream(s);
+        QString detail_html = get_html_from_detail_view(std::string_view{buf.data(), buf.size()});
         ui->calcResult->setHtml(detail_html);
     } catch (std::exception &e) {
         QMessageBox::warning(this, "error", e.what());
@@ -110,19 +113,19 @@ void MainWindow::setDateToToday()
     ui->dateEdit->setDate(QDate::currentDate());
 }
 
-void MainWindow::calcAll(date::year_month_day base_date, std::ostream &o)
+void MainWindow::calcAll(date::year_month_day base_date, fmt::memory_buffer & buf)
 {
     for (auto &l : vp::text_ui::LocationDb()) {
-        calcOne(base_date, l.name, o);
+        calcOne(base_date, l.name, buf);
     }
 }
 
-void MainWindow::calcOne(date::year_month_day base_date, QString location_string, std::ostream &o)
+void MainWindow::calcOne(date::year_month_day base_date, QString location_string, fmt::memory_buffer & buf)
 {
     QByteArray location_as_bytearray = location_string.toLocal8Bit();
     char * location_name = location_as_bytearray.data();
 
-    auto vrata = vp::text_ui::find_calc_and_report_one(base_date, location_name, o);
+    auto vrata = vp::text_ui::find_calc_and_report_one(base_date, location_name, buf);
     if (vrata.has_value()) {
         ui->locationName->setText(QString::fromStdString(vrata->location_name()));
 

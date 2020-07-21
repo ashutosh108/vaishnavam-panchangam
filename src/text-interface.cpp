@@ -3,19 +3,28 @@
 #include "calc.h"
 #include "vrata_detail_printer.h"
 
+#include <charconv>
 #include <cstring>
-#include <fmt/ostream.h>
-#include <iostream>
 
 using namespace vp;
 
 namespace vp::text_ui {
 
-date::year_month_day parse_ymd(const char *s) {
-    std::tm tm{};
-    std::istringstream stream{s};
-    stream >> std::get_time(&tm, "%Y-%m-%d");
-    return date::year_month_day{date::year{tm.tm_year+1900}, date::month{static_cast<unsigned int>(tm.tm_mon+1)}, date::day{static_cast<unsigned int>(tm.tm_mday)}};
+date::year_month_day parse_ymd(const std::string_view s) {
+    // YYYY-MM-DD
+    // 01234567890
+    if (s.length() != 10) return {};
+    const char * const str = s.data();
+    int year;
+    if (auto [p, e] = std::from_chars(str+0, str+4, year); e != std::errc{} || p != str+4)
+        return {};
+    unsigned int month;
+    if (auto [p, e] = std::from_chars(str+5, str+7, month); e != std::errc{} || p != str+7)
+        return {};
+    unsigned int day;
+    if (auto [p, e] = std::from_chars(str+8, str+10, day); e != std::errc{} || p != str+10)
+        return {};
+    return date::year{year}/date::month{month}/date::day{day};
 }
 
 const std::vector<Location> &LocationDb::locations() {
@@ -144,11 +153,11 @@ tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, 
 }
 
 
-// Find next ekAdashI vrata for the named location, report details to the output stream.
-tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location location, std::ostream &o) {
+// Find next ekAdashI vrata for the named location, report details to the output buffer.
+tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location location, fmt::memory_buffer & buf) {
     auto vrata = calc_one(base_date, location);
     if (!vrata.has_value()) {
-        fmt::print(o,
+        fmt::format_to(buf,
                    "# {}*\n"
                    "Can't find next Ekadashi, sorry.\n"
                    "* Error: {}\n",
@@ -156,22 +165,22 @@ tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day 
                    vrata.error());
     } else {
         Vrata_Detail_Printer vd{*vrata};
-        fmt::print(o, "{}\n\n", vd);
+        fmt::format_to(buf, "{}\n\n", vd);
     }
     return vrata;
 }
 
-tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, std::ostream &o) {
+tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf) {
     std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
-        fmt::print(o, "Location not found: '{}'\n", location_name);
+        fmt::format_to(buf, "Location not found: '{}'\n", location_name);
         return tl::unexpected{CantFindLocation{location_name}};
     }
-    return calc_and_report_one(base_date, *coord, o);
+    return calc_and_report_one(base_date, *coord, buf);
 }
 
-void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, std::ostream &o) {
-    fmt::print(o,
+void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, fmt::memory_buffer & buf) {
+    fmt::format_to(buf,
                "{} {}\n"
                "<to be implemented>\n",
                location_name, base_date);
@@ -180,11 +189,11 @@ void print_detail_one(date::year_month_day base_date, const char *location_name,
     if (sunrise) {
         auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
         if (arunodaya) {
-            fmt::print(o, "arunodaya: {} {}\n",
+            fmt::format_to(buf, "arunodaya: {} {}\n",
                 JulDays_Zoned{coord.timezone_name, *arunodaya},
                 calc.swe.get_tithi(*arunodaya));
         }
-        fmt::print(o, "sunrise: {} {}\n",
+        fmt::format_to(buf, "sunrise: {} {}\n",
                    JulDays_Zoned{coord.timezone_name, *sunrise},
                    calc.swe.get_tithi(*sunrise));
 
@@ -192,27 +201,29 @@ void print_detail_one(date::year_month_day base_date, const char *location_name,
         if (sunset) {
             if (sunset) {
                 auto onefifth = calc.proportional_time(*sunrise, *sunset, 0.2);
-                fmt::print(o, "1/5 of daytime: {}\n", JulDays_Zoned{coord.timezone_name, onefifth});
+                fmt::format_to(buf, "1/5 of daytime: {}\n", JulDays_Zoned{coord.timezone_name, onefifth});
             }
-            fmt::print(o, "sunset: {} {}\n",
+            fmt::format_to(buf, "sunset: {} {}\n",
                        JulDays_Zoned{coord.timezone_name, *sunset},
                        calc.swe.get_tithi(*sunrise));
         }
     }
 }
 
-void print_detail_one(date::year_month_day base_date, const char * location_name, std::ostream &o) {
+void print_detail_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf) {
     std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
-        fmt::print(o, "Location not found: '{}'\n", location_name);
+        fmt::format_to(buf, "Location not found: '{}'\n", location_name);
         return;
     }
-    print_detail_one(base_date, location_name, *coord, o);
+    print_detail_one(base_date, location_name, *coord, buf);
 }
 
-void calc_all(date::year_month_day d, std::ostream &o) {
+void calc_all(date::year_month_day d) {
     for (auto &l : LocationDb()) {
-        calc_and_report_one(d, l, o);
+        fmt::memory_buffer buf;
+        calc_and_report_one(d, l, buf);
+        fmt::print("{}", std::string_view{buf.data(), buf.size()});
     }
 }
 
