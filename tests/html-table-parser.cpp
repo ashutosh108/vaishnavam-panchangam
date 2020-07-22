@@ -60,8 +60,8 @@ std::string & Table::set(std::size_t row, std::size_t col, std::string s)
 }
 
 std::string trim(std::string_view s) {
-    auto first_non_ws = std::find_if(s.begin(), s.end(), [](char c){ return !std::isspace(c); });
-    auto last_non_ws = std::find_if(s.rbegin(), s.rend(), [](char c){ return !std::isspace(c); }).base();
+    auto first_non_ws = std::find_if(s.begin(), s.end(), [](unsigned char c){ return !std::isspace(c); });
+    auto last_non_ws = std::find_if(s.rbegin(), s.rend(), [](unsigned char c){ return !std::isspace(c); }).base();
     return first_non_ws >= last_non_ws ? std::string{} : std::string(first_non_ws, last_non_ws);
 }
 
@@ -173,7 +173,7 @@ class InsideTdTag : public ParserMachine {
     }
     void react(const OtherTag & event) override {
         //append space unless string already ends on space
-        if (!td_text.empty() && !std::isspace(td_text.back())) {
+        if (!td_text.empty() && !std::isspace(static_cast<unsigned char>(td_text.back()))) {
             td_text += " ";
         }
         td_text += trim(event.text_after);
