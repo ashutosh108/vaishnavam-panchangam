@@ -29,7 +29,7 @@ struct fmt::formatter<vp::Vrata_Detail_Printer> : fmt::formatter<std::string_vie
             // same time for both events. Merge them by appending descriptions via comma.
             if (time1 == time2) {
                 events[i-1].name += ", " + events[i].name;
-                events.erase(events.begin() + i);
+                events.erase(events.begin() + static_cast<int>(i));
             }
         }
     }
