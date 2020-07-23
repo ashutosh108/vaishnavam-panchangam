@@ -1,6 +1,6 @@
 #include <chrono>
 #include <cstring>
-#include <fmt/format.h>
+#include "fmt-format-fixed.h"
 
 #include "text-interface.h"
 

@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-#include <fmt/format.h>
+#include "fmt-format-fixed.h"
 #include <iterator>
 #include <QDate>
 #include <QMessageBox>

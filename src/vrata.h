@@ -7,7 +7,7 @@
 #include "paran.h"
 #include "tithi.h"
 
-#include <fmt/format.h>
+#include "fmt-format-fixed.h"
 #include <limits>
 #include <optional>
 

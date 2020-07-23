@@ -8,7 +8,7 @@
 
 #include "date/date.h"
 
-#include <fmt/format.h>
+#include "fmt-format-fixed.h"
 
 template<>
 struct fmt::formatter<date::year_month_day> {

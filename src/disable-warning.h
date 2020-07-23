@@ -13,12 +13,14 @@
     #define DISABLE_WARNING(w)      DO_PRAGMA(GCC diagnostic ignored #w)
 
     #define DISABLE_WARNING_SHADOW  DISABLE_WARNING(-Wshadow)
+    #define DISABLE_WARNING_SIGN_CONVERSION DISABLE_WARNING(-Wsign-conversion)
 #else
     #define DISABLE_WARNING_PUSH
     #define DISABLE_WARNING_POP
     #define DISABLE_WARNING(w)
 
     #define DISABLE_WARNING_SHADOW
+    #define DISABLE_WARNING_SIGN_CONVERSION
 #endif
 
 #endif

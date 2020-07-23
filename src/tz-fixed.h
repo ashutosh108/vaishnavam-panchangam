@@ -7,7 +7,7 @@
 #include "date-fixed.h"
 #include "disable-warning.h"
 
-#include <fmt/format.h>
+#include "fmt-format-fixed.h"
 
 DISABLE_WARNING_PUSH
 DISABLE_WARNING_SHADOW

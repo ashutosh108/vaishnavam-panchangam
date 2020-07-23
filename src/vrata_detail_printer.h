@@ -2,7 +2,7 @@
 #define VRATA_DETAIL_H
 
 #include "calc.h"
-#include <fmt/format.h>
+#include "fmt-format-fixed.h"
 #include <string_view>
 
 namespace vp {

@@ -3,7 +3,7 @@
 
 #include "juldays_ut.h"
 
-#include <fmt/format.h>
+#include "fmt-format-fixed.h"
 #include <optional>
 #include <string_view>
 #include <tuple>

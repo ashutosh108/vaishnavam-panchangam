@@ -2,7 +2,7 @@
 #define TITHI_H
 
 #include <cassert>
-#include <fmt/format.h>
+#include "fmt-format-fixed.h"
 #include <string_view>
 
 namespace vp {

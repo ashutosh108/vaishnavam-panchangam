@@ -1,0 +1,10 @@
+#ifndef FMTFORMATFIXED_H
+#define FMTFORMATFIXED_H
+
+#include "disable-warning.h"
+DISABLE_WARNING_PUSH
+DISABLE_WARNING_SIGN_CONVERSION
+#include <fmt/format.h>
+DISABLE_WARNING_POP
+
+#endif // FMTFORMATFIXED_H

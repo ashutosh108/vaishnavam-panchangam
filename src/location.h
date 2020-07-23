@@ -3,7 +3,7 @@
 
 #include <cmath> // fabs
 #include <cstring>
-#include <fmt/format.h>
+#include "fmt-format-fixed.h"
 #include <string_view>
 #include <tuple> // for std::tie() in comparison operators.
 
