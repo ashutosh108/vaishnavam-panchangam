@@ -186,9 +186,9 @@ void print_detail_one(date::year_month_day base_date, Location coord, fmt::memor
                coord.name, base_date);
     Calc calc{coord};
     const auto local_astronomical_midnight = calc.calc_astronomical_midnight(base_date);
-    auto sunrise = calc.swe.find_sunrise(local_astronomical_midnight);
+    const auto sunrise = calc.swe.find_sunrise(local_astronomical_midnight);
     if (sunrise) {
-        auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
+        const auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
         if (arunodaya) {
             fmt::format_to(buf, "arunodaya: {} {}\n",
                 JulDays_Zoned{coord.timezone_name, *arunodaya},
@@ -198,12 +198,10 @@ void print_detail_one(date::year_month_day base_date, Location coord, fmt::memor
                    JulDays_Zoned{coord.timezone_name, *sunrise},
                    calc.swe.get_tithi(*sunrise));
 
-        auto sunset = calc.swe.find_sunset(*sunrise);
+        const auto sunset = calc.swe.find_sunset(*sunrise);
         if (sunset) {
-            if (sunset) {
-                auto onefifth = calc.proportional_time(*sunrise, *sunset, 0.2);
-                fmt::format_to(buf, "1/5 of daytime: {}\n", JulDays_Zoned{coord.timezone_name, onefifth});
-            }
+            const auto onefifth = calc.proportional_time(*sunrise, *sunset, 0.2);
+            fmt::format_to(buf, "1/5 of daytime: {}\n", JulDays_Zoned{coord.timezone_name, onefifth});
             fmt::format_to(buf, "sunset: {} {}\n",
                        JulDays_Zoned{coord.timezone_name, *sunset},
                        calc.swe.get_tithi(*sunset));
@@ -212,7 +210,7 @@ void print_detail_one(date::year_month_day base_date, Location coord, fmt::memor
 }
 
 void print_detail_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf) {
-    std::optional<Location> coord = LocationDb::find_coord(location_name);
+    const std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
         fmt::format_to(buf, "Location not found: '{}'\n", location_name);
         return;
