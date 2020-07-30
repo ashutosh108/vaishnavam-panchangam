@@ -206,7 +206,7 @@ void print_detail_one(date::year_month_day base_date, Location coord, fmt::memor
             }
             fmt::format_to(buf, "sunset: {} {}\n",
                        JulDays_Zoned{coord.timezone_name, *sunset},
-                       calc.swe.get_tithi(*sunrise));
+                       calc.swe.get_tithi(*sunset));
         }
     }
 }
