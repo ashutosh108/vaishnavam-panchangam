@@ -179,13 +179,14 @@ tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month
     return calc_and_report_one(base_date, *coord, buf);
 }
 
-void print_detail_one(date::year_month_day base_date, const char *location_name, Location coord, fmt::memory_buffer & buf) {
+void print_detail_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf) {
     fmt::format_to(buf,
                "{} {}\n"
                "<to be implemented>\n",
-               location_name, base_date);
+               coord.name, base_date);
     Calc calc{coord};
-    auto sunrise = calc.swe.find_sunrise(JulDays_UT{base_date});
+    const auto local_astronomical_midnight = calc.calc_astronomical_midnight(base_date);
+    auto sunrise = calc.swe.find_sunrise(local_astronomical_midnight);
     if (sunrise) {
         auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
         if (arunodaya) {
@@ -216,7 +217,7 @@ void print_detail_one(date::year_month_day base_date, const char * location_name
         fmt::format_to(buf, "Location not found: '{}'\n", location_name);
         return;
     }
-    print_detail_one(base_date, location_name, *coord, buf);
+    print_detail_one(base_date, *coord, buf);
 }
 
 void calc_all(date::year_month_day d) {
