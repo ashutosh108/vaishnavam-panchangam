@@ -529,8 +529,8 @@ TEST_CASE("ativRddhAdi gives correct sunset, sunris and four time points") {
     auto vrata = calc.find_next_vrata(2020_y/May/17);
     REQUIRE(vrata.has_value());
 
-    REQUIRE(vrata->sunset_before_ekadashi_sunrise         == ApproximateJulDays_UT{2020_y/May/17, "17:36:09.669959"_hms});
-    REQUIRE(vrata->ekadashi_sunrise                       == ApproximateJulDays_UT{2020_y/May/18, "02:12:02.827153"_hms});
+    REQUIRE(vrata->sunset0                     == ApproximateJulDays_UT{2020_y/May/17, "17:36:09.669959"_hms});
+    REQUIRE(vrata->sunrise1                    == ApproximateJulDays_UT{2020_y/May/18, "02:12:02.827153"_hms});
     REQUIRE(vrata->times.ativrddha_54gh_40vigh == ApproximateJulDays_UT{2020_y/May/18, "00:40:20.043643"_hms});
     REQUIRE(vrata->times.vrddha_55gh           == ApproximateJulDays_UT{2020_y/May/18, "00:46:03.967627"_hms});
     REQUIRE(vrata->times.samyam_55gh_50vigh    == ApproximateJulDays_UT{2020_y/May/18, "01:00:23.777568"_hms});

@@ -49,9 +49,7 @@ repeat_with_fixed_start_time:
         throw std::runtime_error(fmt::format("find_next_vrata @{} after {} ({}): potential eternal loop detected", swe.location.name, after, start_time));
     }
     VP_TRY(vrata.sunrise1, find_ekadashi_sunrise(start_time));
-    vrata.ekadashi_sunrise = vrata.sunrise1;
     VP_TRY(vrata.sunset0, sunset_before_sunrise(vrata.sunrise1));
-    vrata.sunset_before_ekadashi_sunrise = vrata.sunset0;
     VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1));
 
     vrata.times = calc_key_times_from_sunset_and_sunrise(vrata.sunset0, vrata.sunrise1);
