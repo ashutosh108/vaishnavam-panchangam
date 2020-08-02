@@ -96,8 +96,9 @@ add_executable(test-main
     tests/html-parser.cpp tests/test-html-parser.cpp
     tests/html-table-parser.cpp tests/test-html-table-parser.cpp
     tests/test-precalculated.cpp
+    tests/catch-formatters.h
 )
-target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/tests)
 target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2 vendor/tinyfsm/include)
 target_link_libraries(test-main PRIVATE sweph swe date::date)
 

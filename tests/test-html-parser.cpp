@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include "catch-formatters.h"
 
 #include "html-parser.h"
 

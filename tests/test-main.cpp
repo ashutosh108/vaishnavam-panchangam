@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_RUNNER
-#include "catch.hpp"
+#include "catch-formatters.h"
 
 #ifdef _WIN32
 #include <Windows.h>

@@ -1,6 +1,6 @@
 #include "tithi.h"
 
-#include "catch.hpp"
+#include "catch-formatters.h"
 #include "fmt-format-fixed.h"
 
 using namespace vp;

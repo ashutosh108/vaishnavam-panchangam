@@ -1,6 +1,6 @@
 #include "swe.h"
 
-#include "catch.hpp"
+#include "catch-formatters.h"
 #include <chrono>
 #include "date-fixed.h"
 

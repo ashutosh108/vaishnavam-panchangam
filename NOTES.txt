@@ -1,4 +1,6 @@
-[ ] re-enable -Wshadow (create fmt-fixed to disable those warnings for fmt)
+[ ] Mirny 2020-07-30: aruṇodaya1 must be on the same day as sunrise1
+[ ] Mirny 2020-07-30: add sunrise0 when we move sunrse1 one day ahead
+[ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)
 [ ] switch from std::regex to some other, saner and faster, regex library.
 [ ] add "table" output tab (all primary locations in a single table)
 [ ] "copy to clipboard" function (with link to the program)
@@ -9,7 +11,6 @@
 [ ] allow to change settings: center/edge of disc, SWIEPH/MOSEPH, topo-/geo-centric sunrises, atmospheric diffraction. anything else?
 [ ] Vrata class: keep Location inside
 [ ] precalc: allow colspan=2 cells with combined description of ekAdashI and atiriktA dvAdashI, like 2017-12-11 kophangan
-[ ] allow entering arbitrary latitude/longitude/timezone
 [ ] location.h/text-interface.h: add all locations automatically (order by longitude?)
 [ ] generic test for pre-calculated ekadashi:
     + works for 2019-04-27

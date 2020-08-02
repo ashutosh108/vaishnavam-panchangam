@@ -4,7 +4,7 @@
 #include "vrata.h"
 #include "vrata_detail_printer.h"
 
-#include "catch.hpp"
+#include "catch-formatters.h"
 #include <cstdlib>
 #include "date-fixed.h"
 #include "filesystem-fixed.h"

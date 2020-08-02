@@ -1,6 +1,6 @@
 #include "date-fixed.h"
 
-#include "catch.hpp"
+#include "catch-formatters.h"
 
 using namespace date;
 

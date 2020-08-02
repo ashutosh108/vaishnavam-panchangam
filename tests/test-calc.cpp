@@ -5,7 +5,7 @@
 #include "swe.h"
 #include "vrata_detail_printer.h"
 
-#include "catch.hpp"
+#include "catch-formatters.h"
 #include <chrono>
 #include <condition_variable>
 #include "date-fixed.h"

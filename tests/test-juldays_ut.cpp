@@ -1,6 +1,6 @@
 #include "juldays_ut.h"
 
-#include "catch.hpp"
+#include "catch-formatters.h"
 #include <chrono>
 #include "tz-fixed.h"
 

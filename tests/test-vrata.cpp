@@ -1,6 +1,6 @@
 #include "vrata.h"
 
-#include "catch.hpp"
+#include "catch-formatters.h"
 #include "date-fixed.h"
 
 using namespace date;

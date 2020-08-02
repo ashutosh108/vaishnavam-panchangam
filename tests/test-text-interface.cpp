@@ -3,7 +3,7 @@
 #include "location.h"
 
 #include <array>
-#include "catch.hpp"
+#include "catch-formatters.h"
 
 TEST_CASE("get_exe_dir() exists and returns something") {
     auto exe_dir = vp::text_ui::detail::determine_exe_dir("imaginary/path/to/exe/file");

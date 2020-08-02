@@ -5,7 +5,7 @@
 #include "vrata.h"
 #include "vrata_detail_printer.h"
 
-#include "catch.hpp"
+#include "catch-formatters.h"
 
 
 using namespace date;

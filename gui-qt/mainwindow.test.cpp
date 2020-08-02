@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include "catch-formatters.h"
 
 using Catch::Matchers::Matches;
 
