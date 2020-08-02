@@ -5,8 +5,14 @@
 namespace vp {
 
 Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata):vrata(_vrata) {
+    if (vrata.sunrise0) {
+        events.push_back({"sunrise0", *vrata.sunrise0});
+    }
     events.push_back({"**sunrise1**", vrata.sunrise1});
-    events.push_back({"aruṇodaya1", vrata.times.arunodaya});
+
+    // sunrise0 being set means we have moved vrata one day ahead because of
+    // dAshamI viddha, so aruṇodaya belongs to day0 (before vrata), not to day1 as usual.
+    events.push_back({vrata.sunrise0 ? "aruṇodaya0" : "aruṇodaya1", vrata.times.arunodaya});
 
     events.push_back({"sunrise2", vrata.sunrise2});
     events.push_back({"sunset2", vrata.sunset2});

@@ -86,6 +86,7 @@ struct Vrata {
     Vrata_Time_Points times = dummy_vrata_time_points;
 
     static constexpr double_days nan_days = double_days{std::numeric_limits<double>::quiet_NaN()};
+    std::optional<JulDays_UT> sunrise0; // only used when sunrise1 is moved one day ahead due to dAshamI viddha
     JulDays_UT sunset0{nan_days};
     JulDays_UT sunrise1{nan_days};      // on the first day of vrata (Ekādaśī or Dvādaśī)
     JulDays_UT sunrise2{nan_days};      // on second day after vrata start (≈Dvādaśī)

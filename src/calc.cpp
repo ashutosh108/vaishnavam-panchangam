@@ -55,6 +55,7 @@ repeat_with_fixed_start_time:
     vrata.times = calc_key_times_from_sunset_and_sunrise(vrata.sunset0, vrata.sunrise1);
     auto tithi_that_must_not_be_dashamI = swe.get_tithi(vrata.times.ativrddhaditvam_timepoint());
     if (tithi_that_must_not_be_dashamI.is_dashami()) {
+        vrata.sunrise0 = vrata.sunrise1;
         vrata.sunrise1 = vrata.sunrise2;
         VP_TRY(vrata.sunset0, sunset_before_sunrise(vrata.sunrise1));
         VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1));

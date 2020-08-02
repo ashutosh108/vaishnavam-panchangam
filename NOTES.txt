@@ -1,5 +1,3 @@
-[ ] Mirny 2020-07-30: aruṇodaya1 must be on the same day as sunrise1
-[ ] Mirny 2020-07-30: add sunrise0 when we move sunrse1 one day ahead
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)
 [ ] switch from std::regex to some other, saner and faster, regex library.
 [ ] add "table" output tab (all primary locations in a single table)
@@ -181,3 +179,4 @@ done:
 [+] always write Ekādaśī, Dvādaśī etc as intial-caps [2020-06-14]
 [+] write "Ekādaśī with Atiriktā Ekādaśī" instead of "Atiriktā Ekādaśī" [2020-06-14]
 [+] switch from iostreams to fmt [2020-07-21]
+[+] improve report for dAshamI viddhi: add sunrise0, rename aruṇodaya1 to aruṇodaya0 in details [2020-08-02]
