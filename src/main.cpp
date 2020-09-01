@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
         auto base_date = parse_ymd(argv[1]);
         if (argc-1 <= 1) {
-            calc_all(base_date);
+            calc_and_report_all(base_date);
         } else if (argc-1 == 2) {
             const char * const location_name = argv[2];
             fmt::memory_buffer buf;

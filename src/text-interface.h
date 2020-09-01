@@ -25,7 +25,8 @@ tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month
 
 void print_detail_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf);
 void print_detail_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf);
-void calc_all(date::year_month_day d);
+void calc_and_report_all(date::year_month_day d);
+std::vector<tl::expected<vp::Vrata, vp::CalcError>> calc_all(date::year_month_day);
 std::string version();
 std::string program_name_and_version();
 

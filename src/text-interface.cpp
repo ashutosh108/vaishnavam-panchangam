@@ -218,7 +218,7 @@ void print_detail_one(date::year_month_day base_date, const char * location_name
     print_detail_one(base_date, *coord, buf);
 }
 
-void calc_all(date::year_month_day d) {
+void calc_and_report_all(date::year_month_day d) {
     for (auto &l : LocationDb()) {
         fmt::memory_buffer buf;
         calc_and_report_one(d, l, buf);
@@ -271,6 +271,15 @@ std::string version()
 std::string program_name_and_version()
 {
     return "Vaiṣṇavaṁ Pañcāṅgam " + version();
+}
+
+std::vector<tl::expected<Vrata, CalcError>> calc_all(date::year_month_day base_date)
+{
+    std::vector<tl::expected<Vrata, CalcError>> vratas;
+    for (auto const & location : LocationDb()) {
+        vratas.push_back(calc_one(base_date, location));
+    }
+    return vratas;
 }
 
 } // namespace vp::text_ui

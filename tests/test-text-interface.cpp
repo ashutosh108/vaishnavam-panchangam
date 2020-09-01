@@ -2,6 +2,7 @@
 
 #include "location.h"
 
+#include <algorithm>
 #include <array>
 #include "catch-formatters.h"
 
@@ -33,6 +34,15 @@ TEST_CASE("parse_ymd works in normal case") {
 }
 
 TEST_CASE("parse_ymd returns some old date when given non-date string") {
-    using namespace date::literals;
     REQUIRE(vp::text_ui::parse_ymd("non-date string") == date::year_month_day{});
+}
+
+TEST_CASE("calc_all returns array with non-error results") {
+    using namespace date;
+    auto vratas = vp::text_ui::calc_all(2020_y/January/1);
+
+    REQUIRE(vratas.size() > 0);
+    REQUIRE(std::all_of(vratas.cbegin(), vratas.cend(), [](const auto & vrata) {
+        return vrata.has_value();
+    }));
 }
