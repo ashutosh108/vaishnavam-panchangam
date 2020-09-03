@@ -1,12 +1,14 @@
 #ifndef VRATA_H
 #define VRATA_H
 
+#include "calc-error.h"
 #include "date-fixed.h"
 #include "juldays_ut.h"
 #include "location.h"
 #include "paran.h"
 #include "tithi.h"
 
+#include <tl/expected.hpp>
 #include "fmt-format-fixed.h"
 #include <limits>
 #include <optional>
@@ -124,6 +126,9 @@ bool operator!=(Vrata const &, Vrata const &);
 const std::vector<std::string> & ekadashi_names();
 const std::vector<std::string> & ekadashi_names_rus();
 bool ekadashi_name_rus_is_valid(const std::string & name);
+
+using MaybeVrata = tl::expected<Vrata, CalcError>;
+using MaybeVratas = std::vector<MaybeVrata>;
 
 } // namespace vp
 

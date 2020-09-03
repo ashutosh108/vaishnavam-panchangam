@@ -44,3 +44,8 @@ TEST_CASE("atirikta dvAdashI is written from capital 'A'") {
 TEST_CASE("Śuddhā Ekādaśī is written as initial-caps") {
     REQUIRE_THAT(fmt::to_string(Vrata_Type::Ekadashi), Contains("Śuddhā Ekādaśī"));
 }
+
+TEST_CASE("VrataOrError and Vratas types (or aliases) do exist") {
+    [[maybe_unused]] vp::MaybeVrata vrata;
+    [[maybe_unused]] vp::MaybeVratas vratas;
+}
