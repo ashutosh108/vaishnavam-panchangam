@@ -6,7 +6,11 @@
 #undef max
 #endif
 
+#include "disable-warning.h"
+DISABLE_WARNING_PUSH
+DISABLE_WARNING_USELESS_CAST
 #include "date/date.h"
+DISABLE_WARNING_POP
 
 #include "fmt-format-fixed.h"
 

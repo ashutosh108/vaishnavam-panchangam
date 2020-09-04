@@ -777,7 +777,7 @@ struct VrataFixer {
         shift_time_if_exists(vrata.paranam.start, fix.s);
     }
     date::zoned_seconds local_paran_hms_to_zone(const char * timezone_name, date::local_days date, std::chrono::seconds hms) {
-        auto local = date::local_days(date) + hms;
+        auto local = date + hms;
         return date::make_zoned(date::locate_zone(timezone_name), local);
     }
     std::optional<date::zoned_seconds> replace_hms(std::optional<date::zoned_seconds> zoned, std::optional<std::chrono::seconds> hms) {
