@@ -27,20 +27,28 @@ macro(common_init)
             if (NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.3))
                 set(WARN_FLAGS ${WARN_FLAGS} -Wsign-conversion)
             # GCC >= 4.6
-            elseif (NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.6))
+            endif()
+            if (NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.6))
                 set(WARN_FLAGS ${WARN_FLAGS} -Wdouble-promotion)
             # GCC >= 4.8
-            elseif (NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8))
+            endif()
+            if (NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8))
                 set(WARN_FLAGS ${WARN_FLAGS} -Wuseless-cast)
+            endif()
+            # GCC >= 4.9
+            if (NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.9))
+                set(WARN_FLAGS ${WARN_FLAGS} -fdiagnostics-color)
+            endif()
             # GCC >= 6.0
-            elseif (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.0))
+            if (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.0))
                 set(WARN_FLAGS ${WARN_FLAGS}
                     -Wmisleading-indentation
                     -Wduplicated-cond
                     -Wnull-dereference
                 )
+            endif()
             # GCC >= 7.0
-            elseif (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 7.0))
+            if (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 7.0))
                 set(WARN_FLAGS ${WARN_FLAGS} -Wduplicated-branches)
             endif()
             # GCC, all versions
@@ -51,11 +59,13 @@ macro(common_init)
             # CLANG >= 3.2
             if (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 3.2))
                 set(WARN_FLAGS ${WARN_FLAGS} -Wpedantic)
+            endif()
             # CLANG >= 3.8
-            elseif (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 3.8))
+            if (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 3.8))
                 set(WARN_FLAGS ${WARN_FLAGS} -Wdouble-promotion)
+            endif()
             # CLANG >= 8.0
-            elseif (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 8.0))
+            if (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 8.0))
                 # As of now (Nov 2018) -Wlifetime is only present in the
                 # special branch of clang (not even in trunk!).
                 # So, assume future release 8 (but we don't really know).
