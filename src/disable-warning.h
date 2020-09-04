@@ -14,7 +14,12 @@
 
     #define DISABLE_WARNING_SHADOW  DISABLE_WARNING(-Wshadow)
     #define DISABLE_WARNING_SIGN_CONVERSION DISABLE_WARNING(-Wsign-conversion)
-    #define DISABLE_WARNING_USELESS_CAST DISABLE_WARNING(-Wuseless-cast)
+    // clang doesn't understand -Wuseless-cast
+#   if defined(__clang__)
+#       define DISABLE_WARNING_USELESS_CAST
+#   else
+#       define DISABLE_WARNING_USELESS_CAST DISABLE_WARNING(-Wuseless-cast)
+#   endif
 #else
     #define DISABLE_WARNING_PUSH
     #define DISABLE_WARNING_POP
