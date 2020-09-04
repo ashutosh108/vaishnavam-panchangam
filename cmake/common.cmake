@@ -64,13 +64,6 @@ macro(common_init)
             if (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 3.8))
                 set(WARN_FLAGS ${WARN_FLAGS} -Wdouble-promotion)
             endif()
-            # CLANG >= 8.0
-            if (NOT(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 8.0))
-                # As of now (Nov 2018) -Wlifetime is only present in the
-                # special branch of clang (not even in trunk!).
-                # So, assume future release 8 (but we don't really know).
-                set(WARN_FLAGS ${WARN_FLAGS} -Wlifetime)
-            endif()
             # Clang, all versions
             set(WARN_FLAGS ${WARN_FLAGS} -Wsign-conversion)
         endif()
