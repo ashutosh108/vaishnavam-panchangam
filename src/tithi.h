@@ -47,10 +47,22 @@ Tithi operator -(Tithi const &, double);
 
 template<>
 struct fmt::formatter<vp::Tithi> : fmt::formatter<std::string_view> {
+    bool use_short_form = false;
+    template<typename ParseContext>
+    constexpr auto parse(ParseContext & ctx) {
+        auto it = ctx.begin();
+        if (it != ctx.end() && *it == 's') {
+            ++it;
+            use_short_form = true;
+        }
+        return it;
+    }
+
     template<typename FormatContext>
     auto format(const vp::Tithi & t, FormatContext & ctx) {
         using namespace std::string_view_literals;
         assert(t.tithi >= 0 && t.tithi < 30);
+
         constexpr const static string_view tithi_names[] = {
             "Pratipat"sv,
             "Dvitiya"sv,
@@ -68,20 +80,37 @@ struct fmt::formatter<vp::Tithi> : fmt::formatter<std::string_view> {
             "Chaturdashi"sv
         };
         int int_tithi = static_cast<int>(t.tithi);
-        if (int_tithi < 15) {
-            if (int_tithi < 14) {
-                fmt::format_to(ctx.out(), "Shukla {}", tithi_names[int_tithi]);
+
+        if (use_short_form) {
+            if (int_tithi < 15) {
+                if (int_tithi < 14) {
+                    fmt::format_to(ctx.out(), "Ś{:02d}", int_tithi + 1);
+                } else {
+                    fmt::format_to(ctx.out(), "Pur");
+                }
             } else {
-                fmt::format_to(ctx.out(), "Purnima");
+                if (int_tithi < 29) {
+                    fmt::format_to(ctx.out(), "K{:02d}", int_tithi - 15 + 1);
+                } else {
+                    fmt::format_to(ctx.out(), "Ama");
+                }
             }
         } else {
-            if (int_tithi < 29) {
-                fmt::format_to(ctx.out(), "Krishna {}", tithi_names[int_tithi-15]);
+            if (int_tithi < 15) {
+                if (int_tithi < 14) {
+                    fmt::format_to(ctx.out(), "Shukla {}", tithi_names[int_tithi]);
+                } else {
+                    fmt::format_to(ctx.out(), "Purnima");
+                }
             } else {
-                fmt::format_to(ctx.out(), "Amavasya");
+                if (int_tithi < 29) {
+                    fmt::format_to(ctx.out(), "Krishna {}", tithi_names[int_tithi-15]);
+                } else {
+                    fmt::format_to(ctx.out(), "Amavasya");
+                }
             }
         }
-        return fmt::format_to(ctx.out(), "({:.2g})", t.tithi - int_tithi);
+        return fmt::format_to(ctx.out(), "({:.3f})", t.tithi - int_tithi);
     }
 };
 
