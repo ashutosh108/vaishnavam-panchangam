@@ -95,6 +95,7 @@ struct fmt::formatter<vp::Tithi> : fmt::formatter<std::string_view> {
                     fmt::format_to(ctx.out(), "Ama");
                 }
             }
+            return fmt::format_to(ctx.out(), "({:.3f})", t.tithi - int_tithi);
         } else {
             if (int_tithi < 15) {
                 if (int_tithi < 14) {
@@ -109,8 +110,8 @@ struct fmt::formatter<vp::Tithi> : fmt::formatter<std::string_view> {
                     fmt::format_to(ctx.out(), "Amavasya");
                 }
             }
+            return fmt::format_to(ctx.out(), "({:.2g})", t.tithi - int_tithi);
         }
-        return fmt::format_to(ctx.out(), "({:.3f})", t.tithi - int_tithi);
     }
 };
 
