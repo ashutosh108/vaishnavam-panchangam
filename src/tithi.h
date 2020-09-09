@@ -48,13 +48,26 @@ Tithi operator -(Tithi const &, double);
 template<>
 struct fmt::formatter<vp::Tithi> : fmt::formatter<std::string_view> {
     bool use_short_form = false;
+    bool round_down_to_integer = false;
+
+    /**
+     * {}:   Krishna Saptami(0.285)
+     * {:s}: K07(0.285)
+     * {:d}: Krishna Saptami
+     **/
     template<typename ParseContext>
     constexpr auto parse(ParseContext & ctx) {
         auto it = ctx.begin();
-        if (it != ctx.end() && *it == 's') {
-            ++it;
-            use_short_form = true;
+        if (it != ctx.end()) {
+            if (*it == 's') {
+                ++it;
+                use_short_form = true;
+            } else if (*it == 'd') {
+                ++it;
+                round_down_to_integer = true;
+            }
         }
+
         return it;
     }
 
@@ -110,7 +123,10 @@ struct fmt::formatter<vp::Tithi> : fmt::formatter<std::string_view> {
                     fmt::format_to(ctx.out(), "Amavasya");
                 }
             }
-            return fmt::format_to(ctx.out(), "({:.2g})", t.tithi - int_tithi);
+            if (!round_down_to_integer) {
+                fmt::format_to(ctx.out(), "({:.2g})", t.tithi - int_tithi);
+            }
+            return ctx.out();
         }
     }
 };
