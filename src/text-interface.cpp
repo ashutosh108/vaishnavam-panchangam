@@ -180,6 +180,12 @@ tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month
 }
 
 void print_detail_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf) {
+    struct NamedTimePoint {
+        std::string name;
+        JulDays_UT time_point;
+    };
+
+    std::vector<NamedTimePoint> events;
     fmt::format_to(buf,
                "{} {}\n"
                "<to be implemented>\n",
@@ -188,24 +194,38 @@ void print_detail_one(date::year_month_day base_date, Location coord, fmt::memor
     const auto local_astronomical_midnight = calc.calc_astronomical_midnight(base_date);
     const auto sunrise = calc.swe.find_sunrise(local_astronomical_midnight);
     if (sunrise) {
+        const auto min_tithi = calc.swe.get_tithi(*sunrise);
         const auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
         if (arunodaya) {
-            fmt::format_to(buf, "arunodaya: {} {}\n",
-                JulDays_Zoned{coord.timezone_name, *arunodaya},
-                calc.swe.get_tithi(*arunodaya));
+            events.push_back(NamedTimePoint{"arunodaya", *arunodaya});
         }
-        fmt::format_to(buf, "sunrise: {} {}\n",
-                   JulDays_Zoned{coord.timezone_name, *sunrise},
-                   calc.swe.get_tithi(*sunrise));
+        events.emplace_back(NamedTimePoint{"sunrise", *sunrise});
 
         const auto sunset = calc.swe.find_sunset(*sunrise);
         if (sunset) {
+            events.push_back(NamedTimePoint{"sunset", *sunset});
             const auto onefifth = calc.proportional_time(*sunrise, *sunset, 0.2);
-            fmt::format_to(buf, "1/5 of daytime: {}\n", JulDays_Zoned{coord.timezone_name, onefifth});
-            fmt::format_to(buf, "sunset: {} {}\n",
-                       JulDays_Zoned{coord.timezone_name, *sunset},
-                       calc.swe.get_tithi(*sunset));
+            events.push_back(NamedTimePoint{"1/5 of daytime", onefifth});
+            const auto sunrise2 = calc.swe.find_sunrise(*sunset);
+            if (sunrise2) {
+                const auto middle_of_night = calc.proportional_time(*sunset, *sunrise2, 0.5);
+                events.push_back(NamedTimePoint{"middle of the night", middle_of_night});
+                events.push_back(NamedTimePoint{"next sunrise", *sunrise2});
+                const auto max_tithi = calc.swe.get_tithi(*sunrise2);
+                auto start = *sunrise - std::chrono::hours{36};
+                for (int tithi = static_cast<int>(min_tithi.tithi); tithi <= std::ceil(max_tithi.tithi); ++tithi) {
+                    auto tithi_start = calc.find_tithi_start(start, vp::Tithi{static_cast<double>(tithi)});
+                    events.push_back(NamedTimePoint{"tithi start", tithi_start});
+                }
+            }
         }
+    }
+    std::stable_sort(events.begin(), events.end(), [](const NamedTimePoint & left, const NamedTimePoint & right) {
+        return left.time_point < right.time_point;
+    });
+    for (const auto & e : events) {
+        const auto tithi = calc.swe.get_tithi(e.time_point);
+        fmt::format_to(buf, "{} {:s}: {}\n", vp::JulDays_Zoned{coord.timezone_name, e.time_point}, tithi, e.name);
     }
 }
 
