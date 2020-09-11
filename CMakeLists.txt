@@ -59,6 +59,8 @@ add_library(swe STATIC
     src/text-interface.cpp
     src/calc-error.h
     src/fmt-format-fixed.h
+    src/table-calendar-generator.cpp src/table-calendar-generator.h
+    src/table.cpp src/table.h
 )
 target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)
 target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected fmt::fmt)
@@ -97,6 +99,8 @@ add_executable(test-main
     tests/html-table-parser.cpp tests/test-html-table-parser.cpp
     tests/test-precalculated.cpp
     tests/catch-formatters.h
+    src/table-calendar-generator.test.cpp
+    src/table.test.cpp
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/tests)
 target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2 vendor/tinyfsm/include)
