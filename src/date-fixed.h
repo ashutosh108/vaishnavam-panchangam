@@ -16,15 +16,42 @@ DISABLE_WARNING_POP
 
 template<>
 struct fmt::formatter<date::year_month_day> {
+    bool as_local = false;
     template<typename ParseContext>
-    constexpr auto parse(ParseContext & ctx) { return ctx.begin(); }
+    constexpr auto parse(ParseContext & ctx) {
+        auto it = ctx.begin();
+        auto end = ctx.end();
+        if (it != end && *it == 'l') {
+            as_local = true;
+            ++it;
+        }
+        return it;
+    }
 
     template<typename FormatContext>
     auto format(const date::year_month_day & ymd, FormatContext & ctx) {
+        static constexpr const char * month_name[] = {
+            "января",
+            "февраля",
+            "марта",
+            "апреля",
+            "мая",
+            "іюня",
+            "іюля",
+            "августа",
+            "сентября",
+            "октября",
+            "ноября",
+            "декабря",
+        };
         const int year = static_cast<int>(ymd.year());
         const unsigned month = static_cast<unsigned>(ymd.month());
         const unsigned day = static_cast<unsigned>(ymd.day());
-        return fmt::format_to(ctx.out(), "{:04}-{:02}-{:02}", year, month, day);
+        if (as_local) {
+            return fmt::format_to(ctx.out(), "{} {}", day, month_name[month-1]);
+        } else {
+            return fmt::format_to(ctx.out(), "{:04}-{:02}-{:02}", year, month, day);
+        }
     }
 };
 
