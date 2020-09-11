@@ -31,24 +31,24 @@ struct fmt::formatter<date::year_month_day> {
     template<typename FormatContext>
     auto format(const date::year_month_day & ymd, FormatContext & ctx) {
         static constexpr const char * month_name[] = {
-            "января",
-            "февраля",
-            "марта",
-            "апреля",
-            "мая",
-            "іюня",
-            "іюля",
-            "августа",
-            "сентября",
-            "октября",
-            "ноября",
-            "декабря",
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
         };
         const int year = static_cast<int>(ymd.year());
         const unsigned month = static_cast<unsigned>(ymd.month());
         const unsigned day = static_cast<unsigned>(ymd.day());
         if (as_local) {
-            return fmt::format_to(ctx.out(), "{} {}", day, month_name[month-1]);
+            return fmt::format_to(ctx.out(), "{} {}", month_name[month-1], day);
         } else {
             return fmt::format_to(ctx.out(), "{:04}-{:02}-{:02}", year, month, day);
         }
