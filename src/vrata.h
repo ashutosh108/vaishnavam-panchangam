@@ -115,7 +115,7 @@ struct Vrata {
           paran(_paran),
           location(_location),
           times(_times){}
-    date::year_month_day local_paran_date();
+    date::year_month_day local_paran_date() const;
     std::string location_name() const;
 };
 

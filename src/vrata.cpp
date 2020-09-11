@@ -105,7 +105,7 @@ bool ekadashi_name_rus_is_valid(const std::string &name)
     return valid_names.find(name) != valid_names.end();
 }
 
-date::year_month_day Vrata::local_paran_date()
+date::year_month_day Vrata::local_paran_date() const
 {
     auto delta = date::days{vp::is_atirikta(type) ? 2 : 1};
     return date::year_month_day{date::sys_days{date} + delta};
