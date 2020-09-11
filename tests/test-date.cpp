@@ -39,3 +39,7 @@ TEST_CASE("can print local_time with fmt") {
     auto t = date::local_time<std::chrono::seconds>(date::local_days{20_y/June/7} + 5h);
     REQUIRE(fmt::to_string(t) == "0020-06-07 05:00:00.000000");
 }
+
+TEST_CASE("can format as local date (russian pre-reform locale)") {
+    REQUIRE("6 января" == fmt::format("{:l}", 2020_y/January/6));
+}
