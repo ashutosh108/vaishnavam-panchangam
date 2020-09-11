@@ -20,5 +20,7 @@ TEST_CASE("Table_Caledar_Generator returns reasonable table") {
     REQUIRE(table.at(0, 4).text == "7 января");
     REQUIRE(table.at(0, 5).text == "8 января");
 
-//    REQUIRE(table.height() >= 20);
+    REQUIRE(table.height() >= 20);
+
+    REQUIRE(table.at(1, 0).text == "+5:30");
 }
