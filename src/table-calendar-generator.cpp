@@ -50,7 +50,7 @@ static std::string get_timezone_text(const vp::MaybeVrata & vrata) {
 static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::year_month_day> & vrata_dates) {
     table.start_new_row();
     table.add_cell(get_timezone_text(vrata));
-    table.add_cell("country");
+    table.add_cell(vrata->location.country.name);
     table.add_cell(vrata->location_name());
     if (!vrata) {
         for (std::size_t i=0; i < vrata_dates.size(); ++i) {
