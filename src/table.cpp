@@ -30,6 +30,16 @@ void vp::Table::add_cell(std::string text)
     rows.back().emplace_back(text);
 }
 
+void vp::Table::add_cell(std::string_view text)
+{
+    add_cell(std::string{text});
+}
+
+void vp::Table::add_cell(const char * const text) {
+    add_cell(std::string{text});
+}
+
+
 void vp::Table::add_header_cell(std::string text)
 {
     if (rows.empty()) rows.emplace_back();

@@ -23,6 +23,8 @@ public:
     int width() const;
     int height() const;
     void add_cell(std::string text);
+    void add_cell(std::string_view text);
+    void add_cell(const char * const text);
     void add_header_cell(std::string text);
     Cell & at(int row, int col);
     const Cell & at(int row, int col) const;
