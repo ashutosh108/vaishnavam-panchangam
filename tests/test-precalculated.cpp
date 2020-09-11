@@ -840,7 +840,7 @@ struct VrataFixer {
     }
 };
 
-static vp::Location all_coord{vp::Latitude{0.0}, vp::Longitude{0.0}, "all", "UTC"};
+static vp::Location all_coord{vp::Latitude{0.0}, vp::Longitude{0.0}, "all", vp::c_Unknown, "UTC"};
 
 void fix_vratas(std::vector<Precalculated_Vrata> & vratas, const Fixes & fixes) {
     // first apply individual fixes
