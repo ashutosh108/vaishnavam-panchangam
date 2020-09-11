@@ -68,3 +68,19 @@ TEST_CASE("can iterate over cells with raw loops and at()") {
         }
     }
 }
+
+TEST_CASE("can start_new_row() for a table") {
+    vp::Table table;
+    table.add_cell("cell1,1");
+    table.add_cell("cell1,2");
+    table.start_new_row();
+    table.add_cell("cell2,1");
+    table.add_cell("cell2,2");
+
+    for(int row=0; row < table.height(); ++row) {
+        for (int col=0; col < table.width(); ++col) {
+            auto expected = fmt::format("cell{},{}", row+1, col+1);
+            REQUIRE(expected == table.at(row, col).text);
+        }
+    }
+}

@@ -26,6 +26,7 @@ public:
     void add_header_cell(std::string text);
     Cell & at(int row, int col);
     const Cell & at(int row, int col) const;
+    void start_new_row();
 
     struct CallBack {
         virtual void row_begin() = 0;

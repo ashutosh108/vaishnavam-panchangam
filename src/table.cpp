@@ -46,6 +46,11 @@ const vp::Table::Cell &vp::Table::at(int row, int col) const
     return rows.at(row).at(col);
 }
 
+void vp::Table::start_new_row()
+{
+    rows.emplace_back();
+}
+
 void vp::Table::iterate(vp::Table::CallBack &it)
 {
     for ( auto & row : rows) {
