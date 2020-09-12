@@ -147,8 +147,7 @@ Vrata_Time_Points Calc::calc_key_times_from_sunset_and_sunrise(JulDays_UT sunset
  */
 date::year_month_day Calc::get_vrata_date(const JulDays_UT sunrise) const
 {
-    auto timezone = date::locate_zone(swe.location.timezone_name);
-    auto zoned = sunrise.as_zoned_time(timezone);
+    auto zoned = sunrise.as_zoned_time(swe.location.time_zone());
     return date::year_month_day{date::floor<date::days>(zoned.get_local_time())};
 }
 
@@ -218,7 +217,7 @@ Paran Calc::get_paran(const JulDays_UT sunrise2, const JulDays_UT sunset2, const
         }
     }
 
-    Paran paran{type, paran_start, paran_end};
+    Paran paran{type, paran_start, paran_end, swe.location.time_zone()};
     return paran;
 }
 
@@ -226,9 +225,9 @@ Paran Calc::atirikta_paran(const JulDays_UT sunrise3, const JulDays_UT sunset3, 
 {
     auto fifth_of_paran_daytime = proportional_time(sunrise3, sunset3, 0.2);
     if (fifth_of_paran_daytime < dvadashi_end) {
-        return Paran{Paran::Type::Standard, sunrise3, fifth_of_paran_daytime};
+        return Paran{Paran::Type::Standard, sunrise3, fifth_of_paran_daytime, swe.location.time_zone()};
     }
-    return Paran{Paran::Type::Puccha_Dvadashi, sunrise3, dvadashi_end};
+    return Paran{Paran::Type::Puccha_Dvadashi, sunrise3, dvadashi_end, swe.location.time_zone()};
 }
 
 tl::expected<JulDays_UT, CalcError> Calc::arunodaya_for_sunrise(JulDays_UT const sunrise) const

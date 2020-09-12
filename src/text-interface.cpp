@@ -114,7 +114,7 @@ std::optional<Location> LocationDb::find_coord(const char *location_name) {
         std::begin(locations()),
         std::end(locations()),
         [=](auto named_coord){
-            return strcmp(named_coord.name, location_name) == 0;
+            return named_coord.name == location_name;
         }
     );
     if (found == std::end(locations())) return std::nullopt;
@@ -251,9 +251,9 @@ void print_detail_one(date::year_month_day base_date, Location coord, fmt::memor
     for (const auto & e : events) {
         if (e.print_tithi == NamedTimePoint::Print_Tithi::Yes) {
             const auto tithi = calc.swe.get_tithi(e.time_point);
-            fmt::format_to(buf, "{} {:s}: {}\n", vp::JulDays_Zoned{coord.timezone_name, e.time_point}, tithi, e.name);
+            fmt::format_to(buf, "{} {:s}: {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, tithi, e.name);
         } else {
-            fmt::format_to(buf, "{} {}\n", vp::JulDays_Zoned{coord.timezone_name, e.time_point}, e.name);
+            fmt::format_to(buf, "{} {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, e.name);
         }
     }
 }

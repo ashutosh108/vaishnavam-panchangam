@@ -50,9 +50,9 @@ private:
 class JulDays_Zoned {
 public:
     JulDays_UT t_;
-    const char *timezone_name_;
-    JulDays_Zoned(const char *timezone_name, JulDays_UT t) :
-        t_(t), timezone_name_(timezone_name) {}
+    const date::time_zone *time_zone_;
+    JulDays_Zoned(const date::time_zone * time_zone, JulDays_UT t) :
+        t_(t), time_zone_(time_zone) {}
 };
 
 JulDays_UT operator +(const JulDays_UT &, double_days);
@@ -79,8 +79,7 @@ struct fmt::formatter<vp::JulDays_Zoned> {
     auto parse(ParseContext & ctx) { return ctx.begin(); }
     template<typename FormatContext>
     auto format(const vp::JulDays_Zoned & t, FormatContext & ctx) -> decltype(ctx.out()) {
-        const auto timezone = date::locate_zone(t.timezone_name_);
-        const auto z = t.t_.as_zoned_time(timezone);
+        const auto z = t.t_.as_zoned_time(t.time_zone_);
         return fmt::format_to(ctx.out(), "{}", z);
     }
 };

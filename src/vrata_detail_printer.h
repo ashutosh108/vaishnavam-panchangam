@@ -51,7 +51,7 @@ struct fmt::formatter<vp::Vrata_Detail_Printer> : fmt::formatter<std::string_vie
         });
         merge_consequent_events_with_same_time(events);
         for (const auto & e : events) {
-            fmt::format_to(ctx.out(), "{} {}\n", vp::JulDays_Zoned{vd.vrata.location.timezone_name, e.time_point}, e.name);
+            fmt::format_to(ctx.out(), "{} {}\n", vp::JulDays_Zoned{vd.vrata.location.time_zone(), e.time_point}, e.name);
         }
         return ctx.out();
     }

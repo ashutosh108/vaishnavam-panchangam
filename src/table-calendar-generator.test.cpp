@@ -16,11 +16,16 @@ TEST_CASE("Table_Caledar_Generator returns reasonable table") {
 
     const auto table = vp::Table_Calendar_Generator::generate(vratas);
     REQUIRE(table.width() == 6);
-    REQUIRE(table.at(0, 3).text == "6 января");
-    REQUIRE(table.at(0, 4).text == "7 января");
-    REQUIRE(table.at(0, 5).text == "8 января");
+    REQUIRE(table.at(0, 3).text == "January 6");
+    REQUIRE(table.at(0, 4).text == "January 7");
+    REQUIRE(table.at(0, 5).text == "January 8");
 
     REQUIRE(table.height() >= 20);
 
     REQUIRE(table.at(1, 0).text == "+5:30");
+    REQUIRE(table.at(1, 1).text == "India");
+    REQUIRE(table.at(1, 2).text == "Udupi");
+    REQUIRE(table.at(1, 3).text == "Śuddhā Ekādaśī");
+    REQUIRE(table.at(1, 4).text == ">10:06");
+    REQUIRE(table.at(1, 5).text == "");
 }

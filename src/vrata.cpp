@@ -116,7 +116,7 @@ std::string Vrata::location_name() const
     if (location.latitude_adjusted) {
         return fmt::format("{} (adjusted to {} {})", location.name, location.latitude, location.longitude);
     }
-    return location.name;
+    return std::string{location.name};
 }
 
 double_ghatikas Vrata_Time_Points::dashami_length() const {

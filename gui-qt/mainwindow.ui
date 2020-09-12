@@ -366,6 +366,16 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tab_table">
+       <attribute name="title">
+        <string>Table</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayoutTabTable">
+        <item>
+         <widget class="QTextBrowser" name="tableTextBrowser"/>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>

@@ -210,8 +210,7 @@ struct Precalculated_Vrata {
 
     std::string make_zoned(std::optional<vp::JulDays_UT> jd) const {
         if (!jd.has_value()) return "(unspecified)";
-        auto zone_ptr = date::locate_zone(location.timezone_name);
-        return fmt::to_string(jd->as_zoned_time(zone_ptr));
+        return fmt::to_string(jd->as_zoned_time(location.time_zone()));
     }
 
     bool operator==(const vp::Vrata_Detail_Printer & nowcalc) const {
@@ -348,7 +347,7 @@ TEST_CASE("h_m_from_string works for basic cases") {
     REQUIRE_THROWS(h_m_s_from_string("36:15"));
 }
 
-Paranam parse_precalc_paranam(std::string s, date::year_month_day date, const char * timezone_name) {
+Paranam parse_precalc_paranam(std::string s, date::year_month_day date, const date::time_zone * time_zone) {
     std::smatch match;
     // "*" alone or "*;" followed by other descriptions.
     // We also treat empty cell as a standard pAraNam, e.g. Murmansk in https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-03-29/
@@ -363,7 +362,6 @@ Paranam parse_precalc_paranam(std::string s, date::year_month_day date, const ch
             if (start_sec_empty != end_sec_empty) {
                 throw std::runtime_error(fmt::format(":SS (seconds) of start and end must be either both set or both empty: {}", s));
             }
-            auto time_zone = date::locate_zone(timezone_name);
             auto start_zoned = date::make_zoned(time_zone, date::local_days(date) + start_h_m_s);
             auto end_zoned = date::make_zoned(time_zone, date::local_days(date) + end_h_m_s);
             return {start_zoned, end_zoned, (start_sec_empty ? Paranam::Precision::Minutes : Paranam::Precision::Seconds)};
@@ -371,7 +369,6 @@ Paranam parse_precalc_paranam(std::string s, date::year_month_day date, const ch
     } else if (std::regex_search(s, match, std::regex{R"~(&gt;\s*(\d?\d:\d\d))~"})) {
         if (match.size() >= 1) {
             auto start_h_m_s{h_m_s_from_string(match[1].str())};
-            auto time_zone = date::locate_zone(timezone_name);
             auto start_zoned = date::make_zoned(time_zone, date::local_days(date) + start_h_m_s);
             vp::JulDays_UT start_time{date::local_days(date)+start_h_m_s, time_zone};
             return {start_zoned, std::nullopt};
@@ -379,7 +376,6 @@ Paranam parse_precalc_paranam(std::string s, date::year_month_day date, const ch
     } else if (std::regex_search(s, match, std::regex{R"~(&lt;\s*(\d?\d:\d\d))~"})) {
         if (match.size() >= 1) {
             auto end_h_m_s{h_m_s_from_string(match[1].str())};
-            auto time_zone = date::locate_zone(timezone_name);
             auto end_zoned = date::make_zoned(time_zone, date::local_days(date) + end_h_m_s);
             return {std::nullopt, end_zoned};
         }
@@ -411,10 +407,10 @@ Precalculated_Vrata get_precalc_ekadashi(const vp::Location & location, [[maybe_
     Paranam paranam;
     if (is_atirikta(row_data[col], row_data[col+1], type)) {
         date::year_month_day day3{date::sys_days(date) + date::days{2}};
-        paranam = parse_precalc_paranam(row_data[col+2], day3, location.timezone_name);
+        paranam = parse_precalc_paranam(row_data[col+2], day3, location.time_zone());
     } else {
         date::year_month_day day2{date::sys_days(date) + date::days{1}};
-        paranam = parse_precalc_paranam(row_data[col+1], day2, location.timezone_name);
+        paranam = parse_precalc_paranam(row_data[col+1], day2, location.time_zone());
     }
     return Precalculated_Vrata{location, date, type, paranam};
 }
@@ -776,9 +772,9 @@ struct VrataFixer {
     void operator()(const FixShiftStartTime & fix) {
         shift_time_if_exists(vrata.paranam.start, fix.s);
     }
-    date::zoned_seconds local_paran_hms_to_zone(const char * timezone_name, date::local_days date, std::chrono::seconds hms) {
+    date::zoned_seconds local_paran_hms_to_zone(const date::time_zone * time_zone, date::local_days date, std::chrono::seconds hms) {
         auto local = date + hms;
-        return date::make_zoned(date::locate_zone(timezone_name), local);
+        return date::make_zoned(time_zone, local);
     }
     std::optional<date::zoned_seconds> replace_hms(std::optional<date::zoned_seconds> zoned, std::optional<std::chrono::seconds> hms) {
         if (zoned.has_value() != hms.has_value()) {
@@ -793,26 +789,26 @@ struct VrataFixer {
     void operator()(const FixStart & fix) {
         auto old_time = replace_hms(vrata.paranam.start, fix.expected);
         auto new_date = date::local_days(vrata.date) + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
-        auto new_time = local_paran_hms_to_zone(vrata.location.timezone_name, new_date, fix.new_time);
+        auto new_time = local_paran_hms_to_zone(vrata.location.time_zone(), new_date, fix.new_time);
         replace_time(vrata.paranam.start, old_time, new_time);
     }
     void operator()(const FixStartSeconds & fix) {
         auto old_time = replace_hms(vrata.paranam.start, fix.expected);
         auto new_date = date::local_days(vrata.date) + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
-        auto new_time = local_paran_hms_to_zone(vrata.location.timezone_name, new_date, fix.new_time);
+        auto new_time = local_paran_hms_to_zone(vrata.location.time_zone(), new_date, fix.new_time);
         replace_time(vrata.paranam.start, old_time, new_time);
         vrata.paranam.precision = Paranam::Precision::Seconds;
     }
     void operator()(const FixEnd & fix) {
         auto old_time = replace_hms(vrata.paranam.end, fix.expected);
         auto new_date = date::local_days(vrata.date) + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
-        auto new_time = local_paran_hms_to_zone(vrata.location.timezone_name, new_date, fix.new_time);
+        auto new_time = local_paran_hms_to_zone(vrata.location.time_zone(), new_date, fix.new_time);
         replace_time(vrata.paranam.end, old_time, new_time);
     }
     void operator()(const FixEndSeconds & fix) {
         auto old_time = replace_hms(vrata.paranam.end, fix.expected);
         auto new_date = date::local_days(vrata.date) + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
-        auto new_time = local_paran_hms_to_zone(vrata.location.timezone_name, new_date, fix.new_time);
+        auto new_time = local_paran_hms_to_zone(vrata.location.time_zone(), new_date, fix.new_time);
         replace_time(vrata.paranam.end, old_time, new_time);
         vrata.paranam.precision = Paranam::Precision::Seconds;
     }
@@ -840,7 +836,7 @@ struct VrataFixer {
     }
 };
 
-static vp::Location all_coord{vp::Latitude{0.0}, vp::Longitude{0.0}, "all", vp::c_Unknown, "UTC"};
+static vp::Location all_coord{vp::Latitude{0.0}, vp::Longitude{0.0}, "all"};
 
 void fix_vratas(std::vector<Precalculated_Vrata> & vratas, const Fixes & fixes) {
     // first apply individual fixes

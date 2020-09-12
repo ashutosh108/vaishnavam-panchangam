@@ -104,7 +104,7 @@ void MainWindow::setupLocationsComboBox()
 {
     ui->locationComboBox->addItem("all");
     for (const auto &l : vp::text_ui::LocationDb()) {
-        ui->locationComboBox->addItem(l.name);
+        ui->locationComboBox->addItem(QString::fromUtf8(l.name.data(), l.name.size()));
     }
 }
 
@@ -116,7 +116,7 @@ void MainWindow::setDateToToday()
 void MainWindow::calcAll(date::year_month_day base_date, fmt::memory_buffer & buf)
 {
     for (auto &l : vp::text_ui::LocationDb()) {
-        calcOne(base_date, l.name, buf);
+        calcOne(base_date, QString::fromUtf8(l.name.data(), l.name.size()), buf);
     }
 }
 
@@ -142,7 +142,7 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
 
         std::string paranTime = vp::ParanFormatter::format(
                     vrata->paran,
-                    vrata->location.timezone_name,
+                    vrata->location.time_zone(),
                     "%H:%M<span style=\"font-size:small;\">:%S</span>",
                     "–",
                     "%H:%M<span style=\"font-size:small;\">:%S</span>",
@@ -150,6 +150,11 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
         paranTime += "</small>";
         ui->paranTime->setText(QString::fromStdString(paranTime));
     }
+}
+
+void MainWindow::calcTable(date::year_month_day base_date)
+{
+
 }
 
 void MainWindow::showVersionInStatusLine()
@@ -183,5 +188,5 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
     if (!location.has_value()) return;
     ui->latitude->setText(QString::fromStdString(fmt::to_string(location->latitude)));
     ui->longitude->setText(QString::fromStdString(fmt::to_string(location->longitude)));
-    ui->timezone->setText(location->timezone_name);
+    ui->timezone->setText(QString::fromStdString(location->time_zone()->name()));
 }

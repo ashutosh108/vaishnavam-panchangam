@@ -8,7 +8,7 @@ using namespace date;
 using namespace vp;
 using namespace std::literals::chrono_literals;
 
-[[maybe_unused]] constexpr Location arbitrary_coord{50.0_N, 60.0_E};
+static const Location arbitrary_coord{50.0_N, 60.0_E};
 
 TEST_CASE("Swe default constructor") {
     [[maybe_unused]] Swe s{arbitrary_coord};

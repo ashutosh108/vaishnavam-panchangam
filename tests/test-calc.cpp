@@ -220,13 +220,11 @@ void check_atirikta_at_location(const char * name, const Location & location, co
     REQUIRE(actual_vrata.paran.paran_end.has_value());
 
     // 2. Paran *date* must be two days after vrata date.
-    auto time_zone_at_location = date::locate_zone(location.timezone_name);
-
-    auto zoned_paran_start = actual_vrata.paran.paran_start->as_zoned_time(time_zone_at_location);
+    auto zoned_paran_start = actual_vrata.paran.paran_start->as_zoned_time(location.time_zone());
     auto local_days_paran_start = date::floor<date::days>(zoned_paran_start.get_local_time());
     CHECK(date::local_days(actual_vrata.date) + date::days{2} == local_days_paran_start);
 
-    auto zoned_paran_end = date::make_zoned(time_zone_at_location, actual_vrata.paran.paran_end->as_sys_time());
+    auto zoned_paran_end = date::make_zoned(location.time_zone(), actual_vrata.paran.paran_end->as_sys_time());
     auto local_days_paran_end = date::floor<date::days>(zoned_paran_end.get_local_time());
     CHECK(date::local_days(actual_vrata.date) + date::days{2} == local_days_paran_end);
 
@@ -500,7 +498,7 @@ TEST_CASE("Surgut 2019-12-07 gets paranam time +2days after atiriktA as it shoul
     auto vrata = Calc{surgut_coord}.find_next_vrata(2019_y/December/7);
     REQUIRE(vrata.has_value());
     auto expected_ymd = 2019_y/December/9;
-    date::year_month_day local_ymd{date::floor<date::days>(vrata->paran.paran_start->as_zoned_time(date::locate_zone(surgut_coord.timezone_name)).get_local_time())};
+    date::year_month_day local_ymd{date::floor<date::days>(vrata->paran.paran_start->as_zoned_time(surgut_coord.time_zone()).get_local_time())};
     CAPTURE(Vrata_Detail_Printer{*vrata});
     REQUIRE(expected_ymd == local_ymd);
 }
@@ -624,8 +622,8 @@ TEST_CASE("arunodaya0 and sunrise0 are from the same morning in the dAshaMi vidd
     auto vrata = Calc{mirnyy_coord}.find_next_vrata(2020_y/July/30);
     CAPTURE(vrata->sunrise0);
     REQUIRE(vrata->sunrise0.has_value());
-    JulDays_Zoned local_sunrise{vrata->location.timezone_name, *vrata->sunrise0};
-    const auto timezone = date::locate_zone(vrata->location.timezone_name);
+    JulDays_Zoned local_sunrise{vrata->location.time_zone(), *vrata->sunrise0};
+    const auto timezone = vrata->location.time_zone();
     const auto sunrise0 = vrata->sunrise0->as_zoned_time(timezone);
     const auto min_acceptable_arunodaya0 = (*vrata->sunrise0 - 3h).as_zoned_time(timezone);
     const auto max_acceptable_arunodaya0 = (*vrata->sunrise0 - 30min).as_zoned_time(timezone);

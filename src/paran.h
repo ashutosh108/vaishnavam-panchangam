@@ -7,8 +7,14 @@
 #include <optional>
 #include <string_view>
 #include <tuple>
+#include "tz-fixed.h"
 
 namespace vp {
+
+static const date::time_zone * utc() {
+    static auto _utc = date::locate_zone("UTC");
+    return _utc;
+}
 
 class Paran
 {
@@ -16,8 +22,11 @@ public:
     enum class Type {
         Standard, Until_Dvadashi_End, From_Quarter_Dvadashi, Puccha_Dvadashi
     };
-    Paran(Type _type = Type::Standard, std::optional<JulDays_UT> _paran_start = std::nullopt, std::optional<JulDays_UT> _paran_end = std::nullopt):
-        type(_type), paran_start(_paran_start), paran_end(_paran_end){}
+    Paran(Type _type = Type::Standard,
+          std::optional<JulDays_UT> _paran_start = std::nullopt,
+          std::optional<JulDays_UT> _paran_end = std::nullopt,
+          const date::time_zone * _time_zone = utc()
+          ): type(_type), paran_start(_paran_start), paran_end(_paran_end), time_zone(_time_zone){}
     bool operator==(Paran const &other) const {
         return std::tie(type, paran_start, paran_end) == std::tie(other.type, other.paran_start, other.paran_end);
     }
@@ -28,13 +37,14 @@ public:
     Type type;
     std::optional<JulDays_UT> paran_start{};
     std::optional<JulDays_UT> paran_end{};
+    const date::time_zone * time_zone;
 };
 
 class ParanFormatter {
 public:
     static std::string format(
             const Paran &paran,
-            const char * timezone_name,
+            const date::time_zone * time_zone,
             const char * paran_start_format = "%H:%M:%S",
             const char * separator = "-",
             const char * paran_end_format = "%H:%M:%S",
@@ -64,8 +74,36 @@ struct fmt::formatter<vp::Paran::Type> : fmt::formatter<std::string_view> {
 
 template<>
 struct fmt::formatter<vp::Paran> : fmt::formatter<std::string_view> {
+    bool use_compact_form = false;
+
+    template<typename ParseCtx>
+    auto parse(ParseCtx & ctx) {
+        auto it = ctx.begin();
+        auto end = ctx.end();
+        if (it != end && *it == 'c') {
+            ++it;
+            use_compact_form = true;
+        }
+        return it;
+    }
+
+    template<typename FormatCtx>
+    auto format_compact(const vp::Paran & p, FormatCtx & ctx) {
+        assert(p.time_zone() != nullptr);
+        if (p.paran_start && !p.paran_end) {
+            // round up to minutes;
+            auto local = p.paran_start->as_zoned_time(p.time_zone).get_local_time();
+            auto local_ceil = date::ceil<std::chrono::minutes>(local);
+            return fmt::format_to(ctx.out(), "{}", date::format(">%H:%M", local_ceil));
+        }
+        return ctx.out();
+    }
+
     template<typename FormatCtx>
     auto format(const vp::Paran & p, FormatCtx & ctx) {
+        if (use_compact_form) {
+            return format_compact(p, ctx);
+        }
         fmt::format_to(ctx.out(), "{}{{", p.type);
         if (p.paran_start.has_value()) {
             fmt::format_to(ctx.out(), "{}", *p.paran_start);

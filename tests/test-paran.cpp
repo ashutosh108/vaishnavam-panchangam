@@ -42,3 +42,11 @@ TEST_CASE("Can compare paran types") {
     REQUIRE(Paran{Paran::Type::Standard} != Paran{Paran::Type::Until_Dvadashi_End});
     REQUIRE(Paran{Paran::Type::Standard} != Paran{Paran::Type::From_Quarter_Dvadashi});
 }
+
+TEST_CASE("Paran can format itself in a most compact way (for tables)") {
+    JulDays_UT arbitrary_time{2019_y/March/19, 5h + 3min + 5s};
+    auto timezone = date::locate_zone("Europe/Moscow");
+    Paran p{Paran::Type::Standard, arbitrary_time, std::nullopt, timezone};
+
+    REQUIRE(">08:04" == fmt::format("{:c}", p));
+}

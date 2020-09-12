@@ -101,7 +101,8 @@ TEST_CASE("Can substract JulDays_UT from JulDays_UT") {
 }
 
 TEST_CASE("Pretty-print zoned time") {
-    const auto t = JulDays_Zoned{"Europe/Kiev", JulDays_UT{2019_y/March/10, double_hours{4.5}}};
+    const auto time_zone = date::locate_zone("Europe/Kiev");
+    const auto t = JulDays_Zoned{time_zone, JulDays_UT{2019_y/March/10, double_hours{4.5}}};
     REQUIRE(fmt::to_string(t) == "2019-03-10 06:30:00.000000 EET");
 }
 

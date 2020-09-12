@@ -31,7 +31,7 @@ static std::string get_timezone_text(const vp::MaybeVrata & vrata) {
     if (!vrata) return "-";
     if (!vrata->paran.paran_start) return "-";
     auto paran_start_sys = vrata->paran.paran_start->as_sys_time();
-    auto timezone = date::locate_zone(vrata->location.timezone_name);
+    auto timezone = vrata->location.time_zone();
     auto info = timezone->get_info(paran_start_sys);
 
     long long seconds = info.offset.count();
@@ -50,7 +50,7 @@ static std::string get_timezone_text(const vp::MaybeVrata & vrata) {
 static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::year_month_day> & vrata_dates) {
     table.start_new_row();
     table.add_cell(get_timezone_text(vrata));
-    table.add_cell(vrata->location.country.name);
+    table.add_cell(vrata->location.country);
     table.add_cell(vrata->location_name());
     if (!vrata) {
         for (std::size_t i=0; i < vrata_dates.size(); ++i) {
@@ -62,7 +62,8 @@ static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std
         if (date >= vrata->date && date < vrata->local_paran_date()) {
             table.add_cell(fmt::to_string(vrata->type));
         } else if (date == vrata->local_paran_date()) {
-            table.add_cell(fmt::to_string(vrata->paran));
+            // 'c' means compact formatting
+            table.add_cell(fmt::format("{:c}", vrata->paran));
         } else {
             table.add_cell("");
         }
