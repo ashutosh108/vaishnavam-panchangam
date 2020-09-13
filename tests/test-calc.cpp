@@ -635,3 +635,15 @@ TEST_CASE("arunodaya0 and sunrise0 are from the same morning in the dAshaMi vidd
     CHECK(arunodaya0 >= min_acceptable_arunodaya0);
     CHECK(arunodaya0 <= max_acceptable_arunodaya0);
 }
+
+TEST_CASE("paran after 1/4 of dvAdashI: don't specify end time when interval is short") {
+    auto vrata = Calc{gokarna_coord}.find_next_vrata(2020_y/September/13);
+    REQUIRE(vrata);
+    REQUIRE(!vrata->paran.paran_end);
+}
+
+TEST_CASE("paran after 1/4 of dvAdashI: don't specify end time even when interval is long enough") {
+    auto vrata = Calc{erevan_coord}.find_next_vrata(2020_y/September/13);
+    REQUIRE(vrata);
+    REQUIRE(!vrata->paran.paran_end);
+}
