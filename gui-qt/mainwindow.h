@@ -26,6 +26,8 @@ private slots:
 
     void on_locationComboBox_currentIndexChanged(const QString &arg1);
 
+    void on_tabWidget_currentChanged(int index);
+
 private:
     Ui::MainWindow *ui;
     void setupLocationsComboBox();

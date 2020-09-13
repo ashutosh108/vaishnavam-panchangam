@@ -61,7 +61,7 @@ void vp::Table::start_new_row()
     rows.emplace_back();
 }
 
-void vp::Table::iterate(vp::Table::CallBack &it)
+void vp::Table::iterate(vp::Table::CallBack &it) const
 {
     for ( auto & row : rows) {
         it.row_begin();

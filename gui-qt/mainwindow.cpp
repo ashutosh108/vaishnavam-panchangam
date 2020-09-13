@@ -6,7 +6,9 @@
 #include <QDate>
 #include <QMessageBox>
 
+#include "html-table-writer.h"
 #include "location.h"
+#include "table-calendar-generator.h"
 #include "text-interface.h"
 #include "tz-fixed.h"
 
@@ -154,7 +156,23 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
 
 void MainWindow::calcTable(date::year_month_day base_date)
 {
-
+    std::stringstream s;
+    auto vratas = vp::text_ui::calc_all(base_date);
+    s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas)};
+    static QString css {R"CSS(
+<style>
+table, td, th {
+    border: 1px solid lightgray;
+}
+td, th {
+    padding: 0.1em;
+}
+table {
+    border-collapse: collapse;
+}
+</style>
+    )CSS"};
+    ui->tableTextBrowser->setText(css + QString::fromStdString(s.str()));
 }
 
 void MainWindow::showVersionInStatusLine()
@@ -189,4 +207,12 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
     ui->latitude->setText(QString::fromStdString(fmt::to_string(location->latitude)));
     ui->longitude->setText(QString::fromStdString(fmt::to_string(location->longitude)));
     ui->timezone->setText(QString::fromStdString(location->time_zone()->name()));
+}
+
+void MainWindow::on_tabWidget_currentChanged(int index)
+{
+    if (index == 2) {
+        date::year_month_day base_date = to_sys_days(ui->dateEdit->date());
+        calcTable(base_date);
+    }
 }

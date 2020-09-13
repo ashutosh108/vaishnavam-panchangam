@@ -37,7 +37,7 @@ public:
         virtual void header_cell(std::string_view text) = 0;
     };
 
-    void iterate(CallBack & it);
+    void iterate(CallBack & it) const;
 };
 
 } // namespace vp

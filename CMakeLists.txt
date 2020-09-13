@@ -60,6 +60,7 @@ add_library(swe STATIC
     src/calc-error.h
     src/fmt-format-fixed.h
     src/table-calendar-generator.cpp src/table-calendar-generator.h
+    src/html-table-writer.cpp src/html-table-writer.h
     src/table.cpp src/table.h
 )
 target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)
@@ -100,6 +101,7 @@ add_executable(test-main
     tests/test-precalculated.cpp
     tests/catch-formatters.h
     src/table-calendar-generator.test.cpp
+    src/html-table-writer.test.cpp
     src/table.test.cpp
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/tests)
