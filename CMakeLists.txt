@@ -146,7 +146,7 @@ install(DIRECTORY ${CMAKE_BINARY_DIR}/eph ${CMAKE_BINARY_DIR}/tzdata DESTINATION
 add_custom_target(
     zip
     COMMAND
-    ${CMAKE_COMMAND} --build . --target ${VP_CLI_EXE}
+    ${CMAKE_COMMAND} --build . --target ${VP_CLI_EXE} --config ${CMAKE_BUILD_TYPE}
     COMMAND
     ${CMAKE_COMMAND} --install . --prefix ${PROJECT_NAME} --config ${CMAKE_BUILD_TYPE}
     COMMAND
