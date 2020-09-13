@@ -90,20 +90,46 @@ struct fmt::formatter<vp::Paran> : fmt::formatter<std::string_view> {
     template<typename FormatCtx>
     auto format_compact(const vp::Paran & p, FormatCtx & ctx) {
         assert(p.time_zone() != nullptr);
-        if (p.paran_start && !p.paran_end) {
+        if (p.type == vp::Paran::Type::Standard) {
+            return fmt::format_to(ctx.out(), "*");
+        } else if (p.paran_start && !p.paran_end) {
             // round up to minutes;
             auto local = p.paran_start->as_zoned_time(p.time_zone).get_local_time();
             auto local_ceil = date::ceil<std::chrono::minutes>(local);
             return fmt::format_to(ctx.out(), "{}", date::format(">%H:%M", local_ceil));
+        } else if (!p.paran_start && p.paran_end) {
+            // round down to minutes;
+            auto local = p.paran_end->as_zoned_time(p.time_zone).get_local_time();
+            auto local_floor = date::floor<std::chrono::minutes>(local);
+            return fmt::format_to(ctx.out(), "{}", date::format("<%H:%M", local_floor));
+        } else if (p.paran_start && p.paran_end) {
+            auto start_local = p.paran_start->as_zoned_time(p.time_zone).get_local_time();
+            auto end_local = p.paran_end->as_zoned_time(p.time_zone).get_local_time();
+            if (*p.paran_end - *p.paran_start >= std::chrono::minutes{48}) {
+                // round up to minutes;
+                auto start_local_ceil = date::ceil<std::chrono::minutes>(start_local);
+                auto end_local_floor = date::floor<std::chrono::minutes>(end_local);
+                return fmt::format_to(
+                    ctx.out(),
+                    "{}–{}",
+                    date::format("%H:%M", start_local_ceil),
+                    date::format("%H:%H", end_local_floor));
+            } else {
+                auto start_local_ceil = date::ceil<std::chrono::seconds>(start_local);
+                auto end_local_floor = date::floor<std::chrono::seconds>(end_local);
+                return fmt::format_to(
+                    ctx.out(),
+                    "{}–{}",
+                    date::format("%H:%M:%S", start_local_ceil),
+                    date::format("%H:%M:%S", end_local_floor));
+            }
+        } else {
+            return format_default(p, ctx);
         }
-        return ctx.out();
     }
 
     template<typename FormatCtx>
-    auto format(const vp::Paran & p, FormatCtx & ctx) {
-        if (use_compact_form) {
-            return format_compact(p, ctx);
-        }
+    auto format_default(const vp::Paran & p, FormatCtx & ctx) {
         fmt::format_to(ctx.out(), "{}{{", p.type);
         if (p.paran_start.has_value()) {
             fmt::format_to(ctx.out(), "{}", *p.paran_start);
@@ -113,6 +139,15 @@ struct fmt::formatter<vp::Paran> : fmt::formatter<std::string_view> {
             fmt::format_to(ctx.out(), "{}", *p.paran_end);
         }
         return fmt::format_to(ctx.out(), "}}");
+    }
+
+    template<typename FormatCtx>
+    auto format(const vp::Paran & p, FormatCtx & ctx) {
+        if (use_compact_form) {
+            return format_compact(p, ctx);
+        } else {
+            return format_default(p, ctx);
+        }
     }
 };
 
