@@ -67,14 +67,14 @@ TEST_CASE("compact paran format: <09:03 case") {
     REQUIRE("<09:03" == fmt::format("{:c}", p));
 }
 
-//TEST_CASE("compact paran format: wide range (rounding to minute)") {
-//    JulDays_UT time1{2019_y/March/19, 5h + 3min + 5s};
-//    JulDays_UT time2{2019_y/March/19, 6h + 3min + 5s};
-//    auto timezone = date::locate_zone("Europe/Moscow");
-//    Paran p{Paran::Type::Puccha_Dvadashi, time1, time2, timezone};
+TEST_CASE("compact paran format: wide range (rounding to minute)") {
+    JulDays_UT time1{2019_y/March/19, 5h + 3min + 5s};
+    JulDays_UT time2{2019_y/March/19, 6h + 3min + 5s};
+    auto timezone = date::locate_zone("Europe/Moscow");
+    Paran p{Paran::Type::Puccha_Dvadashi, time1, time2, timezone};
 
-//    REQUIRE("08:04–09:03" == fmt::format("{:c}", p));
-//}
+    REQUIRE("08:04–09:03" == fmt::format("{:c}", p));
+}
 
 TEST_CASE("compact paran format: narrow range (rounding to seconds)") {
     JulDays_UT time1{2019_y/March/19, 5h + 3min + 4.3s};

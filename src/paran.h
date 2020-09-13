@@ -113,7 +113,7 @@ struct fmt::formatter<vp::Paran> : fmt::formatter<std::string_view> {
                     ctx.out(),
                     "{}–{}",
                     date::format("%H:%M", start_local_ceil),
-                    date::format("%H:%H", end_local_floor));
+                    date::format("%H:%M", end_local_floor));
             } else {
                 auto start_local_ceil = date::ceil<std::chrono::seconds>(start_local);
                 auto end_local_floor = date::floor<std::chrono::seconds>(end_local);
