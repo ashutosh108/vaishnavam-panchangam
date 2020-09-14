@@ -167,6 +167,19 @@ table, td, th {
 td, th {
     padding: 0.1em;
 }
+td.mainpart, th.mainpart {
+    text-align: center;
+}
+th.mainpart {
+    background-color: #c0c0c0;
+    color: #3531ff;
+}
+td.odd {
+    backgground-color: #D2E4FC;
+}
+td.even {
+    backgground-color: #EBF5FF;
+}
 table {
     border-collapse: collapse;
 }

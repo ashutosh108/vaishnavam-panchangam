@@ -47,8 +47,8 @@ static std::string get_timezone_text(const vp::MaybeVrata & vrata) {
     return fmt::format("{}{}:{:02}", sign, hours, minutes);
 }
 
-static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::year_month_day> & vrata_dates) {
-    table.start_new_row();
+static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::year_month_day> & vrata_dates, std::string tr_classes) {
+    table.start_new_row(tr_classes);
     table.add_cell(get_timezone_text(vrata));
     table.add_cell(vrata->location.country);
     table.add_cell(vrata->location_name());
@@ -59,13 +59,14 @@ static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std
         return;
     }
     for (auto date : vrata_dates) {
+        std::string classes = "mainpart";
         if (date >= vrata->date && date < vrata->local_paran_date()) {
-            table.add_cell(fmt::to_string(vrata->type));
+            table.add_cell(fmt::to_string(vrata->type), classes);
         } else if (date == vrata->local_paran_date()) {
             // 'c' means compact formatting
-            table.add_cell(fmt::format("{:c}", vrata->paran));
+            table.add_cell(fmt::format("{:c}", vrata->paran), classes);
         } else {
-            table.add_cell("");
+            table.add_cell("", classes);
         }
     }
 }
@@ -75,8 +76,9 @@ vp::Table vp::Table_Calendar_Generator::generate(const vp::MaybeVratas & vratas)
     vp::Table table;
     auto vrata_dates = get_vrata_dates(vratas);
     add_header(table, vrata_dates);
+    int row = 0;
     for (const auto & vrata : vratas) {
-        add_vrata(table, vrata, vrata_dates);
+        add_vrata(table, vrata, vrata_dates, ++row % 2 ? "odd" : "even");
     }
     return table;
 }

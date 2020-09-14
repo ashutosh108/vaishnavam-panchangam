@@ -14,9 +14,9 @@ int vp::Table::width() const
         rows.cbegin(),
         rows.cend(),
         [](const auto & l, const auto & r) {
-            return l.size() < r.size();
+            return l.data.size() < r.data.size();
         }
-    )->size();
+    )->data.size();
 }
 
 int vp::Table::height() const
@@ -24,52 +24,52 @@ int vp::Table::height() const
     return rows.size();
 }
 
-void vp::Table::add_cell(std::string text)
+void vp::Table::add_cell(std::string text, std::string classes)
 {
     if (rows.empty()) rows.emplace_back();
-    rows.back().emplace_back(text);
+    rows.back().data.emplace_back(text, false, std::move(classes));
 }
 
-void vp::Table::add_cell(std::string_view text)
+void vp::Table::add_cell(std::string_view text, std::string classes)
 {
-    add_cell(std::string{text});
+    add_cell(std::string{text}, std::move(classes));
 }
 
-void vp::Table::add_cell(const char * const text) {
-    add_cell(std::string{text});
+void vp::Table::add_cell(const char * const text, std::string classes) {
+    add_cell(std::string{text}, std::move(classes));
 }
 
 
-void vp::Table::add_header_cell(std::string text)
+void vp::Table::add_header_cell(std::string text, std::string classes)
 {
     if (rows.empty()) rows.emplace_back();
-    rows.back().emplace_back(text, true);
+    rows.back().data.emplace_back(text, true, std::move(classes));
 }
 
 vp::Table::Cell &vp::Table::at(int row, int col)
 {
-    return rows.at(row).at(col);
+    return rows.at(row).data.at(col);
 }
 
 const vp::Table::Cell &vp::Table::at(int row, int col) const
 {
-    return rows.at(row).at(col);
+    return rows.at(row).data.at(col);
 }
 
-void vp::Table::start_new_row()
+void vp::Table::start_new_row(std::string classes)
 {
-    rows.emplace_back();
+    rows.emplace_back(classes);
 }
 
 void vp::Table::iterate(vp::Table::CallBack &it) const
 {
     for ( auto & row : rows) {
-        it.row_begin();
-        for (auto & cell : row) {
+        it.row_begin(row.classes);
+        for (auto & cell : row.data) {
             if (cell.is_header) {
-                it.header_cell(cell.text);
+                it.header_cell(cell.text, cell.classes);
             } else {
-                it.cell(cell.text);
+                it.cell(cell.text, cell.classes);
             }
         }
         it.row_end();

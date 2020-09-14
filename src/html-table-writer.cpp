@@ -11,17 +11,29 @@ std::ostream &operator<<(std::ostream &s, const Html_Table_Writer &tw)
     struct WriterCallBack : vp::Table::CallBack {
         std::ostream & s_;
         WriterCallBack(std::ostream & s) : s_(s){}
-        void row_begin() override {
-            s_ << "<tr>";
+        void row_begin(std::string_view classes) override {
+            s_ << "<tr";
+            if (!classes.empty()) {
+                s_ << " class=\"" << classes << "\"";
+            }
+            s_ << ">";
         }
         void row_end() override {
             s_ << "</tr>\n";
         }
-        void cell(std::string_view text) override {
-            s_ << "<td>" << text << "</td>\n";
+        void cell(std::string_view text, std::string_view classes) override {
+            s_ << "<td";
+            if (!classes.empty()) {
+                s_ << " class=\"" << classes << "\"";
+            }
+            s_ << ">" << text << "</td>\n";
         }
-        void header_cell(std::string_view text) override {
-            s_ << "<th>" << text << "</th>\n";
+        void header_cell(std::string_view text, std::string_view classes) override {
+            s_ << "<th";
+            if (!classes.empty()) {
+                s_ << " class=\"" << classes << "\"";
+            }
+            s_ << ">" << text << "</th>\n";
         }
     };
 

@@ -1,5 +1,4 @@
-[ ] create separate html table reporter
-[ ] on switching "table" tab, fill it with fresh-calculated table
+[ ] table: add "View HTML source" context menu item
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)
 [ ] switch from std::regex to some other, saner and faster, regex library.
 [ ] add "table" output tab (all primary locations in a single table)
@@ -184,3 +183,5 @@ done:
 [+] improve report for dAshamI viddhi: add sunrise0, rename aruṇodaya1 to aruṇodaya0 in details [2020-08-02]
 [+] vp::text_ui::calc_all(): return vector of tl::expected Vratas [2020-09-01]
 [+] improve detail mode (-d in cli): print middle of night (midpoint between sunrise and sunset), next sunrise, relevant tithi start timepoints.
+[+] create separate html table reporter [2020-09-14]
+[+] on switching "table" tab, fill it with fresh-calculated table [2020-09-14]

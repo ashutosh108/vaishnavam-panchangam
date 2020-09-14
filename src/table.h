@@ -12,9 +12,14 @@ private:
     struct Cell {
         std::string text;
         bool is_header;
-        Cell(std::string _text, bool _is_header=false) : text(_text), is_header(_is_header){}
+        std::string classes;
+        Cell(std::string _text, bool _is_header=false, std::string _classes="") : text(_text), is_header(_is_header), classes(_classes){}
     };
-    using Row=std::vector<Cell>;
+    struct Row {
+        std::vector<Cell> data;
+        std::string classes;
+        Row(std::string classes_=""):classes(classes_){}
+    };
 
     std::vector<Row> rows;
 
@@ -22,19 +27,19 @@ public:
     Table();
     int width() const;
     int height() const;
-    void add_cell(std::string text);
-    void add_cell(std::string_view text);
-    void add_cell(const char * const text);
-    void add_header_cell(std::string text);
+    void add_cell(std::string text, std::string classes="");
+    void add_cell(std::string_view text, std::string classes="");
+    void add_cell(const char * const text, std::string classes="");
+    void add_header_cell(std::string text, std::string classes="");
     Cell & at(int row, int col);
     const Cell & at(int row, int col) const;
-    void start_new_row();
+    void start_new_row(std::string classes="");
 
     struct CallBack {
-        virtual void row_begin() = 0;
+        virtual void row_begin(std::string_view classes="") = 0;
         virtual void row_end() = 0;
-        virtual void cell(std::string_view text) = 0;
-        virtual void header_cell(std::string_view text) = 0;
+        virtual void cell(std::string_view text, std::string_view classes="") = 0;
+        virtual void header_cell(std::string_view text, std::string_view classes="") = 0;
     };
 
     void iterate(CallBack & it) const;
