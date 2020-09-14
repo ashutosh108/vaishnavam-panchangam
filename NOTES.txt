@@ -1,4 +1,4 @@
-[ ] table: add "View HTML source" context menu item
+[ ] table: allow adjusting dates (prev/next ekAdashI)
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)
 [ ] switch from std::regex to some other, saner and faster, regex library.
 [ ] add "table" output tab (all primary locations in a single table)
@@ -185,3 +185,5 @@ done:
 [+] improve detail mode (-d in cli): print middle of night (midpoint between sunrise and sunset), next sunrise, relevant tithi start timepoints.
 [+] create separate html table reporter [2020-09-14]
 [+] on switching "table" tab, fill it with fresh-calculated table [2020-09-14]
+[+] table: add "View HTML source" context menu item [2020-09-14]
+[+] table: automatically decrease start date to keep all vratas in different locations together [2020-09-14]

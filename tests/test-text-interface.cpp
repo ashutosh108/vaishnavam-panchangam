@@ -46,3 +46,13 @@ TEST_CASE("calc_all returns array with non-error results") {
         return vrata.has_value();
     }));
 }
+
+TEST_CASE("calc_all adjusts start date to ensure all locations have the same ekAdashI") {
+    using namespace date;
+    auto vratas = vp::text_ui::calc_all(2020_y/September/14);
+
+    auto [it_min_date, it_max_date] = std::minmax_element(vratas.cbegin(), vratas.cend(), [](const vp::MaybeVrata &l, const vp::MaybeVrata &r) { return l->date < r->date; });
+    auto length = date::sys_days{it_max_date->value().date} - date::sys_days{it_min_date->value().date};
+
+    REQUIRE(length.count() <= date::days{1}.count());
+}
