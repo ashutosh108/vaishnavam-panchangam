@@ -33,6 +33,7 @@ add_library(mainwindow STATIC
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
+    htmlbrowser.cpp
 )
 #target_include_directories(mainwindow PUBLIC ../src)
 target_link_libraries(mainwindow PUBLIC

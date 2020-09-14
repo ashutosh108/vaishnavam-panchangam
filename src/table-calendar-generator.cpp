@@ -61,7 +61,7 @@ static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std
     for (auto date : vrata_dates) {
         std::string classes = "mainpart";
         if (date >= vrata->date && date < vrata->local_paran_date()) {
-            table.add_cell(fmt::to_string(vrata->type), classes);
+            table.add_cell(fmt::to_string(vrata->type), classes + " vrata");
         } else if (date == vrata->local_paran_date()) {
             // 'c' means compact formatting
             table.add_cell(fmt::format("{:c}", vrata->paran), classes);

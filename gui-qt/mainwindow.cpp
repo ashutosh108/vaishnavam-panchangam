@@ -159,8 +159,7 @@ void MainWindow::calcTable(date::year_month_day base_date)
     std::stringstream s;
     auto vratas = vp::text_ui::calc_all(base_date);
     s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas)};
-    static QString css {R"CSS(
-<style>
+    static QString css {R"CSS(<style>
 table, td, th {
     border: 1px solid lightgray;
 }
@@ -174,18 +173,20 @@ th.mainpart {
     background-color: #c0c0c0;
     color: #3531ff;
 }
-td.odd {
-    backgground-color: #D2E4FC;
+tr.odd {
+    background-color: #D2E4FC;
 }
-td.even {
-    backgground-color: #EBF5FF;
+tr.even {
+    background-color: #EBF5FF;
+}
+td.vrata {
+    background-color: #f8a102;
 }
 table {
     border-collapse: collapse;
 }
-</style>
-    )CSS"};
-    ui->tableTextBrowser->setText(css + QString::fromStdString(s.str()));
+</style>)CSS"};
+    ui->tableTextBrowser->setUnchangableHtml(css + QString::fromStdString(s.str()));
 }
 
 void MainWindow::showVersionInStatusLine()
