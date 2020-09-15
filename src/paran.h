@@ -89,7 +89,7 @@ struct fmt::formatter<vp::Paran> : fmt::formatter<std::string_view> {
 
     template<typename FormatCtx>
     auto format_compact(const vp::Paran & p, FormatCtx & ctx) {
-        assert(p.time_zone() != nullptr);
+        assert(p.time_zone != nullptr);
         if (p.type == vp::Paran::Type::Standard) {
             return fmt::format_to(ctx.out(), "*");
         } else if (p.paran_start && !p.paran_end) {
