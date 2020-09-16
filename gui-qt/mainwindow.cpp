@@ -154,10 +154,10 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
     }
 }
 
-void MainWindow::calcTable(date::year_month_day base_date)
+void MainWindow::refreshTable()
 {
     std::stringstream s;
-    auto vratas = vp::text_ui::calc_all(base_date);
+    auto vratas = vp::text_ui::calc_all(to_sys_days(ui->dateEdit->date()));
     s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas)};
     static QString css {R"CSS(<style>
 table, td, th {
@@ -226,7 +226,13 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
     if (index == 2) {
-        date::year_month_day base_date = to_sys_days(ui->dateEdit->date());
-        calcTable(base_date);
+        refreshTable();
+    }
+}
+
+void MainWindow::on_dateEdit_dateChanged(const QDate & /*date*/)
+{
+    if (ui->tabWidget->currentIndex() == 2) {
+        refreshTable();
     }
 }

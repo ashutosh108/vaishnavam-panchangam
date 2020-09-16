@@ -28,13 +28,15 @@ private slots:
 
     void on_tabWidget_currentChanged(int index);
 
+    void on_dateEdit_dateChanged(const QDate &date);
+
 private:
     Ui::MainWindow *ui;
     void setupLocationsComboBox();
     void setDateToToday();
     void calcAll(date::year_month_day base_date, fmt::memory_buffer & buf);
     void calcOne(date::year_month_day base_date, QString location, fmt::memory_buffer & buf);
-    void calcTable(date::year_month_day base_date);
+    void refreshTable();
     void showVersionInStatusLine();
     void clearLocationData();
 };
