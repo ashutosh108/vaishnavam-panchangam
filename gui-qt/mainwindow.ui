@@ -14,369 +14,431 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <layout class="QVBoxLayout" name="verticalLayout_6">
     <item>
-     <widget class="QGroupBox" name="dateLocationGroup">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>1</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="title">
-       <string>Date/Location</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QLabel" name="dateLabel">
-             <property name="text">
-              <string>Date:</string>
-             </property>
-             <property name="margin">
-              <number>5</number>
-             </property>
-             <property name="buddy">
-              <cstring>dateEdit</cstring>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QDateEdit" name="dateEdit">
-             <property name="dateTime">
-              <datetime>
-               <hour>0</hour>
-               <minute>0</minute>
-               <second>0</second>
-               <year>2020</year>
-               <month>1</month>
-               <day>1</day>
-              </datetime>
-             </property>
-             <property name="displayFormat">
-              <string extracomment="qwe">yyyy-MM-dd</string>
-             </property>
-             <property name="calendarPopup">
-              <bool>true</bool>
-             </property>
-             <property name="timeSpec">
-              <enum>Qt::LocalTime</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QLabel" name="locationLabel">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Location:</string>
-             </property>
-             <property name="margin">
-              <number>5</number>
-             </property>
-             <property name="buddy">
-              <cstring>locationComboBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="locationComboBox"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="hlLatLong">
-           <item>
-            <widget class="QLabel" name="latitudeLabel">
-             <property name="toolTip">
-              <string>Latitude in decimal degrees (+ means North)</string>
-             </property>
-             <property name="text">
-              <string>Lat:</string>
-             </property>
-             <property name="margin">
-              <number>5</number>
-             </property>
-             <property name="buddy">
-              <cstring>latitude</cstring>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="latitude">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="toolTip">
-              <string>Latitude in decimal degrees (+ means North)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="longitudeLabel">
-             <property name="toolTip">
-              <string>Longitude in decimal degrees (+ means East)</string>
-             </property>
-             <property name="text">
-              <string>Long:</string>
-             </property>
-             <property name="margin">
-              <number>5</number>
-             </property>
-             <property name="buddy">
-              <cstring>longitude</cstring>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="longitude">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="toolTip">
-              <string>Longitude in decimal degrees (+ means East)</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="hlTimezone">
-           <item>
-            <widget class="QLabel" name="timezoneLabel">
-             <property name="text">
-              <string>TZ:</string>
-             </property>
-             <property name="margin">
-              <number>5</number>
-             </property>
-             <property name="buddy">
-              <cstring>timezone</cstring>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="timezone">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QPushButton" name="FindNextEkadashi">
-           <property name="text">
-            <string>Find next Ekādaśī</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-        <horstretch>2</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="QWidget" name="tab_brief">
-       <attribute name="title">
-        <string>Summary</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="3" column="1">
-         <widget class="QLabel" name="paranTime">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>(not calculated yet)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="labelVrataType">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>1</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Vrata type:</string>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="vrataType">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>2</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>(not calculated yet)</string>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="vrataDate">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>(not calculated yet)</string>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <spacer name="verticalSpacer_2">
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <spacer name="dateLeftSpacer">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
-            <height>40</height>
+            <width>40</width>
+            <height>20</height>
            </size>
           </property>
          </spacer>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>When:</string>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="paranamNextDay">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Pāraṇam &lt;span style=&quot; font-size:small;&quot;&gt;(next day)&lt;/span&gt;:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>Location:</string>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="locationName">
-          <property name="text">
-           <string>(not calculated yet)</string>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tab_detail">
-       <attribute name="title">
-        <string>Details</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QTextBrowser" name="calcResult">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <widget class="QPushButton" name="datePrevEkadashi">
+          <property name="text">
+           <string>« P&amp;revious Ekādaśī</string>
           </property>
          </widget>
         </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tab_table">
-       <attribute name="title">
-        <string>Table</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayoutTabTable">
         <item>
-         <widget class="HtmlBrowser" name="tableTextBrowser"/>
+         <widget class="QLabel" name="dateLabel">
+          <property name="text">
+           <string>Search starting from date:</string>
+          </property>
+          <property name="margin">
+           <number>5</number>
+          </property>
+          <property name="buddy">
+           <cstring>dateEdit</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDateEdit" name="dateEdit">
+          <property name="dateTime">
+           <datetime>
+            <hour>0</hour>
+            <minute>0</minute>
+            <second>0</second>
+            <year>2020</year>
+            <month>1</month>
+            <day>1</day>
+           </datetime>
+          </property>
+          <property name="displayFormat">
+           <string extracomment="qwe">yyyy-MM-dd</string>
+          </property>
+          <property name="calendarPopup">
+           <bool>true</bool>
+          </property>
+          <property name="timeSpec">
+           <enum>Qt::LocalTime</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="okButton">
+          <property name="text">
+           <string>OK</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="todayButton">
+          <property name="text">
+           <string>Today</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="dateNextEkadashi">
+          <property name="text">
+           <string>&amp;Next Ekādaśī »</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="dateRightSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
-      </widget>
-     </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalBigLayout">
+      <item>
+       <widget class="QGroupBox" name="dateLocationGroup">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>1</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="title">
+         <string>Location</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLabel" name="locationLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Location:</string>
+               </property>
+               <property name="margin">
+                <number>5</number>
+               </property>
+               <property name="buddy">
+                <cstring>locationComboBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="locationComboBox"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="hlLatLong">
+             <item>
+              <widget class="QLabel" name="latitudeLabel">
+               <property name="toolTip">
+                <string>Latitude in decimal degrees (+ means North)</string>
+               </property>
+               <property name="text">
+                <string>Lat:</string>
+               </property>
+               <property name="margin">
+                <number>5</number>
+               </property>
+               <property name="buddy">
+                <cstring>latitude</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="latitude">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="toolTip">
+                <string>Latitude in decimal degrees (+ means North)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="longitudeLabel">
+               <property name="toolTip">
+                <string>Longitude in decimal degrees (+ means East)</string>
+               </property>
+               <property name="text">
+                <string>Long:</string>
+               </property>
+               <property name="margin">
+                <number>5</number>
+               </property>
+               <property name="buddy">
+                <cstring>longitude</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="longitude">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="toolTip">
+                <string>Longitude in decimal degrees (+ means East)</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="hlTimezone">
+             <item>
+              <widget class="QLabel" name="timezoneLabel">
+               <property name="text">
+                <string>TZ:</string>
+               </property>
+               <property name="margin">
+                <number>5</number>
+               </property>
+               <property name="buddy">
+                <cstring>timezone</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="timezone">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="FindNextEkadashi">
+             <property name="text">
+              <string>Find next Ekādaśī</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>2</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="tab_brief">
+         <attribute name="title">
+          <string>Summary</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="2" column="0">
+           <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>When:</string>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelVrataType">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>1</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Vrata type:</string>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Location:</string>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="paranamNextDay">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Pāraṇam &lt;span style=&quot; font-size:small;&quot;&gt;(next day)&lt;/span&gt;:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="locationName">
+            <property name="text">
+             <string>(not calculated yet)</string>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="vrataDate">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>(not calculated yet)</string>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="vrataType">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>2</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>(not calculated yet)</string>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLabel" name="paranTime">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>(not calculated yet)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_detail">
+         <attribute name="title">
+          <string>Details</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QTextBrowser" name="calcResult">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_table">
+         <attribute name="title">
+          <string>Table</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayoutTabTable">
+          <item>
+           <widget class="HtmlBrowser" name="tableTextBrowser"/>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

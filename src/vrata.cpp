@@ -161,7 +161,70 @@ Vrata_Time_Points::Ativrddhaadi Vrata_Time_Points::ativrddhaadi() const
         return Ativrddhaadi::vrddha;
     }
     if (delta1 < 0.0 && delta2 < 0.0) return Ativrddhaadi::hrasva;
-    return Ativrddhaadi::samyam;
+            return Ativrddhaadi::samyam;
+}
+
+MinMaxDate VratasForDate::minmax_date() const
+{
+    auto [it_min, it_max] = std::minmax_element(
+        vector.cbegin(), vector.cend(),
+        [](const vp::MaybeVrata & l, const vp::MaybeVrata & r) -> bool {
+            if (!l.has_value()) return r.has_value(); // nullopt < date; ! (nullopt < nullopt).
+            if (!r.has_value()) return false; // ! (date < nullopt)
+            return l->date < r->date;
+        });
+    std::optional<date::year_month_day> min_date;
+    if (it_min != vector.cend()) {
+        min_date = it_min->value().date;
+    }
+    std::optional<date::year_month_day> max_date;
+    if (it_max != vector.cend()) {
+        max_date = it_max->value().date;
+    }
+    return {min_date, max_date};
+}
+
+std::optional<date::sys_days> VratasForDate::min_date() const
+{
+    auto [l_min_date, l_max_date] = minmax_date();
+    return l_min_date;
+}
+
+std::optional<date::sys_days> VratasForDate::max_date() const
+{
+    auto [l_min_date, l_max_date] = minmax_date();
+    return l_max_date;
+}
+
+/**
+ * True if all vratas in the set are within 2 days from one another.
+ * (also true if vrata set is empty).
+ * I've never seen in practice more than 1 day difference, but just to be safe I set the limit to 2 days.
+ */
+bool VratasForDate::all_from_same_ekadashi() const
+{
+    auto [min_date, max_date] = minmax_date();
+    if (!min_date || !max_date) return true;
+    date::days length = date::sys_days{*max_date} - date::sys_days{*min_date};
+    return length <= date::days{2};
+}
+
+date::sys_days VratasForDate::guess_start_date_for_next_ekadashi(date::sys_days current_start_date)
+{
+    auto l_max_date = max_date();
+    if (!l_max_date) {
+        return current_start_date + date::days{12};
+    }
+    return *l_max_date + date::days{1};
+}
+
+date::sys_days VratasForDate::guess_start_date_for_prev_ekadashi(date::sys_days current_start_date)
+{
+    auto l_min_date = min_date();
+    if (!l_min_date) {
+        return current_start_date - date::days{13};
+    }
+    return *l_min_date - date::days{15};
 }
 
 } // namespace vp

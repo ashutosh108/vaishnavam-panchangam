@@ -322,22 +322,9 @@ std::string program_name_and_version()
     return "Vaiṣṇavaṁ Pañcāṅgam " + version();
 }
 
-// assumes non-empty std::vector vratas
-date::days calc_dates_range(const vp::MaybeVratas & vratas) {
-    auto [it_min, it_max] = std::minmax_element(
-        vratas.begin(), vratas.end(),
-        [](const vp::MaybeVrata & l, const vp::MaybeVrata & r){
-            if (!l.has_value()) return true;
-            if (!r.has_value()) return false;
-            return l->date < r->date;
-        });
-    auto length = date::sys_days{it_max->value().date} - date::sys_days{it_min->value().date};
-    return length;
-}
-
 // Try calculating, return true if resulting date range is small enough (suggesting that it's the same ekAdashI for all locations),
-// false otherwise (suggesting that we should repeac claculation with adjusted base_date
-bool try_calc_all(date::year_month_day base_date, vp::MaybeVratas & vratas) {
+// false otherwise (suggesting that we should repeat calculation with adjusted base_date
+bool try_calc_all(date::year_month_day base_date, vp::VratasForDate & vratas) {
     std::transform(
         LocationDb().begin(),
         LocationDb().end(),
@@ -345,14 +332,12 @@ bool try_calc_all(date::year_month_day base_date, vp::MaybeVratas & vratas) {
         [base_date](const vp::Location & location) {
             return calc_one(base_date, location);
         });
-    if (vratas.empty()) return true;
-    date::days length = calc_dates_range(vratas);
-    return length < date::days{7};
+    return vratas.all_from_same_ekadashi();
 }
 
-vp::MaybeVratas calc_all(date::year_month_day base_date)
+vp::VratasForDate calc_all(date::year_month_day base_date)
 {
-    vp::MaybeVratas vratas;
+    vp::VratasForDate vratas;
 
     if (!try_calc_all(base_date, vratas)) {
         vratas.clear();

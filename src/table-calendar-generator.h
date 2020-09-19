@@ -12,7 +12,7 @@ namespace vp {
 class Table_Calendar_Generator
 {
 public:
-    static vp::Table generate(const MaybeVratas & vratas);
+    static vp::Table generate(const VratasForDate & vratas);
 };
 
 } // namespace vp

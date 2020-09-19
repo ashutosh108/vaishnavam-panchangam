@@ -128,7 +128,65 @@ const std::vector<std::string> & ekadashi_names_rus();
 bool ekadashi_name_rus_is_valid(const std::string & name);
 
 using MaybeVrata = tl::expected<Vrata, CalcError>;
-using MaybeVratas = std::vector<MaybeVrata>;
+
+struct MinMaxDate {
+    std::optional<date::sys_days> min;
+    std::optional<date::sys_days> max;
+};
+
+// All calculated vratas for the same date but different locations.
+class VratasForDate {
+private:
+    using MaybeVratas = std::vector<MaybeVrata>;
+public:
+    // true if all vratas in the set are within 1 day from one another.
+    bool all_from_same_ekadashi() const;
+
+    date::sys_days guess_start_date_for_next_ekadashi(date::sys_days current_start_date);
+    date::sys_days guess_start_date_for_prev_ekadashi(date::sys_days current_start_date);
+
+    MinMaxDate minmax_date() const;
+    std::optional<date::sys_days> min_date() const;
+    std::optional<date::sys_days> max_date() const;
+
+    inline void push_back(const MaybeVrata & vrata) {
+        vector.push_back(vrata);
+    }
+    inline void push_back(MaybeVrata && vrata) {
+        vector.push_back(vrata);
+    }
+    inline MaybeVratas::const_iterator cbegin() const {
+        return vector.cbegin();
+    }
+    inline MaybeVratas::const_iterator cend() const {
+        return vector.cend();
+    };
+    inline MaybeVratas::size_type size() const {
+        return vector.size();
+    }
+    inline MaybeVratas::iterator begin() {
+        return vector.begin();
+    }
+    inline MaybeVratas::const_iterator begin() const {
+        return vector.cbegin();
+    }
+    inline MaybeVratas::iterator end() {
+        return vector.end();
+    };
+    inline MaybeVratas::const_iterator end() const {
+        return vector.cend();
+    };
+    inline void clear() {
+        vector.clear();
+    }
+    inline bool empty() const {
+        return vector.empty();
+    }
+private:
+    MaybeVratas vector;
+public:
+    using value_type = decltype(vector)::value_type;
+};
 
 } // namespace vp
 

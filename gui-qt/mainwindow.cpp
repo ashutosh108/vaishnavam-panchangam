@@ -1,16 +1,15 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-#include "fmt-format-fixed.h"
-#include <iterator>
-#include <QDate>
-#include <QMessageBox>
-
 #include "html-table-writer.h"
 #include "location.h"
 #include "table-calendar-generator.h"
 #include "text-interface.h"
 #include "tz-fixed.h"
+
+#include "fmt-format-fixed.h"
+#include <QDate>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -156,8 +155,10 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
 
 void MainWindow::refreshTable()
 {
+    if (!ui->tableTextBrowser->isVisible()) { return; }
+
     std::stringstream s;
-    auto vratas = vp::text_ui::calc_all(to_sys_days(ui->dateEdit->date()));
+    vratas = vp::text_ui::calc_all(to_sys_days(ui->dateEdit->date()));
     s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas)};
     static QString css {R"CSS(<style>
 table, td, th {
@@ -232,7 +233,45 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 
 void MainWindow::on_dateEdit_dateChanged(const QDate & /*date*/)
 {
-    if (ui->tabWidget->currentIndex() == 2) {
-        refreshTable();
+    refreshTable();
+}
+
+void MainWindow::on_todayButton_clicked()
+{
+    setDateToToday();
+    refreshTable();
+}
+
+static date::days to_juldays(date::sys_days date) {
+    using namespace date;
+    constexpr auto sys_epoch = sys_days{1970_y/January/1};
+    constexpr auto jd_epoch = sys_days{year{-4713}/November/24};
+    constexpr auto sys_to_jd = sys_epoch - jd_epoch;
+    return date.time_since_epoch() + sys_to_jd;
+}
+
+static QDate to_qdate(date::sys_days date) {
+    return QDate::fromJulianDay(to_juldays(date).count());
+}
+
+void MainWindow::on_dateNextEkadashi_clicked()
+{
+    auto next_date = vratas.guess_start_date_for_next_ekadashi(to_sys_days(ui->dateEdit->date()));
+    ui->dateEdit->setDate(to_qdate(next_date));
+    refreshTable();
+    auto min_date = vratas.min_date();
+    if (min_date) {
+        ui->dateEdit->setDate(to_qdate(*min_date));
+    }
+}
+
+void MainWindow::on_datePrevEkadashi_clicked()
+{
+    auto prev_date = vratas.guess_start_date_for_prev_ekadashi(to_sys_days(ui->dateEdit->date()));
+    ui->dateEdit->setDate(to_qdate(prev_date));
+    refreshTable();
+    auto min_date = vratas.min_date();
+    if (min_date) {
+        ui->dateEdit->setDate(to_qdate(*min_date));
     }
 }

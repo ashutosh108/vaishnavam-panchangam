@@ -2,7 +2,7 @@
 
 #include <set>
 
-static std::set<date::year_month_day> get_vrata_dates(const vp::MaybeVratas & vratas) {
+static std::set<date::year_month_day> get_vrata_dates(const vp::VratasForDate & vratas) {
     std::set<date::year_month_day> dates;
     for (const auto & vrata : vratas) {
         if (vrata) {
@@ -71,7 +71,7 @@ static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std
     }
 }
 
-vp::Table vp::Table_Calendar_Generator::generate(const vp::MaybeVratas & vratas)
+vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vratas)
 {
     vp::Table table;
     auto vrata_dates = get_vrata_dates(vratas);

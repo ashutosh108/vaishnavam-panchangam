@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "vrata.h"
+
 #include "date-fixed.h"
 #include <fmt/core.h>
 #include <QMainWindow>
@@ -30,8 +32,15 @@ private slots:
 
     void on_dateEdit_dateChanged(const QDate &date);
 
+    void on_todayButton_clicked();
+
+    void on_dateNextEkadashi_clicked();
+
+    void on_datePrevEkadashi_clicked();
+
 private:
     Ui::MainWindow *ui;
+    vp::VratasForDate vratas;
     void setupLocationsComboBox();
     void setDateToToday();
     void calcAll(date::year_month_day base_date, fmt::memory_buffer & buf);
