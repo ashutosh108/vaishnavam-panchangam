@@ -155,6 +155,17 @@ void MainWindow::calcOne(date::year_month_day base_date, QString location_string
     }
 }
 
+void MainWindow::refreshAllTabs()
+{
+    refreshSummary();
+    refreshTable();
+}
+
+void MainWindow::refreshSummary()
+{
+    if (!ui->vrataDate->isVisible()) { return; }
+}
+
 void MainWindow::refreshTable()
 {
     if (!ui->tableTextBrowser->isVisible()) { return; }
@@ -229,19 +240,19 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
     if (index == 2) {
-        refreshTable();
+        refreshAllTabs();
     }
 }
 
 void MainWindow::on_dateEdit_dateChanged(const QDate & /*date*/)
 {
-    refreshTable();
+    refreshAllTabs();
 }
 
 void MainWindow::on_todayButton_clicked()
 {
     setDateToToday();
-    refreshTable();
+    refreshAllTabs();
 }
 
 static date::days to_juldays(date::sys_days date) {
@@ -260,7 +271,7 @@ void MainWindow::on_dateNextEkadashi_clicked()
 {
     auto next_date = vratas.guess_start_date_for_next_ekadashi(to_sys_days(ui->dateEdit->date()));
     ui->dateEdit->setDate(to_qdate(next_date));
-    refreshTable();
+    refreshAllTabs();
     auto min_date = vratas.min_date();
     if (min_date) {
         ui->dateEdit->setDate(to_qdate(*min_date));
@@ -271,7 +282,7 @@ void MainWindow::on_datePrevEkadashi_clicked()
 {
     auto prev_date = vratas.guess_start_date_for_prev_ekadashi(to_sys_days(ui->dateEdit->date()));
     ui->dateEdit->setDate(to_qdate(prev_date));
-    refreshTable();
+    refreshAllTabs();
     auto min_date = vratas.min_date();
     if (min_date) {
         ui->dateEdit->setDate(to_qdate(*min_date));

@@ -45,6 +45,8 @@ private:
     void setDateToToday();
     void calcAll(date::year_month_day base_date, fmt::memory_buffer & buf);
     void calcOne(date::year_month_day base_date, QString location, fmt::memory_buffer & buf);
+    void refreshAllTabs();
+    void refreshSummary();
     void refreshTable();
     void showVersionInStatusLine();
     void clearLocationData();
