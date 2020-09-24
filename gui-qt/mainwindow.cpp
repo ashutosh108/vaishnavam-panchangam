@@ -164,6 +164,7 @@ void MainWindow::refreshAllTabs()
 void MainWindow::refreshSummary()
 {
     if (!ui->vrataDate->isVisible()) { return; }
+    on_FindNextEkadashi_clicked();
 }
 
 void MainWindow::refreshTable()
