@@ -1,6 +1,5 @@
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)
 [ ] switch from std::regex to some other, saner and faster, regex library.
-[ ] add "table" output tab (all primary locations in a single table)
 [ ] "copy to clipboard" function (with link to the program)
 [ ] "copy as image to clipboard"
 [ ] "all" option: rethink how it works for simple output. separate thread for calculations + get rid of "calculate" button?
@@ -186,4 +185,6 @@ done:
 [+] on switching "table" tab, fill it with fresh-calculated table [2020-09-14]
 [+] table: add "View HTML source" context menu item [2020-09-14]
 [+] table: automatically decrease start date to keep all vratas in different locations together [2020-09-14]
+[+] add "table" output tab (all primary locations in a single table) [2020-09-14]
 [+] table: allow adjusting dates (prev/next ekAdashI) [2020-09-19]
+[+] on startup: select Udupi (not all), find next Ekādaśī [2020-09-24]

@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     setupLocationsComboBox();
     setDateToToday();
     showVersionInStatusLine();
+    on_FindNextEkadashi_clicked();
 }
 
 MainWindow::~MainWindow()
@@ -107,6 +108,7 @@ void MainWindow::setupLocationsComboBox()
     for (const auto &l : vp::text_ui::LocationDb()) {
         ui->locationComboBox->addItem(QString::fromUtf8(l.name.data(), l.name.size()));
     }
+    ui->locationComboBox->setCurrentIndex(1); // select Udupi, first location after "all"
 }
 
 void MainWindow::setDateToToday()
