@@ -244,7 +244,13 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
     if (index == 2) {
+        location_for_summary = ui->locationComboBox->currentIndex();
+        ui->locationComboBox->setCurrentIndex(0); // 0 is "all"
+        ui->locationComboBox->setDisabled(true);
         refreshAllTabs();
+    } else {
+        ui->locationComboBox->setCurrentIndex(location_for_summary);
+        ui->locationComboBox->setDisabled(false);
     }
 }
 

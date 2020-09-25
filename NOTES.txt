@@ -1,3 +1,5 @@
+[ ] mainwindow: separate refresh for vratas (calcuilations) and GUI
+[ ] cache VratasForDate results
 [ ] make "prev ekadashi" more reliable for single-location mode
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)
 [ ] switch from std::regex to some other, saner and faster, regex library.
@@ -193,3 +195,4 @@ done:
 [+] find next ekadashi: store result in "vratas" field (like Table does) [2020-09-25]
 [+] refresh summary/detail automatically on each location/date change [2020-09-25]
 [+] remove "Find next Ekādaśī" button: it's function is performed automatically now [2020-09-25]
+[+] "table" tab: temporarily switch to "all", disable location choice [2020-09-25]
