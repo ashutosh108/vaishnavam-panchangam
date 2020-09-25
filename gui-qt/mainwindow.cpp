@@ -248,10 +248,11 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->locationComboBox->setCurrentIndex(0); // 0 is "all"
         ui->locationComboBox->setDisabled(true);
         refreshAllTabs();
-    } else {
+    } else if (prev_tab_index == 2) {
         ui->locationComboBox->setCurrentIndex(location_for_summary);
         ui->locationComboBox->setDisabled(false);
     }
+    prev_tab_index = index;
 }
 
 void MainWindow::on_dateEdit_dateChanged(const QDate & /*date*/)
