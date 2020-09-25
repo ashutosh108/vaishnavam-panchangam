@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     setupLocationsComboBox();
     setDateToToday();
     showVersionInStatusLine();
-    on_FindNextEkadashi_clicked();
+    refreshAllTabs();
 }
 
 MainWindow::~MainWindow()
@@ -77,11 +77,6 @@ static QString get_html_from_detail_view(const std::string_view & s) {
     }
 
     return res;
-}
-
-void MainWindow::on_FindNextEkadashi_clicked()
-{
-    refreshSummary();
 }
 
 void MainWindow::setupLocationsComboBox()

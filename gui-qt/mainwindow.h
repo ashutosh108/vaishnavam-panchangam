@@ -20,8 +20,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_FindNextEkadashi_clicked();
-
     void on_actionAbout_triggered();
 
     void on_actionE_xit_2_triggered();
