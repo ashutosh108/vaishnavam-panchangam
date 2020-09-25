@@ -43,8 +43,8 @@ private:
     vp::VratasForDate vratas;
     void setupLocationsComboBox();
     void setDateToToday();
-    void calcAll(date::year_month_day base_date, fmt::memory_buffer & buf);
-    void calcOne(date::year_month_day base_date, QString location, fmt::memory_buffer & buf);
+    vp::VratasForDate calcAll(date::year_month_day base_date, fmt::memory_buffer & buf);
+    void calcOne(date::year_month_day base_date, QString location, fmt::memory_buffer & buf, vp::VratasForDate & vratas);
     void refreshAllTabs();
     void refreshSummary();
     void refreshTable();

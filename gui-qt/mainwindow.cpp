@@ -81,25 +81,7 @@ static QString get_html_from_detail_view(const std::string_view & s) {
 
 void MainWindow::on_FindNextEkadashi_clicked()
 {
-    try {
-        date::year_month_day date = to_sys_days(ui->dateEdit->date());
-
-        auto location_string = ui->locationComboBox->currentText();
-
-        fmt::memory_buffer buf;
-        if (location_string == "all") {
-            calcAll(date, buf);
-        } else {
-            calcOne(date, location_string, buf);
-        }
-
-        QString detail_html = get_html_from_detail_view(std::string_view{buf.data(), buf.size()});
-        ui->calcResult->setHtml(detail_html);
-    } catch (std::exception &e) {
-        QMessageBox::warning(this, "error", e.what());
-    } catch (...) {
-        QMessageBox::warning(this, "internal error", "unexpected exception thrown");
-    }
+    refreshSummary();
 }
 
 void MainWindow::setupLocationsComboBox()
@@ -116,20 +98,23 @@ void MainWindow::setDateToToday()
     ui->dateEdit->setDate(QDate::currentDate());
 }
 
-void MainWindow::calcAll(date::year_month_day base_date, fmt::memory_buffer & buf)
+vp::VratasForDate MainWindow::calcAll(date::year_month_day base_date, fmt::memory_buffer & buf)
 {
+    vp::VratasForDate vratas;
     for (auto &l : vp::text_ui::LocationDb()) {
-        calcOne(base_date, QString::fromUtf8(l.name.data(), l.name.size()), buf);
+        calcOne(base_date, QString::fromUtf8(l.name.data(), l.name.size()), buf, vratas);
     }
+    return vratas;
 }
 
-void MainWindow::calcOne(date::year_month_day base_date, QString location_string, fmt::memory_buffer & buf)
+void MainWindow::calcOne(date::year_month_day base_date, QString location_string, fmt::memory_buffer & buf, vp::VratasForDate & vratas)
 {
     QByteArray location_as_bytearray = location_string.toLocal8Bit();
     char * location_name = location_as_bytearray.data();
 
     auto vrata = vp::text_ui::find_calc_and_report_one(base_date, location_name, buf);
     if (vrata.has_value()) {
+        vratas.push_back(vrata);
         ui->locationName->setText(QString::fromStdString(vrata->location_name()));
 
         ui->vrataType->setText(QString::fromStdString(fmt::to_string(vrata->type)));
@@ -163,8 +148,26 @@ void MainWindow::refreshAllTabs()
 
 void MainWindow::refreshSummary()
 {
-    if (!ui->vrataDate->isVisible()) { return; }
-    on_FindNextEkadashi_clicked();
+    try {
+        date::year_month_day date = to_sys_days(ui->dateEdit->date());
+
+        auto location_string = ui->locationComboBox->currentText();
+
+        fmt::memory_buffer buf;
+        if (location_string == "all") {
+            vratas = calcAll(date, buf);
+        } else {
+            vratas.clear();
+            calcOne(date, location_string, buf, vratas);
+        }
+
+        QString detail_html = get_html_from_detail_view(std::string_view{buf.data(), buf.size()});
+        ui->calcResult->setHtml(detail_html);
+    } catch (std::exception &e) {
+        QMessageBox::warning(this, "error", e.what());
+    } catch (...) {
+        QMessageBox::warning(this, "internal error", "unexpected exception thrown");
+    }
 }
 
 void MainWindow::refreshTable()
@@ -229,13 +232,18 @@ void MainWindow::clearLocationData() {
 
 void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location_name)
 {
-    if (location_name == "all") return clearLocationData();
-    auto location_arr = location_name.toUtf8();
-    auto location = vp::text_ui::LocationDb().find_coord(location_arr.data());
-    if (!location.has_value()) return;
-    ui->latitude->setText(QString::fromStdString(fmt::to_string(location->latitude)));
-    ui->longitude->setText(QString::fromStdString(fmt::to_string(location->longitude)));
-    ui->timezone->setText(QString::fromStdString(location->time_zone()->name()));
+    if (location_name == "all") {
+        clearLocationData();
+    } else {
+        auto location_arr = location_name.toUtf8();
+        auto location = vp::text_ui::LocationDb().find_coord(location_arr.data());
+        if (location.has_value()) {
+            ui->latitude->setText(QString::fromStdString(fmt::to_string(location->latitude)));
+            ui->longitude->setText(QString::fromStdString(fmt::to_string(location->longitude)));
+            ui->timezone->setText(QString::fromStdString(location->time_zone()->name()));
+        }
+    }
+    refreshAllTabs();
 }
 
 void MainWindow::on_tabWidget_currentChanged(int index)

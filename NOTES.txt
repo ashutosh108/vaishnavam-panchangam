@@ -1,4 +1,3 @@
-[ ] find next ekadashi: store result in "vratas" field (like Table does)
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)
 [ ] switch from std::regex to some other, saner and faster, regex library.
 [ ] "copy to clipboard" function (with link to the program)
@@ -190,3 +189,5 @@ done:
 [+] table: allow adjusting dates (prev/next ekAdashI) [2020-09-19]
 [+] on startup: select Udupi (not all), find next Ekādaśī [2020-09-24]
 [+] "Summary" mode: "prev/next Ekādaśī" and "Today" buttons should work [2020-09-24]
+[+] find next ekadashi: store result in "vratas" field (like Table does) [2020-09-25]
+[+] refresh summary/detail automatically on each location/date change [2020-09-25]
