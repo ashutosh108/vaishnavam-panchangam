@@ -43,10 +43,10 @@ private:
     int prev_tab_index = 0;
     void setupLocationsComboBox();
     void setDateToToday();
-    vp::VratasForDate calcAll(date::year_month_day base_date, fmt::memory_buffer & buf);
-    void calcOne(date::year_month_day base_date, QString location, fmt::memory_buffer & buf, vp::VratasForDate & vratas);
+    void recalcVratasForSelectedDateAndLocation();
     void refreshAllTabs();
     void refreshSummary();
+    void refreshDetails();
     void refreshTable();
     void showVersionInStatusLine();
     void clearLocationData();

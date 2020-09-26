@@ -135,6 +135,18 @@ tl::expected<vp::Vrata, vp::CalcError> decrease_latitude_and_find_vrata(date::ye
     }
 }
 
+vp::VratasForDate calc_one(date::year_month_day base_date, std::string location_name)
+{
+    vp::VratasForDate vratas;
+    auto location = LocationDb::find_coord(location_name.c_str());
+    if (!location) {
+        vratas.push_back(tl::unexpected{CantFindLocation{std::move(location_name)}});
+        return vratas;
+    }
+    vratas.push_back(calc_one(base_date, *location));
+    return vratas;
+}
+
 tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, Location location) {
     // Use immediately-called lambda to ensure Calc is destroyed before more
     // will be created in decrease_latitude_and_find_vrata()
@@ -153,20 +165,25 @@ tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, 
 }
 
 
-// Find next ekAdashI vrata for the named location, report details to the output buffer.
-tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location location, fmt::memory_buffer & buf) {
-    auto vrata = calc_one(base_date, location);
+void report_details(const vp::MaybeVrata & vrata, fmt::memory_buffer & buf) {
     if (!vrata.has_value()) {
         fmt::format_to(buf,
-                   "# {}*\n"
-                   "Can't find next Ekadashi, sorry.\n"
-                   "* Error: {}\n",
-                   vrata->location_name(),
-                   vrata.error());
+                       "# {}*\n"
+                       "Can't find next Ekadashi, sorry.\n"
+                       "* Error: {}\n",
+                       vrata->location_name(),
+                       vrata.error());
     } else {
         Vrata_Detail_Printer vd{*vrata};
         fmt::format_to(buf, "{}\n\n", vd);
     }
+
+}
+
+// Find next ekAdashI vrata for the named location, report details to the output buffer.
+tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location location, fmt::memory_buffer & buf) {
+    auto vrata = calc_one(base_date, location);
+    report_details(vrata, buf);
     return vrata;
 }
 

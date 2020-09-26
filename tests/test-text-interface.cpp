@@ -56,3 +56,10 @@ TEST_CASE("calc_all adjusts start date to ensure all locations have the same ekA
 
     REQUIRE(length.count() <= date::days{1}.count());
 }
+
+TEST_CASE("can call calc_one with string for location name") {
+    using namespace date;
+    auto vratas = vp::text_ui::calc_one(2020_y/January/1, std::string("Kiev"));
+    REQUIRE(!vratas.empty());
+    REQUIRE(vratas.begin()->has_value());
+}

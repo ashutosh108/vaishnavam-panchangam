@@ -93,71 +93,24 @@ void MainWindow::setDateToToday()
     ui->dateEdit->setDate(QDate::currentDate());
 }
 
-vp::VratasForDate MainWindow::calcAll(date::year_month_day base_date, fmt::memory_buffer & buf)
-{
-    vp::VratasForDate vratas;
-    for (auto &l : vp::text_ui::LocationDb()) {
-        calcOne(base_date, QString::fromUtf8(l.name.data(), l.name.size()), buf, vratas);
-    }
-    return vratas;
-}
+void MainWindow::recalcVratasForSelectedDateAndLocation() {
+    auto date = to_sys_days(ui->dateEdit->date());
+    auto location_string = ui->locationComboBox->currentText().toStdString();
 
-void MainWindow::calcOne(date::year_month_day base_date, QString location_string, fmt::memory_buffer & buf, vp::VratasForDate & vratas)
-{
-    QByteArray location_as_bytearray = location_string.toLocal8Bit();
-    char * location_name = location_as_bytearray.data();
-
-    auto vrata = vp::text_ui::find_calc_and_report_one(base_date, location_name, buf);
-    if (vrata.has_value()) {
-        vratas.push_back(vrata);
-        ui->locationName->setText(QString::fromStdString(vrata->location_name()));
-
-        ui->vrataType->setText(QString::fromStdString(fmt::to_string(vrata->type)));
-
-        if (vp::is_atirikta(vrata->type)) {
-            auto next_day = date::year_month_day{date::sys_days{vrata->date} + date::days{1}};
-            ui->vrataDate->setText(QString::fromStdString(fmt::format("{} and {}", vrata->date, next_day)));
-        } else {
-            ui->vrataDate->setText(QString::fromStdString(fmt::to_string(vrata->date)));
-        }
-
-        ui->paranamNextDay->setText(QString::fromStdString(fmt::format("Pāraṇam <span style=\" font-size:small;\">({})</span>:", vrata->local_paran_date())));
-
-        std::string paranTime = vp::ParanFormatter::format(
-                    vrata->paran,
-                    vrata->location.time_zone(),
-                    "%H:%M<span style=\"font-size:small;\">:%S</span>",
-                    "–",
-                    "%H:%M<span style=\"font-size:small;\">:%S</span>",
-                    "<sup>*</sup><br><small><sup>*</sup>");
-        paranTime += "</small>";
-        ui->paranTime->setText(QString::fromStdString(paranTime));
+    if (location_string == "all") {
+        vratas = vp::text_ui::calc_all(date);
+    } else {
+        vratas = vp::text_ui::calc_one(date, location_string);
     }
 }
 
 void MainWindow::refreshAllTabs()
 {
-    refreshSummary();
-    refreshTable();
-}
-
-void MainWindow::refreshSummary()
-{
     try {
-        date::year_month_day date = to_sys_days(ui->dateEdit->date());
-
-        auto location_string = ui->locationComboBox->currentText();
-
-        fmt::memory_buffer buf;
-        if (location_string == "all") {
-            vratas = calcAll(date, buf);
-        } else {
-            vratas.clear();
-            calcOne(date, location_string, buf, vratas);
-        }
-
-        QString detail_html = get_html_from_detail_view(std::string_view{buf.data(), buf.size()});
-        ui->calcResult->setHtml(detail_html);
+        recalcVratasForSelectedDateAndLocation();
+        refreshSummary();
+        refreshDetails();
+        refreshTable();
     } catch (std::exception &e) {
         QMessageBox::warning(this, "error", e.what());
     } catch (...) {
@@ -165,14 +118,47 @@ void MainWindow::refreshSummary()
     }
 }
 
-void MainWindow::refreshTable()
+void MainWindow::refreshSummary()
 {
-    if (!ui->tableTextBrowser->isVisible()) { return; }
+    for (const auto & vrata : vratas) {
+        if (vrata.has_value()) {
+            ui->locationName->setText(QString::fromStdString(vrata->location_name()));
 
-    std::stringstream s;
-    vratas = vp::text_ui::calc_all(to_sys_days(ui->dateEdit->date()));
-    s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas)};
-    static QString css {R"CSS(<style>
+            ui->vrataType->setText(QString::fromStdString(fmt::to_string(vrata->type)));
+
+            if (vp::is_atirikta(vrata->type)) {
+                auto next_day = date::year_month_day{date::sys_days{vrata->date} + date::days{1}};
+                ui->vrataDate->setText(QString::fromStdString(fmt::format("{} and {}", vrata->date, next_day)));
+            } else {
+                ui->vrataDate->setText(QString::fromStdString(fmt::to_string(vrata->date)));
+            }
+
+            ui->paranamNextDay->setText(QString::fromStdString(fmt::format("Pāraṇam <span style=\" font-size:small;\">({})</span>:", vrata->local_paran_date())));
+
+            std::string paranTime = vp::ParanFormatter::format(
+                vrata->paran,
+                vrata->location.time_zone(),
+                "%H:%M<span style=\"font-size:small;\">:%S</span>",
+                "–",
+                "%H:%M<span style=\"font-size:small;\">:%S</span>",
+                "<sup>*</sup><br><small><sup>*</sup>");
+            paranTime += "</small>";
+            ui->paranTime->setText(QString::fromStdString(paranTime));
+            break; //stop after first valid vrata
+        }
+    }
+}
+
+void MainWindow::refreshDetails() {
+    fmt::memory_buffer buf;
+    for (const auto & vrata : vratas) {
+        vp::text_ui::report_details(vrata, buf);
+    }
+    QString detail_html = get_html_from_detail_view(std::string_view{buf.data(), buf.size()});
+    ui->calcResult->setHtml(detail_html);
+}
+
+static QString table_css {R"CSS(<style>
 table, td, th {
     border: 1px solid lightgray;
 }
@@ -199,7 +185,13 @@ table {
     border-collapse: collapse;
 }
 </style>)CSS"};
-    ui->tableTextBrowser->setUnchangableHtml(css + QString::fromStdString(s.str()));
+
+void MainWindow::refreshTable()
+{
+    if (!ui->tableTextBrowser->isVisible()) { return; }
+    std::stringstream s;
+    s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas)};
+    ui->tableTextBrowser->setUnchangableHtml(table_css + QString::fromStdString(s.str()));
 }
 
 void MainWindow::showVersionInStatusLine()

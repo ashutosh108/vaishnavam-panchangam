@@ -22,11 +22,13 @@ tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day 
 
 // Find next ekAdashI vrata for the named location, report details to the output buffer.
 tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf);
+void report_details(const vp::MaybeVrata & vrata, fmt::memory_buffer & buf);
 
 void print_detail_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf);
 void print_detail_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf);
 void calc_and_report_all(date::year_month_day d);
 vp::VratasForDate calc_all(date::year_month_day);
+vp::VratasForDate calc_one(date::year_month_day base_date, std::string location_name);
 std::string version();
 std::string program_name_and_version();
 
