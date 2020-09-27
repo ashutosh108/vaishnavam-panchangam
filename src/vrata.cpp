@@ -222,9 +222,14 @@ date::sys_days VratasForDate::guess_start_date_for_prev_ekadashi(date::sys_days 
 {
     auto l_min_date = min_date();
     if (!l_min_date) {
+        // backup: if we don't have any vratas calculated, then decrease starting date by 13 days to ensure we don't skip any vratas in between.
+        // Not sure if this code path is realistically reachable, though.
         return current_start_date - date::days{13};
     }
-    return *l_min_date - date::days{15};
+    // General case: step 16 days back from current known vrata.
+    // 16 days between two sequential Ekādaśīs is a maximum I've seen
+    // anywhere so far (e.g. Udupi 2020-09-27 and 2020-10-13).
+    return *l_min_date - date::days{16};
 }
 
 } // namespace vp
