@@ -5,6 +5,7 @@
 #include "filesystem-fixed.h"
 #include <optional>
 #include <tl/expected.hpp>
+#include <unordered_map>
 
 #include "location.h"
 #include "swe.h"
@@ -47,6 +48,17 @@ namespace detail {
 
 fs::path determine_exe_dir(const char* argv0);
 fs::path determine_working_dir(const char* argv0);
+
+struct MyHash {
+    std::size_t operator()(const date::year_month_day & ymd) const {
+        auto hy = std::hash<int>{}(ymd.year().operator int());
+        auto hm = std::hash<unsigned int>{}(ymd.month().operator unsigned int());
+        auto hd = std::hash<unsigned int>{}(ymd.day().operator unsigned int());
+        return hy ^ (hm << 1) ^ (hd << 2);
+    }
+};
+
+extern std::unordered_map<date::year_month_day, vp::VratasForDate, MyHash> cache;
 
 } // namespace detail
 

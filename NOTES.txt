@@ -1,4 +1,3 @@
-[ ] cache VratasForDate results
 [ ] make "prev ekadashi" more reliable for single-location mode
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)
 [ ] switch from std::regex to some other, saner and faster, regex library.
@@ -196,3 +195,4 @@ done:
 [+] remove "Find next Ekādaśī" button: it's function is performed automatically now [2020-09-25]
 [+] "table" tab: temporarily switch to "all", disable location choice [2020-09-25]
 [+] mainwindow: separate refresh for vratas (calcuilations) and GUI [2020-09-26]
+[+] cache VratasForDate results [2020-09-27]
