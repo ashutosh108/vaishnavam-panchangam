@@ -220,7 +220,6 @@ void MainWindow::clearLocationData() {
 
 void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location_name)
 {
-    if (!gui_ready) return;
     if (location_name == "all") {
         clearLocationData();
     } else {
@@ -232,7 +231,10 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
             ui->timezone->setText(QString::fromStdString(location->time_zone()->name()));
         }
     }
-    refreshAllTabs();
+    // skip refresh if the "Table" tab is active: refresh will come later anyway
+    if (gui_ready && ui->tabWidget->currentIndex() != 2) {
+        refreshAllTabs();
+    }
 }
 
 void MainWindow::on_tabWidget_currentChanged(int index)
