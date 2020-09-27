@@ -274,20 +274,10 @@ void MainWindow::on_dateNextEkadashi_clicked()
 {
     auto next_date = vratas.guess_start_date_for_next_ekadashi(to_sys_days(ui->dateEdit->date()));
     ui->dateEdit->setDate(to_qdate(next_date));
-    refreshAllTabs();
-    auto min_date = vratas.min_date();
-    if (min_date) {
-        ui->dateEdit->setDate(to_qdate(*min_date));
-    }
 }
 
 void MainWindow::on_datePrevEkadashi_clicked()
 {
     auto prev_date = vratas.guess_start_date_for_prev_ekadashi(to_sys_days(ui->dateEdit->date()));
     ui->dateEdit->setDate(to_qdate(prev_date));
-    refreshAllTabs();
-    auto min_date = vratas.min_date();
-    if (min_date) {
-        ui->dateEdit->setDate(to_qdate(*min_date));
-    }
 }
