@@ -41,10 +41,12 @@ static std::string get_timezone_text(const vp::MaybeVrata & vrata) {
     seconds -= hours * 3600;
     auto minutes = seconds / 60;
     seconds -= minutes * 60;
+    std::string dst = info.save != std::chrono::seconds{0} ? " (DST)" : "";
+
     if (seconds != 0) {
-        return fmt::format("{}{}:{:02}:{:02}", sign, hours, minutes, seconds);
+        return fmt::format("{}{}:{:02}:{:02}{}", sign, hours, minutes, seconds, dst);
     }
-    return fmt::format("{}{}:{:02}", sign, hours, minutes);
+    return fmt::format("{}{}:{:02}{}", sign, hours, minutes, dst);
 }
 
 static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::year_month_day> & vrata_dates, std::string tr_classes) {

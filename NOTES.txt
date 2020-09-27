@@ -199,3 +199,4 @@ done:
 [+] make "prev ekadashi" more reliable for single-location mode [2020-09-27]
 [+] faster startup: disable some "value changed" GUI callbacks until everything is ready [2020-09-27]
 [+] optimize: don't generate table twice when switching to "Table" tab [2020-09-27]
+[+] Table: add "DST" to timezones as necessary (e.g. +3:00 DST for Kiev summer time) [2020-09-27]

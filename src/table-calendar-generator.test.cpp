@@ -29,3 +29,22 @@ TEST_CASE("Table_Caledar_Generator returns reasonable table") {
     REQUIRE(table.at(1, 4).text == ">10:06");
     REQUIRE(table.at(1, 5).text == "");
 }
+
+TEST_CASE("Table_Caledar_Generator returns reasonable table adds ' (DST)' for 'summer' times") {
+    using namespace date;
+    const auto vratas = vp::text_ui::calc_all(2020_y/July/1);
+
+    const auto table = vp::Table_Calendar_Generator::generate(vratas);
+    int num_with_dst = 0;
+    int num_without_dst = 0;
+    for (int row=0; row < table.height(); ++row) {
+        auto text = table.at(row, 0).text;
+        if (text.find("DST") != std::string::npos) {
+            ++num_with_dst;
+        } else {
+            ++num_without_dst;
+        }
+    }
+    REQUIRE(num_with_dst > 0);
+    REQUIRE(num_with_dst > 0);
+}
