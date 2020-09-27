@@ -41,6 +41,7 @@ private:
     vp::VratasForDate vratas;
     int location_for_summary = 1; // keeps previously selected location when switching to "table" tab
     int prev_tab_index = 0;
+    bool gui_ready = false; // set to true at the and of the MainWindow constructor
     void setupLocationsComboBox();
     void setDateToToday();
     void recalcVratasForSelectedDateAndLocation();

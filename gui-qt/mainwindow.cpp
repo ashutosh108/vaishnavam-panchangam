@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     setupLocationsComboBox();
     setDateToToday();
     showVersionInStatusLine();
+    gui_ready = true;
     refreshAllTabs();
 }
 
@@ -219,6 +220,7 @@ void MainWindow::clearLocationData() {
 
 void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location_name)
 {
+    if (!gui_ready) return;
     if (location_name == "all") {
         clearLocationData();
     } else {
@@ -235,6 +237,7 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
 
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
+    if (!gui_ready) return;
     if (index == 2) {
         location_for_summary = ui->locationComboBox->currentIndex();
         ui->locationComboBox->setCurrentIndex(0); // 0 is "all"
@@ -249,6 +252,7 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 
 void MainWindow::on_dateEdit_dateChanged(const QDate & /*date*/)
 {
+    if (!gui_ready) return;
     refreshAllTabs();
 }
 
