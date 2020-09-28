@@ -168,6 +168,7 @@ td, th {
 }
 td.mainpart, th.mainpart {
     text-align: center;
+    vertical-align: middle;
 }
 th.mainpart {
     background-color: #c0c0c0;
