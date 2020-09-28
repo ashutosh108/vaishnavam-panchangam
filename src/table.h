@@ -42,6 +42,7 @@ private:
     bool has_cell(std::size_t row, std::size_t col);
     void do_add_cell(std::string text, std::string classes, CellType type, Mergeable mergeable);
     static bool mergeable_cells(const vp::Table::Cell &c1, const vp::Table::Cell &c2);
+    void add_row_span(Cell &cell, std::size_t span_size);
 
 public:
     struct Iterator {

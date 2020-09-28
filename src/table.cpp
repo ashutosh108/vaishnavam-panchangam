@@ -88,6 +88,22 @@ bool vp::Table::mergeable_cells(const vp::Table::Cell & c1, const vp::Table::Cel
     return c1.text == c2.text;
 }
 
+// make sure we add spans as evenly as possible
+void vp::Table::add_row_span(Cell & cell, std::size_t overall_span_size) {
+    constexpr std::size_t max_span_size = 12;
+    if (overall_span_size < max_span_size) {
+        cell.rowspan = overall_span_size;
+        return;
+    }
+    std::size_t num_sections = (overall_span_size + max_span_size - 1) / max_span_size; // rounding up
+    std::size_t section_size = (overall_span_size + num_sections - 1) / num_sections; // rounding up
+    std::size_t first_row_after_span = cell.row + overall_span_size;
+    for (std::size_t row=cell.row; row < first_row_after_span; row += section_size) {
+        std::size_t span_size = std::min(section_size,first_row_after_span - row);
+        at(row, cell.col).rowspan = span_size;
+    }
+}
+
 void vp::Table::merge_cells_into_rowspans()
 {
     if (height() < 2) return;
@@ -101,12 +117,12 @@ void vp::Table::merge_cells_into_rowspans()
                 ++span_size;
                 cell.rowspan = 0;
             } else {
-                cell.rowspan = span_size;
+                add_row_span(cell, span_size);
                 span_size = 1;
             }
         }
         if (has_cell(0, col)) {
-            at(0, col).rowspan = span_size;
+            add_row_span(at(0, col), span_size);
         }
     }
 }

@@ -161,3 +161,20 @@ TEST_CASE("doesn't merge cells marked as unmergeable") {
         REQUIRE(cell.rowspan == 1);
     }
 }
+
+TEST_CASE("table cell merge keeps rowspans to 12 rows max with even split") {
+    vp::Table table;
+    for (int i=0; i<13; ++i) {
+        table.add_cell("text");
+        table.start_new_row();
+    }
+    table.merge_cells_into_rowspans();
+
+    REQUIRE(table.at(0,0).rowspan == 7);
+    REQUIRE(table.at(7,0).rowspan == 6);
+    for (auto & cell : table) {
+        if (cell.row != 0 && cell.row != 7) {
+            REQUIRE(cell.rowspan == 0);
+        }
+    }
+}

@@ -1,4 +1,3 @@
-[ ] Table: limit rowspans to ~12 rows (make few separate rowspans as necessary)
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)
 [ ] switch from std::regex to some other, saner and faster, regex library.
 [ ] "copy to clipboard" function (with link to the program)
@@ -203,3 +202,4 @@ done:
 [+] Table: add "DST" to timezones as necessary (e.g. +3:00 DST for Kiev summer time) [2020-09-27]
 [+] Table: merge cells into rowspans [2020-09-28]
 [+] Table: don't merge some of the cells (paran column) [2020-09-28]
+[+] Table: limit rowspans to ~12 rows (make few separate rowspans as necessary) [2020-09-28]
