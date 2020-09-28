@@ -68,7 +68,7 @@ static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std
             // 'c' means compact formatting
             table.add_unmergeable_cell(fmt::format("{:c}", vrata->paran), classes);
         } else {
-            table.add_cell("", classes);
+            table.add_unmergeable_cell("", classes);
         }
     }
 }
