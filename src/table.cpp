@@ -64,7 +64,7 @@ void vp::Table::add_cell(const char * const text, std::string classes) {
 
 void vp::Table::add_header_cell(std::string text, std::string classes)
 {
-    do_add_cell(std::move(text), std::move(classes), CellType::Normal, Mergeable::Yes);
+    do_add_cell(std::move(text), std::move(classes), CellType::Header, Mergeable::Yes);
 }
 
 vp::Table::Cell &vp::Table::at(int row, int col)
