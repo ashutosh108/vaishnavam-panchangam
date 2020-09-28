@@ -33,3 +33,17 @@ TEST_CASE("Html_Table_Writer keeps classes for td") {
     using Catch::Matchers::Contains;
     REQUIRE_THAT(s.str(), Contains("class=\"class1\""));
 }
+
+TEST_CASE("Html_Table_Writer writes proper rowspans") {
+    vp::Table table;
+    table.add_cell("cellx,1");
+    table.start_new_row();
+    table.add_cell("cellx,1");
+    table.merge_cells_into_rowspans();
+
+    std::stringstream s;
+    s << vp::Html_Table_Writer(table);
+    std::string str = s.str();
+    using Catch::Matchers::Contains;
+    REQUIRE_THAT(s.str(), Contains("rowspan=\"2\""));
+}

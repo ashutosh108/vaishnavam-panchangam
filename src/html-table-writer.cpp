@@ -21,15 +21,21 @@ std::ostream &operator<<(std::ostream &s, const Html_Table_Writer &tw)
         void row_end() override {
             s_ << "</tr>\n";
         }
-        void cell(std::string_view text, std::string_view classes) override {
+        void cell(std::string_view text, std::string_view classes, int rowspan) override {
             s_ << "<td";
+            if (rowspan != 1) {
+                s_ << " rowspan=\"" << rowspan << "\"";
+            }
             if (!classes.empty()) {
                 s_ << " class=\"" << classes << "\"";
             }
             s_ << ">" << text << "</td>\n";
         }
-        void header_cell(std::string_view text, std::string_view classes) override {
+        void header_cell(std::string_view text, std::string_view classes, int rowspan) override {
             s_ << "<th";
+            if (rowspan != 1) {
+                s_ << " rowspan=\"" << rowspan << "\"";
+            }
             if (!classes.empty()) {
                 s_ << " class=\"" << classes << "\"";
             }

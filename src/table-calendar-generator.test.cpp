@@ -37,7 +37,7 @@ TEST_CASE("Table_Caledar_Generator returns reasonable table adds ' (DST)' for 's
     const auto table = vp::Table_Calendar_Generator::generate(vratas);
     int num_with_dst = 0;
     int num_without_dst = 0;
-    for (int row=0; row < table.height(); ++row) {
+    for (std::size_t row=0; row < table.height(); ++row) {
         auto text = table.at(row, 0).text;
         if (text.find("DST") != std::string::npos) {
             ++num_with_dst;
