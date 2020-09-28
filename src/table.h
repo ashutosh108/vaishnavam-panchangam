@@ -1,6 +1,7 @@
 #ifndef VP_TABLE_H
 #define VP_TABLE_H
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -9,15 +10,18 @@ namespace vp {
 class Table
 {
 private:
+    enum class CellType : int8_t { Normal, Header };
+    enum class Mergeable : int8_t { No, Yes };
     struct Cell {
         std::string text;
-        bool is_header;
+        CellType type;
         std::string classes;
         std::size_t row = 0;
         std::size_t col = 0;
         std::size_t rowspan = 1;
-        Cell(std::string _text, std::size_t _row, std::size_t _col, bool _is_header=false, std::string _classes="") :
-              text(_text), is_header(_is_header), classes(_classes), row{_row}, col{_col} {}
+        Mergeable mergeable;
+        Cell(std::string _text, std::size_t _row, std::size_t _col, CellType _type=CellType::Normal, std::string _classes="", Mergeable _mergeable=Mergeable::Yes) :
+              text(_text), type(_type), classes(_classes), row{_row}, col{_col}, mergeable{_mergeable} {}
     };
     struct Row {
         std::vector<Cell> data;
@@ -36,7 +40,8 @@ private:
     }
     std::size_t row_length(std::size_t row);
     bool has_cell(std::size_t row, std::size_t col);
-    void do_add_cell(std::string text, std::string classes, bool is_header);
+    void do_add_cell(std::string text, std::string classes, CellType type, Mergeable mergeable);
+    static bool mergeable_cells(const vp::Table::Cell &c1, const vp::Table::Cell &c2);
 
 public:
     struct Iterator {
@@ -52,6 +57,7 @@ public:
     std::size_t width() const;
     std::size_t height() const;
     void add_cell(std::string text, std::string classes="");
+    void add_unmergeable_cell(std::string text, std::string classes="");
     void add_cell(std::string_view text, std::string classes="");
     void add_cell(const char * const text, std::string classes="");
     void add_header_cell(std::string text, std::string classes="");

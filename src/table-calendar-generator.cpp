@@ -66,7 +66,7 @@ static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std
             table.add_cell(fmt::to_string(vrata->type), classes + " vrata");
         } else if (date == vrata->local_paran_date()) {
             // 'c' means compact formatting
-            table.add_cell(fmt::format("{:c}", vrata->paran), classes);
+            table.add_unmergeable_cell(fmt::format("{:c}", vrata->paran), classes);
         } else {
             table.add_cell("", classes);
         }

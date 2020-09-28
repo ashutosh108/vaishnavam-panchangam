@@ -146,3 +146,18 @@ TEST_CASE("doesn't merge cells with non-existing cells in between") {
         REQUIRE(cell.rowspan == 1);
     }
 }
+
+TEST_CASE("doesn't merge cells marked as unmergeable") {
+    vp::Table table;
+    table.add_unmergeable_cell("cellx,1");
+    table.add_cell("cell1,2");
+    table.start_new_row();
+    table.add_cell("cellx,1");
+    table.add_cell("cell2,2");
+
+    table.merge_cells_into_rowspans();
+
+    for (auto & cell : table) {
+        REQUIRE(cell.rowspan == 1);
+    }
+}

@@ -35,16 +35,21 @@ std::size_t vp::Table::height() const
     return rows.size();
 }
 
-void vp::Table::do_add_cell(std::string text, std::string classes, bool is_header) {
+void vp::Table::do_add_cell(std::string text, std::string classes, CellType type, Mergeable mergeable) {
     if (rows.empty()) { start_new_row(); }
     std::size_t row = height()-1;
     std::size_t col = row_length(row);
-    rows.back().data.emplace_back(text, row, col, is_header, std::move(classes));
+    rows.back().data.emplace_back(text, row, col, type, std::move(classes), mergeable);
 }
 
 void vp::Table::add_cell(std::string text, std::string classes)
 {
-    do_add_cell(std::move(text), std::move(classes), false);
+    do_add_cell(std::move(text), std::move(classes), CellType::Normal, Mergeable::Yes);
+}
+
+void vp::Table::add_unmergeable_cell(std::string text, std::string classes)
+{
+    do_add_cell(std::move(text), std::move(classes), CellType::Normal, Mergeable::No);
 }
 
 void vp::Table::add_cell(std::string_view text, std::string classes)
@@ -59,7 +64,7 @@ void vp::Table::add_cell(const char * const text, std::string classes) {
 
 void vp::Table::add_header_cell(std::string text, std::string classes)
 {
-    do_add_cell(std::move(text), std::move(classes), true);
+    do_add_cell(std::move(text), std::move(classes), CellType::Normal, Mergeable::Yes);
 }
 
 vp::Table::Cell &vp::Table::at(int row, int col)
@@ -77,6 +82,12 @@ void vp::Table::start_new_row(std::string classes)
     rows.emplace_back(classes);
 }
 
+bool vp::Table::mergeable_cells(const vp::Table::Cell & c1, const vp::Table::Cell & c2) {
+    if (c1.mergeable == Mergeable::No || c2.mergeable == Mergeable::No) return false;
+    if (c1.type != c2.type) return false;
+    return c1.text == c2.text;
+}
+
 void vp::Table::merge_cells_into_rowspans()
 {
     if (height() < 2) return;
@@ -86,7 +97,7 @@ void vp::Table::merge_cells_into_rowspans()
         for (size_t row=height()-1; row > 0; --row) {
             if (!has_cell(row, col)) continue;
             auto & cell = at(row, col);
-            if (has_cell(row-1, col) && cell.text == at(row-1, col).text) {
+            if (has_cell(row-1, col) && mergeable_cells(cell, at(row-1, col))) {
                 ++span_size;
                 cell.rowspan = 0;
             } else {
@@ -106,7 +117,7 @@ void vp::Table::iterate(vp::Table::CallBack &it) const
         it.row_begin(row.classes);
         for (auto & cell : row.data) {
             if (cell.rowspan == 0) continue;
-            if (cell.is_header) {
+            if (cell.type == CellType::Header) {
                 it.header_cell(cell.text, cell.classes, cell.rowspan);
             } else {
                 it.cell(cell.text, cell.classes, cell.rowspan);
