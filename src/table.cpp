@@ -127,16 +127,40 @@ void vp::Table::merge_cells_into_rowspans()
     }
 }
 
+void vp::Table::add_col_span(Cell & cell, std::size_t span_size) {
+    cell.colspan = span_size;
+}
+
+void vp::Table::merge_cells_into_colspans()
+{
+    for (std::size_t row = 0; row < height(); ++row) {
+        auto our_row_length = row_length(row);
+        if (our_row_length < 2) continue;
+        std::size_t span_size = 1;
+        for (std::size_t col = our_row_length-1; col > 0; --col) {
+            auto & cell = at(row, col);
+            if (mergeable_cells(cell, at(row, col-1))) {
+                ++span_size;
+                cell.colspan = 0;
+            } else {
+                add_col_span(cell, span_size);
+                span_size = 1;
+            }
+        }
+        add_col_span(at(row, 0), span_size);
+    }
+}
+
 void vp::Table::iterate(vp::Table::CallBack &it) const
 {
     for (auto & row : rows) {
         it.row_begin(row.classes);
         for (auto & cell : row.data) {
-            if (cell.rowspan == 0) continue;
+            if (cell.rowspan == 0 || cell.colspan == 0) continue;
             if (cell.type == CellType::Header) {
-                it.header_cell(cell.text, cell.classes, cell.rowspan);
+                it.header_cell(cell);
             } else {
-                it.cell(cell.text, cell.classes, cell.rowspan);
+                it.cell(cell);
             }
         }
         it.row_end();

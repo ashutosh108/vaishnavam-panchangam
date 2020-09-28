@@ -47,3 +47,17 @@ TEST_CASE("Html_Table_Writer writes proper rowspans") {
     using Catch::Matchers::Contains;
     REQUIRE_THAT(s.str(), Contains("rowspan=\"2\""));
 }
+
+TEST_CASE("Html_Table_Writer writes proper colspans") {
+    vp::Table table;
+    table.add_cell("cellx,1");
+    table.add_cell("cellx,1");
+    table.merge_cells_into_colspans();
+
+    std::stringstream s;
+    s << vp::Html_Table_Writer(table);
+    std::string str = s.str();
+    using Catch::Matchers::Contains;
+    REQUIRE_THAT(s.str(), Contains("colspan=\"2\""));
+    REQUIRE_THAT(s.str(), !Contains("colspan=\"0\""));
+}

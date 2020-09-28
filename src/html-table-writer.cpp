@@ -21,25 +21,31 @@ std::ostream &operator<<(std::ostream &s, const Html_Table_Writer &tw)
         void row_end() override {
             s_ << "</tr>\n";
         }
-        void cell(std::string_view text, std::string_view classes, int rowspan) override {
+        void cell(const vp::Table::Cell & cell) override {
             s_ << "<td";
-            if (rowspan != 1) {
-                s_ << " rowspan=\"" << rowspan << "\"";
+            if (cell.rowspan != 1) {
+                s_ << " rowspan=\"" << cell.rowspan << "\"";
             }
-            if (!classes.empty()) {
-                s_ << " class=\"" << classes << "\"";
+            if (cell.colspan != 1) {
+                s_ << " colspan=\"" << cell.colspan << "\"";
             }
-            s_ << ">" << text << "</td>\n";
+            if (!cell.classes.empty()) {
+                s_ << " class=\"" << cell.classes << "\"";
+            }
+            s_ << ">" << cell.text << "</td>\n";
         }
-        void header_cell(std::string_view text, std::string_view classes, int rowspan) override {
+        void header_cell(const vp::Table::Cell & cell) override {
             s_ << "<th";
-            if (rowspan != 1) {
-                s_ << " rowspan=\"" << rowspan << "\"";
+            if (cell.rowspan != 1) {
+                s_ << " rowspan=\"" << cell.rowspan << "\"";
             }
-            if (!classes.empty()) {
-                s_ << " class=\"" << classes << "\"";
+            if (cell.colspan != 1) {
+                s_ << " colspan=\"" << cell.colspan << "\"";
             }
-            s_ << ">" << text << "</th>\n";
+            if (!cell.classes.empty()) {
+                s_ << " class=\"" << cell.classes << "\"";
+            }
+            s_ << ">" << cell.text << "</th>\n";
         }
     };
 

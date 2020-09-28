@@ -82,5 +82,7 @@ vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vrata
     for (const auto & vrata : vratas) {
         add_vrata(table, vrata, vrata_dates, ++row % 2 ? "odd" : "even");
     }
+    table.merge_cells_into_rowspans();
+    table.merge_cells_into_colspans();
     return table;
 }

@@ -9,7 +9,7 @@ namespace vp {
 
 class Table
 {
-private:
+public:
     enum class CellType : int8_t { Normal, Header };
     enum class Mergeable : int8_t { No, Yes };
     struct Cell {
@@ -19,6 +19,7 @@ private:
         std::size_t row = 0;
         std::size_t col = 0;
         std::size_t rowspan = 1;
+        std::size_t colspan = 1;
         Mergeable mergeable;
         Cell(std::string _text, std::size_t _row, std::size_t _col, CellType _type=CellType::Normal, std::string _classes="", Mergeable _mergeable=Mergeable::Yes) :
               text(_text), type(_type), classes(_classes), row{_row}, col{_col}, mergeable{_mergeable} {}
@@ -29,6 +30,7 @@ private:
         Row(std::string classes_=""):classes(classes_){}
     };
 
+private:
     std::vector<Row> rows;
     template<typename Callable>
     void iterate_over_col(std::size_t col, Callable callable) {
@@ -43,6 +45,7 @@ private:
     void do_add_cell(std::string text, std::string classes, CellType type, Mergeable mergeable);
     static bool mergeable_cells(const vp::Table::Cell &c1, const vp::Table::Cell &c2);
     void add_row_span(Cell &cell, std::size_t span_size);
+    void add_col_span(Cell &cell, std::size_t span_size);
 
 public:
     struct Iterator {
@@ -66,12 +69,13 @@ public:
     const Cell & at(int row, int col) const;
     void start_new_row(std::string classes="");
     void merge_cells_into_rowspans();
+    void merge_cells_into_colspans();
 
     struct CallBack {
         virtual void row_begin(std::string_view classes="") = 0;
         virtual void row_end() = 0;
-        virtual void cell(std::string_view text, std::string_view classes, int rowspan) = 0;
-        virtual void header_cell(std::string_view text, std::string_view classes, int rowspan) = 0;
+        virtual void cell(const Cell & cell) = 0;
+        virtual void header_cell(const Cell & cell) = 0;
     };
 
     void iterate(CallBack & it) const;

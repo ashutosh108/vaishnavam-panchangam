@@ -38,12 +38,12 @@ TEST_CASE("can iterate over cells with iterate()") {
         int cell_count = 0;
         void row_begin(std::string_view /*classes*/) override { row_began = true; }
         void row_end() override { row_ended = true; }
-        void cell(std::string_view text, std::string_view /*classes*/, int /*rowspan*/) override {
+        void cell(const vp::Table::Cell & cell) override {
             ++cell_count;
             auto expected = fmt::format("cell1,{}", cell_count);
-            REQUIRE(text == expected);
+            REQUIRE(cell.text == expected);
         }
-        void header_cell(std::string_view /*text*/, std::string_view /*classes*/, int /*rowspan*/) override {
+        void header_cell(const vp::Table::Cell & /*cell*/) override {
             REQUIRE(false);
         }
     };
@@ -177,4 +177,18 @@ TEST_CASE("table cell merge keeps rowspans to 12 rows max with even split") {
             REQUIRE(cell.rowspan == 0);
         }
     }
+}
+
+TEST_CASE("table cell horizontal merge into colspans works") {
+    vp::Table table;
+    table.add_cell("cell1,x");
+    table.add_cell("cell1,x");
+    table.start_new_row();
+    table.add_cell("cell2,1");
+    table.add_cell("cell2,2");
+
+    table.merge_cells_into_colspans();
+
+    REQUIRE(table.at(0,0).colspan == 2);
+    REQUIRE(table.at(0,1).colspan == 0);
 }

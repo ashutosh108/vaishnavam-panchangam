@@ -192,9 +192,7 @@ void MainWindow::refreshTable()
 {
     if (!ui->tableTextBrowser->isVisible()) { return; }
     std::stringstream s;
-    auto table = vp::Table_Calendar_Generator::generate(vratas);
-    table.merge_cells_into_rowspans();
-    s << vp::Html_Table_Writer{table};
+    s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas)};
     ui->tableTextBrowser->setUnchangableHtml(table_css + QString::fromStdString(s.str()));
 }
 
