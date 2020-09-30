@@ -221,6 +221,7 @@ inline bool operator<(const Location & one, const Location & two) {
 
 
 [[maybe_unused]] constexpr Location dummy_coord{0_N, 0_E, "Dummy location"};
+[[maybe_unused]] constexpr Location sample_location{0_N, 0_E, "Sample location"};
 
 } // namespace vp
 

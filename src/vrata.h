@@ -117,6 +117,8 @@ struct Vrata {
           times(_times){}
     date::year_month_day local_paran_date() const;
     std::string location_name() const;
+
+    static Vrata SampleVrata();
 };
 
 bool operator==(Vrata const &, Vrata const &);

@@ -119,6 +119,11 @@ std::string Vrata::location_name() const
     return std::string{location.name};
 }
 
+Vrata Vrata::SampleVrata()
+{
+    return Vrata{Vrata_Type::Ekadashi, date::year{2000}/1/1, Paran{}, sample_location};
+}
+
 double_ghatikas Vrata_Time_Points::dashami_length() const {
     return ekadashi_start - dashami_start;
 }
