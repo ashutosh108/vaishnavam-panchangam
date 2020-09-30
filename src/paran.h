@@ -33,6 +33,9 @@ public:
     bool operator!=(Paran const &other) const {
         return !(*this == other);
     }
+    std::string paran_start_str();
+    std::string paran_end_str();
+    bool is_rounded_to_minutes();
 
     Type type;
     std::optional<JulDays_UT> paran_start{};

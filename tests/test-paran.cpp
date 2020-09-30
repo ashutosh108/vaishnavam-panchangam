@@ -84,3 +84,23 @@ TEST_CASE("compact paran format: narrow range (rounding to seconds)") {
 
     REQUIRE("08:03:05–08:13:05" == fmt::format("{:c}", p));
 }
+
+TEST_CASE("paran_start/end_str rounds to minutes for large (>=48 min) interval") {
+    JulDays_UT time1{2019_y/March/19, 5h + 3min + 4s};
+    JulDays_UT time2{2019_y/March/19, 5h + 3min + 4s + 48min};
+    auto timezone = date::locate_zone("Europe/Moscow");
+    Paran p{Paran::Type::From_Quarter_Dvadashi, time1, time2, timezone};
+
+    REQUIRE("08:04" == p.paran_start_str());
+    REQUIRE("08:51" == p.paran_end_str());
+}
+
+TEST_CASE("paran_start/end_str rounds to seconds for small (<48 min) interval") {
+    JulDays_UT time1{2019_y/March/19, 5h + 3min + 4.5s};
+    JulDays_UT time2{2019_y/March/19, 5h + 3min + 4.5s + 47min};
+    auto timezone = date::locate_zone("Europe/Moscow");
+    Paran p{Paran::Type::From_Quarter_Dvadashi, time1, time2, timezone};
+
+    REQUIRE("08:03:05" == p.paran_start_str());
+    REQUIRE("08:50:04" == p.paran_end_str());
+}
