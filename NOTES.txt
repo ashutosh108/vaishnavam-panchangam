@@ -1,6 +1,3 @@
-[ ] Summary: when "all", write data for all locations
-[ ] -> add SummaryFormatter
-[ ] -> replace Summary labels with ScrollArea with single Label
 [ ] Table: add Russian version
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)
 [ ] switch from std::regex to some other, saner and faster, regex library.
@@ -210,3 +207,4 @@ done:
 [+] Table: don't merge empty cells [2020-09-28]
 [+] Table: vertical alignment for main data section [2020-09-28]
 [+] Table: add horizontal merge for "shrih" and Atirikta [2020-09-28]
+[+] Summary: when "all", write data for all locations. Also new layout [2020-09-30]

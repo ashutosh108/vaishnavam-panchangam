@@ -5,6 +5,7 @@
 #include "location.h"
 #include "table-calendar-generator.h"
 #include "text-interface.h"
+#include "vrata-summary.h"
 #include "tz-fixed.h"
 
 #include "fmt-format-fixed.h"
@@ -121,33 +122,24 @@ void MainWindow::refreshAllTabs()
 
 void MainWindow::refreshSummary()
 {
+    QString summary = R"CSS(
+<style>p {font-size: 12pt;}
+.date, .paran-range {font-size: 15pt;}
+</style>
+    )CSS";
+
+    bool first = true;
+
     for (const auto & vrata : vratas) {
         if (vrata.has_value()) {
-            ui->locationName->setText(QString::fromStdString(vrata->location_name()));
-
-            ui->vrataType->setText(QString::fromStdString(fmt::to_string(vrata->type)));
-
-            if (vp::is_atirikta(vrata->type)) {
-                auto next_day = date::year_month_day{date::sys_days{vrata->date} + date::days{1}};
-                ui->vrataDate->setText(QString::fromStdString(fmt::format("{} and {}", vrata->date, next_day)));
-            } else {
-                ui->vrataDate->setText(QString::fromStdString(fmt::to_string(vrata->date)));
+            if (!first) {
+                summary += "<p>&nbsp;</p>";
             }
-
-            ui->paranamNextDay->setText(QString::fromStdString(fmt::format("Pāraṇam <span style=\" font-size:small;\">({})</span>:", vrata->local_paran_date())));
-
-            std::string paranTime = vp::ParanFormatter::format(
-                vrata->paran,
-                vrata->location.time_zone(),
-                "%H:%M<span style=\"font-size:small;\">:%S</span>",
-                "–",
-                "%H:%M<span style=\"font-size:small;\">:%S</span>",
-                "<sup>*</sup><br><small><sup>*</sup>");
-            paranTime += "</small>";
-            ui->paranTime->setText(QString::fromStdString(paranTime));
-            break; //stop after first valid vrata
+            summary += QString::fromStdString(fmt::format("{}", vp::Vrata_Summary{&vrata.value()}));
+            first = false;
         }
     }
+    ui->vrataSummary->setText(summary);
 }
 
 void MainWindow::refreshDetails() {

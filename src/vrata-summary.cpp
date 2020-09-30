@@ -1,4 +1,4 @@
 #include "vrata-summary.h"
 
-vp::Vrata_Summary::Vrata_Summary(Vrata * _vrata) : vrata(_vrata) {
+vp::Vrata_Summary::Vrata_Summary(const Vrata * _vrata) : vrata(_vrata) {
 }
