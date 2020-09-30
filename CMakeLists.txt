@@ -55,6 +55,7 @@ add_library(swe STATIC
     src/location.h
     src/vrata.h src/vrata.cpp
     src/vrata_detail_printer.h src/vrata_detail_printer.cpp
+    src/vrata-summary.cpp src/vrata-summary.h
     src/paran.h src/paran.cpp
     src/text-interface.cpp
     src/calc-error.h
@@ -103,6 +104,7 @@ add_executable(test-main
     src/table-calendar-generator.test.cpp
     src/html-table-writer.test.cpp
     src/table.test.cpp
+    src/vrata-summary.test.cpp
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/tests)
 target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2 vendor/tinyfsm/include)
