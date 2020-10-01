@@ -81,7 +81,7 @@ struct Location
                                 const char * _name = "Custom Location",
                                 const char * _time_zone_name = "UTC",
                                 const char * _country = "Unknown"
-                                )
+                                ) noexcept
         : latitude(lat),
           longitude(lng),
           time_zone_name(_time_zone_name),

@@ -1,6 +1,7 @@
 #include "table-calendar-generator.h"
 
 #include <set>
+#include <utility>
 
 static std::set<date::year_month_day> get_vrata_dates(const vp::VratasForDate & vratas) {
     std::set<date::year_month_day> dates;
@@ -50,7 +51,7 @@ static std::string get_timezone_text(const vp::MaybeVrata & vrata) {
 }
 
 static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::year_month_day> & vrata_dates, std::string tr_classes) {
-    table.start_new_row(tr_classes);
+    table.start_new_row(std::move(tr_classes));
     table.add_cell(get_timezone_text(vrata));
     table.add_cell(vrata->location.country);
     table.add_cell(vrata->location_name());

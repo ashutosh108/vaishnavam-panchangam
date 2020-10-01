@@ -14,16 +14,16 @@
 // if necessary. Otherwise, continue.
 #define VP_TRY_AUTO(var_name, assign_to)                \
     const auto var_name = assign_to;                    \
-    if (!var_name.has_value()) {                        \
-        return tl::unexpected{var_name.error()};        \
+    if (!(var_name).has_value()) {                      \
+        return tl::make_unexpected((var_name).error()); \
     }
 
 #define VP_TRY(existing_var_name, assign_to) {          \
     auto tmp = assign_to;                               \
     if (!tmp.has_value()) {                             \
-        return tl::unexpected{tmp.error()};             \
+        return tl::make_unexpected(tmp.error());        \
     }                                                   \
-    existing_var_name = *tmp;                           \
+    (existing_var_name) = *tmp;                         \
 }
 
 namespace vp {
@@ -48,17 +48,17 @@ repeat_with_fixed_start_time:
     if (++run_number > 2) {
         throw std::runtime_error(fmt::format("find_next_vrata @{} after {} ({}): potential eternal loop detected", swe.location.name, after, start_time));
     }
-    VP_TRY(vrata.sunrise1, find_ekadashi_sunrise(start_time));
-    VP_TRY(vrata.sunset0, sunset_before_sunrise(vrata.sunrise1));
-    VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1));
+    VP_TRY(vrata.sunrise1, find_ekadashi_sunrise(start_time))
+    VP_TRY(vrata.sunset0, sunset_before_sunrise(vrata.sunrise1))
+    VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1))
 
     vrata.times = calc_key_times_from_sunset_and_sunrise(vrata.sunset0, vrata.sunrise1);
     auto tithi_that_must_not_be_dashamI = swe.get_tithi(vrata.times.ativrddhaditvam_timepoint());
     if (tithi_that_must_not_be_dashamI.is_dashami()) {
         vrata.sunrise0 = vrata.sunrise1;
         vrata.sunrise1 = vrata.sunrise2;
-        VP_TRY(vrata.sunset0, sunset_before_sunrise(vrata.sunrise1));
-        VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1));
+        VP_TRY(vrata.sunset0, sunset_before_sunrise(vrata.sunrise1))
+        VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1))
     }
 
     vrata.date = get_vrata_date(vrata.sunrise1);
@@ -72,9 +72,9 @@ repeat_with_fixed_start_time:
 
     vrata.location = swe.location;
 
-    VP_TRY(vrata.sunset2, swe.find_sunset(vrata.sunrise2));
-    VP_TRY(vrata.sunrise3, next_sunrise(vrata.sunrise2));
-    VP_TRY(vrata.sunset3, swe.find_sunset(vrata.sunrise3));
+    VP_TRY(vrata.sunset2, swe.find_sunset(vrata.sunrise2))
+    VP_TRY(vrata.sunrise3, next_sunrise(vrata.sunrise2))
+    VP_TRY(vrata.sunset3, swe.find_sunset(vrata.sunrise3))
 
     vrata.type = calc_vrata_type(vrata);
     vrata.paran = is_atirikta(vrata.type) ?
@@ -100,7 +100,8 @@ tl::expected<JulDays_UT, CalcError> Calc::find_ekadashi_sunrise(JulDays_UT after
 }
 
 tl::expected<JulDays_UT, CalcError> Calc::next_sunrise(JulDays_UT sunrise) const {
-    return swe.find_sunrise(sunrise + double_days{0.001});
+    constexpr auto small_enough_delta = double_days{0.001};
+    return swe.find_sunrise(sunrise + small_enough_delta);
 }
 
 JulDays_UT Calc::next_sunrise_v(JulDays_UT sunrise) const {
@@ -230,7 +231,7 @@ Paran Calc::atirikta_paran(const JulDays_UT sunrise3, const JulDays_UT sunset3, 
 
 tl::expected<JulDays_UT, CalcError> Calc::arunodaya_for_sunrise(JulDays_UT const sunrise) const
 {
-    VP_TRY_AUTO(prev_sunset, sunset_before_sunrise(sunrise));
+    VP_TRY_AUTO(prev_sunset, sunset_before_sunrise(sunrise))
     constexpr double muhurtas_per_night = (12*60) / 48.0;
     constexpr double proportion_arunodaya = 2 / muhurtas_per_night; // 2/15 = 1/7.5
     return proportional_time(sunrise, *prev_sunset, proportion_arunodaya);

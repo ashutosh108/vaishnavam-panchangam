@@ -34,7 +34,7 @@ void vp::Table::do_add_cell(std::string text, std::string classes, CellType type
     if (rows.empty()) { start_new_row(); }
     std::size_t row = height()-1;
     std::size_t col = row_length(row);
-    rows.back().data.emplace_back(text, row, col, type, std::move(classes), mergeable);
+    rows.back().data.emplace_back(std::move(text), row, col, type, std::move(classes), mergeable);
 }
 
 void vp::Table::add_cell(std::string text, std::string classes)
@@ -62,19 +62,19 @@ void vp::Table::add_header_cell(std::string text, std::string classes)
     do_add_cell(std::move(text), std::move(classes), CellType::Header, Mergeable::Yes);
 }
 
-vp::Table::Cell &vp::Table::at(int row, int col)
+vp::Table::Cell &vp::Table::at(std::size_t row, std::size_t col)
 {
     return rows.at(row).data.at(col);
 }
 
-const vp::Table::Cell &vp::Table::at(int row, int col) const
+const vp::Table::Cell &vp::Table::at(std::size_t row, std::size_t col) const
 {
     return rows.at(row).data.at(col);
 }
 
 void vp::Table::start_new_row(std::string classes)
 {
-    rows.emplace_back(classes);
+    rows.emplace_back(std::move(classes));
 }
 
 bool vp::Table::mergeable_cells(const vp::Table::Cell & c1, const vp::Table::Cell & c2) {

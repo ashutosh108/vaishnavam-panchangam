@@ -1,9 +1,10 @@
 #include "html-parser.h"
 #include "html-table-parser.h"
 
+#include "tinyfsm.hpp"
 #include <algorithm>
 #include <cctype>
-#include "tinyfsm.hpp"
+#include <utility>
 
 namespace html {
 
@@ -24,7 +25,7 @@ std::size_t Table::find_first_free_col_at_row(std::size_t row) {
     return last_possible_col+1;
 }
 
-void Table::append_cell(std::size_t row, std::string s, RowSpan rowspan_, ColSpan colspan_)
+void Table::append_cell(std::size_t row, const std::string & s, RowSpan rowspan_, ColSpan colspan_)
 {
     std::size_t col = find_first_free_col_at_row(row);
 
@@ -56,7 +57,7 @@ Table::Row & Table::get_row(std::size_t row)
 std::string & Table::set(std::size_t row, std::size_t col, std::string s)
 {
     auto & row_data = get_row(row);
-    return row_data[col] = s;
+    return row_data[col] = std::move(s);
 }
 
 std::string trim(std::string_view s) {
@@ -111,8 +112,8 @@ public:
         transit<WaitTdTag>();
     }
     virtual ~ParserMachine()=default;
-    virtual void entry(void) {}
-    virtual void exit(void);
+    virtual void entry() {}
+    virtual void exit();
 
     inline static std::size_t row = 0;
     inline static bool got_table = false;
@@ -126,7 +127,7 @@ void ParserMachine::exit() {}
 
 // States
 class WaitTableTag : public ParserMachine {
-    virtual void react(const TableOpen & /*event*/) override;
+    void react(const TableOpen & /*event*/) override;
 private:
     using ParserMachine::react;
 };

@@ -26,8 +26,8 @@ struct Token {
     std::string_view tag_name;
     std::string_view tag_attributes;
     std::string_view text_after;
-    std::optional<std::string> get_attr(std::string attr);
-    unsigned long get_attr_ul_or_default(std::string attr, unsigned long default_val);
+    std::optional<std::string> get_attr(const std::string & attr);
+    unsigned long get_attr_ul_or_default(const std::string & attr, unsigned long default_val);
 };
 
 class TokenStream {

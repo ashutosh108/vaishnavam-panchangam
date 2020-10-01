@@ -64,8 +64,8 @@ public:
     void add_cell(std::string_view text, std::string classes="");
     void add_cell(const char * const text, std::string classes="");
     void add_header_cell(std::string text, std::string classes="");
-    Cell & at(int row, int col);
-    const Cell & at(int row, int col) const;
+    Cell & at(size_t row, size_t col);
+    const Cell & at(size_t row, size_t col) const;
     void start_new_row(std::string classes="");
     void merge_cells_into_rowspans();
     void merge_cells_into_colspans();

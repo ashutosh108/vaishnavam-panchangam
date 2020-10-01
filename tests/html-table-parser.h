@@ -22,7 +22,7 @@ public:
     };
     using Row = std::map<std::size_t, std::string>;
 
-    void append_cell(std::size_t row, std::string s, RowSpan rowspan_=RowSpan{1}, ColSpan colspan_=ColSpan{1});
+    void append_cell(std::size_t row, const std::string &s, RowSpan rowspan_=RowSpan{1}, ColSpan colspan_=ColSpan{1});
     std::size_t get_row_length(std::size_t row);
     std::size_t row_count();
     Row  & get_row(std::size_t row);

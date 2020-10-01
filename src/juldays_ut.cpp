@@ -52,24 +52,24 @@ bool JulDays_UT::operator==(const JulDays_UT &to) const
 
 date::year_month_day JulDays_UT::year_month_day() const
 {
-    int year, month, day;
-    double hours;
+    int year{}, month{}, day{};
+    double hours{};
     swe_revjul(juldays_ut_.count(), SE_GREG_CAL, &year, &month, &day, &hours);
     return date::year{year}/month/day;
 }
 
 double_hours JulDays_UT::hours() const
 {
-    int year, month, day;
-    double hours;
+    int year{}, month{}, day{};
+    double hours{};
     swe_revjul(juldays_ut_.count(), SE_GREG_CAL, &year, &month, &day, &hours);
     return double_hours{hours};
 }
 
 date::sys_time<double_hours> JulDays_UT::as_sys_time() const
 {
-    int year, month, day;
-    double hours;
+    int year{}, month{}, day{};
+    double hours{};
     swe_revjul(juldays_ut_.count(), SE_GREG_CAL, &year, &month, &day, &hours);
     return date::sys_days{date::year{year}/month/day} + double_hours{hours};
 }

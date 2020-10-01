@@ -162,7 +162,7 @@ public:
     }
     inline MaybeVratas::const_iterator cend() const {
         return vector.cend();
-    };
+    }
     inline MaybeVratas::size_type size() const {
         return vector.size();
     }
@@ -174,10 +174,10 @@ public:
     }
     inline MaybeVratas::iterator end() {
         return vector.end();
-    };
+    }
     inline MaybeVratas::const_iterator end() const {
         return vector.cend();
-    };
+    }
     inline void clear() {
         vector.clear();
     }

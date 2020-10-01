@@ -83,7 +83,7 @@ std::optional<html::Token> html::TokenStream::next_token()
     return Token{tag_name, attributes, trail};
 }
 
-std::optional<std::string> html::Token::get_attr(std::string attr)
+std::optional<std::string> html::Token::get_attr(const std::string & attr)
 {
     std::string regex_str{std::string{R"~(\b)~"} + attr + R"~(\s*=\s*["']?(\d+)["']?\b)~"};
     std::regex regex{regex_str};
@@ -97,12 +97,12 @@ std::optional<std::string> html::Token::get_attr(std::string attr)
     return std::nullopt;
 }
 
-unsigned long html::Token::get_attr_ul_or_default(std::string attr, unsigned long default_val)
+unsigned long html::Token::get_attr_ul_or_default(const std::string & attr, unsigned long default_val)
 {
     auto val = get_attr(attr);
     if (val) {
         const char * begin = val->c_str();
-        char * str_end;
+        char * str_end{};
         // since from_chars isn't available in gcc 7.x, have to use strtol instead
         long long_val = std::strtol(begin, &str_end, 10);
         if (str_end != begin && long_val >= 0) {

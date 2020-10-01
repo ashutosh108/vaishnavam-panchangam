@@ -35,7 +35,8 @@ std::string ParanFormatter::format(const Paran &paran,
 // we round to minutes unless interval is less than 48 minutes long.
 bool Paran::is_rounded_to_minutes() const
 {
-    return paran_start && paran_end && (*paran_end - *paran_start >= std::chrono::minutes{48});
+    constexpr auto short_paran_threshold = std::chrono::minutes{48};
+    return paran_start && paran_end && (*paran_end - *paran_start >= short_paran_threshold);
 }
 
 std::string Paran::paran_start_str() const

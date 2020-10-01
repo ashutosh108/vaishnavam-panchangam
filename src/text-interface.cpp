@@ -10,19 +10,24 @@ using namespace vp;
 
 namespace vp::text_ui {
 
+namespace {
+constexpr int len(const char * s) { return std::char_traits<char>::length(s); }
+static_assert (len("123") == 3);
+}
+
 date::year_month_day parse_ymd(const std::string_view s) {
     // YYYY-MM-DD
     // 01234567890
-    if (s.length() != 10) return {};
+    if (s.length() != len("YYYY-MM-DD")) return {};
     const char * const str = s.data();
-    int year;
-    if (auto [p, e] = std::from_chars(str+0, str+4, year); e != std::errc{} || p != str+4)
+    int year{};
+    if (auto [p, e] = std::from_chars(str+0, str+len("YYYY"), year); e != std::errc{} || p != str+4)
         return {};
-    unsigned int month;
-    if (auto [p, e] = std::from_chars(str+5, str+7, month); e != std::errc{} || p != str+7)
+    unsigned int month{};
+    if (auto [p, e] = std::from_chars(str+len("YYYY-"), str+len("YYYY-MM"), month); e != std::errc{} || p != str+7)
         return {};
-    unsigned int day;
-    if (auto [p, e] = std::from_chars(str+8, str+10, day); e != std::errc{} || p != str+10)
+    unsigned int day{};
+    if (auto [p, e] = std::from_chars(str+len("YYYY-MM-"), str+len("YYYY-MM-DD"), day); e != std::errc{} || p != str+10)
         return {};
     return date::year{year}/date::month{month}/date::day{day};
 }
@@ -140,7 +145,7 @@ vp::VratasForDate calc_one(date::year_month_day base_date, std::string location_
     vp::VratasForDate vratas;
     auto location = LocationDb::find_coord(location_name.c_str());
     if (!location) {
-        vratas.push_back(tl::unexpected{CantFindLocation{std::move(location_name)}});
+        vratas.push_back(tl::make_unexpected(CantFindLocation{std::move(location_name)}));
         return vratas;
     }
     vratas.push_back(calc_one(base_date, *location));
@@ -191,7 +196,7 @@ tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month
     std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
         fmt::format_to(buf, "Location not found: '{}'\n", location_name);
-        return tl::unexpected{CantFindLocation{location_name}};
+        return tl::make_unexpected(CantFindLocation{location_name});
     }
     return calc_and_report_one(base_date, *coord, buf);
 }

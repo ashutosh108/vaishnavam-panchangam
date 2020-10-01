@@ -52,7 +52,7 @@ date::month_day decode_month_day(const std::string& s) {
         {"декабря", date::December}
     };
     std::string month_str;
-    int day;
+    int day{};
     {
         std::istringstream stream{s};
         stream >> day >> month_str;
@@ -347,7 +347,10 @@ TEST_CASE("h_m_from_string works for basic cases") {
     REQUIRE_THROWS(h_m_s_from_string("36:15"));
 }
 
-Paranam parse_precalc_paranam(std::string s, date::year_month_day date, const date::time_zone * time_zone) {
+Paranam parse_precalc_paranam(const std::string & s,
+                              date::year_month_day date,
+                              const date::time_zone *time_zone)
+{
     std::smatch match;
     // "*" alone or "*;" followed by other descriptions.
     // We also treat empty cell as a standard pAraNam, e.g. Murmansk in https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-03-29/
@@ -863,7 +866,7 @@ void fix_vratas(std::vector<Precalculated_Vrata> & vratas, const Fixes & fixes) 
     }
 }
 
-void test_one_precalculated_table_slug(const char * slug, Fixes fixes={}) {
+void test_one_precalculated_table_slug(const char * slug, const Fixes & fixes={}) {
     CAPTURE(slug);
 
     std::string filename{std::string{"data/precalculated-"} + slug + ".html"};
@@ -877,7 +880,7 @@ void test_one_precalculated_table_slug(const char * slug, Fixes fixes={}) {
 
     CAPTURE(slug_ymd);
     std::vector<Precalculated_Vrata> vratas = extract_vratas_from_precalculated_table(std::move(s), slug_ymd);
-    fix_vratas(vratas, std::move(fixes));
+    fix_vratas(vratas, fixes);
     CAPTURE(vratas.size());
     check_precalculated_vratas(vratas);
 }

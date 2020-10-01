@@ -46,7 +46,7 @@ TEST_CASE("HtmlTokenStream can handle closing tags") {
 }
 
 TEST_CASE("Token get_attr_ul_or_default works") {
-    html::TokenStream p{"<tag attr=\"123\" attr2=\"456\" >"};
+    html::TokenStream p{R"(<tag attr="123" attr2="456" >)"};
     auto t = p.next_token();
     REQUIRE(t.has_value());
 

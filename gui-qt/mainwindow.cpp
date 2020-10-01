@@ -46,12 +46,12 @@ QString htmlify_line(const std::string_view & line) {
         return "<h1>" + res + "</h1>";
     }
 
-    res.replace(QRegularExpression{R"~((with Atiriktā (?:Ekādaśī|Dvādaśī)))~"}, "<span style=\"color:red\">\\1</span>");
+    res.replace(QRegularExpression{R"~((with Atiriktā (?:Ekādaśī|Dvādaśī)))~"}, R"(<span style="color:red">\1</span>)");
 
     // Highlight the second half or "on YYYY-MM-DD & YYYY-MM-DD" with red
     // Note: when changing this regex, be careful to not confuse "(" and ")"
     // of raw string literal syntax and of regexp itself.
-    res.replace(QRegularExpression{R"~((on \d\d\d\d-\d\d-\d\d )(\S{1,10} \d\d\d\d-\d\d-\d\d))~"}, "\\1<span style=\"color:red\">\\2</span>");
+    res.replace(QRegularExpression{R"~((on \d\d\d\d-\d\d-\d\d )(\S{1,10} \d\d\d\d-\d\d-\d\d))~"}, R"(\1<span style="color:red">\2</span>)");
 
     int pos = 0;
     while(true) {

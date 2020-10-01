@@ -49,7 +49,7 @@ Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata):vrata(_vrata) {
     events.push_back({"Dvādaśī end", vrata.times.trayodashi_start});
 
     events.push_back({"sunset0", vrata.sunset0});
-    const char * star;
+    const char * star{};
     const auto status = vrata.times.ativrddhaadi();
     star = status == Vrata_Time_Points::Ativrddhaadi::ativrddha ? "**" : "";
     events.push_back({fmt::format("54gh_40vigh ({0}ativṛddhiḥ{0})", star), vrata.times.ativrddha_54gh_40vigh});
