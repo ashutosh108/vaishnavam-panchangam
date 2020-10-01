@@ -11,9 +11,11 @@
 
 namespace vp {
 
-static const date::time_zone * utc() {
+namespace {
+const date::time_zone * utc() {
     static auto _utc = date::locate_zone("UTC");
     return _utc;
+}
 }
 
 class Paran

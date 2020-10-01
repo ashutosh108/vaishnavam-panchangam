@@ -52,12 +52,11 @@ public:
         Table & table;
         std::size_t row;
         std::size_t col;
-        Iterator(Table & _table, std::size_t _row, std::size_t _col) : table{_table}, row{_row}, col{_col} {};
+        Iterator(Table & _table, std::size_t _row, std::size_t _col) : table{_table}, row{_row}, col{_col} {}
         Cell & operator*();
         void operator++();
         bool operator!=(const Iterator &other);
     };
-    Table();
     std::size_t width() const;
     std::size_t height() const;
     void add_cell(std::string text, std::string classes="");
@@ -72,6 +71,7 @@ public:
     void merge_cells_into_colspans();
 
     struct CallBack {
+        virtual ~CallBack() = default;
         virtual void row_begin(std::string_view classes="") = 0;
         virtual void row_end() = 0;
         virtual void cell(const Cell & cell) = 0;

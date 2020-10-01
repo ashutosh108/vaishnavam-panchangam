@@ -33,8 +33,9 @@ MainWindow::~MainWindow()
 date::sys_days to_sys_days(QDate qd)
 {
     using namespace date;
-    return sys_days{days{qd.toJulianDay()} -
-        (sys_days{1970_y/January/1} - sys_days{year{-4713}/November/24})};
+    constexpr auto sys_epoch = sys_days{1970_y/January/1};
+    constexpr auto jd_epoch = sys_days{year{-4713}/November/24};
+    return sys_days{days{qd.toJulianDay()} - (sys_epoch - jd_epoch)};
 }
 
 // parse tiny subset of markdown in a single plain text line, return HTML version
@@ -53,13 +54,13 @@ QString htmlify_line(const std::string_view & line) {
     res.replace(QRegularExpression{R"~((on \d\d\d\d-\d\d-\d\d )(\S{1,10} \d\d\d\d-\d\d-\d\d))~"}, "\\1<span style=\"color:red\">\\2</span>");
 
     int pos = 0;
-    while(1) {
+    while(true) {
         auto start = res.indexOf("**", pos);
         if (start == -1) break;
         auto end = res.indexOf("**", start+2);
         if (end == -1) break;
-        // 9 is 2 (length of "**") + 3 (length of "<b>") + 4 (length of "</b>")
-        pos = end + 9;
+        constexpr int length_or_two_stars_and_b_and_b_close = std::char_traits<char>::length("**<b></b>"); // 9
+        pos = end + length_or_two_stars_and_b_and_b_close;
         res = res.replace(start, 2, "<b>**");
         // end+3 because "<b>**" in previous replacement is three chars longer than "**"
         res = res.replace(end+3, 2, "**</b>");

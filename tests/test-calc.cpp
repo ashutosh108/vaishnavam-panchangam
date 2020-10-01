@@ -513,7 +513,7 @@ TEST_CASE("after atiriktA when 1/5 of day fits before end of dvAdashI, pAraNam m
 
 double_days operator ""_hms(const char *s, const std::size_t size) {
     if (size != (2 + 1 + 2 + 1 + 2 + 1 + 6)) {
-        throw new std::length_error("expected format: hh:mm:ss.ssssss");
+        throw std::length_error("expected format: hh:mm:ss.ssssss");
     }
     std::istringstream stream{s};
     std::chrono::microseconds h_m_s;

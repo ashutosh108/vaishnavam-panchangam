@@ -13,11 +13,6 @@ bool vp::Table::has_cell(std::size_t row, std::size_t col)
     return col < row_length(row);
 }
 
-vp::Table::Table()
-{
-
-}
-
 std::size_t vp::Table::width() const
 {
     if (rows.empty()) return 0;

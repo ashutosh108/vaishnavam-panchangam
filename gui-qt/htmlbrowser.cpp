@@ -36,6 +36,6 @@ HtmlBrowser::HtmlBrowser(QWidget * parent) : QTextBrowser(parent)
 
 void HtmlBrowser::setUnchangableHtml(QString html)
 {
-    unchangable_html = html;
-    setHtml(html);
+    unchangable_html = std::move(html);
+    setHtml(unchangable_html);
 }
