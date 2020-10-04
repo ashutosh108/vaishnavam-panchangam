@@ -76,13 +76,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="okButton">
-          <property name="text">
-           <string>OK</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QToolButton" name="todayButton">
           <property name="text">
            <string>Today</string>
