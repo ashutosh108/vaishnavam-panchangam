@@ -164,7 +164,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location vladivostok_coord{             43'07'00_N, 131'54'00_E, "Vladivostok", "Asia/Vladivostok", "Russia"};
 [[maybe_unused]] constexpr Location pernem_coord{                  15'43'00_N,  73'47'49_E, "Pernem", "Asia/Kolkata", "India"}; // en Wikipedia
 [[maybe_unused]] constexpr Location krasnodar_coord{               45'02'00_N,  38'59'00_E, "Krasnodar", "Europe/Moscow", "Russia"};
-[[maybe_unused]] constexpr Location meadowlake_coord{              54'07'00_N, 108'26'00_W, "Meadow Lake, Canada", "America/Regina", "Canada"};
+[[maybe_unused]] constexpr Location meadowlake_coord{              54'07'00_N, 108'26'00_W, "Meadow Lake", "America/Regina", "Canada"};
 [[maybe_unused]] constexpr Location toronto_coord{                 42'43'00_N,  79'24'00_W, "Toronto", "America/New_York", "Canada"};
 [[maybe_unused]] constexpr Location fredericton_coord{             45'57'00_N,  66'38'00_W, "Fredericton", "America/Moncton", "Canada"};
 [[maybe_unused]] constexpr Location perm_coord{                    58'00'00_N,  56'14'00_E, "Perm", "Asia/Yekaterinburg", "Russia"};
@@ -208,7 +208,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location kolomyya_coord{                48'31'00_N,  25'02'00_E, "Kolomyia", "Europe/Kiev", "Ukraine"};
 [[maybe_unused]] constexpr Location samara_coord{                  53'11'00_N,  50'07'00_E, "Samara", "Europe/Samara", "Russia"};
 [[maybe_unused]] constexpr Location chelyabinsk_coord{             55'09'44_N,  61'24'11_E, "Chelyabinsk", "Asia/Yekaterinburg", "Russia"}; // ru Wikipedia
-[[maybe_unused]] constexpr Location tekeli_coord{                  44'51'47_N,  78'45'51_E, "Tekeli, Kazakhstan", "Asia/Almaty", "Kazakhstan"}; // ru Wikipedia
+[[maybe_unused]] constexpr Location tekeli_coord{                  44'51'47_N,  78'45'51_E, "Tekeli", "Asia/Almaty", "Kazakhstan"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location ustkamenogorsk_coord{          49'59'00_N,  82'37'00_E, "Ust-Kamenogorsk (Oskemen)", "Asia/Almaty", "Kazakhstan"}; // en Wikipedia
 [[maybe_unused]] constexpr Location volgograd_coord{               48'41'57_N,  44'28'24_E, "Volgograd", "Europe/Volgograd", "Russia"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location tambov_coord{                  52'43'00_N,  41'26'00_E, "Tambov", "Europe/Moscow", "Russia"}; // ru Wikipedia
@@ -217,7 +217,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location madrid_coord{                  40'24'00_N,   3'41'00_W, "Madrid", "Europe/Madrid", "Spain"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location miami_coord{                   25'47'00_N,  80'13'00_W, "Miami", "America/New_York", "USA"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location cancun_coord{                  21'09'38_N,  86'50'51_W, "Cancun", "America/Cancun", "Mexico"}; // en Wikipedia
-[[maybe_unused]] constexpr Location nicosia_coord{                 35'10'21_N,  33'21'54_E, "Nicosia (Cyprus)", "Asia/Nicosia", "Cyprus"}; // en Wikipedia
+[[maybe_unused]] constexpr Location nicosia_coord{                 35'10'21_N,  33'21'54_E, "Nicosia", "Asia/Nicosia", "Cyprus"}; // en Wikipedia
 
 
 [[maybe_unused]] constexpr Location dummy_coord{0_N, 0_E, "Dummy location"};
