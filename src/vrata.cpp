@@ -121,7 +121,29 @@ std::string Vrata::location_name() const
 
 Vrata Vrata::SampleVrata()
 {
-    return Vrata{Vrata_Type::Ekadashi, date::year{2000}/1/1, Paran{}, sample_location};
+    using namespace date;
+    using namespace std::chrono_literals;
+    vp::Vrata_Time_Points time_points{
+        JulDays_UT{date::sys_days{2000_y/1/1} + 4h + 40min}, // ativrddha_54gh_40vigh; // for ativRddhA
+        JulDays_UT{date::sys_days{2000_y/1/1} + 4h + 45min}, // vrddha_55gh;        // vRddhA
+        JulDays_UT{date::sys_days{2000_y/1/1} + 4h + 50min}, // samyam_55gh_50vigh; // samyam
+        JulDays_UT{date::sys_days{2000_y/1/1} + 4h + 55min}, // hrasva_55gh_55vigh; // hrasva
+        JulDays_UT{date::sys_days{2000_y/1/1} + 5h}, // arunodaya;          // 56gh = 4gh before sūryodaya
+
+        JulDays_UT{date::sys_days{1999_y/12/31} + 3h}, // dashami_start;
+        JulDays_UT{date::sys_days{2000_y/1/1} + 3h}, // ekadashi_start;
+        JulDays_UT{date::sys_days{2000_y/1/2} + 3h}, // dvadashi_start;
+        JulDays_UT{date::sys_days{2000_y/1/3} + 3h}, // trayodashi_start;
+    };
+    Vrata vrata{Vrata_Type::Ekadashi, date::year{2000}/1/1, Paran{}, sample_location, time_points};
+    vrata.sunset0 = vp::JulDays_UT{date::sys_days{1999_y/12/31} + 21h};
+    vrata.sunrise1 = vp::JulDays_UT{date::sys_days{2000_y/1/1} + 6h};
+    vrata.sunrise2 = vp::JulDays_UT{date::sys_days{2000_y/1/2} + 6h};
+    vrata.sunset2 = vp::JulDays_UT{date::sys_days{2000_y/1/2} + 21h};
+    vrata.sunrise3 = vp::JulDays_UT{date::sys_days{2000_y/1/3} + 6h};
+    vrata.sunset3 = vp::JulDays_UT{date::sys_days{2000_y/1/3} + 21h};
+
+    return vrata;
 }
 
 double_ghatikas Vrata_Time_Points::dashami_length() const {
