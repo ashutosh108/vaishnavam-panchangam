@@ -305,23 +305,6 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab_detail">
-         <attribute name="title">
-          <string>Details</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QTextBrowser" name="calcResult">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
         <widget class="QWidget" name="tab_table">
          <attribute name="title">
           <string>Table</string>

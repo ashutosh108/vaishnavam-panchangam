@@ -5,6 +5,7 @@
 #include "location.h"
 #include "table-calendar-generator.h"
 #include "text-interface.h"
+#include "vrata_detail_printer.h"
 #include "vrata-summary.h"
 #include "tz-fixed.h"
 
@@ -21,6 +22,10 @@ MainWindow::MainWindow(QWidget *parent)
     setupLocationsComboBox();
     setDateToToday();
     showVersionInStatusLine();
+    connect(ui->vrataSummary, &QLabel::linkActivated, [this]{
+        expand_details_in_summary_tab = !expand_details_in_summary_tab;
+        refreshAllTabs();
+    });
     gui_ready = true;
     refreshAllTabs();
 }
@@ -112,7 +117,6 @@ void MainWindow::refreshAllTabs()
     try {
         recalcVratasForSelectedDateAndLocation();
         refreshSummary();
-        refreshDetails();
         refreshTable();
     } catch (std::exception &e) {
         QMessageBox::warning(this, "error", e.what());
@@ -121,11 +125,25 @@ void MainWindow::refreshAllTabs()
     }
 }
 
+static inline QString detailsLinkNonExpanded() {
+    return R"(<div class="details"><a href="toggle-details:"><span class="monowidth">[+]</span> Details&nbsp;&rarr;</a></div>)";
+}
+
+static inline QString detailsLinkExpanded(const vp::Vrata & vrata) {
+    QString detail_string = R"(<div class="details"><a href="toggle-details:"><span class="monowidth">[-]</span> Details</a><br>)";
+    auto detail = vp::Vrata_Detail_Printer{vrata};
+    detail_string += get_html_from_detail_view(fmt::format("{:c}", detail));
+    detail_string += "</div>";
+    return detail_string;
+}
+
 void MainWindow::refreshSummary()
 {
     QString summary = R"CSS(
 <style>p {font-size: 12pt;}
 .date, .paran-range {font-size: 15pt;}
+p.paran { margin-bottom: 0; } /* to ensure "Details->" link is not separated from the last line */
+.monowidth { font-family: "Lucida Console", Monaco, monospace; }
 </style>
     )CSS";
 
@@ -137,19 +155,15 @@ void MainWindow::refreshSummary()
                 summary += "<p>&nbsp;</p>";
             }
             summary += QString::fromStdString(fmt::format("{}", vp::Vrata_Summary{&vrata.value()}));
+            if (expand_details_in_summary_tab) {
+                summary += detailsLinkExpanded(*vrata);
+            } else {
+                summary += detailsLinkNonExpanded();
+            }
             first = false;
         }
     }
     ui->vrataSummary->setText(summary);
-}
-
-void MainWindow::refreshDetails() {
-    fmt::memory_buffer buf;
-    for (const auto & vrata : vratas) {
-        vp::text_ui::report_details(vrata, buf);
-    }
-    QString detail_html = get_html_from_detail_view(std::string_view{buf.data(), buf.size()});
-    ui->calcResult->setHtml(detail_html);
 }
 
 static QString table_css {R"CSS(<style>
@@ -226,24 +240,24 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
         }
     }
     // skip refresh if the "Table" tab is active: refresh will come later anyway
-    if (gui_ready && ui->tabWidget->currentIndex() != 2) {
+    if (gui_ready && !ui->tableTextBrowser->isVisible()) {
         refreshAllTabs();
     }
 }
 
-void MainWindow::on_tabWidget_currentChanged(int index)
+void MainWindow::on_tabWidget_currentChanged(int /*index*/)
 {
     if (!gui_ready) return;
-    if (index == 2) {
+    if (ui->tableTextBrowser->isVisible()) {
         location_for_summary = ui->locationComboBox->currentIndex();
         ui->locationComboBox->setCurrentIndex(0); // 0 is "all"
         ui->locationComboBox->setDisabled(true);
         refreshAllTabs();
-    } else if (prev_tab_index == 2) {
+    } else if (table_tab_was_active) {
         ui->locationComboBox->setCurrentIndex(location_for_summary);
         ui->locationComboBox->setDisabled(false);
     }
-    prev_tab_index = index;
+    table_tab_was_active = ui->tableTextBrowser->isVisible();
 }
 
 void MainWindow::on_dateEdit_dateChanged(const QDate & /*date*/)

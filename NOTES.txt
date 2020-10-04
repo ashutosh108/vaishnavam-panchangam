@@ -208,3 +208,4 @@ done:
 [+] Table: vertical alignment for main data section [2020-09-28]
 [+] Table: add horizontal merge for "shrih" and Atirikta [2020-09-28]
 [+] Summary: when "all", write data for all locations. Also new layout [2020-09-30]
+[+] move calculation details from a separate tab into expandable "details" link in Summary [2020-10-04]

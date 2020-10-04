@@ -40,14 +40,14 @@ private:
     Ui::MainWindow *ui;
     vp::VratasForDate vratas;
     int location_for_summary = 1; // keeps previously selected location when switching to "table" tab
-    int prev_tab_index = 0;
+    bool table_tab_was_active = false;
     bool gui_ready = false; // set to true at the and of the MainWindow constructor
+    bool expand_details_in_summary_tab = false;
     void setupLocationsComboBox();
     void setDateToToday();
     void recalcVratasForSelectedDateAndLocation();
     void refreshAllTabs();
     void refreshSummary();
-    void refreshDetails();
     void refreshTable();
     void showVersionInStatusLine();
     void clearLocationData();
