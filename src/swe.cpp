@@ -2,6 +2,7 @@
 
 #include "location.h"
 
+#include <array>
 #include <exception>
 #include "swephexp.h"
 
@@ -16,28 +17,28 @@ constexpr double atmospheric_temperature = 15;
 
 tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int rise_or_set, JulDays_UT after) const {
     int32 rsmi = rise_or_set | rise_flags;
-    double geopos[3] = {location.longitude.longitude, location.latitude.latitude, 0};
+    std::array<double, 3> geopos{location.longitude.longitude, location.latitude.latitude, 0.0};
     double trise;
-    char serr[AS_MAXCH];
+    std::array<char, AS_MAXCH> serr;
     int32 flags = detail::ephemeris_flags;
     int res_flag = swe_rise_trans(after.raw_julian_days_ut().count(),
                                   SE_SUN,
                                   nullptr,
                                   flags,
                                   rsmi,
-                                  geopos,
+                                  geopos.data(),
                                   detail::atmospheric_pressure,
                                   detail::atmospheric_temperature,
-                                  &trise, serr);
+                                  &trise, serr.data());
     if (res_flag == -1) {
-        throw_on_wrong_flags(-1, flags, serr);
+        throw_on_wrong_flags(-1, flags, serr.data());
     }
 
     if (res_flag == -2) {
         if (rise_or_set == SE_CALC_SET) {
-            return tl::unexpected{CantFindSunsetAfter{after}};
+            return tl::make_unexpected(CantFindSunsetAfter{after});
         }
-        return tl::unexpected{CantFindSunriseAfter{after}};
+        return tl::make_unexpected(CantFindSunriseAfter{after});
     } else {
         return JulDays_UT{double_days{trise}};
     }
