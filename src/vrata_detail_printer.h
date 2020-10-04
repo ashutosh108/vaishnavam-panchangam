@@ -22,6 +22,17 @@ struct Vrata_Detail_Printer {
 
 template<>
 struct fmt::formatter<vp::Vrata_Detail_Printer> : fmt::formatter<std::string_view>{
+    bool use_compact_form = false;
+    template<typename ParseCtx>
+    auto parse(ParseCtx & ctx) {
+        auto it = ctx.begin();
+        auto end = ctx.end();
+        if (it != end && *it == 'c') {
+            ++it;
+            use_compact_form = true;
+        }
+        return it;
+    }
     static void merge_consequent_events_with_same_time(std::vector<vp::Vrata_Detail_Printer::NamedTimePoint> & events) {
         for (std::size_t i = 1; i < events.size(); ++i) {
             auto time1 = events[i-1].time_point;
@@ -36,14 +47,16 @@ struct fmt::formatter<vp::Vrata_Detail_Printer> : fmt::formatter<std::string_vie
 
     template<typename FormatCtx>
     auto format(const vp::Vrata_Detail_Printer & vd, FormatCtx & ctx) {
-        fmt::format_to(
-            ctx.out(),
-            "# {0}\n"
-            "{1}:\n"
-            "{2}\n",
-            vd.vrata.location_name(),
-            vd.vrata,
-            vd.vrata.paran.type);
+        if (!use_compact_form) {
+            fmt::format_to(
+                ctx.out(),
+                "# {0}\n"
+                "{1}:\n"
+                "{2}\n",
+                vd.vrata.location_name(),
+                vd.vrata,
+                vd.vrata.paran.type);
+        }
         auto events = vd.events;
         // stable sort to keep "pAraNam start/end" after corresponding sunrise+ events.
         std::stable_sort(events.begin(), events.end(), [](const vp::Vrata_Detail_Printer::NamedTimePoint & left, const vp::Vrata_Detail_Printer::NamedTimePoint & right) {

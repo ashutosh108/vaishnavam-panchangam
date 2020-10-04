@@ -36,3 +36,10 @@ TEST_CASE("both dates are given for two-days fasts") {
     const auto str = fmt::to_string(buf);
     REQUIRE_THAT(str, Contains("on 2020-06-16 & 2020-06-17"));
 }
+
+TEST_CASE("':c' for Vrata_Detail_Printer means compact formatting: no header") {
+    fmt::memory_buffer buf;
+    fmt::format_to(buf, "{:c}", vp::Vrata_Detail_Printer{Vrata::SampleVrata()});
+    const auto str = fmt::to_string(buf);
+    REQUIRE_THAT(str, !Contains("# ")); // "# Sample location" is a header which must not be present.
+}
