@@ -57,6 +57,8 @@ struct fmt::formatter<vp::Vrata_Detail_Printer> : fmt::formatter<std::string_vie
                 vd.vrata,
                 vd.vrata.paran.type);
         }
+        fmt::format_to(ctx.out(), "Coordinates: {} {}\n", vd.vrata.location.latitude, vd.vrata.location.longitude);
+        fmt::format_to(ctx.out(), "Time zone: {}\n", vd.vrata.location.time_zone_name);
         auto events = vd.events;
         // stable sort to keep "pAraNam start/end" after corresponding sunrise+ events.
         std::stable_sort(events.begin(), events.end(), [](const vp::Vrata_Detail_Printer::NamedTimePoint & left, const vp::Vrata_Detail_Printer::NamedTimePoint & right) {
