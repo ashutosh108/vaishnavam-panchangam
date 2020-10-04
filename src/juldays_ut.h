@@ -69,7 +69,7 @@ struct fmt::formatter<vp::JulDays_UT> {
     auto parse(ParseContext & ctx) { return ctx.begin(); }
     template<typename FormatContext>
     auto format(const vp::JulDays_UT & d, FormatContext & ctx) -> decltype(ctx.out()) {
-        return fmt::format_to(ctx.out(), "{} {} UTC", d.year_month_day(), date::hh_mm_ss(d.hours()));
+        return fmt::format_to(ctx.out(), "{} {} UTC", d.year_month_day(), date::hh_mm_ss<vp::double_days>{d.hours()});
     }
 };
 

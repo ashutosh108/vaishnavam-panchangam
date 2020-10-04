@@ -80,7 +80,7 @@ struct fmt::formatter<date::local_time<Duration>> {
     auto format(const date::local_time<Duration> & t, FormatContext & ctx) {
         const auto daypoint = date::floor<date::days>(t);
         const auto ymd = date::year_month_day{daypoint};
-        const auto tod = date::hh_mm_ss{t - daypoint};
+        const auto tod = date::hh_mm_ss<Duration>{t - daypoint};
         return fmt::format_to(ctx.out(), "{} {}", ymd, tod);
     }
 };
