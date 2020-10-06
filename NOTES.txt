@@ -211,3 +211,5 @@ done:
 [+] move calculation details from a separate tab into expandable "details" link in Summary [2020-10-04]
 [+] details: show coordinates/timezone before timepoints [2020-10-04]
 [+] Move location selector into Summary tab [2020-10-06]
+[+] add kbd shortcuts: Ctrl+PgUp/PgDwn for tab switching, ctrl+up/down to change location, ctrl+left/right/home for prev/next Ekādaśī/today. [2020-10-06]
+[+] press ctrl+home twice to return to today and then to home location (Udupi) [2020-10-06]

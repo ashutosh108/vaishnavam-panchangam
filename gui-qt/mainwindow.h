@@ -51,6 +51,12 @@ private:
     void clearLocationData();
     // "all" when table tab is active, otherwise whatever is selected in the locationComboBox
     std::string selected_location();
+    void setupKeyboardShortcuts();
+    void switchToPrevTab();
+    void switchToNextTab();
+    void switchToHomeDateAndOrLocation();
+    void switchToPrevLocation();
+    void switchToNextLocation();
 };
 
 QString htmlify_line(const std::string_view & line);

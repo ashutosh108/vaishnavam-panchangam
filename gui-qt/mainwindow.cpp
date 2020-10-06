@@ -12,6 +12,7 @@
 #include "fmt-format-fixed.h"
 #include <QDate>
 #include <QMessageBox>
+#include <QShortcut>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -22,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     setupLocationsComboBox();
     setDateToToday();
     showVersionInStatusLine();
+    setupKeyboardShortcuts();
     connect(ui->vrataSummary, &QLabel::linkActivated, [this]{
         expand_details_in_summary_tab = !expand_details_in_summary_tab;
         refreshAllTabs();
@@ -214,6 +216,63 @@ void MainWindow::refreshTable()
 void MainWindow::showVersionInStatusLine()
 {
     statusBar()->showMessage(QString::fromStdString(vp::text_ui::program_name_and_version()));
+}
+
+void MainWindow::setupKeyboardShortcuts() {
+    // no need to store as shortcut object's parent (MainWindow) will remove it properly
+    new QShortcut(Qt::CTRL + Qt::Key_PageUp, this, this, &MainWindow::switchToPrevTab);
+    new QShortcut(Qt::CTRL + Qt::Key_PageDown, this, this, &MainWindow::switchToNextTab);
+    new QShortcut(Qt::CTRL + Qt::Key_Left, this, this, &MainWindow::on_datePrevEkadashi_clicked);
+    new QShortcut(Qt::CTRL + Qt::Key_Right, this, this, &MainWindow::on_dateNextEkadashi_clicked);
+    new QShortcut(Qt::CTRL + Qt::Key_Home, this, this, &MainWindow::switchToHomeDateAndOrLocation);
+    new QShortcut(Qt::CTRL + Qt::Key_Up, this, this, &MainWindow::switchToPrevLocation);
+    new QShortcut(Qt::CTRL + Qt::Key_Down, this, this, &MainWindow::switchToNextLocation);
+}
+
+template <typename Widget>
+inline void switchToPrev(Widget & widget) {
+    int count = widget->count();
+    if (count == 0) return;
+    int new_index = (widget->currentIndex() - 1 + count) % count;
+    widget->setCurrentIndex(new_index);
+}
+
+template <typename Widget>
+inline void switchToNext(Widget & widget) {
+    int count = widget->count();
+    if (count == 0) return;
+    int new_index = (widget->currentIndex() + 1) % count;
+    widget->setCurrentIndex(new_index);
+}
+
+void MainWindow::switchToPrevTab()
+{
+    switchToPrev(ui->tabWidget);
+}
+
+void MainWindow::switchToNextTab()
+{
+    switchToNext(ui->tabWidget);
+}
+
+void MainWindow::switchToHomeDateAndOrLocation()
+{
+    // first ctrl+Home click: switch to today as starting date
+    if (ui->dateEdit->date() != QDate::currentDate()) {
+        return on_todayButton_clicked();
+    }
+    // second ctrl+Home click: switch to Udupi
+    ui->locationComboBox->setCurrentIndex(1);
+}
+
+void MainWindow::switchToPrevLocation()
+{
+    switchToPrev(ui->locationComboBox);
+}
+
+void MainWindow::switchToNextLocation()
+{
+    switchToNext(ui->locationComboBox);
 }
 
 void MainWindow::on_actionAbout_triggered()
