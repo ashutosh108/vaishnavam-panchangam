@@ -210,3 +210,4 @@ done:
 [+] Summary: when "all", write data for all locations. Also new layout [2020-09-30]
 [+] move calculation details from a separate tab into expandable "details" link in Summary [2020-10-04]
 [+] details: show coordinates/timezone before timepoints [2020-10-04]
+[+] Move location selector into Summary tab [2020-10-06]
