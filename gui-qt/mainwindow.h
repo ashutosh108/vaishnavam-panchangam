@@ -39,8 +39,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     vp::VratasForDate vratas;
-    int location_for_summary = 1; // keeps previously selected location when switching to "table" tab
-    bool table_tab_was_active = false;
     bool gui_ready = false; // set to true at the and of the MainWindow constructor
     bool expand_details_in_summary_tab = false;
     void setupLocationsComboBox();
@@ -51,6 +49,8 @@ private:
     void refreshTable();
     void showVersionInStatusLine();
     void clearLocationData();
+    // "all" when table tab is active, otherwise whatever is selected in the locationComboBox
+    std::string selected_location();
 };
 
 QString htmlify_line(const std::string_view & line);

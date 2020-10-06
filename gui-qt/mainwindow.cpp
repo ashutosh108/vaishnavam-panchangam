@@ -101,9 +101,16 @@ void MainWindow::setDateToToday()
     ui->dateEdit->setDate(QDate::currentDate());
 }
 
+std::string MainWindow::selected_location() {
+    if (ui->tableTextBrowser->isVisible()) {
+        return "all";
+    }
+    return ui->locationComboBox->currentText().toStdString();
+}
+
 void MainWindow::recalcVratasForSelectedDateAndLocation() {
     auto date = to_sys_days(ui->dateEdit->date());
-    auto location_string = ui->locationComboBox->currentText().toStdString();
+    auto location_string = selected_location();
 
     if (location_string == "all") {
         vratas = vp::text_ui::calc_all(date);
@@ -114,6 +121,7 @@ void MainWindow::recalcVratasForSelectedDateAndLocation() {
 
 void MainWindow::refreshAllTabs()
 {
+    if (!gui_ready) { return; }
     try {
         recalcVratasForSelectedDateAndLocation();
         refreshSummary();
@@ -239,30 +247,16 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
             ui->timezone->setText(QString::fromStdString(location->time_zone()->name()));
         }
     }
-    // skip refresh if the "Table" tab is active: refresh will come later anyway
-    if (gui_ready && !ui->tableTextBrowser->isVisible()) {
-        refreshAllTabs();
-    }
+    refreshAllTabs();
 }
 
 void MainWindow::on_tabWidget_currentChanged(int /*index*/)
 {
-    if (!gui_ready) return;
-    if (ui->tableTextBrowser->isVisible()) {
-        location_for_summary = ui->locationComboBox->currentIndex();
-        ui->locationComboBox->setCurrentIndex(0); // 0 is "all"
-        ui->locationComboBox->setDisabled(true);
-        refreshAllTabs();
-    } else if (table_tab_was_active) {
-        ui->locationComboBox->setCurrentIndex(location_for_summary);
-        ui->locationComboBox->setDisabled(false);
-    }
-    table_tab_was_active = ui->tableTextBrowser->isVisible();
+    refreshAllTabs();
 }
 
 void MainWindow::on_dateEdit_dateChanged(const QDate & /*date*/)
 {
-    if (!gui_ready) return;
     refreshAllTabs();
 }
 
