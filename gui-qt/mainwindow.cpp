@@ -221,7 +221,9 @@ void MainWindow::showVersionInStatusLine()
 void MainWindow::setupKeyboardShortcuts() {
     // no need to store as shortcut object's parent (MainWindow) will remove it properly
     new QShortcut(Qt::CTRL + Qt::Key_PageUp, this, this, &MainWindow::switchToPrevTab);
+    new QShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_Tab, this, this, &MainWindow::switchToPrevTab);
     new QShortcut(Qt::CTRL + Qt::Key_PageDown, this, this, &MainWindow::switchToNextTab);
+    new QShortcut(Qt::CTRL + Qt::Key_Tab, this, this, &MainWindow::switchToNextTab);
     new QShortcut(Qt::CTRL + Qt::Key_Left, this, this, &MainWindow::on_datePrevEkadashi_clicked);
     new QShortcut(Qt::CTRL + Qt::Key_Right, this, this, &MainWindow::on_dateNextEkadashi_clicked);
     new QShortcut(Qt::CTRL + Qt::Key_Home, this, this, &MainWindow::switchToHomeDateAndOrLocation);

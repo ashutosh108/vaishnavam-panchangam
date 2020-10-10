@@ -1,5 +1,18 @@
+[ ] table: add lower row with dates and ॥ ॐ तत्सत् ॥
+[ ] row-spanning odd-even rows should always switch from one anothed, regardless of row number
+[ ] add empty (all-white) row after Petropavlovsk-Kamchatsky, where timezone switches to the left of BhArata
+[ ] table: use Georgia font for all table
+[ ] table: use bold font for Ekādaśī name (or at least vrata type, for now)
+[ ] table: use cyan/gray background for header and tail rows
+[ ] table: use &nbsp; to separate day and month
+[ ] table: allow adding few columns before/after the Ekādaśī vrata (for e.g. Adhimasa ends, etc)
+[ ] table: add tooltips for all PAraNam cells (with exact pAraNam times and type)
+[ ] table: add tooltips with timezone name to location name cells
+[ ] text selection in "Summary" appears to be lost when right-clicking (and comes back afterwards).
 [ ] Table: add Russian version
-[ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)
+[ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)\
+[ ] -> lat/long input activated => change text to decimal
+[ ] -> change lat/long/TZ => change location to "Custom"
 [ ] switch from std::regex to some other, saner and faster, regex library.
 [ ] "copy to clipboard" function (with link to the program)
 [ ] "copy as image to clipboard"
@@ -213,3 +226,5 @@ done:
 [+] Move location selector into Summary tab [2020-10-06]
 [+] add kbd shortcuts: Ctrl+PgUp/PgDwn for tab switching, ctrl+up/down to change location, ctrl+left/right/home for prev/next Ekādaśī/today. [2020-10-06]
 [+] press ctrl+home twice to return to today and then to home location (Udupi) [2020-10-06]
+[+] fix location names (avoid unnecessary details) [2020-10-10]
+[+] add ctrl+tab, ctrl+shift+tab keyboard shortcuts for tab switching [2020-10-10]
