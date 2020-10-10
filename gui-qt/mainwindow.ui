@@ -151,7 +151,7 @@
                     </sizepolicy>
                    </property>
                    <property name="text">
-                    <string>Location:</string>
+                    <string>&amp;Location:</string>
                    </property>
                    <property name="margin">
                     <number>5</number>
@@ -185,7 +185,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="latitude">
+                  <widget class="LatitudeEdit" name="latitude">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
@@ -363,6 +363,11 @@
    <class>HtmlBrowser</class>
    <extends>QTextBrowser</extends>
    <header>htmlbrowser.h</header>
+  </customwidget>
+  <customwidget>
+   <class>LatitudeEdit</class>
+   <extends>QLineEdit</extends>
+   <header>latitude-edit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

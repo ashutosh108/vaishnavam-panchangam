@@ -34,6 +34,7 @@ add_library(mainwindow STATIC
     mainwindow.h
     mainwindow.ui
     htmlbrowser.cpp
+    latitude-edit.cpp
 )
 #target_include_directories(mainwindow PUBLIC ../src)
 target_link_libraries(mainwindow PUBLIC

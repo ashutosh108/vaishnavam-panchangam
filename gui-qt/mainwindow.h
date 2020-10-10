@@ -57,6 +57,7 @@ private:
     void switchToHomeDateAndOrLocation();
     void switchToPrevLocation();
     void switchToNextLocation();
+    void connectSignals();
 };
 
 QString htmlify_line(const std::string_view & line);

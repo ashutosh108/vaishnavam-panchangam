@@ -14,6 +14,14 @@
 #include <QMessageBox>
 #include <QShortcut>
 
+void MainWindow::connectSignals()
+{
+    connect(ui->vrataSummary, &QLabel::linkActivated, [this]{
+        expand_details_in_summary_tab = !expand_details_in_summary_tab;
+        refreshAllTabs();
+    });
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -24,10 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     setDateToToday();
     showVersionInStatusLine();
     setupKeyboardShortcuts();
-    connect(ui->vrataSummary, &QLabel::linkActivated, [this]{
-        expand_details_in_summary_tab = !expand_details_in_summary_tab;
-        refreshAllTabs();
-    });
+    connectSignals();
     gui_ready = true;
     refreshAllTabs();
 }
@@ -303,7 +308,8 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
         auto location_arr = location_name.toUtf8();
         auto location = vp::text_ui::LocationDb().find_coord(location_arr.data());
         if (location.has_value()) {
-            ui->latitude->setText(QString::fromStdString(fmt::to_string(location->latitude)));
+            ui->latitude->setValue(location->latitude.latitude);
+//            ui->latitude->setText(QString::fromStdString(fmt::to_string(location->latitude)));
             ui->longitude->setText(QString::fromStdString(fmt::to_string(location->longitude)));
             ui->timezone->setText(QString::fromStdString(location->time_zone()->name()));
         }
