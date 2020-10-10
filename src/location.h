@@ -129,7 +129,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location spb_coord{                     59'55'00_N,  30'15'00_E, "Saint Petersburg", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location freiburg_coord{                48'00'00_N,   7'52'00_E, "Freiburg im Breisgau", "Europe/Paris", "Germany"};
 [[maybe_unused]] constexpr Location nikolaev_coord{                46'58'00_N,  32'00'00_E, "Nikolaev", "Europe/Kiev", "Ukraine"};
-[[maybe_unused]] constexpr Location ramenskoe_m_obl_coord{         55'34'00_N,  38'13'00_E, "Ramenskoye, Moscow Oblast", "Europe/Moscow", "Russia"}; // en Wikipedia
+[[maybe_unused]] constexpr Location ramenskoe_m_obl_coord{         55'34'00_N,  38'13'00_E, "Ramenskoye", "Europe/Moscow", "Russia"}; // en Wikipedia
 [[maybe_unused]] constexpr Location minsk_coord{                   53'55'00_N,  27'35'00_E, "Minsk", "Europe/Minsk", "Belarus"};
 [[maybe_unused]] constexpr Location barnaul_coord{                 53'21'00_N,  83'46'00_E, "Barnaul", "Asia/Barnaul", "Russia"};
 [[maybe_unused]] constexpr Location newdelhi_coord{                28'39'00_N,  77'13'00_E, "New Delhi", "Asia/Kolkata", "India"};
@@ -143,11 +143,11 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location bombey_coord{                  18'58'00_N,  72'50'00_E, "Mumbai", "Asia/Kolkata", "India"};
 [[maybe_unused]] constexpr Location pune_coord{                    18'32'00_N,  73'52'00_E, "Pune", "Asia/Kolkata", "India"};
 [[maybe_unused]] constexpr Location simferopol_coord{              44'56'00_N,  34'06'00_E, "Simferopol", "Europe/Simferopol", "Russia"};
-[[maybe_unused]] constexpr Location manali_coord{                  32'16'00_N,  77'10'00_E, "Manali, Himachal Pradesh", "Asia/Kolkata", "India"};
+[[maybe_unused]] constexpr Location manali_coord{                  32'16'00_N,  77'10'00_E, "Manali", "Asia/Kolkata", "India"};
 [[maybe_unused]] constexpr Location pyatigorsk_coord{              44'02'00_N,  43'03'00_E, "Pyatigorsk", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location kirov_coord{                   58'36'00_N,  49'39'00_E, "Kirov", "Europe/Kirov", "Russia"};
 [[maybe_unused]] constexpr Location washington_coord{              38'53'00_N,  77'02'00_W, "Washington, D.C.", "America/New_York", "USA"};
-[[maybe_unused]] constexpr Location gokarna_coord{                 14'33'00_N,  74'19'00_E, "Gokarna, Karnataka", "Asia/Kolkata", "India"};
+[[maybe_unused]] constexpr Location gokarna_coord{                 14'33'00_N,  74'19'00_E, "Gokarna", "Asia/Kolkata", "India"};
 [[maybe_unused]] constexpr Location telaviv_coord{                 32'04'00_N,  34'47'00_E, "Tel Aviv", "Asia/Jerusalem", "Israel"};
 [[maybe_unused]] constexpr Location tomsk_coord{                   56'29'00_N,  84'57'00_E, "Tomsk", "Asia/Tomsk", "Russia"};
 [[maybe_unused]] constexpr Location kiel_coord{                    54'19'00_N,  10'08'00_E, "Kiel", "Europe/Berlin", "Germany"};
@@ -173,7 +173,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location krivoyrog_coord{               47'57'00_N,  33'25'00_E, "Krivoy Rog", "Europe/Kiev", "Ukraine"};
 [[maybe_unused]] constexpr Location petropavlovskkamchatskiy_coord{53'01'00_N, 158'39'00_E, "Petropavlovsk-Kamchatsky", "Asia/Kamchatka", "Russia"};
 [[maybe_unused]] constexpr Location kophangan_coord{                9'43'00_N, 100'00'00_E, "Ko Pha-ngan", "Asia/Bangkok", "Thailand"};
-[[maybe_unused]] constexpr Location denpasar_coord{                 8'39'00_S, 115'13'00_E, "Denpasar", "Asia/Makassar", "Bali"};
+[[maybe_unused]] constexpr Location denpasar_coord{                 8'39'00_S, 115'13'00_E, "Denpasar", "Asia/Makassar", "Indonesia"};
 [[maybe_unused]] constexpr Location mundelein_coord{               42'16'00_N,  88'00'00_W, "Mundelein", "America/Chicago", "USA"};
 [[maybe_unused]] constexpr Location bishkek_coord{                 42'52'00_N,  74'34'00_E, "Bishkek", "Asia/Bishkek", "Kyrgyzstan"};
 [[maybe_unused]] constexpr Location vena_coord{                    48'12'00_N,  16'22'00_E, "Vienna", "Europe/Vienna", "Austria"};
@@ -184,7 +184,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location stavropol_coord{               45'02'00_N,  41'58'00_E, "Stavropol", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location pokhara_coord{                 28'15'00_N,  83'58'00_E, "Pokhara", "Asia/Kathmandu", "Nepal"};
 [[maybe_unused]] constexpr Location murmansk_coord{                68'58'00_N,  33'05'00_E, "Murmansk", "Europe/Moscow", "Russia"};
-[[maybe_unused]] constexpr Location mirnyy_coord{                  62'32'00_N, 113'57'00_E, "Mirny, Sakha Republic", "Asia/Yakutsk", "Russia"};
+[[maybe_unused]] constexpr Location mirnyy_coord{                  62'32'00_N, 113'57'00_E, "Mirny", "Asia/Yakutsk", "Russia"};
 [[maybe_unused]] constexpr Location riga_coord{                    56'56'00_N,  24'06'00_E, "Riga", "Europe/Riga", "Latvia"};
 [[maybe_unused]] constexpr Location surgut_coord{                  61'15'00_N,  73'26'00_E, "Surgut", "Asia/Yekaterinburg", "Russia"};
 [[maybe_unused]] constexpr Location ryazan_coord{                  54'37'00_N,  39'43'00_E, "Ryazan", "Europe/Moscow", "Russia"};
