@@ -26,7 +26,7 @@ void add_header(vp::Table & table, const std::set<date::year_month_day> & vrata_
     table.add_header_cell("॥ श्रीः ॥");
 
     for (auto date : vrata_dates) {
-        table.add_header_cell(fmt::format("{:l}", date));
+        table.add_header_cell(fmt::format("{:l}", date), "mainpart");
     }
 }
 
@@ -37,7 +37,7 @@ void add_bottom_header(vp::Table & table, const std::set<date::year_month_day> &
     table.add_header_cell("॥ ॐ तत्सत् ॥");
 
     for (auto date : vrata_dates) {
-        table.add_header_cell(fmt::format("{:l}", date));
+        table.add_header_cell(fmt::format("{:l}", date), "mainpart");
     }
 }
 

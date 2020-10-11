@@ -2,7 +2,6 @@
 [ ] add empty (all-white) row after Petropavlovsk-Kamchatsky, where timezone switches to the left of BhArata
 [ ] table: use Georgia font for all table
 [ ] table: use bold font for Ekādaśī name (or at least vrata type, for now)
-[ ] table: use cyan/gray background for header and tail rows
 [ ] table: use &nbsp; to separate day and month
 [ ] table: allow adding few columns before/after the Ekādaśī vrata (for e.g. Adhimasa ends, etc)
 [ ] table: add tooltips for all PAraNam cells (with exact pAraNam times and type)
@@ -228,3 +227,4 @@ done:
 [+] fix location names (avoid unnecessary details) [2020-10-10]
 [+] add ctrl+tab, ctrl+shift+tab keyboard shortcuts for tab switching [2020-10-10]
 [+] table: add bottom header with with ॥ ॐ तत्सत् ॥ and dates [2020-10-11]
+[+] table: use cyan/gray background for header and tail rows [2020-10-11]

@@ -5,16 +5,18 @@
 
 #include <sstream>
 
-static auto some_vratas() {
-    using namespace date;
-    const auto arbitrary_date = 2020_y/January/1;
-    return vp::text_ui::calc_all(arbitrary_date);
+namespace {
+auto some_vratas(date::year_month_day date = date::year{2020}/1/1) {
+    return vp::text_ui::calc_all(date);
+}
+
+auto some_table(date::year_month_day date = date::year{2020}/1/1) {
+    return vp::Table_Calendar_Generator::generate(some_vratas(date));
+}
 }
 
 TEST_CASE("Table_Calendar_Generator returns reasonable table") {
-    const auto vratas = some_vratas();
-
-    const auto table = vp::Table_Calendar_Generator::generate(vratas);
+    const auto table = some_table();
     REQUIRE(table.width() == 6);
     REQUIRE(table.at(0, 3).text == "January 6");
     REQUIRE(table.at(0, 4).text == "January 7");
@@ -32,9 +34,7 @@ TEST_CASE("Table_Calendar_Generator returns reasonable table") {
 
 TEST_CASE("Table_Calendar_Generator returns reasonable table adds ' (DST)' for 'summer' times") {
     using namespace date;
-    const auto vratas = vp::text_ui::calc_all(2020_y/July/1);
-
-    const auto table = vp::Table_Calendar_Generator::generate(vratas);
+    const auto table = some_table(2020_y/July/1);
     int num_with_dst = 0;
     int num_without_dst = 0;
     for (std::size_t row=0; row < table.height(); ++row) {
@@ -50,9 +50,8 @@ TEST_CASE("Table_Calendar_Generator returns reasonable table adds ' (DST)' for '
 }
 
 TEST_CASE("Table_Calendar_Generator generates 'shrIH'/'Om tatsat' with dates as the top and bottom rows") {
-    const auto vratas = some_vratas();
+    const auto table = some_table();
 
-    const auto table = vp::Table_Calendar_Generator::generate(vratas);
     size_t rows = table.height();
 
     REQUIRE(rows >= 3);
@@ -67,4 +66,20 @@ TEST_CASE("Table_Calendar_Generator generates 'shrIH'/'Om tatsat' with dates as 
     using Catch::Matchers::Contains;
     REQUIRE_THAT(table.at(0, 0).text, Contains("श्रीः"));
     REQUIRE_THAT(table.at(rows-1, 0).text, Contains("ॐ तत्सत्"));
+}
+
+TEST_CASE("generated table has 'mainpart' as a class for top/bottom date headers") {
+    const auto table = some_table();
+    using Catch::Matchers::Contains;
+
+    REQUIRE_THAT(table.at(0, 3).classes, Contains("mainpart"));
+    REQUIRE_THAT(table.at(0, 4).classes, Contains("mainpart"));
+    REQUIRE_THAT(table.at(0, 5).classes, Contains("mainpart"));
+
+    size_t rows = table.height();
+    REQUIRE(rows >= 3);
+
+    REQUIRE_THAT(table.at(rows-1, 3).classes, Contains("mainpart"));
+    REQUIRE_THAT(table.at(rows-1, 4).classes, Contains("mainpart"));
+    REQUIRE_THAT(table.at(rows-1, 5).classes, Contains("mainpart"));
 }

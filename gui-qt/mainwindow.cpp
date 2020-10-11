@@ -192,6 +192,10 @@ td.mainpart, th.mainpart {
     text-align: center;
     vertical-align: middle;
 }
+th {
+    background-color: #34CDF9;
+    color: #FFFC9E;
+}
 th.mainpart {
     background-color: #c0c0c0;
     color: #3531ff;
