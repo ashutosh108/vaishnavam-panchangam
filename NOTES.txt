@@ -1,5 +1,4 @@
-[ ] table: add lower row with dates and ॥ ॐ तत्सत् ॥
-[ ] row-spanning odd-even rows should always switch from one anothed, regardless of row number
+[ ] row-spanning odd/even cell classes should always alternate, regardless of odd/even row number
 [ ] add empty (all-white) row after Petropavlovsk-Kamchatsky, where timezone switches to the left of BhArata
 [ ] table: use Georgia font for all table
 [ ] table: use bold font for Ekādaśī name (or at least vrata type, for now)
@@ -228,3 +227,4 @@ done:
 [+] press ctrl+home twice to return to today and then to home location (Udupi) [2020-10-06]
 [+] fix location names (avoid unnecessary details) [2020-10-10]
 [+] add ctrl+tab, ctrl+shift+tab keyboard shortcuts for tab switching [2020-10-10]
+[+] table: add bottom header with with ॥ ॐ तत्सत् ॥ and dates [2020-10-11]

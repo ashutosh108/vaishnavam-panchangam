@@ -11,7 +11,7 @@ static auto some_vratas() {
     return vp::text_ui::calc_all(arbitrary_date);
 }
 
-TEST_CASE("Table_Caledar_Generator returns reasonable table") {
+TEST_CASE("Table_Calendar_Generator returns reasonable table") {
     const auto vratas = some_vratas();
 
     const auto table = vp::Table_Calendar_Generator::generate(vratas);
@@ -30,7 +30,7 @@ TEST_CASE("Table_Caledar_Generator returns reasonable table") {
     REQUIRE(table.at(1, 5).text == "");
 }
 
-TEST_CASE("Table_Caledar_Generator returns reasonable table adds ' (DST)' for 'summer' times") {
+TEST_CASE("Table_Calendar_Generator returns reasonable table adds ' (DST)' for 'summer' times") {
     using namespace date;
     const auto vratas = vp::text_ui::calc_all(2020_y/July/1);
 
@@ -46,5 +46,25 @@ TEST_CASE("Table_Caledar_Generator returns reasonable table adds ' (DST)' for 's
         }
     }
     REQUIRE(num_with_dst > 0);
-    REQUIRE(num_with_dst > 0);
+    REQUIRE(num_without_dst > 0);
+}
+
+TEST_CASE("Table_Calendar_Generator generates 'shrIH'/'Om tatsat' with dates as the top and bottom rows") {
+    const auto vratas = some_vratas();
+
+    const auto table = vp::Table_Calendar_Generator::generate(vratas);
+    size_t rows = table.height();
+
+    REQUIRE(rows >= 3);
+
+    REQUIRE(table.at(0, 3).text == "January 6");
+    REQUIRE(table.at(rows-1, 3).text == "January 6");
+    REQUIRE(table.at(0, 4).text == "January 7");
+    REQUIRE(table.at(rows-1, 4).text == "January 7");
+    REQUIRE(table.at(0, 5).text == "January 8");
+    REQUIRE(table.at(rows-1, 5).text == "January 8");
+
+    using Catch::Matchers::Contains;
+    REQUIRE_THAT(table.at(0, 0).text, Contains("श्रीः"));
+    REQUIRE_THAT(table.at(rows-1, 0).text, Contains("ॐ तत्सत्"));
 }

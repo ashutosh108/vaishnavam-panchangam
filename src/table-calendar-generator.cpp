@@ -3,7 +3,9 @@
 #include <set>
 #include <utility>
 
-static std::set<date::year_month_day> get_vrata_dates(const vp::VratasForDate & vratas) {
+namespace {
+
+std::set<date::year_month_day> get_vrata_dates(const vp::VratasForDate & vratas) {
     std::set<date::year_month_day> dates;
     for (const auto & vrata : vratas) {
         if (vrata) {
@@ -18,7 +20,7 @@ static std::set<date::year_month_day> get_vrata_dates(const vp::VratasForDate & 
     return dates;
 }
 
-static void add_header(vp::Table & table, const std::set<date::year_month_day> & vrata_dates) {
+void add_header(vp::Table & table, const std::set<date::year_month_day> & vrata_dates) {
     table.add_header_cell("॥ श्रीः ॥");
     table.add_header_cell("॥ श्रीः ॥");
     table.add_header_cell("॥ श्रीः ॥");
@@ -28,7 +30,18 @@ static void add_header(vp::Table & table, const std::set<date::year_month_day> &
     }
 }
 
-static std::string get_timezone_text(const vp::MaybeVrata & vrata) {
+void add_bottom_header(vp::Table & table, const std::set<date::year_month_day> & vrata_dates) {
+    table.start_new_row();
+    table.add_header_cell("॥ ॐ तत्सत् ॥");
+    table.add_header_cell("॥ ॐ तत्सत् ॥");
+    table.add_header_cell("॥ ॐ तत्सत् ॥");
+
+    for (auto date : vrata_dates) {
+        table.add_header_cell(fmt::format("{:l}", date));
+    }
+}
+
+std::string get_timezone_text(const vp::MaybeVrata & vrata) {
     if (!vrata) return "-";
     if (!vrata->paran.paran_start) return "-";
     auto paran_start_sys = vrata->paran.paran_start->as_sys_time();
@@ -50,7 +63,7 @@ static std::string get_timezone_text(const vp::MaybeVrata & vrata) {
     return fmt::format("{}{}:{:02}{}", sign, hours, minutes, dst);
 }
 
-static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::year_month_day> & vrata_dates, std::string tr_classes) {
+void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::year_month_day> & vrata_dates, std::string tr_classes) {
     table.start_new_row(std::move(tr_classes));
     table.add_cell(get_timezone_text(vrata));
     table.add_cell(vrata->location.country);
@@ -74,6 +87,8 @@ static void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std
     }
 }
 
+} // anonymous namespace
+
 vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vratas)
 {
     vp::Table table;
@@ -83,6 +98,7 @@ vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vrata
     for (const auto & vrata : vratas) {
         add_vrata(table, vrata, vrata_dates, ++row % 2 ? "odd" : "even");
     }
+    add_bottom_header(table, vrata_dates);
     table.merge_cells_into_rowspans();
     table.merge_cells_into_colspans();
     return table;
