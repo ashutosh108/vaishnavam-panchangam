@@ -86,19 +86,19 @@ endif()
 
 add_executable(test-main
     tests/test-main.cpp
-    tests/test-juldays_ut.cpp
-    tests/test-swe.cpp
-    tests/test-calc.cpp
-    tests/test-tithi.cpp
-    tests/test-location.cpp
+    src/juldays_ut.test.cpp
+    src/swe.test.cpp
+    src/calc.test.cpp
+    src/tithi.test.cpp
+    src/location.test.cpp
     tests/test-date.cpp
-    tests/test-tz.cpp
-    tests/test-vrata.cpp
-    tests/test-vrata-detail-printer.cpp
-    tests/test-paran.cpp
-    tests/test-text-interface.cpp
-    tests/html-parser.cpp tests/test-html-parser.cpp
-    tests/html-table-parser.cpp tests/test-html-table-parser.cpp
+    src/tz-fixed.test.cpp
+    src/vrata.test.cpp
+    src/vrata_detail_printer.test.cpp
+    src/paran.test.cpp
+    src/text-interface.test.cpp
+    tests/html-parser.cpp tests/html-parser.test.cpp
+    tests/html-table-parser.cpp tests/html-table-parser.test.cpp
     tests/test-precalculated.cpp
     tests/catch-formatters.h
     src/table-calendar-generator.test.cpp
