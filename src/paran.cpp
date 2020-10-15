@@ -32,11 +32,14 @@ std::string ParanFormatter::format(const Paran &paran,
     return fmt::to_string(buf);
 }
 
-// we round to minutes unless interval is less than 48 minutes long.
+// we round to minutes unless rounded interval is less than 5 minutes long.
 bool Paran::is_rounded_to_minutes() const
 {
-    constexpr auto short_paran_threshold = std::chrono::minutes{48};
-    return paran_start && paran_end && (*paran_end - *paran_start >= short_paran_threshold);
+    using namespace std::chrono_literals;
+    if (!paran_start || !paran_end) return true;
+    const auto start_rounded_to_minutes = date::ceil<std::chrono::minutes>(paran_start->as_zoned_time(time_zone).get_local_time());
+    const auto end_rounded_to_minutes = date::floor<std::chrono::minutes>(paran_end->as_zoned_time(time_zone).get_local_time());
+    return end_rounded_to_minutes - start_rounded_to_minutes >= 5min;
 }
 
 std::string Paran::paran_start_str() const

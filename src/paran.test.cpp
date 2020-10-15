@@ -78,11 +78,11 @@ TEST_CASE("compact paran format: wide range (rounding to minute)") {
 
 TEST_CASE("compact paran format: narrow range (rounding to seconds)") {
     JulDays_UT time1{2019_y/March/19, 5h + 3min + 4.3s};
-    JulDays_UT time2{2019_y/March/19, 5h + 13min + 5.5s};
+    JulDays_UT time2{2019_y/March/19, 5h + 8min + 5.5s};
     auto timezone = date::locate_zone("Europe/Moscow");
     Paran p{Paran::Type::From_Quarter_Dvadashi, time1, time2, timezone};
 
-    REQUIRE("08:03:05–08:13:05" == fmt::format("{:c}", p));
+    REQUIRE("08:03:05–08:08:05" == fmt::format("{:c}", p));
 }
 
 TEST_CASE("paran_start/end_str rounds to minutes for large (>=48 min) interval") {
@@ -95,12 +95,20 @@ TEST_CASE("paran_start/end_str rounds to minutes for large (>=48 min) interval")
     REQUIRE("08:51" == p.paran_end_str());
 }
 
-TEST_CASE("paran_start/end_str rounds to seconds for small (<48 min) interval") {
-    JulDays_UT time1{2019_y/March/19, 5h + 3min + 4.5s};
-    JulDays_UT time2{2019_y/March/19, 5h + 3min + 4.5s + 47min};
-    auto timezone = date::locate_zone("Europe/Moscow");
-    Paran p{Paran::Type::From_Quarter_Dvadashi, time1, time2, timezone};
+TEST_CASE("paran_start/end_str rounds to minutes when rounded interval is just 5 minutes") {
+    JulDays_UT time1{2019_y/March/19, 5h + 3min + 0.5s};
+    JulDays_UT time2{2019_y/March/19, 5h + 9min + 59.5s};
+    Paran p{Paran::Type::From_Quarter_Dvadashi, time1, time2};
 
-    REQUIRE("08:03:05" == p.paran_start_str());
-    REQUIRE("08:50:04" == p.paran_end_str());
+    REQUIRE("05:04" == p.paran_start_str());
+    REQUIRE("05:09" == p.paran_end_str());
+}
+
+TEST_CASE("paran_start/end_str rounds to minutes when rounded interval is 4 minutes") {
+    JulDays_UT time1{2019_y/March/19, 5h + 3min + 0.5s};
+    JulDays_UT time2{2019_y/March/19, 5h + 8min + 59.5s};
+    Paran p{Paran::Type::From_Quarter_Dvadashi, time1, time2};
+
+    REQUIRE("05:03:01" == p.paran_start_str());
+    REQUIRE("05:08:59" == p.paran_end_str());
 }
