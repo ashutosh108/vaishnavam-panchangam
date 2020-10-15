@@ -2,6 +2,14 @@
 
 #include "html-table-writer.h"
 
+namespace {
+std::string table_to_string(const vp::Table & table) {
+    std::stringstream stream;
+    stream << vp::Html_Table_Writer(table);
+    return stream.str();
+}
+}
+
 TEST_CASE("Html_Table_Writer generates something for a small table") {
     vp::Table table;
     table.add_cell("cell1,1");
@@ -10,28 +18,24 @@ TEST_CASE("Html_Table_Writer generates something for a small table") {
     table.add_cell("cell2,1");
     table.add_cell("cell2,2");
 
-    std::stringstream s;
-    s << vp::Html_Table_Writer(table);
+    std::string s = table_to_string(table);
 
     using Catch::Matchers::StartsWith;
     using Catch::Matchers::Contains;
-    REQUIRE_THAT(s.str(), StartsWith("<table"));
-    REQUIRE_THAT(s.str(), Contains("<tr"));
-    REQUIRE_THAT(s.str(), Contains("<td"));
-    REQUIRE_THAT(s.str(), Contains("cell1,1"));
-    REQUIRE_THAT(s.str(), Contains("cell2,2"));
-    REQUIRE_THAT(s.str(), Contains("</table>"));
+    REQUIRE_THAT(s, StartsWith("<table"));
+    REQUIRE_THAT(s, Contains("<tr"));
+    REQUIRE_THAT(s, Contains("<td"));
+    REQUIRE_THAT(s, Contains("cell1,1"));
+    REQUIRE_THAT(s, Contains("cell2,2"));
+    REQUIRE_THAT(s, Contains("</table>"));
 }
 
 TEST_CASE("Html_Table_Writer keeps classes for td") {
     vp::Table table;
     table.add_cell("cell1,1", "class1");
 
-    std::stringstream s;
-    s << vp::Html_Table_Writer(table);
-
     using Catch::Matchers::Contains;
-    REQUIRE_THAT(s.str(), Contains("class=\"class1\""));
+    REQUIRE_THAT(table_to_string(table), Contains("class=\"class1\""));
 }
 
 TEST_CASE("Html_Table_Writer writes proper rowspans") {
@@ -41,11 +45,9 @@ TEST_CASE("Html_Table_Writer writes proper rowspans") {
     table.add_cell("cellx,1");
     table.merge_cells_into_rowspans();
 
-    std::stringstream s;
-    s << vp::Html_Table_Writer(table);
-    std::string str = s.str();
+    std::string str = table_to_string(table);
     using Catch::Matchers::Contains;
-    REQUIRE_THAT(s.str(), Contains("rowspan=\"2\""));
+    REQUIRE_THAT(str, Contains("rowspan=\"2\""));
 }
 
 TEST_CASE("Html_Table_Writer writes proper colspans") {
@@ -54,10 +56,28 @@ TEST_CASE("Html_Table_Writer writes proper colspans") {
     table.add_cell("cellx,1");
     table.merge_cells_into_colspans();
 
-    std::stringstream s;
-    s << vp::Html_Table_Writer(table);
-    std::string str = s.str();
+    std::string str = table_to_string(table);
     using Catch::Matchers::Contains;
-    REQUIRE_THAT(s.str(), Contains("colspan=\"2\""));
-    REQUIRE_THAT(s.str(), !Contains("colspan=\"0\""));
+    REQUIRE_THAT(str, Contains("colspan=\"2\""));
+    REQUIRE_THAT(str, !Contains("colspan=\"0\""));
+}
+
+TEST_CASE("Html_Table_Writer writes every column width in the first non-col-spanning cell of each column") {
+    vp::Table table;
+    table.add_cell("cell1,1-2");
+    table.add_cell("cell1,1-2");
+    table.add_cell("cell1,3");
+    table.start_new_row();
+    table.add_cell("cell2,1");
+    table.add_cell("cell2,2");
+    table.add_cell("cell2,3");
+
+    table.set_column_widths({10.0,40.0,50.0});
+    table.merge_cells_into_colspans();
+
+    auto s = table_to_string(table);
+    using Catch::Matchers::Matches;
+    REQUIRE_THAT(s, Matches(R"~((.|\n)*<td\s+[^>]*width="10%"[^>]*>cell2,1(.|\n)*)~"));
+    REQUIRE_THAT(s, Matches(R"~((.|\n)*<td\s+[^>]*width="40%"[^>]*>cell2,2(.|\n)*)~"));
+    REQUIRE_THAT(s, Matches(R"~((.|\n)*<td\s+[^>]*width="50%"[^>]*>cell1,3(.|\n)*)~"));
 }

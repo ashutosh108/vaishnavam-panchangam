@@ -1,13 +1,14 @@
+[ ] table: specify reasonable cell widths (suitable for 2- and 3-col main part)
 [ ] row-spanning odd/even cell classes should always alternate, regardless of odd/even row number
 [ ] add empty (all-white) row after Petropavlovsk-Kamchatsky, where timezone switches to the left of BhArata
 [ ] table: use Georgia font for all table
-] table: use &nbsp; to separate day and month
+[ ] table: use &nbsp; to separate day and month
 [ ] table: allow adding few columns before/after the Ekādaśī vrata (for e.g. Adhimasa ends, etc)
 [ ] table: add tooltips for all PAraNam cells (with exact pAraNam times and type)
 [ ] table: add tooltips with timezone name to location name cells
 [ ] text selection in "Summary" appears to be lost when right-clicking (and comes back afterwards).
 [ ] Table: add Russian version
-[ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone)\
+[ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone):
 [ ] -> lat/long input activated => change text to decimal
 [ ] -> change lat/long/TZ => change location to "Custom"
 [ ] switch from std::regex to some other, saner and faster, regex library.

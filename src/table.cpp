@@ -146,6 +146,16 @@ void vp::Table::merge_cells_into_colspans()
     }
 }
 
+void vp::Table::set_column_widths(std::vector<double> _col_widths)
+{
+    col_widths_ = _col_widths;
+}
+
+const std::vector<double> & vp::Table::column_widths() const
+{
+    return col_widths_;
+}
+
 void vp::Table::iterate(vp::Table::CallBack &it) const
 {
     for (auto & row : rows) {

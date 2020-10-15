@@ -32,6 +32,7 @@ public:
 
 private:
     std::vector<Row> rows;
+    std::vector<double> col_widths_;
     template<typename Callable>
     void iterate_over_col(std::size_t col, Callable callable) {
         for (std::size_t row=0; row < height(); ++row) {
@@ -69,6 +70,8 @@ public:
     void start_new_row(std::string classes="");
     void merge_cells_into_rowspans();
     void merge_cells_into_colspans();
+    void set_column_widths(std::vector<double> _col_widths);
+    const std::vector<double> & column_widths() const;
 
     struct CallBack {
         virtual ~CallBack() = default;

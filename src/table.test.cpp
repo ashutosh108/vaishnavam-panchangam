@@ -192,3 +192,8 @@ TEST_CASE("table cell horizontal merge into colspans works") {
     REQUIRE(table.at(0,0).colspan == 2);
     REQUIRE(table.at(0,1).colspan == 0);
 }
+
+TEST_CASE("can set column widths") {
+    vp::Table table;
+    table.set_column_widths({25.0,25.0,25.0,25.0});
+}
