@@ -87,6 +87,23 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
     }
 }
 
+std::vector<double> calc_column_widths(const vp::Table & table) {
+    size_t width = table.width();
+
+    constexpr double timezone_col_width = 8.0;
+    constexpr double country_col_width = 16.0;
+    constexpr double city_col_width = 16.0;
+    std::vector<double> col_widths{timezone_col_width, country_col_width, city_col_width};
+    col_widths.resize(width);
+    const size_t mainpart_col_count = width - 3;
+    const double mainpart_col_width = (100.0 - timezone_col_width - country_col_width - city_col_width) / mainpart_col_count;
+    for (size_t col=3; col < width; ++col) {
+        col_widths[col] = mainpart_col_width;
+    }
+    return col_widths;
+}
+
+
 } // anonymous namespace
 
 vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vratas)
@@ -101,5 +118,6 @@ vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vrata
     add_bottom_header(table, vrata_dates);
     table.merge_cells_into_rowspans();
     table.merge_cells_into_colspans();
+    table.set_column_widths(calc_column_widths(table));
     return table;
 }
