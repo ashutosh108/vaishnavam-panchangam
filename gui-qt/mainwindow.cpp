@@ -208,6 +208,7 @@ tr.even {
 }
 td.vrata {
     background-color: #f8a102;
+    font-weight: bold;
 }
 table {
     border-collapse: collapse;
