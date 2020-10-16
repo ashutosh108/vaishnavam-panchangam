@@ -234,6 +234,22 @@ TEST_CASE("table can set even/odd classes for a column with proper rowspan handl
     REQUIRE(table.at(3,0).classes == "even");
 }
 
+TEST_CASE("add_even_odd_classes_for_col works when some row is empty") {
+    vp::Table table;
+    table.add_cell("row1");
+    table.start_new_row();
+    table.start_new_row();
+    table.add_cell("row3");
+    table.start_new_row();
+    table.add_cell("row4");
+
+    table.add_even_odd_classes_for_col(0);
+
+    REQUIRE(table.at(0,0).classes == "odd");
+    REQUIRE(table.at(2,0).classes == "even");
+    REQUIRE(table.at(3,0).classes == "odd");
+}
+
 TEST_CASE("merging >12 rows of table cell gives proper classes to help remove borders in CSS") {
     vp::Table table;
     // 27 to ensure we get three runs (9 each in this case)

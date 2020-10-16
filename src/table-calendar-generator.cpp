@@ -103,6 +103,14 @@ std::vector<double> calc_column_widths(const vp::Table & table) {
     return col_widths;
 }
 
+std::chrono::seconds utc_offset_for_vrata(const vp::Vrata & vrata) {
+    if (!vrata.paran.paran_start) return {};
+    auto paran_start_sys = vrata.paran.paran_start->as_sys_time();
+    auto timezone = vrata.location.time_zone();
+    auto info = timezone->get_info(paran_start_sys);
+
+    return info.offset;
+}
 
 } // anonymous namespace
 
@@ -112,7 +120,21 @@ vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vrata
     auto vrata_dates = get_vrata_dates(vratas);
     add_header(table, vrata_dates);
     int row = 1;
+    const vp::MaybeVrata * prev_vrata{};
+    std::chrono::seconds prev_vrata_utc_offset;
+    using namespace std::chrono_literals;
+    constexpr std::chrono::seconds min_utc_offset_for_separator = 7h;
     for (const auto & vrata : vratas) {
+        if (vrata) {
+            auto vrata_utc_offset = utc_offset_for_vrata(*vrata);
+            if (prev_vrata) {
+                if (abs(vrata_utc_offset - prev_vrata_utc_offset) >= min_utc_offset_for_separator) {
+                    table.start_new_row("separator");
+                }
+            }
+            prev_vrata = &vrata;
+            prev_vrata_utc_offset = vrata_utc_offset;
+        }
         add_vrata(table, vrata, vrata_dates, ++row % 2 ? "odd" : "even");
     }
     add_bottom_header(table, vrata_dates);

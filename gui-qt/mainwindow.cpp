@@ -231,6 +231,9 @@ td.vrata.merge-to-top {
 table {
     border-collapse: collapse;
 }
+tr.separator {
+    height: 1.1em;
+}
 </style>)CSS"};
 
 void MainWindow::refreshTable()

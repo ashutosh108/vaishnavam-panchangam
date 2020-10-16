@@ -2,12 +2,12 @@
 
 #include <algorithm>
 
-size_t vp::Table::row_length(size_t row)
+size_t vp::Table::row_length(size_t row) const
 {
     return rows[row].data.size();
 }
 
-bool vp::Table::has_cell(std::size_t row, std::size_t col)
+bool vp::Table::has_cell(std::size_t row, std::size_t col) const
 {
     if (row > height()) return false;
     return col < row_length(row);
@@ -169,8 +169,9 @@ const std::vector<double> & vp::Table::column_widths() const
 void vp::Table::add_even_odd_classes_for_col(size_t col, StartFrom start_from)
 {
     bool odd = (start_from == StartFrom::Odd);
-    vp::Table::Cell * prev_cell{};
+    const vp::Table::Cell * prev_cell{};
     for (size_t row=0; row < height(); ++row) {
+        if (!has_cell(row,col)) { continue; }
         auto & cell = at(row, col);
         // do not switch between odd/even for multiple runs of rowspanning cell with the same text
         if (prev_cell && prev_cell->text != cell.text) {
@@ -181,6 +182,11 @@ void vp::Table::add_even_odd_classes_for_col(size_t col, StartFrom start_from)
         }
         prev_cell = &cell;
     }
+}
+
+const vp::Table::Row & vp::Table::row(size_t row_num) const
+{
+    return rows.at(row_num);
 }
 
 void vp::Table::iterate(vp::Table::CallBack &it) const

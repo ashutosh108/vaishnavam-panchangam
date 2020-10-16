@@ -37,6 +37,9 @@ public:
         std::vector<Cell> data;
         std::string classes;
         Row(std::string classes_=""):classes(classes_){}
+        bool has_class(std::string some_class) const {
+            return classes.find(some_class) != std::string::npos;
+        }
     };
 
 private:
@@ -50,8 +53,7 @@ private:
             }
         }
     }
-    std::size_t row_length(std::size_t row);
-    bool has_cell(std::size_t row, std::size_t col);
+    std::size_t row_length(std::size_t row) const;
     void do_add_cell(std::string text, std::string classes, CellType type, Mergeable mergeable);
     static bool mergeable_cells(const vp::Table::Cell &c1, const vp::Table::Cell &c2);
     void add_row_span(Cell &cell, std::size_t span_size);
@@ -82,6 +84,8 @@ public:
     void set_column_widths(std::vector<double> _col_widths);
     const std::vector<double> & column_widths() const;
     void add_even_odd_classes_for_col(std::size_t col, StartFrom start_from = StartFrom::Odd);
+    const Row & row(std::size_t row_num) const;
+    bool has_cell(std::size_t row, std::size_t col) const;
 
     struct CallBack {
         virtual ~CallBack() = default;

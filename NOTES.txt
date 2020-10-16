@@ -1,4 +1,3 @@
-[ ] add empty (all-white) row after Petropavlovsk-Kamchatsky, where timezone switches to the left of BhArata
 [ ] table: use Georgia font for all table
 [ ] table: use &nbsp; to separate day and month
 [ ] table: allow adding few columns before/after the Ekādaśī vrata (for e.g. Adhimasa ends, etc)
@@ -231,3 +230,4 @@ done:
 [+] table: specify reasonable cell widths (suitable for 2- and 3-col main part) [2020-10-15]
 [+] improve odd/even cell alternation for first two columns (timezone and country): they always alternate now, regardless of odd/even row number [2020-10-16]
 [+] table: remove borders between repeated vertical blocks of "+3:00", "Suddha ekAdashi" etc (>12cells) [2020-10-16]
+[+] add empty (all-white) row after Petropavlovsk-Kamchatsky, where timezone switches to the left of BhArata [2020-10-16]
