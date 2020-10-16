@@ -1,4 +1,3 @@
-[ ] row-spanning odd/even cell classes should always alternate, regardless of odd/even row number
 [ ] add empty (all-white) row after Petropavlovsk-Kamchatsky, where timezone switches to the left of BhArata
 [ ] table: use Georgia font for all table
 [ ] table: use &nbsp; to separate day and month
@@ -230,3 +229,4 @@ done:
 [+] table: use bold font for Ekādaśī name (or at least vrata type, for now) [2020-10-15]
 [+] specify seconds in pāraṇam time only when rounded interval would have been <5min [2020-10-15]
 [+] table: specify reasonable cell widths (suitable for 2- and 3-col main part) [2020-10-15]
+[+] improve odd/even cell alternation for first two columns (timezone and country): they always alternate now, regardless of odd/even row number [2020-10-16]

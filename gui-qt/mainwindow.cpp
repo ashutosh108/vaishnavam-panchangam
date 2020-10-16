@@ -200,11 +200,11 @@ th.mainpart {
     background-color: #c0c0c0;
     color: #3531ff;
 }
-tr.odd {
-    background-color: #D2E4FC;
-}
-tr.even {
+tr.odd,td.odd {
     background-color: #EBF5FF;
+}
+tr.even,td.even {
+    background-color: #D2E4FC;
 }
 td.vrata {
     background-color: #f8a102;

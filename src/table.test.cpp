@@ -197,3 +197,39 @@ TEST_CASE("can set column widths") {
     vp::Table table;
     table.set_column_widths({25.0,25.0,25.0,25.0});
 }
+
+TEST_CASE("table can set even/odd classes for a column with proper rowspan handling") {
+    vp::Table table;
+    table.add_cell("row1-2");
+    table.start_new_row();
+    table.add_cell("row1-2");
+    table.start_new_row();
+    table.add_cell("row3");
+    table.start_new_row();
+    table.add_cell("row4");
+
+    table.merge_cells_into_rowspans();
+    table.add_even_odd_classes_for_col(0);
+
+    REQUIRE(table.at(0,0).classes == "odd");
+    REQUIRE(table.at(2,0).classes == "even");
+    REQUIRE(table.at(3,0).classes == "odd");
+}
+
+TEST_CASE("table can set even/odd classes for a column with proper rowspan handling while (starting from even)") {
+    vp::Table table;
+    table.add_cell("row1-2");
+    table.start_new_row();
+    table.add_cell("row1-2");
+    table.start_new_row();
+    table.add_cell("row3");
+    table.start_new_row();
+    table.add_cell("row4");
+
+    table.merge_cells_into_rowspans();
+    table.add_even_odd_classes_for_col(0, vp::Table::StartFrom::Even);
+
+    REQUIRE(table.at(0,0).classes == "even");
+    REQUIRE(table.at(2,0).classes == "odd");
+    REQUIRE(table.at(3,0).classes == "even");
+}

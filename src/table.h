@@ -12,6 +12,7 @@ class Table
 public:
     enum class CellType : int8_t { Normal, Header };
     enum class Mergeable : int8_t { No, Yes };
+    enum class StartFrom : int8_t { Odd, Even };
     struct Cell {
         std::string text;
         CellType type;
@@ -23,6 +24,14 @@ public:
         Mergeable mergeable;
         Cell(std::string _text, std::size_t _row, std::size_t _col, CellType _type=CellType::Normal, std::string _classes="", Mergeable _mergeable=Mergeable::Yes) :
               text(_text), type(_type), classes(_classes), row{_row}, col{_col}, mergeable{_mergeable} {}
+        void add_classes(std::string new_classes) {
+            if (classes.empty()) {
+                classes = std::move(new_classes);
+            } else {
+                classes += " ";
+                classes += std::move(new_classes);
+            }
+        }
     };
     struct Row {
         std::vector<Cell> data;
@@ -72,6 +81,7 @@ public:
     void merge_cells_into_colspans();
     void set_column_widths(std::vector<double> _col_widths);
     const std::vector<double> & column_widths() const;
+    void add_even_odd_classes_for_col(std::size_t col, StartFrom start_from = StartFrom::Odd);
 
     struct CallBack {
         virtual ~CallBack() = default;

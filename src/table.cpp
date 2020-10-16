@@ -156,6 +156,23 @@ const std::vector<double> & vp::Table::column_widths() const
     return col_widths_;
 }
 
+void vp::Table::add_even_odd_classes_for_col(size_t col, StartFrom start_from)
+{
+    bool odd = (start_from == StartFrom::Odd);
+    vp::Table::Cell * prev_cell{};
+    for (size_t row=0; row < height(); ++row) {
+        auto & cell = at(row, col);
+        // do not switch between odd/even for multiple runs of rowspanning cell with the same text
+        if (prev_cell && prev_cell->text != cell.text) {
+            odd = !odd;
+        }
+        if (cell.rowspan >= 1) {
+            cell.add_classes(odd ? "odd" : "even");
+        }
+        prev_cell = &cell;
+    }
+}
+
 void vp::Table::iterate(vp::Table::CallBack &it) const
 {
     for (auto & row : rows) {

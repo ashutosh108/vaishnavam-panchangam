@@ -111,7 +111,7 @@ vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vrata
     vp::Table table;
     auto vrata_dates = get_vrata_dates(vratas);
     add_header(table, vrata_dates);
-    int row = 0;
+    int row = 1;
     for (const auto & vrata : vratas) {
         add_vrata(table, vrata, vrata_dates, ++row % 2 ? "odd" : "even");
     }
@@ -119,5 +119,7 @@ vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vrata
     table.merge_cells_into_rowspans();
     table.merge_cells_into_colspans();
     table.set_column_widths(calc_column_widths(table));
+    table.add_even_odd_classes_for_col(0);
+    table.add_even_odd_classes_for_col(1, Table::StartFrom::Even);
     return table;
 }
