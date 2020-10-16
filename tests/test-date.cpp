@@ -43,3 +43,7 @@ TEST_CASE("can print local_time with fmt") {
 TEST_CASE("can format as local date (russian pre-reform locale)") {
     REQUIRE("January 6" == fmt::format("{:l}", 2020_y/January/6));
 }
+
+TEST_CASE("can format as local date with nbsp (html non-breaking space)") {
+    REQUIRE("January&nbsp;6" == fmt::format("{:lh}", 2020_y/January/6));
+}

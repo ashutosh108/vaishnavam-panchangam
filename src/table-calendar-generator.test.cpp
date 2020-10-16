@@ -19,9 +19,9 @@ auto some_table(date::year_month_day date = date::year{2020}/1/1) {
 TEST_CASE("Table_Calendar_Generator returns reasonable table") {
     const auto table = some_table();
     REQUIRE(table.width() == 6);
-    REQUIRE(table.at(0, 3).text == "January 6");
-    REQUIRE(table.at(0, 4).text == "January 7");
-    REQUIRE(table.at(0, 5).text == "January 8");
+    REQUIRE(table.at(0, 3).text == "January&nbsp;6");
+    REQUIRE(table.at(0, 4).text == "January&nbsp;7");
+    REQUIRE(table.at(0, 5).text == "January&nbsp;8");
 
     REQUIRE(table.height() >= 20);
 
@@ -58,12 +58,12 @@ TEST_CASE("Table_Calendar_Generator generates 'shrIH'/'Om tatsat' with dates as 
 
     REQUIRE(rows >= 3);
 
-    REQUIRE(table.at(0, 3).text == "January 6");
-    REQUIRE(table.at(rows-1, 3).text == "January 6");
-    REQUIRE(table.at(0, 4).text == "January 7");
-    REQUIRE(table.at(rows-1, 4).text == "January 7");
-    REQUIRE(table.at(0, 5).text == "January 8");
-    REQUIRE(table.at(rows-1, 5).text == "January 8");
+    REQUIRE(table.at(0, 3).text == "January&nbsp;6");
+    REQUIRE(table.at(rows-1, 3).text == "January&nbsp;6");
+    REQUIRE(table.at(0, 4).text == "January&nbsp;7");
+    REQUIRE(table.at(rows-1, 4).text == "January&nbsp;7");
+    REQUIRE(table.at(0, 5).text == "January&nbsp;8");
+    REQUIRE(table.at(rows-1, 5).text == "January&nbsp;8");
 
     using Catch::Matchers::Contains;
     REQUIRE_THAT(table.at(0, 0).text, Contains("श्रीः"));
@@ -126,4 +126,9 @@ TEST_CASE("generated table has a separator row when switching to timezone 7 or m
         }
     }
     REQUIRE(separator_rows_count == 1);
+}
+
+TEST_CASE("generated table has &nbsp; as date separators") {
+    const auto table = some_table();
+    REQUIRE(table.at(0, 3).text == "January&nbsp;6");
 }

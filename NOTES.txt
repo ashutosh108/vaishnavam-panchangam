@@ -1,5 +1,3 @@
-[ ] table: use &nbsp; to separate day and month
-[ ] table: allow adding few columns before/after the Ekādaśī vrata (for e.g. Adhimasa ends, etc)
 [ ] table: add tooltips for all PAraNam cells (with exact pAraNam times and type)
 [ ] table: add tooltips with timezone name to location name cells
 [ ] text selection in "Summary" appears to be lost when right-clicking (and comes back afterwards).
@@ -231,3 +229,4 @@ done:
 [+] table: remove borders between repeated vertical blocks of "+3:00", "Suddha ekAdashi" etc (>12cells) [2020-10-16]
 [+] add empty (all-white) row after Petropavlovsk-Kamchatsky, where timezone switches to the left of BhArata [2020-10-16]
 [+] table: use Georgia font [2020-10-16]
+[+] table: use &nbsp; to separate day and month [2020-10-16]

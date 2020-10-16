@@ -17,15 +17,19 @@ DISABLE_WARNING_POP
 template<>
 struct fmt::formatter<date::year_month_day> {
     bool as_local = false;
+    bool use_nbsp = false;
     template<typename ParseContext>
     constexpr auto parse(ParseContext & ctx) {
-        auto it = ctx.begin();
-        auto end = ctx.end();
-        if (it != end && *it == 'l') {
-            as_local = true;
-            ++it;
+        for (auto it = ctx.begin(), end = ctx.end(); it != end; ++it) {
+            if (*it == 'l') {
+                as_local = true;
+            } else if (*it == 'h') {
+                use_nbsp = true;
+            } else {
+                return it;
+            }
         }
-        return it;
+        return ctx.end();
     }
 
     template<typename FormatContext>
@@ -47,8 +51,8 @@ struct fmt::formatter<date::year_month_day> {
         const int year = static_cast<int>(ymd.year());
         const unsigned month = static_cast<unsigned>(ymd.month());
         const unsigned day = static_cast<unsigned>(ymd.day());
-        if (as_local) {
-            return fmt::format_to(ctx.out(), "{} {}", month_name[month-1], day);
+        if (as_local && ymd.ok()) {
+            return fmt::format_to(ctx.out(), "{}{}{}", month_name[month-1], (use_nbsp ? "&nbsp;" : " "), day);
         } else {
             return fmt::format_to(ctx.out(), "{:04}-{:02}-{:02}", year, month, day);
         }
