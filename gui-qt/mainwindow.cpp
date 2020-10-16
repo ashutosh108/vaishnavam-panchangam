@@ -184,6 +184,7 @@ p.paran { margin-bottom: 0; } /* to ensure "Details->" link is not separated fro
 static QString table_css {R"CSS(<style>
 table, td, th {
     border: 1px solid lightgray;
+    font-family: Georgia, Serif;
 }
 td, th {
     padding: 0.1em;
