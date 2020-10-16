@@ -203,12 +203,30 @@ th.mainpart {
 tr.odd,td.odd {
     background-color: #EBF5FF;
 }
+td.odd.merge-to-top {
+    border-top: 1px solid #EBF5FF;
+}
+td.odd.merge-to-bottom {
+    border-bottom: 1px solid #EBF5FF;
+}
 tr.even,td.even {
     background-color: #D2E4FC;
+}
+td.even.merge-to-top {
+    border-top: 1px solid #D2E4FC;
+}
+td.even.merge-to-bottom {
+    border-bottom: 1px solid #D2E4FC;
 }
 td.vrata {
     background-color: #f8a102;
     font-weight: bold;
+}
+td.vrata.merge-to-bottom {
+    border-bottom: 1px solid #f8a102;
+}
+td.vrata.merge-to-top {
+    border-top: 1px solid #f8a102;
 }
 table {
     border-collapse: collapse;

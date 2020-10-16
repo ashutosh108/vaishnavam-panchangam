@@ -94,8 +94,18 @@ void vp::Table::add_row_span(Cell & cell, std::size_t overall_span_size) {
     std::size_t section_size = (overall_span_size + num_sections - 1) / num_sections; // rounding up
     std::size_t first_row_after_span = cell.row + overall_span_size;
     for (std::size_t row=cell.row; row < first_row_after_span; row += section_size) {
-        std::size_t span_size = std::min(section_size,first_row_after_span - row);
-        at(row, cell.col).rowspan = span_size;
+        auto & curr_cell = at(row, cell.col);
+        std::size_t span_size = std::min(section_size, first_row_after_span - row);
+        curr_cell.rowspan = span_size;
+
+        // merge-to-top all cell runs except the first one
+        if (row != cell.row) {
+            curr_cell.add_classes("merge-to-top");
+        }
+        // merge-to-bottom all cell runs except the last one
+        if (row + section_size < first_row_after_span) {
+            curr_cell.add_classes("merge-to-bottom");
+        }
     }
 }
 

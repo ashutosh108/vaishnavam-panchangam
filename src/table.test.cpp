@@ -233,3 +233,19 @@ TEST_CASE("table can set even/odd classes for a column with proper rowspan handl
     REQUIRE(table.at(2,0).classes == "odd");
     REQUIRE(table.at(3,0).classes == "even");
 }
+
+TEST_CASE("merging >12 rows of table cell gives proper classes to help remove borders in CSS") {
+    vp::Table table;
+    // 27 to ensure we get three runs (9 each in this case)
+    for (int i=0; i<27; ++i) {
+        table.add_cell("text");
+        table.start_new_row();
+    }
+    table.merge_cells_into_rowspans();
+
+    using Catch::Matchers::Contains;
+    REQUIRE_THAT(table.at(0,0).classes, Contains("merge-to-bottom"));
+    REQUIRE_THAT(table.at(9,0).classes, Contains("merge-to-top"));
+    REQUIRE_THAT(table.at(9,0).classes, Contains("merge-to-bottom"));
+    REQUIRE_THAT(table.at(18,0).classes, Contains("merge-to-top"));
+}

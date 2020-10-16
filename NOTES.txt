@@ -230,3 +230,4 @@ done:
 [+] specify seconds in pāraṇam time only when rounded interval would have been <5min [2020-10-15]
 [+] table: specify reasonable cell widths (suitable for 2- and 3-col main part) [2020-10-15]
 [+] improve odd/even cell alternation for first two columns (timezone and country): they always alternate now, regardless of odd/even row number [2020-10-16]
+[+] table: remove borders between repeated vertical blocks of "+3:00", "Suddha ekAdashi" etc (>12cells) [2020-10-16]
