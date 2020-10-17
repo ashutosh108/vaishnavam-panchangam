@@ -18,6 +18,7 @@ template<>
 struct fmt::formatter<date::year_month_day> {
     bool as_local = false;
     bool use_nbsp = false;
+    bool print_year = false;
     template<typename ParseContext>
     constexpr auto parse(ParseContext & ctx) {
         for (auto it = ctx.begin(), end = ctx.end(); it != end; ++it) {
@@ -25,6 +26,8 @@ struct fmt::formatter<date::year_month_day> {
                 as_local = true;
             } else if (*it == 'h') {
                 use_nbsp = true;
+            } else if (*it == 'y') {
+                print_year = true;
             } else {
                 return it;
             }
@@ -52,7 +55,12 @@ struct fmt::formatter<date::year_month_day> {
         const unsigned month = static_cast<unsigned>(ymd.month());
         const unsigned day = static_cast<unsigned>(ymd.day());
         if (as_local && ymd.ok()) {
-            return fmt::format_to(ctx.out(), "{}{}{}", month_name[month-1], (use_nbsp ? "&nbsp;" : " "), day);
+            if (print_year) {
+                return fmt::format_to(ctx.out(), "{}{}{}, {}", month_name[month-1], (use_nbsp ? "&nbsp;" : " "), day, year);
+            } else {
+                return fmt::format_to(ctx.out(), "{}{}{}", month_name[month-1], (use_nbsp ? "&nbsp;" : " "), day);
+            }
+
         } else {
             return fmt::format_to(ctx.out(), "{:04}-{:02}-{:02}", year, month, day);
         }

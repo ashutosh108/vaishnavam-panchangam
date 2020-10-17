@@ -1,3 +1,4 @@
+[ ] table: specify year in dates when calendar is for other years (e.g. "January 9, 2021", not "January 9")
 [ ] table: add tooltips for all PAraNam cells (with exact pAraNam times and type)
 [ ] table: add tooltips with timezone name to location name cells
 [ ] text selection in "Summary" appears to be lost when right-clicking (and comes back afterwards).

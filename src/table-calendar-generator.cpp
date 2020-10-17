@@ -20,24 +20,18 @@ std::set<date::year_month_day> get_vrata_dates(const vp::VratasForDate & vratas)
     return dates;
 }
 
-void add_header(vp::Table & table, const std::set<date::year_month_day> & vrata_dates) {
-    table.add_header_cell("॥ श्रीः ॥");
-    table.add_header_cell("॥ श्रीः ॥");
-    table.add_header_cell("॥ श्रीः ॥");
-
-    for (auto date : vrata_dates) {
-        table.add_header_cell(fmt::format("{:lh}", date), "mainpart");
-    }
-}
-
-void add_bottom_header(vp::Table & table, const std::set<date::year_month_day> & vrata_dates) {
+void add_header(vp::Table & table, const std::set<date::year_month_day> & vrata_dates, date::year default_year, std::string text) {
     table.start_new_row();
-    table.add_header_cell("॥ ॐ तत्सत् ॥");
-    table.add_header_cell("॥ ॐ तत्सत् ॥");
-    table.add_header_cell("॥ ॐ तत्सत् ॥");
+    table.add_header_cell(text);
+    table.add_header_cell(text);
+    table.add_header_cell(text);
 
     for (auto date : vrata_dates) {
-        table.add_header_cell(fmt::format("{:lh}", date), "mainpart");
+        if (default_year != date::year::min() && date.year() != default_year) {
+            table.add_header_cell(fmt::format("{:lhy}", date), "mainpart");
+        } else {
+            table.add_header_cell(fmt::format("{:lh}", date), "mainpart");
+        }
     }
 }
 
@@ -114,11 +108,11 @@ std::chrono::seconds utc_offset_for_vrata(const vp::Vrata & vrata) {
 
 } // anonymous namespace
 
-vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vratas)
+vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vratas, date::year default_year)
 {
     vp::Table table;
     auto vrata_dates = get_vrata_dates(vratas);
-    add_header(table, vrata_dates);
+    add_header(table, vrata_dates, default_year, "॥ श्रीः ॥");
     int row = 1;
     const vp::MaybeVrata * prev_vrata{};
     std::chrono::seconds prev_vrata_utc_offset;
@@ -137,7 +131,7 @@ vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vrata
         }
         add_vrata(table, vrata, vrata_dates, ++row % 2 ? "odd" : "even");
     }
-    add_bottom_header(table, vrata_dates);
+    add_header(table, vrata_dates, default_year, "॥ ॐ तत्सत् ॥");
     table.merge_cells_into_rowspans();
     table.merge_cells_into_colspans();
     table.set_column_widths(calc_column_widths(table));
