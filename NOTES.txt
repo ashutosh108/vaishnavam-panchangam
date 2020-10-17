@@ -1,4 +1,3 @@
-[ ] table: specify year in dates when calendar is for other years (e.g. "January 9, 2021", not "January 9")
 [ ] table: add tooltips for all PAraNam cells (with exact pAraNam times and type)
 [ ] table: add tooltips with timezone name to location name cells
 [ ] text selection in "Summary" appears to be lost when right-clicking (and comes back afterwards).
@@ -231,3 +230,4 @@ done:
 [+] add empty (all-white) row after Petropavlovsk-Kamchatsky, where timezone switches to the left of BhArata [2020-10-16]
 [+] table: use Georgia font [2020-10-16]
 [+] table: use &nbsp; to separate day and month [2020-10-16]
+[+] table: specify year in dates when calendar is for other years (e.g. "January 9, 2021", not "January 9") [2020-10-17]

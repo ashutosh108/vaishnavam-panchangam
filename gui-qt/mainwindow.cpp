@@ -9,6 +9,7 @@
 #include "vrata-summary.h"
 #include "tz-fixed.h"
 
+#include <chrono>
 #include "fmt-format-fixed.h"
 #include <QDate>
 #include <QMessageBox>
@@ -241,7 +242,8 @@ void MainWindow::refreshTable()
 {
     if (!ui->tableTextBrowser->isVisible()) { return; }
     std::stringstream s;
-    s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas)};
+    date::year current_year = date::year_month_day{date::floor<date::days>(std::chrono::system_clock::now())}.year();
+    s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas, current_year)};
     ui->tableTextBrowser->setUnchangableHtml(table_css + QString::fromStdString(s.str()));
 }
 
