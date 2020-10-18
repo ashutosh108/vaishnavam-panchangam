@@ -81,3 +81,12 @@ TEST_CASE("Html_Table_Writer writes every column width in the first non-col-span
     REQUIRE_THAT(s, Matches(R"~((.|\n)*<td\s+[^>]*width="40%"[^>]*>cell2,2(.|\n)*)~"));
     REQUIRE_THAT(s, Matches(R"~((.|\n)*<td\s+[^>]*width="50%"[^>]*>cell1,3(.|\n)*)~"));
 }
+
+TEST_CASE("Html_Table_Writer writes cells' 'title' attribute with proper escape") {
+    vp::Table table;
+    table.add_cell("text").set_title(R"(qwe&'"<>)");
+    auto s = table_to_string(table);
+
+    using Catch::Matchers::Contains;
+    REQUIRE_THAT(s, Contains(R"(title="qwe&amp;&#039;&quot;&lt;&gt;")"));
+}

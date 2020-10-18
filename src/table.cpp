@@ -30,36 +30,36 @@ std::size_t vp::Table::height() const
     return rows.size();
 }
 
-void vp::Table::do_add_cell(std::string text, std::string classes, CellType type, Mergeable mergeable) {
+vp::Table::Cell &vp::Table::do_add_cell(std::string text, std::string classes, CellType type, Mergeable mergeable) {
     if (rows.empty()) { start_new_row(); }
     std::size_t row = height()-1;
     std::size_t col = row_length(row);
-    rows.back().data.emplace_back(std::move(text), row, col, type, std::move(classes), mergeable);
+    return rows.back().data.emplace_back(std::move(text), row, col, type, std::move(classes), mergeable);
 }
 
-void vp::Table::add_cell(std::string text, std::string classes)
+vp::Table::Cell &vp::Table::add_cell(std::string text, std::string classes)
 {
-    do_add_cell(std::move(text), std::move(classes), CellType::Normal, Mergeable::Yes);
+    return do_add_cell(std::move(text), std::move(classes), CellType::Normal, Mergeable::Yes);
 }
 
-void vp::Table::add_unmergeable_cell(std::string text, std::string classes)
+vp::Table::Cell &vp::Table::add_unmergeable_cell(std::string text, std::string classes)
 {
-    do_add_cell(std::move(text), std::move(classes), CellType::Normal, Mergeable::No);
+    return do_add_cell(std::move(text), std::move(classes), CellType::Normal, Mergeable::No);
 }
 
-void vp::Table::add_cell(std::string_view text, std::string classes)
+vp::Table::Cell &vp::Table::add_cell(std::string_view text, std::string classes)
 {
-    add_cell(std::string{text}, std::move(classes));
+    return add_cell(std::string{text}, std::move(classes));
 }
 
-void vp::Table::add_cell(const char * const text, std::string classes) {
-    add_cell(std::string{text}, std::move(classes));
+vp::Table::Cell & vp::Table::add_cell(const char * const text, std::string classes) {
+    return add_cell(std::string{text}, std::move(classes));
 }
 
 
-void vp::Table::add_header_cell(std::string text, std::string classes)
+vp::Table::Cell &vp::Table::add_header_cell(std::string text, std::string classes)
 {
-    do_add_cell(std::move(text), std::move(classes), CellType::Header, Mergeable::Yes);
+    return do_add_cell(std::move(text), std::move(classes), CellType::Header, Mergeable::Yes);
 }
 
 vp::Table::Cell &vp::Table::at(std::size_t row, std::size_t col)
@@ -224,4 +224,23 @@ void vp::Table::Iterator::operator++() {
 bool vp::Table::Iterator::operator!=(const vp::Table::Iterator &other)
 {
     return (row != other.row || col != other.col);
+}
+
+void vp::Table::Cell::add_classes(std::string new_classes) {
+    if (classes.empty()) {
+        classes = std::move(new_classes);
+    } else {
+        classes += " ";
+        classes += std::move(new_classes);
+    }
+}
+
+vp::Table::Cell &vp::Table::Cell::set_title(std::string new_title)
+{
+    title = new_title;
+    return *this;
+}
+
+bool vp::Table::Row::has_class(std::string some_class) const {
+    return classes.find(some_class) != std::string::npos;
 }

@@ -1,5 +1,6 @@
 [ ] table: add tooltips for all PAraNam cells (with exact pAraNam times and type)
 [ ] table: add tooltips with timezone name to location name cells
+[ ] table: add link to details for each vrata
 [ ] text selection in "Summary" appears to be lost when right-clicking (and comes back afterwards).
 [ ] Table: add Russian version
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone):

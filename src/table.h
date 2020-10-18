@@ -17,6 +17,7 @@ public:
         std::string text;
         CellType type;
         std::string classes;
+        std::string title;
         std::size_t row = 0;
         std::size_t col = 0;
         std::size_t rowspan = 1;
@@ -24,22 +25,14 @@ public:
         Mergeable mergeable;
         Cell(std::string _text, std::size_t _row, std::size_t _col, CellType _type=CellType::Normal, std::string _classes="", Mergeable _mergeable=Mergeable::Yes) :
               text(_text), type(_type), classes(_classes), row{_row}, col{_col}, mergeable{_mergeable} {}
-        void add_classes(std::string new_classes) {
-            if (classes.empty()) {
-                classes = std::move(new_classes);
-            } else {
-                classes += " ";
-                classes += std::move(new_classes);
-            }
-        }
+        void add_classes(std::string new_classes);
+        Cell & set_title(std::string new_title);
     };
     struct Row {
         std::vector<Cell> data;
         std::string classes;
         Row(std::string classes_=""):classes(classes_){}
-        bool has_class(std::string some_class) const {
-            return classes.find(some_class) != std::string::npos;
-        }
+        bool has_class(std::string some_class) const;
     };
 
 private:
@@ -54,7 +47,7 @@ private:
         }
     }
     std::size_t row_length(std::size_t row) const;
-    void do_add_cell(std::string text, std::string classes, CellType type, Mergeable mergeable);
+    Cell & do_add_cell(std::string text, std::string classes, CellType type, Mergeable mergeable);
     static bool mergeable_cells(const vp::Table::Cell &c1, const vp::Table::Cell &c2);
     void add_row_span(Cell &cell, std::size_t span_size);
     void add_col_span(Cell &cell, std::size_t span_size);
@@ -71,11 +64,11 @@ public:
     };
     std::size_t width() const;
     std::size_t height() const;
-    void add_cell(std::string text, std::string classes="");
-    void add_unmergeable_cell(std::string text, std::string classes="");
-    void add_cell(std::string_view text, std::string classes="");
-    void add_cell(const char * const text, std::string classes="");
-    void add_header_cell(std::string text, std::string classes="");
+    Cell & add_cell(std::string text, std::string classes="");
+    Cell & add_unmergeable_cell(std::string text, std::string classes="");
+    Cell & add_cell(std::string_view text, std::string classes="");
+    Cell & add_cell(const char * const text, std::string classes="");
+    Cell & add_header_cell(std::string text, std::string classes="");
     Cell & at(size_t row, size_t col);
     const Cell & at(size_t row, size_t col) const;
     void start_new_row(std::string classes="");

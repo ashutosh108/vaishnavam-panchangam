@@ -265,3 +265,10 @@ TEST_CASE("merging >12 rows of table cell gives proper classes to help remove bo
     REQUIRE_THAT(table.at(9,0).classes, Contains("merge-to-bottom"));
     REQUIRE_THAT(table.at(18,0).classes, Contains("merge-to-top"));
 }
+
+TEST_CASE("can set 'title' (something like tooltip) for cells") {
+    vp::Table table;
+    table.add_cell("text").set_title("specific title");
+
+    REQUIRE(table.at(0, 0).title == "specific title");
+}
