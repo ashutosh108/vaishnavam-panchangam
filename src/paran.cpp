@@ -42,10 +42,36 @@ bool Paran::is_rounded_to_minutes() const
     return end_rounded_to_minutes - start_rounded_to_minutes >= 5min;
 }
 
-std::string Paran::paran_start_str() const
+Paran::StartType Paran::start_type() const
+{
+    switch (type) {
+    case Type::Standard:
+    case Type::Until_Dvadashi_End:
+    case Type::Puccha_Dvadashi:
+        return StartType::Sunrise;
+    case Type::From_Quarter_Dvadashi:
+        return StartType::QuarterOfDvadashi;
+    }
+    return StartType::Unspecified;
+}
+
+Paran::EndType Paran::end_type() const {
+    if (!paran_end) { return EndType::Unspecified; }
+    switch (type) {
+    case Type::Standard:
+    case Type::From_Quarter_Dvadashi:
+        return EndType::OneFifthOfDaytime;
+    case Type::Until_Dvadashi_End:
+    case Type::Puccha_Dvadashi:
+        return EndType::EndOfDvadashi;
+    }
+    return EndType::Unspecified;
+}
+
+std::string Paran::start_str() const
 {
     if (!paran_start) return "…";
-    auto local = paran_start->as_zoned_time(time_zone).get_local_time();
+    const auto local = paran_start->as_zoned_time(time_zone).get_local_time();
     if (is_rounded_to_minutes()) {
         return date::format("%H:%M", date::ceil<std::chrono::minutes>(local));
     } else {
@@ -53,15 +79,29 @@ std::string Paran::paran_start_str() const
     }
 }
 
-std::string Paran::paran_end_str() const
+std::string Paran::start_str_seconds() const
+{
+    if (!paran_start) return "…";
+    const auto local = paran_start->as_zoned_time(time_zone).get_local_time();
+    return date::format("%H:%M:%S", date::ceil<std::chrono::seconds>(local));
+}
+
+std::string Paran::end_str() const
 {
     if (!paran_end) return "…";
-    auto local = paran_end->as_zoned_time(time_zone).get_local_time();
+    const auto local = paran_end->as_zoned_time(time_zone).get_local_time();
     if (is_rounded_to_minutes()) {
         return date::format("%H:%M", date::floor<std::chrono::minutes>(local));
     } else {
         return date::format("%H:%M:%S", date::floor<std::chrono::seconds>(local));
     }
+}
+
+std::string Paran::end_str_seconds() const
+{
+    if (!paran_end) return "…";
+    const auto local = paran_end->as_zoned_time(time_zone).get_local_time();
+    return date::format("%H:%M:%S", date::floor<std::chrono::seconds>(local));
 }
 
 } // namespace vp

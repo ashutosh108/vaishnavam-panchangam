@@ -91,8 +91,8 @@ TEST_CASE("paran_start/end_str rounds to minutes for large (>=48 min) interval")
     auto timezone = date::locate_zone("Europe/Moscow");
     Paran p{Paran::Type::From_Quarter_Dvadashi, time1, time2, timezone};
 
-    REQUIRE("08:04" == p.paran_start_str());
-    REQUIRE("08:51" == p.paran_end_str());
+    REQUIRE("08:04" == p.start_str());
+    REQUIRE("08:51" == p.end_str());
 }
 
 TEST_CASE("paran_start/end_str rounds to minutes when rounded interval is just 5 minutes") {
@@ -100,8 +100,8 @@ TEST_CASE("paran_start/end_str rounds to minutes when rounded interval is just 5
     JulDays_UT time2{2019_y/March/19, 5h + 9min + 59.5s};
     Paran p{Paran::Type::From_Quarter_Dvadashi, time1, time2};
 
-    REQUIRE("05:04" == p.paran_start_str());
-    REQUIRE("05:09" == p.paran_end_str());
+    REQUIRE("05:04" == p.start_str());
+    REQUIRE("05:09" == p.end_str());
 }
 
 TEST_CASE("paran_start/end_str rounds to minutes when rounded interval is 4 minutes") {
@@ -109,6 +109,16 @@ TEST_CASE("paran_start/end_str rounds to minutes when rounded interval is 4 minu
     JulDays_UT time2{2019_y/March/19, 5h + 8min + 59.5s};
     Paran p{Paran::Type::From_Quarter_Dvadashi, time1, time2};
 
-    REQUIRE("05:03:01" == p.paran_start_str());
-    REQUIRE("05:08:59" == p.paran_end_str());
+    REQUIRE("05:03:01" == p.start_str());
+    REQUIRE("05:08:59" == p.end_str());
+}
+
+TEST_CASE("can get and print types of paran start/end") {
+    auto start_time = vp::JulDays_UT{date::sys_days{2020_y/January/1} + 5h + 30min + 15s};
+    auto end_time = start_time + 55min;
+    vp::Paran paran{vp::Paran::Type::Standard, start_time, end_time};
+
+    using Catch::Matchers::Contains;
+    REQUIRE_THAT(fmt::to_string(paran.start_type()), Contains("sunrise"));
+    REQUIRE_THAT(fmt::to_string(paran.end_type()), Contains("1/5th of daytime"));
 }

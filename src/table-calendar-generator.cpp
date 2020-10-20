@@ -57,6 +57,21 @@ std::string get_timezone_text(const vp::MaybeVrata & vrata) {
     return fmt::format("{}{}:{:02}{}", sign, hours, minutes, dst);
 }
 
+namespace {
+std::string paran_title(const vp::Paran & paran) {
+    std::string title;
+
+    if (paran.paran_start) {
+        title += fmt::format("{} ({})", paran.start_str_seconds(), paran.start_type());
+    }
+    title += "…";
+    if (paran.paran_end) {
+        title += fmt::format("{} ({})", paran.end_str_seconds(), paran.end_type());
+    }
+    return title;
+}
+}
+
 void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::year_month_day> & vrata_dates, std::string tr_classes) {
     table.start_new_row(std::move(tr_classes));
     table.add_cell(get_timezone_text(vrata));
@@ -74,7 +89,7 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
             table.add_cell(fmt::to_string(vrata->type), classes + " vrata");
         } else if (date == vrata->local_paran_date()) {
             // 'c' means compact formatting
-            table.add_unmergeable_cell(fmt::format("{:c}", vrata->paran), classes);
+            table.add_unmergeable_cell(fmt::format("{:c}", vrata->paran), classes).set_title(paran_title(vrata->paran));
         } else {
             table.add_unmergeable_cell("", classes);
         }

@@ -30,7 +30,7 @@ struct fmt::formatter<vp::Vrata_Summary> : fmt::formatter<std::string_view> {
         } else {
             fmt::format_to(ctx.out(), "<p>{} on <span class=\"date paran\">{}</span></p>\n", vs.vrata->type, vs.vrata->date);
         }
-        fmt::format_to(ctx.out(), R"(<p class="paran">Pāraṇam: {} <span class="paran-range">{}–{}</span><br>)", vs.vrata->local_paran_date(), vs.vrata->paran.paran_start_str(), vs.vrata->paran.paran_end_str());
+        fmt::format_to(ctx.out(), R"(<p class="paran">Pāraṇam: {} <span class="paran-range">{}–{}</span><br>)", vs.vrata->local_paran_date(), vs.vrata->paran.start_str(), vs.vrata->paran.end_str());
         fmt::format_to(ctx.out(), R"(<span class="paran-type">{}</span></p>)", vs.vrata->paran.type);
         return ctx.out();
     }

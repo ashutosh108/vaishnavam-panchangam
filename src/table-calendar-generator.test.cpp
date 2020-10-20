@@ -144,3 +144,10 @@ TEST_CASE("generated table shows year for non-default-year dates when default ye
         REQUIRE_THAT(table.at(pair.first, pair.second).text, Contains("2019"));
     }
 }
+
+TEST_CASE("generated table contains titles for PAraNam details") {
+    auto table = some_table();
+
+    using Catch::Matchers::Contains;
+    REQUIRE_THAT(table.at(1, 4).title, Contains("10:05:34 (1/4th of dvādaśī)…"));
+}
