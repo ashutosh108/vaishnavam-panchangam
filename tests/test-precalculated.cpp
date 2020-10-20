@@ -273,7 +273,7 @@ struct Precalculated_Vrata {
 
             return true;
         }
-        if (nowcalc.vrata.paran.type == vp::Paran::Type::Puccha_Dvadashi || nowcalc.vrata.paran.type == vp::Paran::Type::Until_Dvadashi_End) {
+        if (nowcalc.vrata.paran.type == vp::Paran::Type::Puccha_Dvadashi) {
             UNSCOPED_INFO(fmt::format("paran type: {}", nowcalc.vrata.paran.type));
             // "<HH:MM" might have start time and MUST have end time
             if (!paranam.end) {

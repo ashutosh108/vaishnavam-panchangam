@@ -39,7 +39,7 @@ TEST_CASE("Can print paran") {
 }
 
 TEST_CASE("Can compare paran types") {
-    REQUIRE(Paran{Paran::Type::Standard} != Paran{Paran::Type::Until_Dvadashi_End});
+    REQUIRE(Paran{Paran::Type::Standard} != Paran{Paran::Type::Puccha_Dvadashi});
     REQUIRE(Paran{Paran::Type::Standard} != Paran{Paran::Type::From_Quarter_Dvadashi});
 }
 

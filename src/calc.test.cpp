@@ -300,7 +300,7 @@ TEST_CASE("Ekadashi 2019-03-17") {
     Expected_Vrata v17_paran_before{
         Vrata_Type::Ekadashi,
         2019_y/March/17,
-        Paran{Paran::Type::Until_Dvadashi_End, std::nullopt, JulDays_UT{2019_y/March/18, 12h + 13min + 36.459301s}}};
+        Paran{Paran::Type::Puccha_Dvadashi, std::nullopt, JulDays_UT{2019_y/March/18, 12h + 13min + 36.459301s}}};
     Vrata v18{Vrata_Type::Ekadashi, 2019_y/March/18};
     REQUIRE(v17 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v17 == vrata(Calc{gokarna_coord}, d));

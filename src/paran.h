@@ -22,7 +22,7 @@ class Paran
 {
 public:
     enum class Type {
-        Standard, Until_Dvadashi_End, From_Quarter_Dvadashi, Puccha_Dvadashi
+        Standard, From_Quarter_Dvadashi, Puccha_Dvadashi
     };
     enum class StartType {
         Sunrise, QuarterOfDvadashi, Unspecified
@@ -77,12 +77,10 @@ struct fmt::formatter<vp::Paran::Type> : fmt::formatter<std::string_view> {
         switch (t) {
         case vp::Paran::Type::Standard:
             return fmt::format_to(ctx.out(), "Standard pāraṇam: from sunrise until 1/5 of day-time"); break;
-        case vp::Paran::Type::Until_Dvadashi_End:
-            return fmt::format_to(ctx.out(), "Pāraṇam before the end of Dvādaśī"); break;
+        case vp::Paran::Type::Puccha_Dvadashi:
+            return fmt::format_to(ctx.out(), "Pāraṇam before the end of Dvādaśī (Puccha-Dvādaśī)"); break;
         case vp::Paran::Type::From_Quarter_Dvadashi:
             return fmt::format_to(ctx.out(), "Pāraṇam after the first ¼ of Dvādaśī"); break;
-        case vp::Paran::Type::Puccha_Dvadashi:
-            return fmt::format_to(ctx.out(), "Pāraṇam within Puccha-Dvādaśī"); break;
         }
         return fmt::format_to(ctx.out(), "Unknown Pāraṇam type: {}", static_cast<int>(t));
     }

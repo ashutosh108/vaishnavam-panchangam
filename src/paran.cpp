@@ -46,7 +46,6 @@ Paran::StartType Paran::start_type() const
 {
     switch (type) {
     case Type::Standard:
-    case Type::Until_Dvadashi_End:
     case Type::Puccha_Dvadashi:
         return StartType::Sunrise;
     case Type::From_Quarter_Dvadashi:
@@ -61,7 +60,6 @@ Paran::EndType Paran::end_type() const {
     case Type::Standard:
     case Type::From_Quarter_Dvadashi:
         return EndType::OneFifthOfDaytime;
-    case Type::Until_Dvadashi_End:
     case Type::Puccha_Dvadashi:
         return EndType::EndOfDvadashi;
     }

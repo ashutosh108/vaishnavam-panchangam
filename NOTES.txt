@@ -1,4 +1,3 @@
-[ ] Paran: merge Type::Until_Dvadashi_End and Puccha_Dvadashi (they must be same)
 [ ] table: add tooltips with timezone name to location name cells
 [ ] table: add link to details for each vrata
 [ ] text selection in "Summary" appears to be lost when right-clicking (and comes back afterwards).
@@ -233,3 +232,4 @@ done:
 [+] table: use &nbsp; to separate day and month [2020-10-16]
 [+] table: specify year in dates when calendar is for other years (e.g. "January 9, 2021", not "January 9") [2020-10-17]
 [+] table: added tooltips for all pAraNam cells (e.g. '06:27:33 (sunrise)…08:46:24 (1/5th of daytime)' for certain '*') [2020-10-20]
+[+] Paran: merge Type::Until_Dvadashi_End and Puccha_Dvadashi (they are identical) [2020-10-20]

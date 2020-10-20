@@ -211,8 +211,8 @@ Paran Calc::get_paran(const JulDays_UT sunrise2, const JulDays_UT sunset2, const
     if (paran_end) {
         // paran end should never be before Dvadashi's end
         if (dvadashi_end > *paran_start && dvadashi_end < *paran_end) {
-            paran_end = std::min(*paran_end, dvadashi_end);
-            type = Paran::Type::Until_Dvadashi_End;
+            paran_end = dvadashi_end;
+            type = Paran::Type::Puccha_Dvadashi;
         }
     }
 
