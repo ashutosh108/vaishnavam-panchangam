@@ -151,3 +151,10 @@ TEST_CASE("generated table contains titles for PAraNam details") {
     using Catch::Matchers::Contains;
     REQUIRE_THAT(table.at(1, 4).title, Contains("10:05:34 (1/4th of dvādaśī)…"));
 }
+
+TEST_CASE("generated table contains titles with timezone name for cell with location name") {
+    auto table = some_table();
+
+    using Catch::Matchers::Contains;
+    REQUIRE_THAT(table.at(1, 2).title, Contains("Asia/Kolkata"));
+}

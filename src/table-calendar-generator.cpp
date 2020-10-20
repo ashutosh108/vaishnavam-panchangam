@@ -76,7 +76,7 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
     table.start_new_row(std::move(tr_classes));
     table.add_cell(get_timezone_text(vrata));
     table.add_cell(vrata->location.country);
-    table.add_cell(vrata->location_name());
+    table.add_cell(vrata->location_name()).set_title(fmt::format("Timezone: {}", vrata->location.time_zone_name));
     if (!vrata) {
         for (std::size_t i=0; i < vrata_dates.size(); ++i) {
             table.add_cell("calculation error");
