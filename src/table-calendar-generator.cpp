@@ -1,5 +1,7 @@
 #include "table-calendar-generator.h"
 
+#include "html-util.h"
+
 #include <set>
 #include <utility>
 
@@ -76,7 +78,10 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
     table.start_new_row(std::move(tr_classes));
     table.add_cell(get_timezone_text(vrata));
     table.add_cell(vrata->location.country);
-    table.add_cell(vrata->location_name()).set_title(fmt::format("Timezone: {}", vrata->location.time_zone_name));
+    {
+        auto location_with_href = fmt::format(R"(<a href="#{}">{}</a>)", html::escape_attribute(vrata->location_name()), vrata->location_name());
+        table.add_cell(location_with_href).set_title(fmt::format("Timezone: {}", vrata->location.time_zone_name));
+    }
     if (!vrata) {
         for (std::size_t i=0; i < vrata_dates.size(); ++i) {
             table.add_cell("calculation error");
@@ -88,8 +93,9 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
         if (date >= vrata->date && date < vrata->local_paran_date()) {
             table.add_cell(fmt::to_string(vrata->type), classes + " vrata");
         } else if (date == vrata->local_paran_date()) {
-            // 'c' means compact formatting
-            table.add_unmergeable_cell(fmt::format("{:c}", vrata->paran), classes).set_title(paran_title(vrata->paran));
+            // 'c' means compact formatting ("*" for standard pAraNam, otherwise something like ">06:45", "<07:45" or "06:45-07.45")
+            const auto paran_with_href = fmt::format(R"(<a href="#{}">{:c}</a>)", html::escape_attribute(vrata->location_name()), vrata->paran);
+            table.add_unmergeable_cell(paran_with_href, classes).set_title(paran_title(vrata->paran));
         } else {
             table.add_unmergeable_cell("", classes);
         }

@@ -1,4 +1,3 @@
-[ ] table: add link to details for each vrata
 [ ] text selection in "Summary" appears to be lost when right-clicking (and comes back afterwards).
 [ ] Table: add Russian version
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone):
@@ -233,3 +232,6 @@ done:
 [+] table: added tooltips for all pAraNam cells (e.g. '06:27:33 (sunrise)…08:46:24 (1/5th of daytime)' for certain '*') [2020-10-20]
 [+] Paran: merge Type::Until_Dvadashi_End and Puccha_Dvadashi (they are identical) [2020-10-20]
 [+] table: add tooltips with timezone name to location name cells [2020-10-20]
+[+] table: add link to details for each vrata [2020-10-21]
+[+] -> add links in Table_Calendar_Generator (they should be safe for static websites) [2020-10-21]
+[+] -> switch to summary on link click [2020-10-21]

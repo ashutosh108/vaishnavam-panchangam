@@ -25,9 +25,11 @@ TEST_CASE("Table_Calendar_Generator returns reasonable table") {
 
     REQUIRE(table.height() >= 20);
 
+    using Catch::Matchers::Contains;
+
     REQUIRE(table.at(1, 0).text == "+5:30");
     REQUIRE(table.at(1, 1).text == "India");
-    REQUIRE(table.at(1, 2).text == "Udupi");
+    REQUIRE_THAT(table.at(1, 2).text, Contains("Udupi"));
     REQUIRE(table.at(1, 3).text == "Śuddhā Ekādaśī");
     REQUIRE(table.at(1, 4).text == ">10:06");
     REQUIRE(table.at(1, 5).text == "");
@@ -157,4 +159,10 @@ TEST_CASE("generated table contains titles with timezone name for cell with loca
 
     using Catch::Matchers::Contains;
     REQUIRE_THAT(table.at(1, 2).title, Contains("Asia/Kolkata"));
+}
+
+TEST_CASE("generated table contains links with details in cells with location name, vrata, pAraNam") {
+    auto table = some_table();
+    using Catch::Matchers::Contains;
+    REQUIRE_THAT(table.at(1, 2).text, Contains("<a href"));
 }

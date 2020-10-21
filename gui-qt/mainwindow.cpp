@@ -21,6 +21,15 @@ void MainWindow::connectSignals()
         expand_details_in_summary_tab = !expand_details_in_summary_tab;
         refreshAllTabs();
     });
+    ui->tableTextBrowser->setOpenLinks(false);
+    connect(ui->tableTextBrowser, &QTextBrowser::anchorClicked, [this](const QUrl & link){
+        auto location_name = link.fragment();
+        gui_ready = false;
+        ui->locationComboBox->setCurrentText(location_name);
+        ui->tabWidget->setCurrentIndex(0); // 0 means summary tab
+        gui_ready = true;
+        refreshAllTabs();
+    });
 }
 
 MainWindow::MainWindow(QWidget *parent)
