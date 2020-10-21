@@ -1,27 +1,12 @@
 #include "html-table-writer.h"
 
+#include "html-util.h"
+
 #include <string_view>
 
 namespace vp {
 
 Html_Table_Writer::Html_Table_Writer(const vp::Table & table) : table_(table){}
-
-namespace {
-std::string escape_html_attribute(const std::string & s) {
-    std::string escaped;
-    for (auto c : s) {
-        switch(c) {
-        case '&': escaped += "&amp;"; break;
-        case '"': escaped += "&quot;"; break;
-        case '\'': escaped += "&#039;"; break;
-        case '<': escaped += "&lt;"; break;
-        case '>': escaped += "&gt;"; break;
-        default: escaped += c; break;
-        }
-    }
-    return escaped;
-}
-}
 
 std::ostream &operator<<(std::ostream &s, const Html_Table_Writer &tw)
 {
@@ -66,7 +51,7 @@ std::ostream &operator<<(std::ostream &s, const Html_Table_Writer &tw)
                 s_ << " class=\"" << cell.classes << "\"";
             }
             if (!cell.title.empty()) {
-                s_ << " title=\"" << escape_html_attribute(cell.title) << "\"";
+                s_ << " title=\"" << html::escape_attribute(cell.title) << "\"";
             }
             s_ << ">" << cell.text << "</" << tag << ">\n";
         }

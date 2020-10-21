@@ -63,6 +63,7 @@ add_library(swe STATIC
     src/table-calendar-generator.cpp src/table-calendar-generator.h
     src/html-table-writer.cpp src/html-table-writer.h
     src/table.cpp src/table.h
+    src/html-util.cpp src/html-util.h
 )
 target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)
 target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected fmt::fmt)
