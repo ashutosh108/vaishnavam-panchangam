@@ -244,7 +244,7 @@ void MainWindow::refreshTable()
     std::stringstream s;
     date::year current_year = date::year_month_day{date::floor<date::days>(std::chrono::system_clock::now())}.year();
     s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas, current_year)};
-    ui->tableTextBrowser->setUnchangableHtml(table_css + QString::fromStdString(s.str()));
+    ui->tableTextBrowser->setHtmlForNormalAndSourceView(table_css + QString::fromStdString(s.str()));
 }
 
 void MainWindow::showVersionInStatusLine()

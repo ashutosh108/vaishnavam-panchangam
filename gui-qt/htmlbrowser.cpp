@@ -9,11 +9,11 @@ void HtmlBrowser::viewSourceToggle()
 {
     if (viewing_source) {
         // show rendered HTML
-        setHtml(unchangable_html);
+        setHtml(m_html_for_normal_and_source_view);
         viewing_source = false;
     } else {
         // show HTML source
-        setPlainText(unchangable_html);
+        setPlainText(m_html_for_normal_and_source_view);
         viewing_source = true;
     }
 }
@@ -34,8 +34,8 @@ HtmlBrowser::HtmlBrowser(QWidget * parent) : QTextBrowser(parent)
     connect(viewSourceAct, &QAction::triggered, this, &HtmlBrowser::viewSourceToggle);
 }
 
-void HtmlBrowser::setUnchangableHtml(QString html)
+void HtmlBrowser::setHtmlForNormalAndSourceView(QString html_for_normal_and_source_view)
 {
-    unchangable_html = std::move(html);
-    setHtml(unchangable_html);
+    m_html_for_normal_and_source_view = std::move(html_for_normal_and_source_view);
+    setHtml(m_html_for_normal_and_source_view);
 }
