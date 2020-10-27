@@ -17,7 +17,7 @@
 
 void MainWindow::connectSignals()
 {
-    connect(ui->vrataSummary, &QLabel::linkActivated, [this]{
+    connect(ui->vrataSummary, &QTextBrowser::anchorClicked, [this]{
         expand_details_in_summary_tab = !expand_details_in_summary_tab;
         refreshAllTabs();
     });

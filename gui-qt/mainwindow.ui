@@ -286,17 +286,11 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
-               <widget class="QLabel" name="vrataSummary">
-                <property name="text">
+               <widget class="QTextBrowser" name="vrataSummary">
+                <property name="html">
                  <string>&lt;style&gt;h1 {color: green;}&lt;/style&gt;&lt;h1&gt;(unknown location)&lt;/h1&gt;
 &lt;p&gt;(unknown vrata) on YYYY-MM-DD&lt;/p&gt;
 &lt;p&gt;Pāraṇam: &lt;/p&gt;</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                </property>
-                <property name="textInteractionFlags">
-                 <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                 </property>
                </widget>
               </item>

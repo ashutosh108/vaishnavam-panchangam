@@ -235,3 +235,4 @@ done:
 [+] table: add link to details for each vrata [2020-10-21]
 [+] -> add links in Table_Calendar_Generator (they should be safe for static websites) [2020-10-21]
 [+] -> switch to summary on link click [2020-10-21]
+[+] performance fix: use QTextBrowser for vrataSummary instead of QLabel; otherwise switching back to summary tab took unreasonably long time due to layout subtleties [2020-10-27]
