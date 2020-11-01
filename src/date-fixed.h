@@ -97,4 +97,14 @@ struct fmt::formatter<date::local_time<Duration>> {
     }
 };
 
+namespace std {
+template<> struct hash<date::year_month_day> {
+    std::size_t operator() (const date::year_month_day & date) const {
+        return (std::hash<int>{}(date.year().operator int()) << 2)
+               ^ (std::hash<unsigned>{}(date.month().operator unsigned int()) << 1 )
+               ^ (std::hash<unsigned>{}(date.day().operator unsigned int()));
+    }
+};
+}
+
 #endif // #ifndef VP_DATE_FIXED_H

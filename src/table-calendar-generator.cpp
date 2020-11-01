@@ -7,7 +7,7 @@
 
 namespace {
 
-std::set<date::year_month_day> get_vrata_dates(const vp::VratasForDate & vratas) {
+std::set<date::year_month_day> get_vrata_dates(const vp::VratasForDate & vratas, const vp::Custom_Dates & custom_dates) {
     std::set<date::year_month_day> dates;
     for (const auto & vrata : vratas) {
         if (vrata) {
@@ -18,6 +18,9 @@ std::set<date::year_month_day> get_vrata_dates(const vp::VratasForDate & vratas)
                 dates.insert(date::year_month_day{date::sys_days{vrata->date} + date::days{1}});
             }
         }
+    }
+    for (const auto & date_desc_pair : custom_dates) {
+        dates.insert(date_desc_pair.first);
     }
     return dates;
 }
@@ -74,7 +77,7 @@ std::string paran_title(const vp::Paran & paran) {
 }
 }
 
-void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::year_month_day> & vrata_dates, std::string tr_classes) {
+void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::year_month_day> & vrata_dates, std::string tr_classes, const vp::Custom_Dates & custom_dates) {
     table.start_new_row(std::move(tr_classes));
     table.add_cell(get_timezone_text(vrata));
     table.add_cell(vrata->location.country);
@@ -96,6 +99,8 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
             // 'c' means compact formatting ("*" for standard pAraNam, otherwise something like ">06:45", "<07:45" or "06:45-07.45")
             const auto paran_with_href = fmt::format(R"(<a href="#{}">{:c}</a>)", html::escape_attribute(vrata->location_name()), vrata->paran);
             table.add_unmergeable_cell(paran_with_href, classes).set_title(paran_title(vrata->paran));
+        } else if (auto found_it = custom_dates.find(date); found_it != custom_dates.end()) {
+            table.add_cell(found_it->second, "custom");
         } else {
             table.add_unmergeable_cell("", classes);
         }
@@ -129,10 +134,10 @@ std::chrono::seconds utc_offset_for_vrata(const vp::Vrata & vrata) {
 
 } // anonymous namespace
 
-vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vratas, date::year default_year)
+vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vratas, date::year default_year, const Custom_Dates & custom_dates)
 {
     vp::Table table;
-    auto vrata_dates = get_vrata_dates(vratas);
+    auto vrata_dates = get_vrata_dates(vratas, custom_dates);
     add_header(table, vrata_dates, default_year, "॥ श्रीः ॥");
     int row = 1;
     const vp::MaybeVrata * prev_vrata{};
@@ -150,7 +155,7 @@ vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vrata
             prev_vrata = &vrata;
             prev_vrata_utc_offset = vrata_utc_offset;
         }
-        add_vrata(table, vrata, vrata_dates, ++row % 2 ? "odd" : "even");
+        add_vrata(table, vrata, vrata_dates, ++row % 2 ? "odd" : "even", custom_dates);
     }
     add_header(table, vrata_dates, default_year, "॥ ॐ तत्सत् ॥");
     table.merge_cells_into_rowspans();
