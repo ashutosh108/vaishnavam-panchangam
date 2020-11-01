@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include "edit-custom-dates.h"
 #include "html-table-writer.h"
 #include "location.h"
 #include "table-calendar-generator.h"
@@ -32,6 +33,19 @@ void MainWindow::connectSignals()
     });
 }
 
+void MainWindow::addTableContextMenu()
+{
+    addCustomDatesForTableAction = new QAction(tr("Add custom dates..."), this);
+    connect(addCustomDatesForTableAction, &QAction::triggered, this, &MainWindow::addCustomDatesForTable);
+    ui->tableTextBrowser->setContextMenuAction(addCustomDatesForTableAction);
+}
+
+void MainWindow::addCustomDatesForTable()
+{
+    custom_dates = vp::edit_custom_dates(custom_dates, this);
+    refreshTable();
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -43,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
     showVersionInStatusLine();
     setupKeyboardShortcuts();
     connectSignals();
+    addTableContextMenu();
     gui_ready = true;
     refreshAllTabs();
 }
@@ -252,7 +267,7 @@ void MainWindow::refreshTable()
     if (!ui->tableTextBrowser->isVisible()) { return; }
     std::stringstream s;
     date::year current_year = date::year_month_day{date::floor<date::days>(std::chrono::system_clock::now())}.year();
-    s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas, current_year)};
+    s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas, current_year, custom_dates)};
     ui->tableTextBrowser->setHtmlForNormalAndSourceView(table_css + QString::fromStdString(s.str()));
 }
 

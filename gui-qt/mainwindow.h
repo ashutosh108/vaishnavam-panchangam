@@ -1,10 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "table-calendar-generator.h"
 #include "vrata.h"
 
 #include "date-fixed.h"
 #include <fmt/core.h>
+#include <QAction>
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -41,6 +43,9 @@ private:
     vp::VratasForDate vratas;
     bool gui_ready = false; // set to true at the and of the MainWindow constructor
     bool expand_details_in_summary_tab = false;
+    QAction * addCustomDatesForTableAction = nullptr;
+    vp::Custom_Dates custom_dates;
+
     void setupLocationsComboBox();
     void setDateToToday();
     void recalcVratasForSelectedDateAndLocation();
@@ -58,6 +63,8 @@ private:
     void switchToPrevLocation();
     void switchToNextLocation();
     void connectSignals();
+    void addTableContextMenu();
+    void addCustomDatesForTable();
 };
 
 QString htmlify_line(const std::string_view & line);
