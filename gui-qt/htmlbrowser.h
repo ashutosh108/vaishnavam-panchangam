@@ -11,6 +11,7 @@ class HtmlBrowser : public QTextBrowser
     void viewSourceToggle();
     bool viewing_source = false;
     QString m_html_for_normal_and_source_view;
+    QAction * custom_context_menu_action = nullptr;
 
 protected:
     void contextMenuEvent(QContextMenuEvent * event) override;
@@ -21,6 +22,7 @@ public:
     // Set HTML which will not be modified in any way (used for source/rendered views).
     // The reason we need this is that toHtml() returns modified HTML code, not the same as was passed to setHtml() previously.
     void setHtmlForNormalAndSourceView(QString html_for_normal_and_source_view);
+    void setContextMenuAction(QAction * action);
 };
 
 #endif // HTMLBROWSER_H

@@ -22,6 +22,7 @@ void HtmlBrowser::contextMenuEvent(QContextMenuEvent * event)
 {
     QMenu menu(this);
     menu.addAction(viewSourceAct);
+    if (custom_context_menu_action) { menu.addAction(custom_context_menu_action); }
     menu.exec(event->globalPos());
 }
 
@@ -38,4 +39,9 @@ void HtmlBrowser::setHtmlForNormalAndSourceView(QString html_for_normal_and_sour
 {
     m_html_for_normal_and_source_view = std::move(html_for_normal_and_source_view);
     setHtml(m_html_for_normal_and_source_view);
+}
+
+void HtmlBrowser::setContextMenuAction(QAction * action)
+{
+    custom_context_menu_action = action;
 }
