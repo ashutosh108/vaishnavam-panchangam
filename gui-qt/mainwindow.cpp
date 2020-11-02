@@ -260,6 +260,15 @@ table {
 tr.separator {
     height: 1.1em;
 }
+td.custom {
+    background-color: yellow;
+}
+td.custom.merge-to-bottom {
+    border-bottom: 1px solid yellow;
+}
+td.custom.merge-to-top {
+    border-top: 1px solid yellow;
+}
 </style>)CSS"};
 
 void MainWindow::refreshTable()
