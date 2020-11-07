@@ -10,6 +10,7 @@ namespace vp {
 
 namespace detail {
 constexpr int32 ephemeris_flags = SEFLG_SWIEPH;
+constexpr int32 ayanamsha = SE_SIDM_LAHIRI;
 
 constexpr double atmospheric_pressure = 1013.25;
 constexpr double atmospheric_temperature = 15;
@@ -117,11 +118,61 @@ JulDays_UT Swe::find_sunset_v(JulDays_UT after) const
     return *sunset_or_error;
 }
 
+namespace {
+std::string se_flag_to_string(uint_fast32_t flag) {
+    struct known_flag {
+        uint_fast32_t flag;
+        std::string name;
+        std::string description;
+    };
+
+    static const std::array<known_flag, 20> known_flags{{
+        {SEFLG_JPLEPH, "SEFLG_JPLEPH", "use JPL ephemeris"},    // 1
+        {SEFLG_SWIEPH, "SEFLG_SWIEPH", "use SWISSEPH ephemeris"},   // 2
+        {SEFLG_MOSEPH, "SEFLG_MOSEPH", "use Moshier ephemeris"}, //4
+        {SEFLG_HELCTR, "SEFLG_HELCTR", "heliocentric position"}, //8
+        {SEFLG_TRUEPOS, "SEFLG_TRUEPOS", "true/geometric position, not apparent position"}, //16
+        {SEFLG_J2000, "SEFLG_J2000", "no precession, i.e. give J2000 equinox"}, //32
+        {SEFLG_NONUT, "SEFLG_NONUT", "no nutation, i.e. mean equinox of date"}, //64
+        {SEFLG_SPEED3, "SEFLG_SPEED3", "speed from 3 positions"}, //128
+        {SEFLG_SPEED, "SEFLG_SPEED", "high precision speed"}, //256
+        {SEFLG_NOGDEFL, "SEFLG_NOGDEFL", "turn off gravitational deflection"}, //512
+        {SEFLG_NOABERR, "SEFLG_NOABERR", "turn off 'annual' aberration of light"}, //1024
+        {SEFLG_EQUATORIAL, "SEFLG_EQUATORIAL", "equatorial positions are wanted"}, //(2*1024)
+        {SEFLG_XYZ, "SEFLG_XYZ", "cartesian, not polar, coordinates"}, //(4*1024)
+        {SEFLG_RADIANS, "SEFLG_RADIANS", "coordinates in radians, not degrees"}, //(8*1024)
+        {SEFLG_BARYCTR, "SEFLG_BARYCTR", "barycentric position"}, //(16*1024)
+        {SEFLG_TOPOCTR, "SEFLG_TOPOCTR", "topocentric position"}, //(32*1024)
+        {SEFLG_SIDEREAL, "SEFLG_SIDEREAL", "sidereal position"}, //(64*1024)
+        {SEFLG_ICRS, "SEFLG_ICRS", "ICRS (DE406 reference frame)"}, //(128*1024)
+        {SEFLG_DPSIDEPS_1980, "SEFLG_DPSIDEPS_1980", "reproduce JPL Horizons 1962 - today to 0.002 arcsec."}, //(256*1024)
+        {SEFLG_JPLHOR_APPROX, "SEFLG_JPLHOR_APPROX", "approximate JPL Horizons 1962 - today"}, //(512*1024)
+    }};
+    fmt::memory_buffer buf;
+    fmt::format_to(buf, "{}\n", flag);
+    bool first = true;
+    for (const auto & cur_flag : known_flags) {
+        if (cur_flag.flag & flag) {
+            flag &= ~(cur_flag.flag);
+            if (!first) fmt::format_to(buf, "\n| ");
+            first = false;
+            fmt::format_to(buf, "{:x} {} ({})", cur_flag.flag, cur_flag.name, cur_flag.description);
+        }
+    }
+    if (flag != 0) {
+        fmt::format_to(buf, "\n| {:x}", flag);
+
+    }
+    return fmt::to_string(buf);
+}
+}
+
 [[noreturn]] void Swe::throw_on_wrong_flags(int out_flags, int in_flags, char *serr) const {
     if (out_flags == ERR) {
         throw std::runtime_error(serr);
     } else {
-        throw std::runtime_error(fmt::format("return flags != input flags ({}!={})", out_flags, in_flags));
+        throw std::runtime_error(fmt::format(
+            "input flags != return flags ({}!={})\nin: {}\nout: {}", in_flags, out_flags, se_flag_to_string(in_flags), se_flag_to_string(out_flags)));
     }
 }
 
@@ -131,6 +182,11 @@ void Swe::do_calc_ut(double jd, int planet, int flags, double *res) const {
     if (res_flags == flags) {
         return;
     }
+    // with sidereal calculations, NONUT is added automatically, so ignore change in that bit
+    if ((flags & SEFLG_SIDEREAL) && ((flags & ~SEFLG_NONUT) == (res_flags & ~SEFLG_NONUT))) {
+        return;
+    }
+
     throw_on_wrong_flags(res_flags, flags, serr);
 }
 
@@ -156,6 +212,18 @@ Tithi Swe::get_tithi(JulDays_UT time) const
     double diff = moon - sun;
     if (diff < 0) diff += 360.0;
     return Tithi{diff / (360.0/30)};
+}
+
+Longitude_sidereal Swe::get_moon_longitude_sidereal(JulDays_UT time) const
+{
+    throw std::runtime_error("get_moon_longitude_sidereal is not implemented yet");
+    double res[6];
+    swe_set_sid_mode(
+        detail::ayanamsha,
+        0/*t0, unused since predefined mode is given as first argument*/,
+        0/*ayan_t0, unused since predefined mode is given as first argument*/);
+    do_calc_ut(time.raw_julian_days_ut().count(), SE_MOON, detail::ephemeris_flags | SEFLG_SIDEREAL, res);
+    return Longitude_sidereal{res[0]};
 }
 
 Swe::Flag operator&(Swe::Flag lhs, Swe::Flag rhs) {

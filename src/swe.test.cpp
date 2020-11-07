@@ -92,3 +92,27 @@ TEST_CASE("swe gives different sunrises for edge and center of sun disc") {
     REQUIRE(diff < 10min);
     REQUIRE(diff >= 1min);
 }
+
+#if 0 // uncomment after finishing get_moon_longitude_fixedstars implementation
+TEST_CASE("get_moon_longitude_fixedstars works for known case (Rohini end on 2020-11-03 is 2:30am next day in India)") {
+    Location loc{28'39'00_N,  77'13'00_E};
+    constexpr auto timezone_offset = 5h+30min; // IST
+    // bracket is [t-30sec..t+30sec]
+    JulDays_UT t1{2020_y/November/4, 2h + 30min + timezone_offset - 30s};
+    JulDays_UT t2{t1 + 1min};
+    // 2020-11-03
+    // Sunrise: ~06:26
+    // Rohini (4-of-27) until 50-08 26-30
+    const auto actual1 = vp::Swe{loc}.get_moon_longitude_sidereal(t1);
+    const auto actual2 = vp::Swe{loc}.get_moon_longitude_sidereal(t2);
+
+    const vp::Longitude_sidereal expected{4.0/27.0 * 360.0};
+
+    CAPTURE(actual1.longitude);
+    CAPTURE(actual2.longitude);
+    CAPTURE(expected.longitude);
+    CHECK(actual1.longitude <= expected.longitude);
+    CHECK(actual2.longitude >= expected.longitude);
+    REQUIRE(false);
+}
+#endif

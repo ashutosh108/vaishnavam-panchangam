@@ -11,6 +11,10 @@
 
 namespace vp {
 
+struct Longitude_sidereal {
+    double longitude;
+};
+
 class Swe
 {
 public:
@@ -39,6 +43,7 @@ public:
     double get_moon_longitude(JulDays_UT time) const;
     /** Get tithi as double [0..30) */
     Tithi get_tithi(JulDays_UT time) const;
+    Longitude_sidereal get_moon_longitude_sidereal(JulDays_UT time) const;
 private:
     bool need_to_close = true;
     int32_t rise_flags;
