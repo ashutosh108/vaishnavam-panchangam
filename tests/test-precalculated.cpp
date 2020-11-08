@@ -589,7 +589,7 @@ std::vector<Precalculated_Vrata> extract_vratas_from_precalculated_table(std::st
     auto t = p.next_table();
     if (!t) throw std::runtime_error("can't parse table");
     std::vector<Precalculated_Vrata> vratas;
-    INFO("extract_vratas_from_precalculated_table()")
+    INFO("extract_vratas_from_precalculated_table()");
 
     auto date_headers = get_date_headers(*t, reference_ymd);
     CAPTURE(date_headers);

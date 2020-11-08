@@ -66,7 +66,7 @@ add_library(swe STATIC
     src/html-util.cpp src/html-util.h
 )
 target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)
-target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected fmt::fmt)
+target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected fmt::fmt Catch2::Catch2)
 
 add_library(sweph STATIC
     vendor/sweph/src/swecl.c
@@ -108,7 +108,7 @@ add_executable(test-main
     src/vrata-summary.test.cpp
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/tests)
-target_include_directories(test-main PRIVATE vendor/catch2/single_include/catch2 vendor/tinyfsm/include)
+target_include_directories(test-main PRIVATE vendor/tinyfsm/include)
 target_link_libraries(test-main PRIVATE sweph swe date::date)
 
 enable_testing()
@@ -205,3 +205,4 @@ add_library(tl-expected INTERFACE)
 target_include_directories(tl-expected INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/vendor/expected/include)
 
 add_subdirectory(vendor/fmt)
+add_subdirectory(vendor/catch2)

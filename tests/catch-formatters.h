@@ -4,7 +4,7 @@
 #include "juldays_ut.h"
 
 #define CATCH_CONFIG_ENABLE_ALL_STRINGMAKERS
-#include "catch.hpp"
+#include "catch2/catch.hpp"
 #include <optional>
 
 namespace Catch {

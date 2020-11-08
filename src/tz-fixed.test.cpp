@@ -1,6 +1,6 @@
 #include "tz-fixed.h"
 
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 TEST_CASE("can format date::zoned_time with fmt") {
     using namespace date;
