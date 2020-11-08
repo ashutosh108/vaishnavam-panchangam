@@ -49,7 +49,10 @@ tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int rise_or_set, JulDays_
 // Returned value is to be or-red with SE_CALC_RISE or SE_CALC_SET.
 // Possible flags: SE_BIT_DISC_CENTER, SE_BIT_NO_REFRACTION, SE_BIT_GEOCTR_NO_ECL_LAT
 int32_t Swe::get_rise_flags(Flag flags) {
-    int32_t res = SE_BIT_NO_REFRACTION;
+    int32_t res = 0;
+    if ((flags & Flag::RefractionMask) == Flag::RefractionOff) {
+        res |= SE_BIT_NO_REFRACTION;
+    }
     if ((flags & Flag::SunriseByDiscMask) == Flag::SunriseByDiscCenter) {
         res |= SE_BIT_DISC_CENTER;
     }

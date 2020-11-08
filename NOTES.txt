@@ -1,3 +1,4 @@
+[ ] switch catch2 from single-include to proper linking (preparing for v3)
 [ ] text selection in "Summary" appears to be lost when right-clicking (and comes back afterwards).
 [ ] Table: add Russian version
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone):
@@ -238,3 +239,4 @@ done:
 [+] performance fix: use QTextBrowser for vrataSummary instead of QLabel; otherwise switching back to summary tab took unreasonably long time due to layout subtleties [2020-10-27]
 [+] htmlbrowser: allow adding custom context menu actions [2020-11-01]
 [+] table: allow adding additional dates to the table (right-click menu and a dialog) [2020-11-01]
+[+] swe: allow RefractionOn/Off flags [2020-11-08]

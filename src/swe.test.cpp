@@ -93,6 +93,19 @@ TEST_CASE("swe gives different sunrises for edge and center of sun disc") {
     REQUIRE(diff >= 1min);
 }
 
+TEST_CASE("sunrise with refraction off comes 3-5 minutes before actual observed sunrise with refraction on") {
+    const JulDays_UT after{2020_y/January/1};
+    const auto sunrise_with_refraction_off = [&]() {
+        return vp::Swe{arbitrary_coord, Swe::Flag::RefractionOff}.find_sunrise_v(after);
+    }();
+    const auto sunrise_with_refraction_on = [&]() {
+        return vp::Swe{arbitrary_coord, Swe::Flag::RefractionOn}.find_sunrise_v(after);
+    }();
+    auto diff = sunrise_with_refraction_off - sunrise_with_refraction_on;
+    REQUIRE(diff >= 3min);
+    REQUIRE(diff < 5min);
+}
+
 #if 0 // uncomment after finishing get_moon_longitude_fixedstars implementation
 TEST_CASE("get_moon_longitude_fixedstars works for known case (Rohini end on 2020-11-03 is 2:30am next day in India)") {
     Location loc{28'39'00_N,  77'13'00_E};

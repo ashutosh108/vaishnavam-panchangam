@@ -23,7 +23,10 @@ public:
         SunriseByDiscCenter = 0,    // both sunrise and sunset
         SunriseByDiscEdge = 1,      // both sunrise and sunset
         SunriseByDiscMask = 1,
-        Default = SunriseByDiscCenter,
+        RefractionOff = 0,
+        RefractionOn = 2,
+        RefractionMask = 2,
+        Default = SunriseByDiscCenter | RefractionOff,
     };
     Location location{};
 
