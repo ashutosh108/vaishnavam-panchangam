@@ -85,7 +85,7 @@ TEST_CASE("swe gives different sunrises for edge and center of sun disc") {
         return vp::Swe{loc}.find_sunrise_v(after);
     }();
     auto sunrise_edge = [&]() {
-        return vp::Swe{loc, Swe::Flag::SunriseByDiscEdge}.find_sunrise_v(after);
+        return vp::Swe{loc, vp::CalcFlags::SunriseByDiscEdge}.find_sunrise_v(after);
     }();
     REQUIRE(sunrise_edge < sunrise_center);
     auto diff = date::floor<std::chrono::seconds>(sunrise_center - sunrise_edge);
@@ -96,10 +96,10 @@ TEST_CASE("swe gives different sunrises for edge and center of sun disc") {
 TEST_CASE("sunrise with refraction off comes 3-5 minutes before actual observed sunrise with refraction on") {
     const JulDays_UT after{2020_y/January/1};
     const auto sunrise_with_refraction_off = [&]() {
-        return vp::Swe{arbitrary_coord, Swe::Flag::RefractionOff}.find_sunrise_v(after);
+        return vp::Swe{arbitrary_coord, vp::CalcFlags::RefractionOff}.find_sunrise_v(after);
     }();
     const auto sunrise_with_refraction_on = [&]() {
-        return vp::Swe{arbitrary_coord, Swe::Flag::RefractionOn}.find_sunrise_v(after);
+        return vp::Swe{arbitrary_coord, vp::CalcFlags::RefractionOn}.find_sunrise_v(after);
     }();
     auto diff = sunrise_with_refraction_off - sunrise_with_refraction_on;
     REQUIRE(diff >= 3min);

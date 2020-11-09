@@ -1,16 +1,16 @@
 #ifndef VP_SRC_TEXT_INTERFACE_H
 #define VP_SRC_TEXT_INTERFACE_H
 
+#include "calc-flags.h"
+#include "location.h"
+#include "tz-fixed.h"
+#include "vrata.h"
+
 #include <chrono>
 #include "filesystem-fixed.h"
 #include <optional>
 #include <tl/expected.hpp>
 #include <unordered_map>
-
-#include "location.h"
-#include "swe.h"
-#include "tz-fixed.h"
-#include "vrata.h"
 
 namespace vp::text_ui {
 
@@ -18,7 +18,7 @@ namespace vp::text_ui {
 void change_to_data_dir(const char* argv0);
 
 date::year_month_day parse_ymd(const std::string_view s);
-tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, Location location);
+tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, Location location, CalcFlags flags = CalcFlags::Default);
 tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf);
 
 // Find next ekAdashI vrata for the named location, report details to the output buffer.
@@ -28,8 +28,8 @@ void report_details(const vp::MaybeVrata & vrata, fmt::memory_buffer & buf);
 void print_detail_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf);
 void print_detail_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf);
 void calc_and_report_all(date::year_month_day d);
-vp::VratasForDate calc_all(date::year_month_day);
-vp::VratasForDate calc_one(date::year_month_day base_date, std::string location_name);
+vp::VratasForDate calc_all(date::year_month_day, CalcFlags flags = CalcFlags::Default);
+vp::VratasForDate calc_one(date::year_month_day base_date, std::string location_name, CalcFlags flags = CalcFlags::Default);
 std::string version();
 std::string program_name_and_version();
 

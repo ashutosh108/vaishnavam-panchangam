@@ -46,6 +46,27 @@ void MainWindow::addCustomDatesForTable()
     refreshTable();
 }
 
+void MainWindow::setupToolbar()
+{
+    refraction_toggle = ui->toolBar->addAction("Refraction: on (click to toggle)", [this](bool checked){
+        auto text = QString{"Refraction: %1 (click to toggle)"}.arg(checked ? "on" : "off");
+        refraction_toggle->setText(text);
+        refreshAllTabs();
+    });
+    refraction_toggle->setCheckable(true);
+    refraction_toggle->setChecked(true);
+    refraction_toggle->setToolTip("on: take atmospheric refraction into account for sunrise/sunset; off: pure geometric sunrise/sunset, no refraction (can differ by 2-3 minutes)");
+}
+
+vp::CalcFlags MainWindow::flagsForCurrentSettings()
+{
+    if (refraction_toggle->isChecked()) {
+        return vp::CalcFlags::RefractionOn;
+    } else {
+        return vp::CalcFlags::RefractionOff;
+    }
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -56,6 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
     setDateToToday();
     showVersionInStatusLine();
     setupKeyboardShortcuts();
+    setupToolbar();
     connectSignals();
     addTableContextMenu();
     gui_ready = true;
@@ -143,11 +165,12 @@ std::string MainWindow::selected_location() {
 void MainWindow::recalcVratasForSelectedDateAndLocation() {
     auto date = to_sys_days(ui->dateEdit->date());
     auto location_string = selected_location();
+    const auto flags = flagsForCurrentSettings();
 
     if (location_string == "all") {
-        vratas = vp::text_ui::calc_all(date);
+        vratas = vp::text_ui::calc_all(date, flags);
     } else {
-        vratas = vp::text_ui::calc_one(date, location_string);
+        vratas = vp::text_ui::calc_one(date, location_string, flags);
     }
 }
 

@@ -4,6 +4,7 @@
 #include "table-calendar-generator.h"
 #include "vrata.h"
 
+#include "calc-flags.h"
 #include "date-fixed.h"
 #include <fmt/core.h>
 #include <QAction>
@@ -45,6 +46,7 @@ private:
     bool expand_details_in_summary_tab = false;
     QAction * addCustomDatesForTableAction = nullptr;
     vp::Custom_Dates custom_dates;
+    QAction * refraction_toggle = nullptr;
 
     void setupLocationsComboBox();
     void setDateToToday();
@@ -65,6 +67,8 @@ private:
     void connectSignals();
     void addTableContextMenu();
     void addCustomDatesForTable();
+    void setupToolbar();
+    vp::CalcFlags flagsForCurrentSettings();
 };
 
 QString htmlify_line(const std::string_view & line);

@@ -2,6 +2,7 @@
 #define SWE_H
 
 #include "calc-error.h"
+#include "calc-flags.h"
 #include "juldays_ut.h"
 #include "location.h"
 #include "tithi.h"
@@ -18,19 +19,9 @@ struct Longitude_sidereal {
 class Swe
 {
 public:
-    // bitmask
-    enum class Flag {
-        SunriseByDiscCenter = 0,    // both sunrise and sunset
-        SunriseByDiscEdge = 1,      // both sunrise and sunset
-        SunriseByDiscMask = 1,
-        RefractionOff = 0,
-        RefractionOn = 2,
-        RefractionMask = 2,
-        Default = SunriseByDiscCenter | RefractionOff,
-    };
     Location location{};
 
-    Swe(Location coord_, Flag flags=Flag::Default);
+    Swe(Location coord_, CalcFlags flags=CalcFlags::Default);
     ~Swe();
     // Swe is kind of hanlde for sweph and thus we can't really copy it.
     // Copying it would allow for muiltiple swe_close() calls.
@@ -53,10 +44,8 @@ private:
     [[noreturn]] void throw_on_wrong_flags(int out_flags, int in_flags, char *serr) const;
     void do_calc_ut(double jd, int planet, int flags, double *res) const;
     tl::expected<JulDays_UT, CalcError> do_rise_trans(int rise_or_set, JulDays_UT after) const;
-    int32_t get_rise_flags(Flag flags);
+    int32_t get_rise_flags(CalcFlags flags);
 };
-
-Swe::Flag operator&(Swe::Flag lhs, Swe::Flag rhs);
 
 } // namespace vp
 

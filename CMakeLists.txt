@@ -64,6 +64,7 @@ add_library(swe STATIC
     src/html-table-writer.cpp src/html-table-writer.h
     src/table.cpp src/table.h
     src/html-util.cpp src/html-util.h
+    src/calc-flags.cpp src/calc-flags.h
 )
 target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)
 target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected fmt::fmt Catch2::Catch2)

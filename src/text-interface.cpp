@@ -140,7 +140,7 @@ tl::expected<vp::Vrata, vp::CalcError> decrease_latitude_and_find_vrata(date::ye
     }
 }
 
-vp::VratasForDate calc_one(date::year_month_day base_date, std::string location_name)
+vp::VratasForDate calc_one(date::year_month_day base_date, std::string location_name, CalcFlags flags)
 {
     vp::VratasForDate vratas;
     auto location = LocationDb::find_coord(location_name.c_str());
@@ -148,15 +148,15 @@ vp::VratasForDate calc_one(date::year_month_day base_date, std::string location_
         vratas.push_back(tl::make_unexpected(CantFindLocation{std::move(location_name)}));
         return vratas;
     }
-    vratas.push_back(calc_one(base_date, *location));
+    vratas.push_back(calc_one(base_date, *location, flags));
     return vratas;
 }
 
-tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, Location location) {
+tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, Location location, CalcFlags flags) {
     // Use immediately-called lambda to ensure Calc is destroyed before more
     // will be created in decrease_latitude_and_find_vrata()
     auto vrata = [&](){
-        return Calc{location}.find_next_vrata(base_date);
+        return Calc{Swe{location, flags}}.find_next_vrata(base_date);
     }();
     if (vrata) return vrata;
 
@@ -346,28 +346,28 @@ std::string program_name_and_version()
 
 // Try calculating, return true if resulting date range is small enough (suggesting that it's the same ekAdashI for all locations),
 // false otherwise (suggesting that we should repeat calculation with adjusted base_date
-bool try_calc_all(date::year_month_day base_date, vp::VratasForDate & vratas) {
+bool try_calc_all(date::year_month_day base_date, vp::VratasForDate & vratas, CalcFlags flags) {
     std::transform(
         LocationDb().begin(),
         LocationDb().end(),
         std::back_inserter(vratas),
-        [base_date](const vp::Location & location) {
-            return calc_one(base_date, location);
+        [base_date, flags](const vp::Location & location) {
+            return calc_one(base_date, location, flags);
         });
     return vratas.all_from_same_ekadashi();
 }
 
-vp::VratasForDate calc_all(date::year_month_day base_date)
+vp::VratasForDate calc_all(date::year_month_day base_date, CalcFlags flags)
 {
     if (auto found = detail::cache.find(base_date); found != detail::cache.end()) {
         return found->second;
     }
     vp::VratasForDate vratas;
 
-    if (!try_calc_all(base_date, vratas)) {
+    if (!try_calc_all(base_date, vratas, flags)) {
         vratas.clear();
         date::year_month_day adjusted_base_date = date::sys_days{base_date} - date::days{1};
-        try_calc_all(adjusted_base_date, vratas);
+        try_calc_all(adjusted_base_date, vratas, flags);
     }
     detail::cache[base_date] = vratas;
     return vratas;

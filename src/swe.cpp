@@ -48,18 +48,18 @@ tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int rise_or_set, JulDays_
 // Get proper Sweph rise/set flags from intialization Swe flags.
 // Returned value is to be or-red with SE_CALC_RISE or SE_CALC_SET.
 // Possible flags: SE_BIT_DISC_CENTER, SE_BIT_NO_REFRACTION, SE_BIT_GEOCTR_NO_ECL_LAT
-int32_t Swe::get_rise_flags(Flag flags) {
+int32_t Swe::get_rise_flags(CalcFlags flags) {
     int32_t res = 0;
-    if ((flags & Flag::RefractionMask) == Flag::RefractionOff) {
+    if ((flags & CalcFlags::RefractionMask) == CalcFlags::RefractionOff) {
         res |= SE_BIT_NO_REFRACTION;
     }
-    if ((flags & Flag::SunriseByDiscMask) == Flag::SunriseByDiscCenter) {
+    if ((flags & CalcFlags::SunriseByDiscMask) == CalcFlags::SunriseByDiscCenter) {
         res |= SE_BIT_DISC_CENTER;
     }
     return res;
 }
 
-Swe::Swe(Location coord_, Flag flags):location(coord_)
+Swe::Swe(Location coord_, CalcFlags flags):location(coord_)
 {
     rise_flags = get_rise_flags(flags);
 
@@ -227,13 +227,6 @@ Longitude_sidereal Swe::get_moon_longitude_sidereal(JulDays_UT time) const
         0/*ayan_t0, unused since predefined mode is given as first argument*/);
     do_calc_ut(time.raw_julian_days_ut().count(), SE_MOON, detail::ephemeris_flags | SEFLG_SIDEREAL, res);
     return Longitude_sidereal{res[0]};
-}
-
-Swe::Flag operator&(Swe::Flag lhs, Swe::Flag rhs) {
-    using underlying = std::underlying_type_t<Swe::Flag>;
-    return static_cast<Swe::Flag>(
-                static_cast<underlying>(lhs) &
-                static_cast<underlying>(rhs));
 }
 
 } // namespace swe

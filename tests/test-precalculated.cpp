@@ -673,7 +673,7 @@ void check_precalculated_vrata(const Precalculated_Vrata & vrata) {
     // calculate sunrise/sunset by TOP EDGE of sun disc crossing the horizon because
     // the old precalc tables are based on data from "Panchaga" program which used
     // "by edge" setting. Our usual default is "by disc center".
-    auto our_vrata = vp::Calc{vp::Swe{vrata.location, vp::Swe::Flag::SunriseByDiscEdge}}.find_next_vrata(start_date);
+    auto our_vrata = vp::Calc{vp::Swe{vrata.location, vp::CalcFlags::SunriseByDiscEdge}}.find_next_vrata(start_date);
     REQUIRE(our_vrata.has_value());
     auto our_vrata_detail = vp::Vrata_Detail_Printer{*our_vrata};
     REQUIRE(vrata == our_vrata_detail);
