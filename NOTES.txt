@@ -241,3 +241,4 @@ done:
 [+] swe: allow RefractionOn/Off flags [2020-11-08]
 [+] switch catch2 from single-include to proper linking (preparing for v3) [2020-11-08]
 [+] add GUI option for refraction on/off. Default is ON (used to be off previously) [2020-11-09]
+[+] add setting: sun disc center/edge for sunrise/sunset [2020-11-09]

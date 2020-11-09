@@ -49,22 +49,37 @@ void MainWindow::addCustomDatesForTable()
 void MainWindow::setupToolbar()
 {
     refraction_toggle = ui->toolBar->addAction("Refraction: on (click to toggle)", [this](bool checked){
-        auto text = QString{"Refraction: %1 (click to toggle)"}.arg(checked ? "on" : "off");
+        const auto text = QString{"Refraction: %1 (click to toggle)"}.arg(checked ? "on" : "off");
         refraction_toggle->setText(text);
         refreshAllTabs();
     });
     refraction_toggle->setCheckable(true);
     refraction_toggle->setChecked(true);
     refraction_toggle->setToolTip("on: take atmospheric refraction into account for sunrise/sunset; off: pure geometric sunrise/sunset, no refraction (can differ by 2-3 minutes)");
+
+    ui->toolBar->addSeparator();
+
+    sunrise_by_disc_center = ui->toolBar->addAction("Sunrise: by disc CENTER (click to toggle)", [this](bool checked) {
+        const auto text = QString{"Sunrise: by disc %1 (click to toggle)"}.arg(checked ? "CENTER" : "EDGE");
+        sunrise_by_disc_center->setText(text);
+        refreshAllTabs();
+    });
+    sunrise_by_disc_center->setCheckable(true);
+    sunrise_by_disc_center->setChecked(true);
+    sunrise_by_disc_center->setToolTip("detect sunrise/sunset when sun disc's CENTER or EDGE crosses the horizon");
 }
 
 vp::CalcFlags MainWindow::flagsForCurrentSettings()
 {
-    if (refraction_toggle->isChecked()) {
-        return vp::CalcFlags::RefractionOn;
-    } else {
-        return vp::CalcFlags::RefractionOff;
-    }
+    const auto refraction_flags = refraction_toggle->isChecked() ?
+        vp::CalcFlags::RefractionOn
+       :
+       vp::CalcFlags::RefractionOff;
+    const auto disc_flags = sunrise_by_disc_center->isChecked() ?
+        vp::CalcFlags::SunriseByDiscCenter
+        :
+        vp::CalcFlags::SunriseByDiscEdge;
+    return refraction_flags | disc_flags;
 }
 
 MainWindow::MainWindow(QWidget *parent)

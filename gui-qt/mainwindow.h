@@ -47,6 +47,7 @@ private:
     QAction * addCustomDatesForTableAction = nullptr;
     vp::Custom_Dates custom_dates;
     QAction * refraction_toggle = nullptr;
+    QAction * sunrise_by_disc_center = nullptr;
 
     void setupLocationsComboBox();
     void setDateToToday();

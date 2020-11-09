@@ -12,10 +12,11 @@ enum class CalcFlags {
     RefractionOff = 0,
     RefractionOn = 2,
     RefractionMask = 2,
-    Default = SunriseByDiscCenter | RefractionOff,
+    Default = 0, // Default must be zero because we are ORing it with flags sometimes
 };
 
 CalcFlags operator&(CalcFlags lhs, CalcFlags rhs);
+CalcFlags operator|(CalcFlags lhs, CalcFlags rhs);
 
 }
 #endif // CALC_FLAGS_H
