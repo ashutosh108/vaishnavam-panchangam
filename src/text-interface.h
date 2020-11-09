@@ -49,16 +49,25 @@ namespace detail {
 fs::path determine_exe_dir(const char* argv0);
 fs::path determine_working_dir(const char* argv0);
 
+struct CalcSettings {
+    date::year_month_day date;
+    vp::CalcFlags flags;
+};
+
+bool operator==(const CalcSettings & left, const CalcSettings & right);
+
 struct MyHash {
-    std::size_t operator()(const date::year_month_day & ymd) const {
-        auto hy = std::hash<int>{}(ymd.year().operator int());
-        auto hm = std::hash<unsigned int>{}(ymd.month().operator unsigned int());
-        auto hd = std::hash<unsigned int>{}(ymd.day().operator unsigned int());
-        return hy ^ (hm << 1) ^ (hd << 2);
+    std::size_t operator()(const CalcSettings & key) const {
+        auto hy = std::hash<int>{}(key.date.year().operator int());
+        auto hm = std::hash<unsigned int>{}(key.date.month().operator unsigned int());
+        auto hd = std::hash<unsigned int>{}(key.date.day().operator unsigned int());
+        using FlagsT = std::underlying_type_t<vp::CalcFlags>;
+        auto hash_flags = std::hash<FlagsT>{}(static_cast<FlagsT>(key.flags));
+        return hy ^ (hm << 1) ^ (hd << 2) ^ (hash_flags << 3);
     }
 };
 
-extern std::unordered_map<date::year_month_day, vp::VratasForDate, MyHash> cache;
+extern std::unordered_map<CalcSettings, vp::VratasForDate, MyHash> cache;
 
 } // namespace detail
 

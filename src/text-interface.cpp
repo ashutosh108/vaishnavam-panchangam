@@ -320,7 +320,13 @@ namespace detail {
         // fallback: return whatever we got, even if we couldn't find proper working dir.
         return exe_dir;
     }
-    std::unordered_map<date::year_month_day, vp::VratasForDate, MyHash> cache;
+    std::unordered_map<CalcSettings, vp::VratasForDate, MyHash> cache;
+
+    bool operator==(const CalcSettings & left, const CalcSettings & right)
+    {
+        return (left.date == right.date) && (left.flags == right.flags);
+    }
+
 } // namespace detail
 
 /* Change dir to the directory with eph and tzdata data files (usually it's .exe dir or the one above) */
@@ -359,7 +365,8 @@ bool try_calc_all(date::year_month_day base_date, vp::VratasForDate & vratas, Ca
 
 vp::VratasForDate calc_all(date::year_month_day base_date, CalcFlags flags)
 {
-    if (auto found = detail::cache.find(base_date); found != detail::cache.end()) {
+    const auto key = detail::CalcSettings{base_date, flags};
+    if (auto found = detail::cache.find(key); found != detail::cache.end()) {
         return found->second;
     }
     vp::VratasForDate vratas;
@@ -369,7 +376,7 @@ vp::VratasForDate calc_all(date::year_month_day base_date, CalcFlags flags)
         date::year_month_day adjusted_base_date = date::sys_days{base_date} - date::days{1};
         try_calc_all(adjusted_base_date, vratas, flags);
     }
-    detail::cache[base_date] = vratas;
+    detail::cache[key] = vratas;
     return vratas;
 }
 
