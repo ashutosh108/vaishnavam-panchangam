@@ -67,6 +67,17 @@ void MainWindow::setupToolbar()
     sunrise_by_disc_center->setCheckable(true);
     sunrise_by_disc_center->setChecked(true);
     sunrise_by_disc_center->setToolTip("detect sunrise/sunset when sun disc's CENTER or EDGE crosses the horizon");
+
+    ui->toolBar->addSeparator();
+
+    ephemeris_swiss = ui->toolBar->addAction("Ephemeris: Swiss (click to change)", [this](bool checked) {
+        const auto text = QString{"Ephemeris: %1 (click to change)"}.arg(checked ? "Swiss" : "Moshier");
+        ephemeris_swiss->setText(text);
+        refreshAllTabs();
+    });
+    ephemeris_swiss->setCheckable(true);
+    ephemeris_swiss->setChecked(true);
+    ephemeris_swiss->setToolTip("use Swiss ephemeris (better accuracy, requires se*.se1 files) or Moshier (less accurate, no data files required)");
 }
 
 vp::CalcFlags MainWindow::flagsForCurrentSettings()
@@ -79,7 +90,11 @@ vp::CalcFlags MainWindow::flagsForCurrentSettings()
         vp::CalcFlags::SunriseByDiscCenter
         :
         vp::CalcFlags::SunriseByDiscEdge;
-    return refraction_flags | disc_flags;
+    const auto ephemeris_flags = ephemeris_swiss->isChecked() ?
+        vp::CalcFlags::EphemerisSwiss
+        :
+        vp::CalcFlags::EphemerisMoshier;
+    return refraction_flags | disc_flags | ephemeris_flags;
 }
 
 MainWindow::MainWindow(QWidget *parent)

@@ -12,6 +12,9 @@ enum class CalcFlags {
     RefractionOff = 0,
     RefractionOn = 2,
     RefractionMask = 2,
+    EphemerisSwiss = 0,
+    EphemerisMoshier = 4,
+    EphemerisMask = 4,
     Default = 0, // Default must be zero because we are ORing it with flags sometimes
 };
 

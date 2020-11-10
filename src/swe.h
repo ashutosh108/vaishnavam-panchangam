@@ -39,12 +39,15 @@ public:
     Tithi get_tithi(JulDays_UT time) const;
     Longitude_sidereal get_moon_longitude_sidereal(JulDays_UT time) const;
 private:
+    // remember to update move-contructor and and move-assigment when adding/changing fields
     bool need_to_close = true;
     int32_t rise_flags;
+    int32_t ephemeris_flags;
     [[noreturn]] void throw_on_wrong_flags(int out_flags, int in_flags, char *serr) const;
     void do_calc_ut(double jd, int planet, int flags, double *res) const;
     tl::expected<JulDays_UT, CalcError> do_rise_trans(int rise_or_set, JulDays_UT after) const;
-    int32_t get_rise_flags(CalcFlags flags);
+    int32_t get_rise_flags(CalcFlags flags) const noexcept;
+    int32_t calc_ephemeris_flags(CalcFlags flags) const noexcept;
 };
 
 } // namespace vp

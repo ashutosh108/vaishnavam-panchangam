@@ -48,6 +48,7 @@ private:
     vp::Custom_Dates custom_dates;
     QAction * refraction_toggle = nullptr;
     QAction * sunrise_by_disc_center = nullptr;
+    QAction * ephemeris_swiss = nullptr;
 
     void setupLocationsComboBox();
     void setDateToToday();

@@ -9,7 +9,6 @@
 namespace vp {
 
 namespace detail {
-constexpr int32 ephemeris_flags = SEFLG_SWIEPH;
 constexpr int32 ayanamsha = SE_SIDM_LAHIRI;
 
 constexpr double atmospheric_pressure = 1013.25;
@@ -21,18 +20,17 @@ tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int rise_or_set, JulDays_
     std::array<double, 3> geopos{location.longitude.longitude, location.latitude.latitude, 0.0};
     double trise;
     std::array<char, AS_MAXCH> serr;
-    int32 flags = detail::ephemeris_flags;
     int res_flag = swe_rise_trans(after.raw_julian_days_ut().count(),
                                   SE_SUN,
                                   nullptr,
-                                  flags,
+                                  ephemeris_flags,
                                   rsmi,
                                   geopos.data(),
                                   detail::atmospheric_pressure,
                                   detail::atmospheric_temperature,
                                   &trise, serr.data());
     if (res_flag == -1) {
-        throw_on_wrong_flags(-1, flags, serr.data());
+        throw_on_wrong_flags(-1, ephemeris_flags, serr.data());
     }
 
     if (res_flag == -2) {
@@ -48,7 +46,7 @@ tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int rise_or_set, JulDays_
 // Get proper Sweph rise/set flags from intialization Swe flags.
 // Returned value is to be or-red with SE_CALC_RISE or SE_CALC_SET.
 // Possible flags: SE_BIT_DISC_CENTER, SE_BIT_NO_REFRACTION, SE_BIT_GEOCTR_NO_ECL_LAT
-int32_t Swe::get_rise_flags(CalcFlags flags) {
+int32_t Swe::get_rise_flags(CalcFlags flags) const noexcept {
     int32_t res = 0;
     if ((flags & CalcFlags::RefractionMask) == CalcFlags::RefractionOff) {
         res |= SE_BIT_NO_REFRACTION;
@@ -59,9 +57,19 @@ int32_t Swe::get_rise_flags(CalcFlags flags) {
     return res;
 }
 
+int32_t Swe::calc_ephemeris_flags(CalcFlags flags) const noexcept
+{
+    if ((flags & vp::CalcFlags::EphemerisMask) == vp::CalcFlags::EphemerisSwiss) {
+        return SEFLG_SWIEPH;
+    } else {
+        return SEFLG_MOSEPH;
+    }
+}
+
 Swe::Swe(Location coord_, CalcFlags flags):location(coord_)
 {
     rise_flags = get_rise_flags(flags);
+    ephemeris_flags = calc_ephemeris_flags(flags);
 
     // have to use (non-const) char array due to swe_set_ephe_path() strang signature: char * instead of const char *.
     char ephepath[] = "eph";
@@ -82,6 +90,7 @@ Swe::Swe(Swe && other) noexcept
     std::swap(need_to_close, other.need_to_close);
     std::swap(location, other.location);
     std::swap(rise_flags, other.rise_flags);
+    std::swap(ephemeris_flags, other.ephemeris_flags);
 }
 
 Swe &Swe::operator=(Swe && other) noexcept
@@ -90,6 +99,7 @@ Swe &Swe::operator=(Swe && other) noexcept
     std::swap(need_to_close, other.need_to_close);
     std::swap(location, other.location);
     std::swap(rise_flags, other.rise_flags);
+    std::swap(ephemeris_flags, other.ephemeris_flags);
     return *this;
 }
 
@@ -196,14 +206,14 @@ void Swe::do_calc_ut(double jd, int planet, int flags, double *res) const {
 double Swe::get_sun_longitude(JulDays_UT time) const
 {
     double res[6];
-    do_calc_ut(time.raw_julian_days_ut().count(), SE_SUN, detail::ephemeris_flags, res);
+    do_calc_ut(time.raw_julian_days_ut().count(), SE_SUN, ephemeris_flags, res);
     return res[0];
 }
 
 double Swe::get_moon_longitude(JulDays_UT time) const
 {
     double res[6];
-    do_calc_ut(time.raw_julian_days_ut().count(), SE_MOON, detail::ephemeris_flags, res);
+    do_calc_ut(time.raw_julian_days_ut().count(), SE_MOON, ephemeris_flags, res);
     return res[0];
 }
 
@@ -225,7 +235,7 @@ Longitude_sidereal Swe::get_moon_longitude_sidereal(JulDays_UT time) const
         detail::ayanamsha,
         0/*t0, unused since predefined mode is given as first argument*/,
         0/*ayan_t0, unused since predefined mode is given as first argument*/);
-    do_calc_ut(time.raw_julian_days_ut().count(), SE_MOON, detail::ephemeris_flags | SEFLG_SIDEREAL, res);
+    do_calc_ut(time.raw_julian_days_ut().count(), SE_MOON, ephemeris_flags | SEFLG_SIDEREAL, res);
     return Longitude_sidereal{res[0]};
 }
 
