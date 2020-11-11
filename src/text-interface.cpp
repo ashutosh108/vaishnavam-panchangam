@@ -262,10 +262,10 @@ std::vector<NamedTimePoint> get_detail_events(date::year_month_day base_date, co
 }
 
 /* print details (-d mode) for a single date and single location */
-void print_detail_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf) {
+void print_detail_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf, vp::CalcFlags flags) {
     print_detail_header(base_date, coord, buf);
 
-    Calc calc{coord};
+    Calc calc{Swe{coord, flags}};
     std::vector<NamedTimePoint> events = get_detail_events(base_date, calc);
     std::stable_sort(events.begin(), events.end(), [](const NamedTimePoint & left, const NamedTimePoint & right) {
         return left.time_point < right.time_point;
@@ -280,13 +280,13 @@ void print_detail_one(date::year_month_day base_date, Location coord, fmt::memor
     }
 }
 
-void print_detail_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf) {
+void print_detail_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf, vp::CalcFlags flags) {
     const std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
         fmt::format_to(buf, "Location not found: '{}'\n", location_name);
         return;
     }
-    print_detail_one(base_date, *coord, buf);
+    print_detail_one(base_date, *coord, buf, flags);
 }
 
 void calc_and_report_all(date::year_month_day d) {

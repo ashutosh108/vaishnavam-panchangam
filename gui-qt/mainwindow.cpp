@@ -212,6 +212,7 @@ void MainWindow::refreshAllTabs()
         recalcVratasForSelectedDateAndLocation();
         refreshSummary();
         refreshTable();
+        refreshDaybyday();
     } catch (std::exception &e) {
         QMessageBox::warning(this, "error", e.what());
     } catch (...) {
@@ -355,7 +356,13 @@ void MainWindow::refreshTable()
 
 void MainWindow::refreshDaybyday()
 {
-//    if (!ui->daybydayBrowser->isVisible()) { return; }
+    if (!ui->daybydayBrowser->isVisible()) { return; }
+    fmt::memory_buffer buf;
+    auto date = to_sys_days(ui->dateEdit->date());
+    auto location_string = selected_location();
+    const auto flags = flagsForCurrentSettings();
+    vp::text_ui::print_detail_one(date, location_string.c_str(), buf, flags);
+    ui->daybydayBrowser->setPlainText(QString::fromStdString(fmt::to_string(buf)));
 }
 
 void MainWindow::showVersionInStatusLine()

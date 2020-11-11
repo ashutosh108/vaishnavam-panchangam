@@ -314,7 +314,7 @@ p, li { white-space: pre-wrap; }
           </item>
          </layout>
         </widget>
-        <!--<widget class="QWidget" name="tab_daybyday">
+        <widget class="QWidget" name="tab_daybyday">
          <attribute name="title">
           <string>Day-by-day</string>
          </attribute>
@@ -323,7 +323,7 @@ p, li { white-space: pre-wrap; }
            <widget class="QTextBrowser" name="daybydayBrowser"/>
           </item>
          </layout>
-        </widget>-->
+        </widget>
        </widget>
       </item>
      </layout>

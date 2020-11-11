@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
         auto base_date = parse_ymd(argv[2]);
         const char * const location_name = argv[3];
         fmt::memory_buffer buf;
-        print_detail_one(base_date, location_name, buf);
+        print_detail_one(base_date, location_name, buf, vp::CalcFlags::Default);
         fmt::print("{}", std::string_view{buf.data(), buf.size()});
     } else {
         if (argc-1 != 1 && argc-1 != 2 && argc-1 != 3) {
