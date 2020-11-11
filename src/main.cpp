@@ -22,7 +22,7 @@ void print_usage() {
                program_name_and_version());
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[]) try
 {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
@@ -61,4 +61,8 @@ int main(int argc, char *argv[])
             fmt::print("{}", std::string_view{buf.data(), buf.size()});
         }
     }
+} catch(const std::runtime_error & err) {
+    fmt::print(stderr, "Fatal error: {}\n", err.what());
+} catch(...) {
+    fmt::print(stderr, "Fatal error: Unknown exception\n");
 }
