@@ -244,3 +244,4 @@ done:
 [+] add GUI option for refraction on/off. Default is ON (used to be off previously) [2020-11-09]
 [+] add setting: sun disc center/edge for sunrise/sunset [2020-11-09]
 [+] GUI: add option for ephemeris selection: Swiss/Moshier [2020-11-10]
+[+] GUI: keep vertical scroll position in summary and table tabs after settings change [2020-11-11]

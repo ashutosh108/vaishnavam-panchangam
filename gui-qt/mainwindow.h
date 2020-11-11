@@ -56,6 +56,7 @@ private:
     void refreshAllTabs();
     void refreshSummary();
     void refreshTable();
+    void refreshDaybyday();
     void showVersionInStatusLine();
     void clearLocationData();
     // "all" when table tab is active, otherwise whatever is selected in the locationComboBox
@@ -71,6 +72,7 @@ private:
     void addCustomDatesForTable();
     void setupToolbar();
     vp::CalcFlags flagsForCurrentSettings();
+    int getTableVerticalScrollValue() const;
 };
 
 QString htmlify_line(const std::string_view & line);

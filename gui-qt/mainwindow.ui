@@ -314,6 +314,16 @@ p, li { white-space: pre-wrap; }
           </item>
          </layout>
         </widget>
+        <!--<widget class="QWidget" name="tab_daybyday">
+         <attribute name="title">
+          <string>Day-by-day</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayoutTabDaybyday">
+          <item>
+           <widget class="QTextBrowser" name="daybydayBrowser"/>
+          </item>
+         </layout>
+        </widget>-->
        </widget>
       </item>
      </layout>

@@ -14,6 +14,7 @@
 #include "fmt-format-fixed.h"
 #include <QDate>
 #include <QMessageBox>
+#include <QScrollBar>
 #include <QShortcut>
 
 void MainWindow::connectSignals()
@@ -256,7 +257,15 @@ p.paran { margin-bottom: 0; } /* to ensure "Details->" link is not separated fro
             first = false;
         }
     }
+
+    int old_scroll_y = 0;
+    if (QScrollBar * bar = ui->vrataSummary->verticalScrollBar(); bar) {
+        old_scroll_y = bar->value();
+    }
     ui->vrataSummary->setText(summary);
+    if (QScrollBar * bar = ui->vrataSummary->verticalScrollBar(); bar) {
+        bar->setValue(old_scroll_y);
+    }
 }
 
 static QString table_css {R"CSS(<style>
@@ -324,13 +333,29 @@ td.custom.merge-to-top {
 }
 </style>)CSS"};
 
+int MainWindow::getTableVerticalScrollValue() const
+{
+    const QScrollBar * scroll_bar = ui->tableTextBrowser->verticalScrollBar();
+    return scroll_bar ? scroll_bar->value() : 0;
+}
+
 void MainWindow::refreshTable()
 {
     if (!ui->tableTextBrowser->isVisible()) { return; }
     std::stringstream s;
     date::year current_year = date::year_month_day{date::floor<date::days>(std::chrono::system_clock::now())}.year();
     s << vp::Html_Table_Writer{vp::Table_Calendar_Generator::generate(vratas, current_year, custom_dates)};
+
+    int old_scroll_y = getTableVerticalScrollValue();
     ui->tableTextBrowser->setHtmlForNormalAndSourceView(table_css + QString::fromStdString(s.str()));
+    if (QScrollBar * bar = ui->tableTextBrowser->verticalScrollBar(); bar) {
+        bar->setValue(old_scroll_y);
+    }
+}
+
+void MainWindow::refreshDaybyday()
+{
+//    if (!ui->daybydayBrowser->isVisible()) { return; }
 }
 
 void MainWindow::showVersionInStatusLine()
