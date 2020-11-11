@@ -37,6 +37,7 @@ struct Tithi {
     Tithi &operator +=(double const);
     double positive_delta_until_tithi(Tithi) const;
     double delta_to_nearest_tithi(Tithi) const;
+    static double normalize(double raw_tithi);
 };
 
 double operator -(Tithi const &, Tithi const &);

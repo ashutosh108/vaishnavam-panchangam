@@ -245,3 +245,4 @@ done:
 [+] GUI: add option for ephemeris selection: Swiss/Moshier [2020-11-10]
 [+] GUI: keep vertical scroll position in summary and table tabs after settings change [2020-11-11]
 [+] GUI: add day-by-day tab (~ show info from -d command line option) [2020-11-11]
+[+] bugfix: no longer throws on amavasya-crossing "Day-by-day" (detail print) mode [2020-11-11]

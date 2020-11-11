@@ -34,7 +34,7 @@ bool Tithi::is_dashami()
 
 Tithi &Tithi::operator +=(const double delta)
 {
-    tithi += delta;
+    tithi = normalize(tithi + delta);
     return *this;
 }
 
@@ -56,6 +56,13 @@ double Tithi::delta_to_nearest_tithi(Tithi target) const
         delta -= 30.0;
     }
     return delta;
+}
+
+double Tithi::normalize(double raw_tithi)
+{
+    double mod_res = std::fmod(raw_tithi, 30.0);
+    if (mod_res < 0) { mod_res += 30.0; }
+    return mod_res;
 }
 
 bool operator ==(const Tithi &t1, const Tithi &t2)
@@ -94,7 +101,7 @@ bool operator >=(const Tithi &t1, const Tithi &t2)
 
 Tithi operator +(const Tithi &t, double delta)
 {
-    return Tithi{t.tithi+delta};
+    return Tithi{Tithi::normalize(t.tithi+delta)};
 }
 
 double operator -(const Tithi &t1, const Tithi &t2)
@@ -104,7 +111,7 @@ double operator -(const Tithi &t1, const Tithi &t2)
 
 Tithi operator -(const Tithi &t, double delta)
 {
-    return Tithi{t.tithi - delta};
+    return Tithi{Tithi::normalize(t.tithi - delta)};
 }
 
 } // namespace vp

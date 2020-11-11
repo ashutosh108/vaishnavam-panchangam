@@ -218,9 +218,11 @@ struct NamedTimePoint {
 
 void detail_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
     const auto min_tithi = vp::Tithi{std::floor(calc.swe.get_tithi(from).tithi)};
-    const auto max_tithi = vp::Tithi{std::ceil(calc.swe.get_tithi(to).tithi)};
+    // need to normalize for amavasya-crossing case (30.5 becomes 0.5)
+    const auto max_tithi = vp::Tithi{Tithi::normalize(std::ceil(calc.swe.get_tithi(to).tithi) + 1.0)};
     auto start = from - std::chrono::hours{36};
-    for (vp::Tithi tithi = min_tithi; tithi <= max_tithi; tithi += 1.0) {
+    // need "!=" to handle cross-amavasya cases correctly, when max_tithi is less than min_tithi
+    for (vp::Tithi tithi = min_tithi; tithi != max_tithi; tithi += 1.0) {
         auto tithi_start = calc.find_tithi_start(start, tithi);
         events.push_back(NamedTimePoint{fmt::format("{:d} starts", tithi), tithi_start, NamedTimePoint::Print_Tithi::No});
         if (tithi.is_dvadashi()) {
