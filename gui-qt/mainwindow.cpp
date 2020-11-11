@@ -376,8 +376,20 @@ void MainWindow::setupKeyboardShortcuts() {
     new QShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_Tab, this, this, &MainWindow::switchToPrevTab);
     new QShortcut(Qt::CTRL + Qt::Key_PageDown, this, this, &MainWindow::switchToNextTab);
     new QShortcut(Qt::CTRL + Qt::Key_Tab, this, this, &MainWindow::switchToNextTab);
-    new QShortcut(Qt::CTRL + Qt::Key_Left, this, this, &MainWindow::on_datePrevEkadashi_clicked);
-    new QShortcut(Qt::CTRL + Qt::Key_Right, this, this, &MainWindow::on_dateNextEkadashi_clicked);
+    new QShortcut(Qt::CTRL + Qt::Key_Left, this, [this](){
+        if (ui->tabWidget->tabText(ui->tabWidget->currentIndex()) == "Day-by-day") {
+            ui->dateEdit->setDate(ui->dateEdit->date().addDays(-1));
+        } else {
+            on_datePrevEkadashi_clicked();
+        }
+    });
+    new QShortcut(Qt::CTRL + Qt::Key_Right, this, [this]() {
+        if (ui->tabWidget->tabText(ui->tabWidget->currentIndex()) == "Day-by-day") {
+            ui->dateEdit->setDate(ui->dateEdit->date().addDays(+1));
+        } else {
+            on_dateNextEkadashi_clicked();
+        }
+    });
     new QShortcut(Qt::CTRL + Qt::Key_Home, this, this, &MainWindow::switchToHomeDateAndOrLocation);
     new QShortcut(Qt::CTRL + Qt::Key_Up, this, this, &MainWindow::switchToPrevLocation);
     new QShortcut(Qt::CTRL + Qt::Key_Down, this, this, &MainWindow::switchToNextLocation);
