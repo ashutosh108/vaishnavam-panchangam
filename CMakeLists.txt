@@ -65,6 +65,7 @@ add_library(swe STATIC
     src/table.cpp src/table.h
     src/html-util.cpp src/html-util.h
     src/calc-flags.cpp src/calc-flags.h
+    src/nakshatra.cpp src/nakshatra.h
 )
 target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)
 target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected fmt::fmt Catch2::Catch2)
@@ -107,6 +108,7 @@ add_executable(test-main
     src/html-table-writer.test.cpp
     src/table.test.cpp
     src/vrata-summary.test.cpp
+    src/nakshatra.test.cpp
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/tests)
 target_include_directories(test-main PRIVATE vendor/tinyfsm/include)
