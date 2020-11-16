@@ -109,6 +109,7 @@ add_executable(test-main
     src/table.test.cpp
     src/vrata-summary.test.cpp
     src/nakshatra.test.cpp
+#    tests/test-existing-panchangas.cpp
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/tests)
 target_include_directories(test-main PRIVATE vendor/tinyfsm/include)
