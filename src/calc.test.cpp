@@ -647,3 +647,17 @@ TEST_CASE("paran after 1/4 of dvAdashI: don't specify end time even when interva
     REQUIRE(vrata);
     REQUIRE(!vrata->paran.paran_end);
 }
+
+// disabled until implementation is ready
+#if 0
+TEST_CASE("find_nakshatra_start() works for simple case", "[!mayfail][.]") {
+    Location udupi{28'39'00_N,  77'13'00_E};
+    const auto timezone_offset = 5h + 30min;
+    auto calc = Calc{udupi};
+    auto from_date = vp::JulDays_UT{2020_y/11/3};
+    auto target_nakshatra = vp::Nakshatra{3.0};
+
+    auto time = calc.find_nakshatra_start(from_date, target_nakshatra);
+    REQUIRE(time == vp::JulDays_UT{2020_y/11/4, 2h + 30min + timezone_offset});
+}
+#endif

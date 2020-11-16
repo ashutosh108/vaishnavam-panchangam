@@ -282,4 +282,10 @@ JulDays_UT Calc::find_tithi_start(JulDays_UT const from, Tithi const tithi) cons
     return time;
 }
 
+JulDays_UT Calc::find_nakshatra_start(const JulDays_UT from, const Nakshatra target) const
+{
+    // TODO: implement
+    return from;
+}
+
 } // namespace vp

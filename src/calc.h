@@ -3,6 +3,7 @@
 
 #include "location.h"
 #include "date-fixed.h"
+#include "nakshatra.h"
 #include "swe.h"
 #include "juldays_ut.h"
 #include "tithi.h"
@@ -35,6 +36,7 @@ public:
     tl::expected<JulDays_UT, CalcError> arunodaya_for_sunrise(JulDays_UT sunrise) const;
 
     JulDays_UT find_tithi_start(JulDays_UT, Tithi) const;
+    JulDays_UT find_nakshatra_start(const JulDays_UT, const Nakshatra) const;
 
     static JulDays_UT proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion);
     JulDays_UT calc_astronomical_midnight(date::year_month_day date) const;
