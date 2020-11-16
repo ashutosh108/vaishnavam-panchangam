@@ -65,6 +65,14 @@ constexpr Longitude operator ""_W(const long double lng) {
     return Longitude{-static_cast<double>(lng)};
 }
 
+constexpr Longitude operator+(Longitude l, double delta) {
+    return Longitude{l.longitude + delta};
+}
+
+constexpr Latitude operator+(Latitude l, double delta) {
+    return Latitude{l.latitude + delta};
+}
+
 struct Location
 {
     Latitude latitude;

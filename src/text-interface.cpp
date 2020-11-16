@@ -275,7 +275,9 @@ void print_detail_one(date::year_month_day base_date, Location coord, fmt::memor
     for (const auto & e : events) {
         if (e.print_tithi == NamedTimePoint::Print_Tithi::Yes) {
             const auto tithi = calc.swe.get_tithi(e.time_point);
-            fmt::format_to(buf, "{} {:s}: {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, tithi, e.name);
+            const auto nakshatra_angle = calc.swe.get_moon_longitude_sidereal(e.time_point);
+            const auto nakshatra_number = nakshatra_angle.longitude * 27.0 / 360.0;
+            fmt::format_to(buf, "{} {:s} {:06.2f} {:05.2f}: {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, tithi, nakshatra_angle.longitude, nakshatra_number, e.name);
         } else {
             fmt::format_to(buf, "{} {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, e.name);
         }

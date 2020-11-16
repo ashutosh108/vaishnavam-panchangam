@@ -1,3 +1,5 @@
+[ ] fix catch2 linking (must only be in test executables)
+[ ] day-by-day: print nakshatras for each timepoint
 [ ] text selection in "Summary" appears to be lost when right-clicking (and comes back afterwards).
 [ ] Table: add Russian version
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone):
@@ -246,3 +248,4 @@ done:
 [+] GUI: keep vertical scroll position in summary and table tabs after settings change [2020-11-11]
 [+] GUI: add day-by-day tab (~ show info from -d command line option) [2020-11-11]
 [+] bugfix: no longer throws on amavasya-crossing "Day-by-day" (detail print) mode [2020-11-11]
+[+] add tests for comparing our data with existing drg-gaNita panchangas (Palimaru and Puttige) [2020-11-17]
