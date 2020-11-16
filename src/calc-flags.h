@@ -15,6 +15,9 @@ enum class CalcFlags {
     EphemerisSwiss = 0,
     EphemerisMoshier = 4,
     EphemerisMask = 4,
+    RiseSetGeocentricMask = 8,
+    RiseSetGeocentricOff = 0, // default: do not set GEOCTR_NO_ECL_LAT
+    RiseSetGeocentricOn = 8, // set GEOCTR_NO_ECL_LAT for rise-set-related calls
     Default = 0, // Default must be zero because we are ORing it with flags sometimes
 };
 

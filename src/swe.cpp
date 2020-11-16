@@ -54,6 +54,9 @@ int32_t Swe::get_rise_flags(CalcFlags flags) const noexcept {
     if ((flags & CalcFlags::SunriseByDiscMask) == CalcFlags::SunriseByDiscCenter) {
         res |= SE_BIT_DISC_CENTER;
     }
+    if ((flags & CalcFlags::RiseSetGeocentricMask) == CalcFlags::RiseSetGeocentricOn)  {
+        res |= SE_BIT_GEOCTR_NO_ECL_LAT;
+    }
     return res;
 }
 
@@ -229,7 +232,7 @@ Tithi Swe::get_tithi(JulDays_UT time) const
 
 Longitude_sidereal Swe::get_moon_longitude_sidereal(JulDays_UT time) const
 {
-    throw std::runtime_error("get_moon_longitude_sidereal is not implemented yet");
+//    throw std::runtime_error("get_moon_longitude_sidereal is not implemented yet");
     double res[6];
     swe_set_sid_mode(
         detail::ayanamsha,
