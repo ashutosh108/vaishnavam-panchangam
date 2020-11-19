@@ -282,10 +282,40 @@ JulDays_UT Calc::find_tithi_start(JulDays_UT const from, Tithi const tithi) cons
     return time;
 }
 
-JulDays_UT Calc::find_nakshatra_start(const JulDays_UT from, const Nakshatra target) const
+JulDays_UT Calc::find_nakshatra_start(const JulDays_UT from, const Nakshatra target_nakshatra) const
 {
     // TODO: implement
-    return from;
+//    return from;
+    using namespace std::literals::chrono_literals;
+    constexpr double_hours average_nakshatra_length = 24h + 17min + 9.36s; // from "Basics of Panchangam" by S.Narasimha Rao, p.21
+    Nakshatra cur_nakshatra = swe.get_nakshatra(from);
+
+    double initial_delta_nakshatra = positive_delta_between_nakshatras(cur_nakshatra, target_nakshatra);
+
+    JulDays_UT time{from + initial_delta_nakshatra * average_nakshatra_length};
+    cur_nakshatra = swe.get_nakshatra(time);
+
+    double prev_abs_delta_nakshatra = std::numeric_limits<double>::max();
+
+    constexpr int max_iterations = 1'000;
+    int iteration = 0;
+
+    while (cur_nakshatra != target_nakshatra) {
+        double const delta_nakshatra = minimal_delta_between_nakshatras(cur_nakshatra, target_nakshatra);
+        time += delta_nakshatra * average_nakshatra_length;
+        cur_nakshatra = swe.get_nakshatra(time);
+
+        double const abs_delta_nakshatra = fabs(delta_nakshatra);
+        // Check for calculations loop: break if delta stopped decreasing (by absolute vbalue).
+        if (abs_delta_nakshatra >= prev_abs_delta_nakshatra) {
+            break;
+        }
+        prev_abs_delta_nakshatra = abs_delta_nakshatra;
+        if (++iteration >= max_iterations) {
+            throw CantFindNakshatraAfter{target_nakshatra, from};
+        }
+    }
+    return time;
 }
 
 } // namespace vp

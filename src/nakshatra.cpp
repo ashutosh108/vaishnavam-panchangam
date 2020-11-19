@@ -30,3 +30,16 @@ double vp::minimal_delta_between_nakshatras(Nakshatra n1, Nakshatra n2)
     }
     return delta;
 }
+
+bool vp::operator ==(const vp::Nakshatra n1, const vp::Nakshatra n2)
+{
+    // 2e-11 is chosen to give precision better than 0.5E-6 seconds:
+    // ~1e5 seconds per average nakshatra, 1e6 millionths per second, *2 to be better than
+    // half of millionth of digit.
+    constexpr double epsilon = 0.5e-11;
+    return ( fabs(n1.nakshatra - n2.nakshatra) < epsilon );
+}
+
+bool vp::operator !=(const vp::Nakshatra n1, const vp::Nakshatra n2) {
+    return !(n1 == n2);
+}

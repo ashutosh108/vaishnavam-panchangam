@@ -648,16 +648,51 @@ TEST_CASE("paran after 1/4 of dvAdashI: don't specify end time even when interva
     REQUIRE(!vrata->paran.paran_end);
 }
 
-// disabled until implementation is ready
-#if 0
-TEST_CASE("find_nakshatra_start() works for simple case", "[!mayfail][.]") {
+namespace {
+class EqualsRoundedToMinuteMatcher : public Catch::MatcherBase<vp::JulDays_UT> {
+    date::sys_seconds m_time;
+    std::chrono::seconds m_timezone_offset;
+public:
+    EqualsRoundedToMinuteMatcher(date::year_month_day date, std::chrono::seconds time, std::chrono::seconds timezone_offset)
+        : m_time(date::sys_days{date} + time - timezone_offset), m_timezone_offset{timezone_offset} {}
+    bool match(const vp::JulDays_UT & what) const override {
+        return what.round_to_minute() == m_time;
+    }
+
+    std::string describe() const override {
+        auto local = m_time + m_timezone_offset;
+        return fmt::format(FMT_STRING("rounded to minute, equals to {} (local {})"), date::format("%Y-%m-%d %H:%M", m_time), date::format("%Y-%m-%d %H:%M", local));
+    }
+};
+
+EqualsRoundedToMinuteMatcher EqualsRoundedToMinute(date::year_month_day date, std::chrono::seconds time, std::chrono::seconds timezone_offset) {
+    return {date, time, timezone_offset};
+}
+}
+
+TEST_CASE("find_nakshatra_start() works for simple cases from 2020-11 Palimaru panchangam") {
     Location udupi{28'39'00_N,  77'13'00_E};
     const auto timezone_offset = 5h + 30min;
     auto calc = Calc{udupi};
-    auto from_date = vp::JulDays_UT{2020_y/11/3};
-    auto target_nakshatra = vp::Nakshatra{3.0};
 
+    struct test_data {
+        date::year_month_day date;
+        std::chrono::seconds time;
+        double raw_nakshatra_value;
+    };
+
+    auto data = GENERATE(
+        test_data{2020_y/11/1, 20h+57min, vp::Nakshatra::BHARANI_END},
+        test_data{2020_y/11/2, 23h+50min, vp::Nakshatra::KRITIKA_END},
+        test_data{2020_y/11/4, 2h+30min, vp::Nakshatra::ROHINI_END},
+        test_data{2020_y/11/5, 4h+51min, vp::Nakshatra::MRGASHIRSHA_END},
+        test_data{2020_y/11/6, 6h+45min, vp::Nakshatra::ARDRA_END},
+        test_data{2020_y/11/7, 8h+5min, vp::Nakshatra::PUNARVASU_END},
+        test_data{2020_y/11/8, 8h+45min, vp::Nakshatra::PUSHYA_END}
+        );
+
+    auto from_date = vp::JulDays_UT{date::year_month_day{date::sys_days{data.date} - date::days{1}}};
+    auto target_nakshatra = vp::Nakshatra{data.raw_nakshatra_value};
     auto time = calc.find_nakshatra_start(from_date, target_nakshatra);
-    REQUIRE(time == vp::JulDays_UT{2020_y/11/4, 2h + 30min + timezone_offset});
+    REQUIRE_THAT(time, EqualsRoundedToMinute(data.date, data.time, timezone_offset));
 }
-#endif

@@ -242,4 +242,10 @@ Longitude_sidereal Swe::get_moon_longitude_sidereal(JulDays_UT time) const
     return Longitude_sidereal{res[0]};
 }
 
+Nakshatra Swe::get_nakshatra(JulDays_UT time) const
+{
+    const auto moon_longitude_sidereal = get_moon_longitude_sidereal(time);
+    return Nakshatra{moon_longitude_sidereal.longitude * (27.0/360.0)};
+}
+
 } // namespace swe

@@ -19,6 +19,11 @@ struct CantFindTithiAfter {
     JulDays_UT after;
 };
 
+struct CantFindNakshatraAfter {
+    Nakshatra nakshatra;
+    JulDays_UT after;
+};
+
 class Calc
 {
 public:

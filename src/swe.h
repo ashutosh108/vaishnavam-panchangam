@@ -5,16 +5,13 @@
 #include "calc-flags.h"
 #include "juldays_ut.h"
 #include "location.h"
+#include "nakshatra.h"
 #include "tithi.h"
 
 #include <cstdint> // for int32_t
 #include <tl/expected.hpp>
 
 namespace vp {
-
-struct Longitude_sidereal {
-    double longitude;
-};
 
 class Swe
 {
@@ -38,6 +35,7 @@ public:
     /** Get tithi as double [0..30) */
     Tithi get_tithi(JulDays_UT time) const;
     Longitude_sidereal get_moon_longitude_sidereal(JulDays_UT time) const;
+    Nakshatra get_nakshatra(JulDays_UT time) const;
 private:
     // remember to update move-contructor and and move-assigment when adding/changing fields
     bool need_to_close = true;
