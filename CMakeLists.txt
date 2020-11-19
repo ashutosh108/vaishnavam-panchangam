@@ -68,7 +68,7 @@ add_library(swe STATIC
     src/nakshatra.cpp src/nakshatra.h
 )
 target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)
-target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected fmt::fmt Catch2::Catch2)
+target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected fmt::fmt)
 
 add_library(sweph STATIC
     vendor/sweph/src/swecl.c
@@ -113,7 +113,7 @@ add_executable(test-main
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/tests)
 target_include_directories(test-main PRIVATE vendor/tinyfsm/include)
-target_link_libraries(test-main PRIVATE sweph swe date::date)
+target_link_libraries(test-main PRIVATE sweph swe date::date Catch2::Catch2)
 
 enable_testing()
 add_test(test-main test-main)
