@@ -13,6 +13,23 @@ vp::Nakshatra::Nakshatra(vp::Longitude_sidereal longitude) : Nakshatra(longitude
 {
 }
 
+vp::Nakshatra vp::Nakshatra::floor() const
+{
+    return vp::Nakshatra{std::floor(nakshatra)};
+}
+
+vp::Nakshatra vp::Nakshatra::ceil() const
+{
+    return vp::Nakshatra{normalize(std::ceil(nakshatra))};
+}
+
+double vp::Nakshatra::normalize(double raw_nakshatra)
+{
+    double mod_res = std::fmod(raw_nakshatra, 27.0);
+    if (mod_res < 0) { mod_res += 27.0; }
+    return mod_res;
+}
+
 double vp::positive_delta_between_nakshatras(vp::Nakshatra n1, vp::Nakshatra n2)
 {
     double delta = n2.nakshatra - n1.nakshatra;
@@ -42,4 +59,15 @@ bool vp::operator ==(const vp::Nakshatra n1, const vp::Nakshatra n2)
 
 bool vp::operator !=(const vp::Nakshatra n1, const vp::Nakshatra n2) {
     return !(n1 == n2);
+}
+
+vp::Nakshatra & vp::operator ++(vp::Nakshatra & n)
+{
+    n.nakshatra = vp::Nakshatra::normalize(n.nakshatra + 1.0);
+    return n;
+}
+
+vp::Nakshatra vp::operator +(vp::Nakshatra n, double delta)
+{
+    return vp::Nakshatra{vp::Nakshatra::normalize(n.nakshatra + delta)};
 }

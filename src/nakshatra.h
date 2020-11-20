@@ -1,6 +1,10 @@
 #ifndef NAKSHATRA_H
 #define NAKSHATRA_H
 
+#include <cmath>
+#include "fmt-format-fixed.h"
+#include <string>
+
 namespace vp {
 
 struct Longitude_sidereal {
@@ -13,6 +17,10 @@ public:
     double nakshatra;
     explicit Nakshatra(double nakshatra_value);
     explicit Nakshatra(vp::Longitude_sidereal longitude);
+    Nakshatra floor() const;
+    Nakshatra ceil() const;
+    static double normalize(double raw_nakshatra);
+
     static constexpr double ASHVINI_START = 0.0;
     static constexpr double ASHVINI_END = 1.0;
     static constexpr double BHARANI_START = 1.0;
@@ -75,7 +83,62 @@ double positive_delta_between_nakshatras(Nakshatra n1, Nakshatra n2);
 double minimal_delta_between_nakshatras(Nakshatra n1, Nakshatra n2);
 bool operator == (const Nakshatra n1, const Nakshatra n2);
 bool operator != (const Nakshatra n1, const Nakshatra n2);
+vp::Nakshatra & operator ++(Nakshatra & n);
+vp::Nakshatra operator +(Nakshatra n, double delta);
 
 }
+
+namespace  {
+std::string nakshatra_name(int n) {
+    static const char * const names[] {
+        "Ashvini",
+        "Bharani",
+        "Kritika",
+        "Rohini",
+        "Mrgashirsha",
+        "Ardra",
+        "Punarvasu",
+        "Pushya",
+        "Ashlesha",
+        "Magha",
+        "Purva Phalguni",
+        "Uttara Phalguni",
+        "Hasta",
+        "Chitra",
+        "Svati",
+        "Vishakha",
+        "Arundhati",
+        "Jyeshtha",
+        "Mula",
+        "Purva Ashadha",
+        "Uttara Ashadha",
+        "Shravana",
+        "Dhanistha",
+        "Shatabhisha",
+        "Purva Bhadrapada",
+        "Uttara Bhadrapada",
+        "Revati"
+    };
+    if (n < 0 || n > 26) {
+        return "Unknown";
+    }
+    return names[n];
+}
+}
+
+template<>
+struct fmt::formatter<vp::Nakshatra> {
+    template<class ParseContext>
+    auto parse(ParseContext & ctx) {
+        return ctx.begin();
+    }
+    template<class FormatContext>
+    auto format(const vp::Nakshatra n, FormatContext & ctx) {
+        long raw_nakshatra_by_thousand = std::lround(n.nakshatra * 1000) % 27000;
+        long nakshatra_num = raw_nakshatra_by_thousand / 1000; // 0...26
+        long nakshatra_fract = raw_nakshatra_by_thousand % 1000;
+        return fmt::format_to(ctx.out(), FMT_STRING("{}(.{:03})"), nakshatra_name(nakshatra_num), nakshatra_fract);
+    }
+};
 
 #endif // NAKSHATRA_H

@@ -31,3 +31,13 @@ TEST_CASE("minimal_delta_between_nakshatras works for zero-crossing pair") {
     REQUIRE(vp::minimal_delta_between_nakshatras(vp::Nakshatra{26.0}, vp::Nakshatra{1.0}) == 2.0);
     REQUIRE(vp::minimal_delta_between_nakshatras(vp::Nakshatra{1.0}, vp::Nakshatra{26.0}) == -2.0);
 }
+
+TEST_CASE("floor and ceil work") {
+    REQUIRE(vp::Nakshatra{1.1}.floor() == vp::Nakshatra{1.0});
+    REQUIRE(vp::Nakshatra{26.9}.ceil() == vp::Nakshatra{0.0});
+}
+
+TEST_CASE("Nakshatra formatting works") {
+    REQUIRE(fmt::to_string(vp::Nakshatra{1.1}) == "Bharani(.100)");
+    REQUIRE(fmt::to_string(vp::Nakshatra{26.99999}) == "Ashvini(.000)");
+}

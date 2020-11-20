@@ -233,6 +233,18 @@ void detail_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::C
 
 }
 
+void detail_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
+    const auto min_nakshatra = calc.swe.get_nakshatra(from).floor();
+    const auto max_nakshatra = calc.swe.get_nakshatra(to).ceil() + 1.0;
+    auto start = from - std::chrono::hours{36}; // to ensure we get beginning of first nakshatra
+    for (vp::Nakshatra n = min_nakshatra; n != max_nakshatra; ++n) {
+        auto nakshatra_start = calc.find_nakshatra_start(start, n);
+        events.push_back(NamedTimePoint{fmt::format(FMT_STRING("{} starts"), n), nakshatra_start, NamedTimePoint::Print_Tithi::No});
+    }
+    // TODO: implement
+}
+
+
 std::vector<NamedTimePoint> get_detail_events(date::year_month_day base_date, const vp::Calc & calc) {
     std::vector<NamedTimePoint> events;
     const auto local_astronomical_midnight = calc.calc_astronomical_midnight(base_date);
@@ -257,6 +269,7 @@ std::vector<NamedTimePoint> get_detail_events(date::year_month_day base_date, co
                 const auto earliest_timepoint = arunodaya ? * arunodaya : *sunrise;
                 const auto latest_timepoint = *sunrise2;
                 detail_add_tithi_events(earliest_timepoint, latest_timepoint, calc, events);
+                detail_add_nakshatra_events(earliest_timepoint, latest_timepoint, calc, events);
             }
         }
     }
