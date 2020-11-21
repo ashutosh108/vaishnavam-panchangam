@@ -3,6 +3,7 @@
 
 #include "juldays_ut.h"
 #include "nakshatra.h"
+#include "tithi.h"
 
 #define CATCH_CONFIG_ENABLE_ALL_STRINGMAKERS
 #include "catch2/catch.hpp"
@@ -20,6 +21,13 @@ template<>
 struct StringMaker<vp::Nakshatra> {
     static std::string convert(const vp::Nakshatra & n) {
         return fmt::to_string(n);
+    }
+};
+
+template<>
+struct StringMaker<vp::Tithi> {
+    static std::string convert(const vp::Tithi & t) {
+        return fmt::format(FMT_STRING("Tithi({})"), t.tithi);
     }
 };
 }
