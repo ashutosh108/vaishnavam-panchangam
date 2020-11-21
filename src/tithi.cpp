@@ -5,13 +5,6 @@
 
 namespace vp {
 
-Tithi::Tithi(double _tithi) : tithi(_tithi)
-{
-    if (tithi < 0 || tithi >= 30) {
-        throw std::range_error(fmt::format("Wrong tithi value: {}", tithi));
-    }
-}
-
 Paksha Tithi::get_paksha()
 {
     return tithi < 15 ? Paksha::Shukla : Paksha::Krishna;

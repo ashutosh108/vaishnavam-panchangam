@@ -13,20 +13,25 @@ enum class Paksha {
 };
 
 struct Tithi {
-    explicit Tithi(double _tithi);
+    explicit constexpr Tithi(double _tithi) : tithi(_tithi)
+    {
+        if (tithi < 0 || tithi >= 30) {
+            throw std::range_error(fmt::format("Wrong tithi value: {}", tithi));
+        }
+    }
     double tithi;
     Paksha get_paksha();
     bool is_dvadashi();
     bool is_ekadashi();
     bool is_dashami();
     // Pratipat is 0.00...0.99, Dvitiya is 1.00..1.99, etc
-    static constexpr double Dashami = 9.0;
-    static constexpr double Ekadashi = 10.0;
-    static constexpr double Dashami_End = Ekadashi;
-    static constexpr double Dvadashi = 11.0;
-    static constexpr double Ekadashi_End = Dvadashi;
-    static constexpr double Trayodashi = 12.0;
-    static constexpr double Dvadashi_End = Trayodashi;
+    static constexpr Tithi Dashami() { return Tithi{9.0}; }
+    static constexpr Tithi Ekadashi() { return Tithi{10.0}; }
+    static constexpr Tithi Dashami_End() { return Ekadashi(); }
+    static constexpr Tithi Dvadashi() { return Tithi{11.0}; }
+    static constexpr Tithi Ekadashi_End() { return Dvadashi(); }
+    static constexpr Tithi Trayodashi() { return Tithi{12.0}; }
+    static constexpr Tithi Dvadashi_End() { return Trayodashi(); }
 
     friend bool operator ==(Tithi const &t1, Tithi const &t2);
     friend bool operator !=(Tithi const &t1, Tithi const &t2);

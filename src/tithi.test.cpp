@@ -54,49 +54,49 @@ TEST_CASE("is Dashami") {
 }
 
 TEST_CASE("can construct and compare Tithi using symbolic names") {
-    REQUIRE(Tithi{Tithi::Dashami} == Tithi{9});
-    REQUIRE(Tithi{Tithi::Dashami} != Tithi{9.1});
-    REQUIRE(Tithi{Tithi::Ekadashi} == Tithi{10});
-    REQUIRE(Tithi{Tithi::Dvadashi} == Tithi{11});
-    REQUIRE(Tithi{Tithi::Trayodashi} == Tithi{12});
+    REQUIRE(Tithi::Dashami() == Tithi{9});
+    REQUIRE(Tithi::Dashami() != Tithi{9.1});
+    REQUIRE(Tithi::Ekadashi() == Tithi{10});
+    REQUIRE(Tithi::Dvadashi() == Tithi{11});
+    REQUIRE(Tithi::Trayodashi() == Tithi{12});
 
-    REQUIRE(Tithi::Dashami_End == Approx(Tithi::Ekadashi));
-    REQUIRE(Tithi::Ekadashi_End == Approx(Tithi::Dvadashi));
-    REQUIRE(Tithi::Dvadashi_End == Approx(Tithi::Trayodashi));
+    REQUIRE(Tithi::Dashami_End() == Tithi::Ekadashi());
+    REQUIRE(Tithi::Ekadashi_End() == Tithi::Dvadashi());
+    REQUIRE(Tithi::Dvadashi_End() == Tithi::Trayodashi());
 }
 
 TEST_CASE("less than and greater than works for Tithi") {
-    REQUIRE(Tithi{Tithi::Ekadashi} < Tithi{Tithi::Dvadashi});
-    REQUIRE(Tithi{Tithi::Ekadashi} <= Tithi{Tithi::Dvadashi});
-    REQUIRE(Tithi{Tithi::Ekadashi} <= Tithi{Tithi::Ekadashi});
-    REQUIRE_FALSE(Tithi{Tithi::Dvadashi} <= Tithi{Tithi::Ekadashi});
-    REQUIRE(Tithi{Tithi::Ekadashi} > Tithi{Tithi::Dashami});
-    REQUIRE(Tithi{Tithi::Ekadashi} >= Tithi{Tithi::Dashami});
-    REQUIRE(Tithi{Tithi::Ekadashi} >= Tithi{Tithi::Ekadashi});
-    REQUIRE_FALSE(Tithi{Tithi::Ekadashi} >= Tithi{Tithi::Dvadashi});
+    REQUIRE(Tithi::Ekadashi() < Tithi::Dvadashi());
+    REQUIRE(Tithi::Ekadashi() <= Tithi::Dvadashi());
+    REQUIRE(Tithi::Ekadashi() <= Tithi::Ekadashi());
+    REQUIRE_FALSE(Tithi::Dvadashi() <= Tithi::Ekadashi());
+    REQUIRE(Tithi::Ekadashi() > Tithi::Dashami());
+    REQUIRE(Tithi::Ekadashi() >= Tithi::Dashami());
+    REQUIRE(Tithi::Ekadashi() >= Tithi::Ekadashi());
+    REQUIRE_FALSE(Tithi::Ekadashi() >= Tithi::Dvadashi());
 }
 
 TEST_CASE("delta_until_tithi") {
-    REQUIRE(Tithi{Tithi::Ekadashi}.positive_delta_until_tithi(Tithi{Tithi::Dvadashi}) == 1.0);
-    REQUIRE(Tithi{Tithi::Dvadashi}.positive_delta_until_tithi(Tithi{Tithi::Ekadashi}) == 29.0);
-    REQUIRE(Tithi{Tithi::Ekadashi}.delta_to_nearest_tithi(Tithi{Tithi::Dvadashi}) == 1.0);
-    REQUIRE(Tithi{Tithi::Dvadashi}.delta_to_nearest_tithi(Tithi{Tithi::Ekadashi}) == Approx(-1.0));
+    REQUIRE(Tithi::Ekadashi().positive_delta_until_tithi(Tithi::Dvadashi()) == 1.0);
+    REQUIRE(Tithi::Dvadashi().positive_delta_until_tithi(Tithi::Ekadashi()) == 29.0);
+    REQUIRE(Tithi::Ekadashi().delta_to_nearest_tithi(Tithi::Dvadashi()) == 1.0);
+    REQUIRE(Tithi::Dvadashi().delta_to_nearest_tithi(Tithi::Ekadashi()) == Approx(-1.0));
 }
 
 TEST_CASE("Can substract Tithis") {
-    REQUIRE(Tithi{Tithi::Dvadashi} - Tithi{Tithi::Dashami} == 2.0);
+    REQUIRE(Tithi::Dvadashi() - Tithi::Dashami() == 2.0);
 }
 
 TEST_CASE("Can add double to Tithi") {
-    REQUIRE(Tithi{Tithi::Dashami} + 2.0 == Tithi{Tithi::Dvadashi});
+    REQUIRE(Tithi::Dashami() + 2.0 == Tithi::Dvadashi());
 }
 
 TEST_CASE("Can substract double from Tithi") {
-    REQUIRE(Tithi{Tithi::Dvadashi} - 2.0 == Tithi{Tithi::Dashami});
+    REQUIRE(Tithi::Dvadashi() - 2.0 == Tithi::Dashami());
 }
 
 TEST_CASE("Tithi += double should work") {
-    Tithi t{Tithi::Ekadashi};
+    Tithi t{Tithi::Ekadashi()};
     t += 1.0;
-    REQUIRE(t == Tithi{Tithi::Dvadashi});
+    REQUIRE(t == Tithi::Dvadashi());
 }

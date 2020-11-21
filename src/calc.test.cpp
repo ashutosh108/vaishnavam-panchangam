@@ -380,7 +380,7 @@ TEST_CASE("Ekadashi 2019-03-17") {
 
 TEST_CASE("find_tithi_start gives what we expect (close to the target tithi)") {
     JulDays_UT from{2019_y/March/17};
-    Tithi expected_tithi{Tithi::Dvadashi_End};
+    Tithi expected_tithi{Tithi::Dvadashi_End()};
     Calc calc{fredericton_coord};
 
     auto actual_time = calc.find_tithi_start(from, expected_tithi);
@@ -400,37 +400,33 @@ auto get_next_tithi_wrapper(Location coord, JulDays_UT from, Tithi tithi) {
 
 TEST_CASE("find_tithi_start breaks out from eternal loop") {
     JulDays_UT from{2019_y/April/29, double_hours{2.0411111153662205}};
-    Tithi tithi{Tithi::Ekadashi};
-    (void) get_next_tithi_wrapper(london_coord, from, tithi);
+    (void) get_next_tithi_wrapper(london_coord, from, Tithi::Ekadashi());
 }
 
 TEST_CASE("get_next_tithi() returns Shukla Ekadashi after Shukla something tithi") {
     Calc const calc{london_coord};
     JulDays_UT const from{2019_y/May/12};
-    Tithi const tithi{Tithi::Ekadashi};
-    auto actual_time = get_next_tithi_wrapper(calc, from, tithi);
+    auto actual_time = get_next_tithi_wrapper(calc, from, Tithi::Ekadashi());
     auto actual_tithi = calc.swe.get_tithi(actual_time);
-    REQUIRE(actual_tithi.tithi == Approx(Tithi{Tithi::Ekadashi}.tithi));
+    REQUIRE(actual_tithi == Tithi::Ekadashi());
     REQUIRE((actual_time - from) <= double_days{14});
 }
 
 TEST_CASE("get_next_tithi() returns Krishna Ekadashi after Krishna something tithi") {
     Calc const calc{london_coord};
     JulDays_UT const from{2019_y/April/25};
-    Tithi const tithi{Tithi::Ekadashi};
-    auto actual_time = get_next_tithi_wrapper(calc, from, tithi);
+    auto actual_time = get_next_tithi_wrapper(calc, from, Tithi::Ekadashi());
     auto actual_tithi = calc.swe.get_tithi(actual_time);
-    REQUIRE(actual_tithi.tithi-15.0 == Approx(Tithi{Tithi::Ekadashi}.tithi));
+    REQUIRE(actual_tithi.tithi-15.0 == Approx(Tithi::Ekadashi().tithi));
     REQUIRE((actual_time - from) <= double_days{14});
 }
 
 TEST_CASE("get_next_tithi() gives closest Ekadashi tithi for petropavlovsk after 2019-03-15") {
     Calc const calc{petropavlovskkamchatskiy_coord};
     JulDays_UT const from{2019_y/March/15};
-    Tithi const tithi{Tithi::Ekadashi};
-    auto actual_time = get_next_tithi_wrapper(calc, from, tithi);
+    auto actual_time = get_next_tithi_wrapper(calc, from, Tithi::Ekadashi());
     auto actual_tithi = calc.swe.get_tithi(actual_time);
-    REQUIRE(actual_tithi.tithi == Approx(Tithi{Tithi::Ekadashi}.tithi));
+    REQUIRE(actual_tithi.tithi == Approx(Tithi::Ekadashi().tithi));
     REQUIRE((actual_time - from) <= double_days{14});
 }
 

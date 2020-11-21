@@ -94,7 +94,7 @@ JulDays_UT Calc::calc_astronomical_midnight(date::year_month_day date) const {
  */
 tl::expected<JulDays_UT, CalcError> Calc::find_ekadashi_sunrise(JulDays_UT after) const
 {
-    const auto ekadashi = find_tithi_start(after, Tithi{Tithi::Ekadashi});
+    const auto ekadashi = find_tithi_start(after, Tithi::Ekadashi());
 
     return swe.find_sunrise(ekadashi);
 }
@@ -120,10 +120,10 @@ tl::expected<JulDays_UT, CalcError> Calc::sunset_before_sunrise(JulDays_UT const
 
 Vrata_Time_Points Calc::calc_key_times_from_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const
 {
-    const auto ekadashi_start = find_tithi_start(sunrise1 - double_hours{25.0}, Tithi{Tithi::Ekadashi});
-    const auto dashami_start = find_tithi_start(ekadashi_start - double_hours{27.0}, Tithi{Tithi::Dashami});
-    const auto dvadashi_start = find_tithi_start(ekadashi_start + double_hours{1.0}, Tithi{Tithi::Dvadashi});
-    const auto trayodashi_start = find_tithi_start(dvadashi_start + double_hours{1.0}, Tithi{Tithi::Trayodashi});
+    const auto ekadashi_start = find_tithi_start(sunrise1 - double_hours{25.0}, Tithi::Ekadashi());
+    const auto dashami_start = find_tithi_start(ekadashi_start - double_hours{27.0}, Tithi::Dashami());
+    const auto dvadashi_start = find_tithi_start(ekadashi_start + double_hours{1.0}, Tithi::Dvadashi());
+    const auto trayodashi_start = find_tithi_start(dvadashi_start + double_hours{1.0}, Tithi::Trayodashi());
 
     const double_days night_length = sunrise1 - sunset0;
     const double_days ghatika = night_length / 30.0;
