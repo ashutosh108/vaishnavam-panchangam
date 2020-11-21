@@ -237,111 +237,95 @@ tl::expected<JulDays_UT, CalcError> Calc::arunodaya_for_sunrise(JulDays_UT const
     return proportional_time(sunrise, *prev_sunset, proportion_arunodaya);
 }
 
-JulDays_UT Calc::find_either_tithi_start(JulDays_UT const from, Tithi const tithi) const
+namespace {
+template<class Value, class ValueGetter, class PosDeltaCalculator, class MinDeltaCalculator, class ExceptionThrower, class InitialTargetFixer>
+JulDays_UT find_time_with_given_value(
+    const JulDays_UT from,
+    Value target_value,
+    double_hours average_length,
+    ValueGetter getter,
+    PosDeltaCalculator pos_delta_calc,
+    MinDeltaCalculator min_delta_calc,
+    ExceptionThrower exception_thrower,
+    InitialTargetFixer initial_target_fixer)
 {
-    Tithi cur_tithi = swe.get_tithi(from);
+    Value cur_value = getter(from);
 
-    double initial_delta_tithi = cur_tithi.positive_delta_until_tithi(tithi);
-    // If delta_tithi >= 15 then actually there is
-    // another target tithi before the presumably target one
-    // (which we would miss with such a larget delta_tithi).
-    // Since target tithi is always < 15.0, just increase it
-    // by 15.0 because this function is supposed to find
-    // next nearest Tithi, whether it's Shukla or Krishna.
-    Tithi target_tithi = tithi;
-    if (initial_delta_tithi >= 15.0) {
-        target_tithi += 15.0;
-        initial_delta_tithi -= 15.0;
-    }
+    double initial_delta = pos_delta_calc(cur_value, target_value);
 
-    JulDays_UT time{from + initial_delta_tithi * Tithi::AverageLength()};
-    cur_tithi = swe.get_tithi(time);
+    initial_target_fixer(target_value, initial_delta);
 
-    double prev_abs_delta_tithi = std::numeric_limits<double>::max();
+    JulDays_UT time{from + initial_delta * average_length};
+    cur_value = getter(time);
+
+    double prev_abs_delta = std::numeric_limits<double>::max();
 
     constexpr int max_iterations = 1'000;
     int iteration = 0;
 
-    while (cur_tithi != target_tithi) {
-        double const delta_tithi = cur_tithi.delta_to_nearest_tithi(target_tithi);
-        time += delta_tithi * Tithi::AverageLength();
-        cur_tithi = swe.get_tithi(time);
+    while (cur_value != target_value) {
+        double const delta = min_delta_calc(cur_value, target_value);
+        time += delta * average_length;
+        cur_value = getter(time);
 
-        double const abs_delta_tithi = fabs(delta_tithi);
+        double const abs_delta = fabs(delta);
         // Check for calculations loop: break if delta stopped decreasing (by absolute vbalue).
-        if (abs_delta_tithi >= prev_abs_delta_tithi) {
+        if (abs_delta >= prev_abs_delta) {
             break;
         }
-        prev_abs_delta_tithi = abs_delta_tithi;
+        prev_abs_delta = abs_delta;
         if (++iteration >= max_iterations) {
-            throw CantFindTithiAfter{tithi, from};
+            exception_thrower(target_value, from);
         }
     }
     return time;
 }
+}
 
-JulDays_UT Calc::find_exact_tithi_start(JulDays_UT from, Tithi tithi) const
+JulDays_UT Calc::find_exact_tithi_start(JulDays_UT from, Tithi tithi) const {
+    return find_time_with_given_value(
+        from,
+        tithi,
+        Tithi::AverageLength(),
+        [this](JulDays_UT time) { return swe.get_tithi(time); },
+        [](Tithi t1, Tithi t2) { return t1.positive_delta_until_tithi(t2); },
+        [](Tithi t1, Tithi t2) { return t1.delta_to_nearest_tithi(t2); },
+        [](Tithi target, JulDays_UT from) { throw CantFindTithiAfter{target, from}; },
+        [](Tithi & /*target*/, double & /*delta*/) {}
+        );
+}
+
+JulDays_UT Calc::find_either_tithi_start(JulDays_UT from, Tithi tithi) const
 {
-    Tithi cur_tithi = swe.get_tithi(from);
-
-    double initial_delta_tithi = cur_tithi.positive_delta_until_tithi(tithi);
-
-    JulDays_UT time{from + initial_delta_tithi * Tithi::AverageLength()};
-    cur_tithi = swe.get_tithi(time);
-
-    double prev_abs_delta_tithi = std::numeric_limits<double>::max();
-
-    constexpr int max_iterations = 1'000;
-    int iteration = 0;
-
-    while (cur_tithi != tithi) {
-        double const delta_tithi = cur_tithi.delta_to_nearest_tithi(tithi);
-        time += delta_tithi * Tithi::AverageLength();
-        cur_tithi = swe.get_tithi(time);
-
-        double const abs_delta_tithi = fabs(delta_tithi);
-        // Check for calculations loop: break if delta stopped decreasing (by absolute vbalue).
-        if (abs_delta_tithi >= prev_abs_delta_tithi) {
-            break;
+    return find_time_with_given_value(
+        from,
+        tithi,
+        Tithi::AverageLength(),
+        [this](JulDays_UT time) { return swe.get_tithi(time); },
+        [](Tithi t1, Tithi t2) { return t1.positive_delta_until_tithi(t2); },
+        [](Tithi t1, Tithi t2) { return t1.delta_to_nearest_tithi(t2); },
+        [](Tithi target, JulDays_UT from) { throw CantFindTithiAfter{target, from}; },
+        [](Tithi & target, double & delta) {
+            if (delta >= 15.0) {
+                target += 15.0;
+                delta -= 15.0;
+            }
         }
-        prev_abs_delta_tithi = abs_delta_tithi;
-        if (++iteration >= max_iterations) {
-            throw CantFindTithiAfter{tithi, from};
-        }
-    }
-    return time;
+        );
 }
 
 JulDays_UT Calc::find_nakshatra_start(const JulDays_UT from, const Nakshatra target_nakshatra) const
 {
-    Nakshatra cur_nakshatra = swe.get_nakshatra(from);
-
-    double initial_delta_nakshatra = positive_delta_between_nakshatras(cur_nakshatra, target_nakshatra);
-
-    JulDays_UT time{from + initial_delta_nakshatra * Nakshatra::AverageLength()};
-    cur_nakshatra = swe.get_nakshatra(time);
-
-    double prev_abs_delta_nakshatra = std::numeric_limits<double>::max();
-
-    constexpr int max_iterations = 1'000;
-    int iteration = 0;
-
-    while (cur_nakshatra != target_nakshatra) {
-        double const delta_nakshatra = minimal_delta_between_nakshatras(cur_nakshatra, target_nakshatra);
-        time += delta_nakshatra * Nakshatra::AverageLength();
-        cur_nakshatra = swe.get_nakshatra(time);
-
-        double const abs_delta_nakshatra = fabs(delta_nakshatra);
-        // Check for calculations loop: break if delta stopped decreasing (by absolute vbalue).
-        if (abs_delta_nakshatra >= prev_abs_delta_nakshatra) {
-            break;
-        }
-        prev_abs_delta_nakshatra = abs_delta_nakshatra;
-        if (++iteration >= max_iterations) {
-            throw CantFindNakshatraAfter{target_nakshatra, from};
-        }
-    }
-    return time;
+    return find_time_with_given_value(
+        from,
+        target_nakshatra,
+        Nakshatra::AverageLength(),
+        [this](JulDays_UT time) { return swe.get_nakshatra(time); },
+        positive_delta_between_nakshatras,
+        minimal_delta_between_nakshatras,
+        [](Nakshatra target, JulDays_UT from) { throw CantFindNakshatraAfter{target, from}; },
+        [](Nakshatra & /*target*/, double & /*delta*/) {}
+        );
 }
 
 } // namespace vp
