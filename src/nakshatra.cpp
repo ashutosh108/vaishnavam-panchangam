@@ -2,13 +2,6 @@
 
 #include "fmt-format-fixed.h"
 
-vp::Nakshatra::Nakshatra(double nakshatra_value) : nakshatra(nakshatra_value)
-{
-    if (nakshatra < 0.0 || nakshatra >= 27.0) {
-        throw std::domain_error(fmt::format(FMT_STRING("nakshatra's value {} is outside of permitted range [0.0..28.0)."), nakshatra));
-    }
-}
-
 vp::Nakshatra::Nakshatra(vp::Nirayana_Longitude longitude) : Nakshatra(longitude.longitude * (27.0 / 360.0))
 {
 }

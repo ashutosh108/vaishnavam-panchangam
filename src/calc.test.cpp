@@ -678,21 +678,20 @@ TEST_CASE("find_nakshatra_start() works for simple cases from 2020-11 Palimaru p
     struct test_data {
         date::year_month_day date;
         std::chrono::seconds time;
-        double raw_nakshatra_value;
+        Nakshatra nakshatra;
     };
 
     auto data = GENERATE(
-        test_data{2020_y/11/1, 20h+57min, vp::Nakshatra::BHARANI_END},
-        test_data{2020_y/11/2, 23h+50min, vp::Nakshatra::KRITIKA_END},
-        test_data{2020_y/11/4, 2h+30min, vp::Nakshatra::ROHINI_END},
-        test_data{2020_y/11/5, 4h+51min, vp::Nakshatra::MRGASHIRSHA_END},
-        test_data{2020_y/11/6, 6h+45min, vp::Nakshatra::ARDRA_END},
-        test_data{2020_y/11/7, 8h+5min, vp::Nakshatra::PUNARVASU_END},
-        test_data{2020_y/11/8, 8h+45min, vp::Nakshatra::PUSHYA_END}
+        test_data{2020_y/11/1, 20h+57min, vp::Nakshatra::BHARANI_END()},
+        test_data{2020_y/11/2, 23h+50min, vp::Nakshatra::KRITIKA_END()},
+        test_data{2020_y/11/4, 2h+30min, vp::Nakshatra::ROHINI_END()},
+        test_data{2020_y/11/5, 4h+51min, vp::Nakshatra::MRGASHIRSHA_END()},
+        test_data{2020_y/11/6, 6h+45min, vp::Nakshatra::ARDRA_END()},
+        test_data{2020_y/11/7, 8h+5min, vp::Nakshatra::PUNARVASU_END()},
+        test_data{2020_y/11/8, 8h+45min, vp::Nakshatra::PUSHYA_END()}
         );
 
     auto from_date = vp::JulDays_UT{date::year_month_day{date::sys_days{data.date} - date::days{1}}};
-    auto target_nakshatra = vp::Nakshatra{data.raw_nakshatra_value};
-    auto time = calc.find_nakshatra_start(from_date, target_nakshatra);
+    auto time = calc.find_nakshatra_start(from_date, data.nakshatra);
     REQUIRE_THAT(time, EqualsRoundedToMinute(data.date, data.time, timezone_offset));
 }

@@ -15,66 +15,70 @@ class Nakshatra
 {
 public:
     double nakshatra;
-    explicit Nakshatra(double nakshatra_value);
+    explicit constexpr Nakshatra(double nakshatra_value) : nakshatra(nakshatra_value) {
+        if (nakshatra < 0.0 || nakshatra >= 27.0) {
+            throw std::domain_error(fmt::format(FMT_STRING("nakshatra's value {} is outside of permitted range [0.0..28.0)."), nakshatra));
+        }
+    }
     explicit Nakshatra(vp::Nirayana_Longitude longitude);
     Nakshatra floor() const;
     Nakshatra ceil() const;
     static double normalize(double raw_nakshatra);
 
-    static constexpr double ASHVINI_START = 0.0;
-    static constexpr double ASHVINI_END = 1.0;
-    static constexpr double BHARANI_START = 1.0;
-    static constexpr double BHARANI_END = 2.0;
-    static constexpr double KRITIKA_START = 2.0;
-    static constexpr double KRITIKA_END = 3.0;
-    static constexpr double ROHINI_START = 3.0;
-    static constexpr double ROHINI_END = 4.0;
-    static constexpr double MRGASHIRSHA_START = 4.0;
-    static constexpr double MRGASHIRSHA_END = 5.0;
-    static constexpr double ARDRA_START = 5.0;
-    static constexpr double ARDRA_END = 6.0;
-    static constexpr double PUNARVASU_START = 6.0;
-    static constexpr double PUNARVASU_END = 7.0;
-    static constexpr double PUSHYA_START = 7.0;
-    static constexpr double PUSHYA_END = 8.0;
-    static constexpr double ASHLESHA_START = 8.0;
-    static constexpr double ASHLESHA_END = 9.0;
-    static constexpr double MAGHA_START = 9.0;
-    static constexpr double MAGHA_END = 10.0;
-    static constexpr double PURVA_PHALGUNI_START = 10.0;
-    static constexpr double PURVA_PHALGUNI_END = 11.0;
-    static constexpr double UTTARA_PHALGUNI_START = 11.0;
-    static constexpr double UTTARA_PHALGUNI_END = 12.0;
-    static constexpr double HASTA_START = 12.0;
-    static constexpr double HASTA_END = 13.0;
-    static constexpr double CHITRA_START = 13.0;
-    static constexpr double CHITRA_END = 14.0;
-    static constexpr double SVATI_START = 14.0;
-    static constexpr double SVATI_END = 15.0;
-    static constexpr double VISHAKHA_START = 15.0;
-    static constexpr double VISHAKHA_END = 16.0;
-    static constexpr double ARUNDHATI_START = 16.0;
-    static constexpr double ARUNDHATI_END = 17.0;
-    static constexpr double JYESHTHA_START = 17.0;
-    static constexpr double JYESHTHA_END = 18.0;
-    static constexpr double MULA_START = 18.0;
-    static constexpr double MULA_END = 19.0;
-    static constexpr double PURVA_ASHADHA_START = 19.0;
-    static constexpr double PURVA_ASHADHA_END = 20.0;
-    static constexpr double UTTARA_ASHADHA_START = 20.0;
-    static constexpr double UTTARA_ASHADHA_END = 21.0;
-    static constexpr double SHRAVANA_START = 21.0;
-    static constexpr double SHRAVANA_END = 22.0;
-    static constexpr double DHANISTHA_START = 22.0;
-    static constexpr double DHANISTHA_END = 23.0;
-    static constexpr double SHATABHISHA_START = 23.0;
-    static constexpr double SHATABHISHA_END = 24.0;
-    static constexpr double PURVA_BHADRAPADA_START = 24.0;
-    static constexpr double PURVA_BHADRAPADA_END = 25.0;
-    static constexpr double UTTARA_BHADRAPADA_START = 25.0;
-    static constexpr double UTTARA_BHADRAPADA_END = 26.0;
-    static constexpr double REVATI_START = 26.0;
-    static constexpr double REVATI_END = 0.0;
+    static constexpr Nakshatra ASHVINI_START() { return Nakshatra{0.0}; }
+    static constexpr Nakshatra ASHVINI_END() { return Nakshatra{1.0}; }
+    static constexpr Nakshatra BHARANI_START() { return Nakshatra{1.0}; }
+    static constexpr Nakshatra BHARANI_END() { return Nakshatra{2.0}; }
+    static constexpr Nakshatra KRITIKA_START() { return Nakshatra{2.0}; }
+    static constexpr Nakshatra KRITIKA_END() { return Nakshatra{3.0}; }
+    static constexpr Nakshatra ROHINI_START() { return Nakshatra{3.0}; }
+    static constexpr Nakshatra ROHINI_END() { return Nakshatra{4.0}; }
+    static constexpr Nakshatra MRGASHIRSHA_START() { return Nakshatra{4.0}; }
+    static constexpr Nakshatra MRGASHIRSHA_END() { return Nakshatra{5.0}; }
+    static constexpr Nakshatra ARDRA_START() { return Nakshatra{5.0}; }
+    static constexpr Nakshatra ARDRA_END() { return Nakshatra{6.0}; }
+    static constexpr Nakshatra PUNARVASU_START() { return Nakshatra{6.0}; }
+    static constexpr Nakshatra PUNARVASU_END() { return Nakshatra{7.0}; }
+    static constexpr Nakshatra PUSHYA_START() { return Nakshatra{7.0}; }
+    static constexpr Nakshatra PUSHYA_END() { return Nakshatra{8.0}; }
+    static constexpr Nakshatra ASHLESHA_START() { return Nakshatra{8.0}; }
+    static constexpr Nakshatra ASHLESHA_END() { return Nakshatra{9.0}; }
+    static constexpr Nakshatra MAGHA_START() { return Nakshatra{9.0}; }
+    static constexpr Nakshatra MAGHA_END() { return Nakshatra{10.0}; }
+    static constexpr Nakshatra PURVA_PHALGUNI_START() { return Nakshatra{10.0}; }
+    static constexpr Nakshatra PURVA_PHALGUNI_END() { return Nakshatra{11.0}; }
+    static constexpr Nakshatra UTTARA_PHALGUNI_START() { return Nakshatra{11.0}; }
+    static constexpr Nakshatra UTTARA_PHALGUNI_END() { return Nakshatra{12.0}; }
+    static constexpr Nakshatra HASTA_START() { return Nakshatra{12.0}; }
+    static constexpr Nakshatra HASTA_END() { return Nakshatra{13.0}; }
+    static constexpr Nakshatra CHITRA_START() { return Nakshatra{13.0}; }
+    static constexpr Nakshatra CHITRA_END() { return Nakshatra{14.0}; }
+    static constexpr Nakshatra SVATI_START() { return Nakshatra{14.0}; }
+    static constexpr Nakshatra SVATI_END() { return Nakshatra{15.0}; }
+    static constexpr Nakshatra VISHAKHA_START() { return Nakshatra{15.0}; }
+    static constexpr Nakshatra VISHAKHA_END() { return Nakshatra{16.0}; }
+    static constexpr Nakshatra ARUNDHATI_START() { return Nakshatra{16.0}; }
+    static constexpr Nakshatra ARUNDHATI_END() { return Nakshatra{17.0}; }
+    static constexpr Nakshatra JYESHTHA_START() { return Nakshatra{17.0}; }
+    static constexpr Nakshatra JYESHTHA_END() { return Nakshatra{18.0}; }
+    static constexpr Nakshatra MULA_START() { return Nakshatra{18.0}; }
+    static constexpr Nakshatra MULA_END() { return Nakshatra{19.0}; }
+    static constexpr Nakshatra PURVA_ASHADHA_START() { return Nakshatra{19.0}; }
+    static constexpr Nakshatra PURVA_ASHADHA_END() { return Nakshatra{20.0}; }
+    static constexpr Nakshatra UTTARA_ASHADHA_START() { return Nakshatra{20.0}; }
+    static constexpr Nakshatra UTTARA_ASHADHA_END() { return Nakshatra{21.0}; }
+    static constexpr Nakshatra SHRAVANA_START() { return Nakshatra{21.0}; }
+    static constexpr Nakshatra SHRAVANA_END() { return Nakshatra{22.0}; }
+    static constexpr Nakshatra DHANISTHA_START() { return Nakshatra{22.0}; }
+    static constexpr Nakshatra DHANISTHA_END() { return Nakshatra{23.0}; }
+    static constexpr Nakshatra SHATABHISHA_START() { return Nakshatra{23.0}; }
+    static constexpr Nakshatra SHATABHISHA_END() { return Nakshatra{24.0}; }
+    static constexpr Nakshatra PURVA_BHADRAPADA_START() { return Nakshatra{24.0}; }
+    static constexpr Nakshatra PURVA_BHADRAPADA_END() { return Nakshatra{25.0}; }
+    static constexpr Nakshatra UTTARA_BHADRAPADA_START() { return Nakshatra{25.0}; }
+    static constexpr Nakshatra UTTARA_BHADRAPADA_END() { return Nakshatra{26.0}; }
+    static constexpr Nakshatra REVATI_START() { return Nakshatra{26.0}; }
+    static constexpr Nakshatra REVATI_END() { return Nakshatra{0.0}; }
 };
 
 
