@@ -40,6 +40,7 @@ public:
     // get arunodaya(= sunrise - night_length/8) for given sunrise
     tl::expected<JulDays_UT, CalcError> arunodaya_for_sunrise(JulDays_UT sunrise) const;
 
+    // find Shukla- or Krishna- tithi - whichever is closest. Expects Tithi argument to be < 15.0 (shukla paksha)
     JulDays_UT find_tithi_start(JulDays_UT, Tithi) const;
     JulDays_UT find_nakshatra_start(const JulDays_UT, const Nakshatra) const;
 

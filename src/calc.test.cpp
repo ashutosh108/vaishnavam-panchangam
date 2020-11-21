@@ -408,7 +408,7 @@ TEST_CASE("get_next_tithi() returns Shukla Ekadashi after Shukla something tithi
     JulDays_UT const from{2019_y/May/12};
     auto actual_time = get_next_tithi_wrapper(calc, from, Tithi::Ekadashi());
     auto actual_tithi = calc.swe.get_tithi(actual_time);
-    REQUIRE(actual_tithi == Tithi::Ekadashi());
+    REQUIRE(actual_tithi.tithi == Approx{Tithi::Ekadashi().tithi});
     REQUIRE((actual_time - from) <= double_days{14});
 }
 
