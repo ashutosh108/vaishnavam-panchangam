@@ -120,8 +120,8 @@ tl::expected<JulDays_UT, CalcError> Calc::sunset_before_sunrise(JulDays_UT const
 
 Vrata_Time_Points Calc::calc_key_times_from_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const
 {
-    const auto ekadashi_start = find_either_tithi_start(sunrise1 - double_hours{25.0}, Tithi::Ekadashi());
-    const auto dashami_start = find_either_tithi_start(ekadashi_start - double_hours{27.0}, Tithi::Dashami());
+    const auto ekadashi_start = find_either_tithi_start(sunrise1 - Tithi::MaxLength(), Tithi::Ekadashi());
+    const auto dashami_start = find_either_tithi_start(ekadashi_start - Tithi::MaxLength(), Tithi::Dashami());
     const auto dvadashi_start = find_either_tithi_start(ekadashi_start + double_hours{1.0}, Tithi::Dvadashi());
     const auto trayodashi_start = find_either_tithi_start(dvadashi_start + double_hours{1.0}, Tithi::Trayodashi());
 
@@ -239,8 +239,6 @@ tl::expected<JulDays_UT, CalcError> Calc::arunodaya_for_sunrise(JulDays_UT const
 
 JulDays_UT Calc::find_either_tithi_start(JulDays_UT const from, Tithi const tithi) const
 {
-    using namespace std::literals::chrono_literals;
-    constexpr double_hours average_tithi_length = 23h + 37min;
     Tithi cur_tithi = swe.get_tithi(from);
 
     double initial_delta_tithi = cur_tithi.positive_delta_until_tithi(tithi);
@@ -256,7 +254,7 @@ JulDays_UT Calc::find_either_tithi_start(JulDays_UT const from, Tithi const tith
         initial_delta_tithi -= 15.0;
     }
 
-    JulDays_UT time{from + initial_delta_tithi * average_tithi_length};
+    JulDays_UT time{from + initial_delta_tithi * Tithi::AverageLength()};
     cur_tithi = swe.get_tithi(time);
 
     double prev_abs_delta_tithi = std::numeric_limits<double>::max();
@@ -266,7 +264,7 @@ JulDays_UT Calc::find_either_tithi_start(JulDays_UT const from, Tithi const tith
 
     while (cur_tithi != target_tithi) {
         double const delta_tithi = cur_tithi.delta_to_nearest_tithi(target_tithi);
-        time += delta_tithi * average_tithi_length;
+        time += delta_tithi * Tithi::AverageLength();
         cur_tithi = swe.get_tithi(time);
 
         double const abs_delta_tithi = fabs(delta_tithi);
@@ -284,13 +282,11 @@ JulDays_UT Calc::find_either_tithi_start(JulDays_UT const from, Tithi const tith
 
 JulDays_UT Calc::find_exact_tithi_start(JulDays_UT from, Tithi tithi) const
 {
-    using namespace std::literals::chrono_literals;
-    constexpr double_hours average_tithi_length = 23h + 37min;
     Tithi cur_tithi = swe.get_tithi(from);
 
     double initial_delta_tithi = cur_tithi.positive_delta_until_tithi(tithi);
 
-    JulDays_UT time{from + initial_delta_tithi * average_tithi_length};
+    JulDays_UT time{from + initial_delta_tithi * Tithi::AverageLength()};
     cur_tithi = swe.get_tithi(time);
 
     double prev_abs_delta_tithi = std::numeric_limits<double>::max();
@@ -300,7 +296,7 @@ JulDays_UT Calc::find_exact_tithi_start(JulDays_UT from, Tithi tithi) const
 
     while (cur_tithi != tithi) {
         double const delta_tithi = cur_tithi.delta_to_nearest_tithi(tithi);
-        time += delta_tithi * average_tithi_length;
+        time += delta_tithi * Tithi::AverageLength();
         cur_tithi = swe.get_tithi(time);
 
         double const abs_delta_tithi = fabs(delta_tithi);
@@ -318,15 +314,11 @@ JulDays_UT Calc::find_exact_tithi_start(JulDays_UT from, Tithi tithi) const
 
 JulDays_UT Calc::find_nakshatra_start(const JulDays_UT from, const Nakshatra target_nakshatra) const
 {
-    // TODO: implement
-//    return from;
-    using namespace std::literals::chrono_literals;
-    constexpr double_hours average_nakshatra_length = 24h + 17min + 9.36s; // from "Basics of Panchangam" by S.Narasimha Rao, p.21
     Nakshatra cur_nakshatra = swe.get_nakshatra(from);
 
     double initial_delta_nakshatra = positive_delta_between_nakshatras(cur_nakshatra, target_nakshatra);
 
-    JulDays_UT time{from + initial_delta_nakshatra * average_nakshatra_length};
+    JulDays_UT time{from + initial_delta_nakshatra * Nakshatra::AverageLength()};
     cur_nakshatra = swe.get_nakshatra(time);
 
     double prev_abs_delta_nakshatra = std::numeric_limits<double>::max();
@@ -336,7 +328,7 @@ JulDays_UT Calc::find_nakshatra_start(const JulDays_UT from, const Nakshatra tar
 
     while (cur_nakshatra != target_nakshatra) {
         double const delta_nakshatra = minimal_delta_between_nakshatras(cur_nakshatra, target_nakshatra);
-        time += delta_nakshatra * average_nakshatra_length;
+        time += delta_nakshatra * Nakshatra::AverageLength();
         cur_nakshatra = swe.get_nakshatra(time);
 
         double const abs_delta_nakshatra = fabs(delta_nakshatra);

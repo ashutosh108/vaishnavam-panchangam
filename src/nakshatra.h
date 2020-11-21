@@ -2,6 +2,7 @@
 #define NAKSHATRA_H
 
 #include <cmath>
+#include <chrono>
 #include "fmt-format-fixed.h"
 #include <string>
 
@@ -79,6 +80,11 @@ public:
     static constexpr Nakshatra UTTARA_BHADRAPADA_END() { return Nakshatra{26.0}; }
     static constexpr Nakshatra REVATI_START() { return Nakshatra{26.0}; }
     static constexpr Nakshatra REVATI_END() { return Nakshatra{0.0}; }
+
+    static constexpr std::chrono::duration<double, std::ratio<3600>> AverageLength() {
+        using namespace std::literals::chrono_literals;
+        return 24h + 17min + 9.36s; // from "Basics of Panchangam" by S.Narasimha Rao, p.21
+    }
 };
 
 

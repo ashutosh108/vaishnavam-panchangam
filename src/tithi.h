@@ -2,6 +2,7 @@
 #define TITHI_H
 
 #include <cassert>
+#include <chrono>
 #include "fmt-format-fixed.h"
 #include <string_view>
 
@@ -33,6 +34,17 @@ struct Tithi {
     static constexpr Tithi Trayodashi() { return Tithi{12.0}; }
     static constexpr Tithi Dvadashi_End() { return Trayodashi(); }
     static constexpr Tithi Krishna_Saptami() { return Tithi{15.0 + 6.0}; }
+
+    static constexpr std::chrono::duration<double, std::ratio<3600>> AverageLength() {
+        using namespace std::literals::chrono_literals;
+        return 23h + 37min + 28.092s; // from "Basics of Panchangam" by S.Narasimha Rao, p.12
+    };
+    static constexpr std::chrono::duration<double, std::ratio<3600>> MaxLength() {
+        using namespace std::literals::chrono_literals;
+        // "Basics of Panchangam" by S.Narasimha Rao, p.12 states 26h 6min 24s, but I've found cases of somewhat longer tithis
+        // (at least 26h 26m 15.36s long for 2020-05-17 ekadadshi), so 27h it is, to be safe.
+        return 27h;
+    }
 
     friend bool operator ==(Tithi const &t1, Tithi const &t2);
     friend bool operator !=(Tithi const &t1, Tithi const &t2);
