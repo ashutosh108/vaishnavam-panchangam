@@ -383,14 +383,14 @@ TEST_CASE("find_tithi_start gives what we expect (close to the target tithi)") {
     Tithi expected_tithi{Tithi::Dvadashi_End()};
     Calc calc{fredericton_coord};
 
-    auto actual_time = calc.find_tithi_start(from, expected_tithi);
+    auto actual_time = calc.find_either_tithi_start(from, expected_tithi);
 
     Tithi actual_tithi = calc.swe.get_tithi(actual_time);
     REQUIRE(expected_tithi == actual_tithi);
 }
 
 auto get_next_tithi_wrapper(Calc const &calc, JulDays_UT from, Tithi tithi) {
-    return calc.find_tithi_start(from, tithi);
+    return calc.find_either_tithi_start(from, tithi);
 }
 
 auto get_next_tithi_wrapper(Location coord, JulDays_UT from, Tithi tithi) {

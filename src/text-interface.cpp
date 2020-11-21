@@ -223,10 +223,10 @@ void detail_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::C
     auto start = from - std::chrono::hours{36};
     // need "!=" to handle cross-amavasya cases correctly, when max_tithi is less than min_tithi
     for (vp::Tithi tithi = min_tithi; tithi != max_tithi; tithi += 1.0) {
-        auto tithi_start = calc.find_tithi_start(start, tithi);
+        auto tithi_start = calc.find_either_tithi_start(start, tithi);
         events.push_back(NamedTimePoint{fmt::format("{:d} starts", tithi), tithi_start, NamedTimePoint::Print_Tithi::No});
         if (tithi.is_dvadashi()) {
-            auto dvadashi_quarter_end = calc.find_tithi_start(start, tithi+0.25);
+            auto dvadashi_quarter_end = calc.find_either_tithi_start(start, tithi+0.25);
             events.push_back(NamedTimePoint{fmt::format("First quarter of {:d} ends", tithi), dvadashi_quarter_end});
         }
     }
