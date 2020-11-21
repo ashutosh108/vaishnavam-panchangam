@@ -78,6 +78,11 @@ Swe::Swe(Location coord_, CalcFlags flags):location(coord_)
     char ephepath[] = "eph";
     swe_set_ephe_path(ephepath);
     swe_set_topo(location.longitude.longitude, location.latitude.latitude, 0);
+
+    swe_set_sid_mode(
+        detail::ayanamsha,
+        0/*t0, unused since predefined mode is given as first argument*/,
+        0/*ayan_t0, unused since predefined mode is given as first argument*/);
 }
 
 Swe::~Swe()
@@ -232,12 +237,7 @@ Tithi Swe::get_tithi(JulDays_UT time) const
 
 Nirayana_Longitude Swe::get_moon_longitude_sidereal(JulDays_UT time) const
 {
-//    throw std::runtime_error("get_moon_longitude_sidereal is not implemented yet");
     double res[6];
-    swe_set_sid_mode(
-        detail::ayanamsha,
-        0/*t0, unused since predefined mode is given as first argument*/,
-        0/*ayan_t0, unused since predefined mode is given as first argument*/);
     do_calc_ut(time.raw_julian_days_ut().count(), SE_MOON, ephemeris_flags | SEFLG_SIDEREAL, res);
     return Nirayana_Longitude{res[0]};
 }
@@ -248,4 +248,11 @@ Nakshatra Swe::get_nakshatra(JulDays_UT time) const
     return Nakshatra{moon_longitude_sidereal.longitude * (27.0/360.0)};
 }
 
-} // namespace swe
+Nirayana_Longitude Swe::surya_nirayana_longitude(JulDays_UT time) const
+{
+    double res[6];
+    do_calc_ut(time.raw_julian_days_ut().count(), SE_SUN, ephemeris_flags | SEFLG_SIDEREAL, res);
+    return Nirayana_Longitude{res[0]};
+}
+
+} // namespace vp

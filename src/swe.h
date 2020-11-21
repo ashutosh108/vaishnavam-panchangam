@@ -36,6 +36,7 @@ public:
     Tithi get_tithi(JulDays_UT time) const;
     Nirayana_Longitude get_moon_longitude_sidereal(JulDays_UT time) const;
     Nakshatra get_nakshatra(JulDays_UT time) const;
+    Nirayana_Longitude surya_nirayana_longitude(JulDays_UT time) const;
 private:
     // remember to update move-contructor and and move-assigment when adding/changing fields
     bool need_to_close = true;

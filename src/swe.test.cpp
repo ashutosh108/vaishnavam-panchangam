@@ -128,3 +128,19 @@ TEST_CASE("get_moon_longitude_sidereal works for known case (Rohini end on 2020-
     CHECK(actual1.longitude <= expected.longitude);
     REQUIRE(actual2.longitude >= expected.longitude);
 }
+
+TEST_CASE("surya_nirayana_longitude() works for known date of Mesha sankranti") {
+    // mesha sankranti (corresponding to 0 degrees surya nirayana longitude) generally occurs on April 13th or 14th,
+    // so expect it to be > 13th UTC midnight but < 15th UTC midnight
+    JulDays_UT earliest{2020_y/April/13};
+    JulDays_UT latest{2020_y/April/15};
+    Swe swe{arbitrary_coord};
+
+    Nirayana_Longitude l1 = swe.surya_nirayana_longitude(earliest);
+    Nirayana_Longitude l2 = swe.surya_nirayana_longitude(latest);
+
+    CAPTURE(l1.longitude);
+    CAPTURE(l2.longitude);
+    REQUIRE(l1.longitude > 357.0);
+    REQUIRE(l2.longitude < 3.0);
+}

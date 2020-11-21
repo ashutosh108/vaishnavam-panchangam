@@ -1,3 +1,4 @@
+[ ] add find_next_sankramana() (change into next nirayana solar month)
 [ ] Table: add Russian version
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone):
 [ ] -> lat/long input activated => change text to decimal
@@ -248,3 +249,4 @@ done:
 [+] add tests for comparing our data with existing drg-gaNita panchangas (Palimaru and Puttige) [2020-11-17]
 [+] fix catch2 linking (must only be in test executables) [2020-11-19]
 [+] day-by-day: print nakshatra start times [2020-11-20]
+[+] add surya_nirayana_longitude() [2020-11-21]
