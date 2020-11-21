@@ -230,7 +230,7 @@ Tithi Swe::get_tithi(JulDays_UT time) const
     return Tithi{diff / (360.0/30)};
 }
 
-Longitude_sidereal Swe::get_moon_longitude_sidereal(JulDays_UT time) const
+Nirayana_Longitude Swe::get_moon_longitude_sidereal(JulDays_UT time) const
 {
 //    throw std::runtime_error("get_moon_longitude_sidereal is not implemented yet");
     double res[6];
@@ -239,7 +239,7 @@ Longitude_sidereal Swe::get_moon_longitude_sidereal(JulDays_UT time) const
         0/*t0, unused since predefined mode is given as first argument*/,
         0/*ayan_t0, unused since predefined mode is given as first argument*/);
     do_calc_ut(time.raw_julian_days_ut().count(), SE_MOON, ephemeris_flags | SEFLG_SIDEREAL, res);
-    return Longitude_sidereal{res[0]};
+    return Nirayana_Longitude{res[0]};
 }
 
 Nakshatra Swe::get_nakshatra(JulDays_UT time) const

@@ -118,7 +118,7 @@ TEST_CASE("get_moon_longitude_sidereal works for known case (Rohini end on 2020-
     const auto actual1 = vp::Swe{udupi}.get_moon_longitude_sidereal(t1);
     const auto actual2 = vp::Swe{udupi}.get_moon_longitude_sidereal(t2);
 
-    const vp::Longitude_sidereal expected{4.0 * (360.0 / 27.0)};
+    const vp::Nirayana_Longitude expected{4.0 * (360.0 / 27.0)};
 
     CAPTURE(t1);
     CAPTURE(t2);

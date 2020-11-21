@@ -9,7 +9,7 @@ vp::Nakshatra::Nakshatra(double nakshatra_value) : nakshatra(nakshatra_value)
     }
 }
 
-vp::Nakshatra::Nakshatra(vp::Longitude_sidereal longitude) : Nakshatra(longitude.longitude * (27.0 / 360.0))
+vp::Nakshatra::Nakshatra(vp::Nirayana_Longitude longitude) : Nakshatra(longitude.longitude * (27.0 / 360.0))
 {
 }
 

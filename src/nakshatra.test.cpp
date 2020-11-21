@@ -10,8 +10,8 @@ TEST_CASE("positive_delta_between_nakshatras works for zero-crossing pair as wel
 }
 
 TEST_CASE("positive_delta_between_nakshatras works for zero-crossing pairs when using raw longitude") {
-    vp::Nakshatra n1{vp::Longitude_sidereal{360 * 24.0/27.0}};
-    vp::Nakshatra n2{vp::Longitude_sidereal{360 * 3.0/27.0}};
+    vp::Nakshatra n1{vp::Nirayana_Longitude{360 * 24.0/27.0}};
+    vp::Nakshatra n2{vp::Nirayana_Longitude{360 * 3.0/27.0}};
     REQUIRE(vp::positive_delta_between_nakshatras(n1, n2) == 6.0);
 }
 
@@ -23,8 +23,8 @@ TEST_CASE("creating nakshatra with value <0 or >=27 throws") {
 
 TEST_CASE("creating nakshatra with longitude <0 or >=360 throws") {
     vp::Nakshatra n{0.0};
-    REQUIRE_THROWS(n = vp::Nakshatra{vp::Longitude_sidereal{-1.0}});
-    REQUIRE_THROWS(n = vp::Nakshatra{vp::Longitude_sidereal{360.0}});
+    REQUIRE_THROWS(n = vp::Nakshatra{vp::Nirayana_Longitude{-1.0}});
+    REQUIRE_THROWS(n = vp::Nakshatra{vp::Nirayana_Longitude{360.0}});
 }
 
 TEST_CASE("minimal_delta_between_nakshatras works for zero-crossing pair") {

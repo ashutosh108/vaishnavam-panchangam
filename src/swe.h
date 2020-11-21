@@ -34,7 +34,7 @@ public:
     double get_moon_longitude(JulDays_UT time) const;
     /** Get tithi as double [0..30) */
     Tithi get_tithi(JulDays_UT time) const;
-    Longitude_sidereal get_moon_longitude_sidereal(JulDays_UT time) const;
+    Nirayana_Longitude get_moon_longitude_sidereal(JulDays_UT time) const;
     Nakshatra get_nakshatra(JulDays_UT time) const;
 private:
     // remember to update move-contructor and and move-assigment when adding/changing fields

@@ -7,7 +7,7 @@
 
 namespace vp {
 
-struct Longitude_sidereal {
+struct Nirayana_Longitude {
     double longitude;
 };
 
@@ -16,7 +16,7 @@ class Nakshatra
 public:
     double nakshatra;
     explicit Nakshatra(double nakshatra_value);
-    explicit Nakshatra(vp::Longitude_sidereal longitude);
+    explicit Nakshatra(vp::Nirayana_Longitude longitude);
     Nakshatra floor() const;
     Nakshatra ceil() const;
     static double normalize(double raw_nakshatra);
