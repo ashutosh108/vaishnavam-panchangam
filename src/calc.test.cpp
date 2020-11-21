@@ -691,3 +691,13 @@ TEST_CASE("find_nakshatra_start() works for simple cases from 2020-11 Palimaru p
     auto time = calc.find_nakshatra_start(from_date, data.nakshatra);
     REQUIRE_THAT(time, EqualsRoundedToMinute(data.date, data.time, timezone_offset));
 }
+
+TEST_CASE("find_exact_tithi_start() works for second paksha (tithis >= 15)") {
+    auto calc = Calc{sample_location};
+    const auto start_time = JulDays_UT{2020_y/November/20};
+    const auto time = calc.find_exact_tithi_start(start_time, Tithi::Krishna_Saptami());
+
+    // shukla saptami is very close (within 2 days) of start time. So ensure we found next saptami
+    REQUIRE(time - start_time >= double_days{10});
+    REQUIRE(calc.swe.get_tithi(time).tithi == Approx(Tithi::Krishna_Saptami().tithi));
+}

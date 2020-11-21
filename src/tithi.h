@@ -32,6 +32,7 @@ struct Tithi {
     static constexpr Tithi Ekadashi_End() { return Dvadashi(); }
     static constexpr Tithi Trayodashi() { return Tithi{12.0}; }
     static constexpr Tithi Dvadashi_End() { return Trayodashi(); }
+    static constexpr Tithi Krishna_Saptami() { return Tithi{15.0 + 6.0}; }
 
     friend bool operator ==(Tithi const &t1, Tithi const &t2);
     friend bool operator !=(Tithi const &t1, Tithi const &t2);

@@ -282,6 +282,40 @@ JulDays_UT Calc::find_either_tithi_start(JulDays_UT const from, Tithi const tith
     return time;
 }
 
+JulDays_UT Calc::find_exact_tithi_start(JulDays_UT from, Tithi tithi) const
+{
+    using namespace std::literals::chrono_literals;
+    constexpr double_hours average_tithi_length = 23h + 37min;
+    Tithi cur_tithi = swe.get_tithi(from);
+
+    double initial_delta_tithi = cur_tithi.positive_delta_until_tithi(tithi);
+
+    JulDays_UT time{from + initial_delta_tithi * average_tithi_length};
+    cur_tithi = swe.get_tithi(time);
+
+    double prev_abs_delta_tithi = std::numeric_limits<double>::max();
+
+    constexpr int max_iterations = 1'000;
+    int iteration = 0;
+
+    while (cur_tithi != tithi) {
+        double const delta_tithi = cur_tithi.delta_to_nearest_tithi(tithi);
+        time += delta_tithi * average_tithi_length;
+        cur_tithi = swe.get_tithi(time);
+
+        double const abs_delta_tithi = fabs(delta_tithi);
+        // Check for calculations loop: break if delta stopped decreasing (by absolute vbalue).
+        if (abs_delta_tithi >= prev_abs_delta_tithi) {
+            break;
+        }
+        prev_abs_delta_tithi = abs_delta_tithi;
+        if (++iteration >= max_iterations) {
+            throw CantFindTithiAfter{tithi, from};
+        }
+    }
+    return time;
+}
+
 JulDays_UT Calc::find_nakshatra_start(const JulDays_UT from, const Nakshatra target_nakshatra) const
 {
     // TODO: implement

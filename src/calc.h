@@ -42,6 +42,8 @@ public:
 
     // find Shukla- or Krishna- tithi - whichever is closest. Expects Tithi argument to be < 15.0 (shukla paksha)
     JulDays_UT find_either_tithi_start(JulDays_UT, Tithi) const;
+    // find exactly given tithi (Shukla- or Krishna-), even if another paksha's tithi is closer.
+    JulDays_UT find_exact_tithi_start(JulDays_UT, Tithi) const;
     JulDays_UT find_nakshatra_start(const JulDays_UT, const Nakshatra) const;
 
     static JulDays_UT proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion);
