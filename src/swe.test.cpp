@@ -106,26 +106,25 @@ TEST_CASE("sunrise with refraction off comes 3-5 minutes before actual observed 
     REQUIRE(diff < 5min);
 }
 
-#if 0 // uncomment after finishing get_moon_longitude_fixedstars implementation
-TEST_CASE("get_moon_longitude_fixedstars works for known case (Rohini end on 2020-11-03 is 2:30am next day in India)") {
-    Location loc{28'39'00_N,  77'13'00_E};
+TEST_CASE("get_moon_longitude_sidereal works for known case (Rohini end on 2020-11-03 is 2:30am next day in India)") {
+    Location udupi{28'39'00_N,  77'13'00_E};
     constexpr auto timezone_offset = 5h+30min; // IST
     // bracket is [t-30sec..t+30sec]
-    JulDays_UT t1{2020_y/November/4, 2h + 30min + timezone_offset - 30s};
+    JulDays_UT t1{2020_y/November/4, 2h + 30min - timezone_offset - 30s};
     JulDays_UT t2{t1 + 1min};
     // 2020-11-03
     // Sunrise: ~06:26
     // Rohini (4-of-27) until 50-08 26-30
-    const auto actual1 = vp::Swe{loc}.get_moon_longitude_sidereal(t1);
-    const auto actual2 = vp::Swe{loc}.get_moon_longitude_sidereal(t2);
+    const auto actual1 = vp::Swe{udupi}.get_moon_longitude_sidereal(t1);
+    const auto actual2 = vp::Swe{udupi}.get_moon_longitude_sidereal(t2);
 
-    const vp::Longitude_sidereal expected{4.0/27.0 * 360.0};
+    const vp::Longitude_sidereal expected{5.0 * (360.0 / 27.0)};
 
+    CAPTURE(t1);
+    CAPTURE(t2);
     CAPTURE(actual1.longitude);
     CAPTURE(actual2.longitude);
     CAPTURE(expected.longitude);
     CHECK(actual1.longitude <= expected.longitude);
-    CHECK(actual2.longitude >= expected.longitude);
-    REQUIRE(false);
+    REQUIRE(actual2.longitude >= expected.longitude);
 }
-#endif
