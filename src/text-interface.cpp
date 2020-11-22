@@ -204,8 +204,7 @@ tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month
 void daybyday_print_header(date::year_month_day base_date, const Location & coord, fmt::memory_buffer & buf)
 {
     fmt::format_to(buf,
-               "{} {}\n"
-               "<to be implemented>\n",
+               "{} {}\n",
                coord.name, base_date);
 }
 
@@ -215,6 +214,7 @@ struct NamedTimePoint {
     enum class Print_Tithi : char { No, Yes };
     Print_Tithi print_tithi = Print_Tithi::Yes;
 };
+using NamedTimePoints = std::vector<NamedTimePoint>;
 
 void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
     const auto min_tithi = vp::Tithi{std::floor(calc.swe.get_tithi(from).tithi)};
@@ -276,6 +276,16 @@ std::vector<NamedTimePoint> daybyday_events(date::year_month_day base_date, cons
     return events;
 }
 
+namespace {
+void daybyday_add_sauramasa_info(NamedTimePoints & points, const vp::Calc & calc, fmt::memory_buffer & buf) {
+    if (points.empty()) {
+        fmt::format_to(buf, "Can't determine saura māsa\n");
+        return;
+    }
+    fmt::format_to(buf, FMT_STRING("Saura māsa: {}\n"), calc.saura_masa(points[0].time_point));
+}
+}
+
 /* print day-by-day report (-d mode) for a single date and single location */
 void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf, vp::CalcFlags flags) {
     daybyday_print_header(base_date, coord, buf);
@@ -285,6 +295,7 @@ void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::mem
     std::stable_sort(events.begin(), events.end(), [](const NamedTimePoint & left, const NamedTimePoint & right) {
         return left.time_point < right.time_point;
     });
+    daybyday_add_sauramasa_info(events, calc, buf);
     for (const auto & e : events) {
         if (e.print_tithi == NamedTimePoint::Print_Tithi::Yes) {
             const auto tithi = calc.swe.get_tithi(e.time_point);

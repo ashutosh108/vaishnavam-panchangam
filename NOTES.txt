@@ -1,4 +1,3 @@
-[ ] day-by-day: print saura masa at the beginning
 [ ] day-by-day: print saura masa changes, if any
 [ ] day-by-day: print chandra masa at the beginning
 [ ] day-by-day: print chandra masa change, if any (purnima=>pratipat)
@@ -255,3 +254,4 @@ done:
 [+] day-by-day: print nakshatra start times [2020-11-20]
 [+] add surya_nirayana_longitude() [2020-11-21]
 [+] determine chandra masa (from solar masa on Pūrṇimā) for simple cases [2020-11-22]
+[+] day-by-day: print saura masa at the beginning [2020-11-22]

@@ -73,3 +73,12 @@ TEST_CASE("print_detail_one for Udupi 2020-11-14 does NOT raise exception and in
 
     REQUIRE_THAT(fmt::to_string(buf), Contains("Amavasya"));
 }
+
+TEST_CASE("daybyday_print_one() includes sauramasa info") {
+    fmt::memory_buffer buf;
+    using namespace date::literals;
+    using Catch::Matchers::Contains;
+    vp::text_ui::daybyday_print_one(2020_y/11/22, "Udupi", buf, vp::CalcFlags::Default);
+
+    REQUIRE_THAT(fmt::to_string(buf), Contains("Saura māsa: Vṛścika"));
+}

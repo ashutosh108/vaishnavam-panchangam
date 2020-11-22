@@ -101,4 +101,31 @@ int operator-(Saura_Masa m1, Saura_Masa m2);
 
 } // namespace vp
 
+namespace {
+}
+
+template<>
+struct fmt::formatter<vp::Saura_Masa> : fmt::formatter<std::string_view> {
+    template<class FormatCtx>
+    auto format(const vp::Saura_Masa & m, FormatCtx & ctx) {
+        const char * name = "Unknown";
+        switch (m) {
+        case vp::Saura_Masa::Mesha: name = "Meśa"; break;
+        case vp::Saura_Masa::Vrishabha: name = "Vṛṣabha"; break;
+        case vp::Saura_Masa::Mithuna: name = "Mithuna"; break;
+        case vp::Saura_Masa::Karkataka: name = "Karkataka"; break;
+        case vp::Saura_Masa::Simha: name = "Siṁha"; break;
+        case vp::Saura_Masa::Kanya: name = "Kanyā"; break;
+        case vp::Saura_Masa::Tula: name = "Tula"; break;
+        case vp::Saura_Masa::Vrishchika: name = "Vṛścika"; break;
+        case vp::Saura_Masa::Dhanus: name = "Dhanus"; break;
+        case vp::Saura_Masa::Makara: name = "Makara"; break;
+        case vp::Saura_Masa::Kumbha: name = "Kumbha"; break;
+        case vp::Saura_Masa::Mina: name = "Mina"; break;
+        }
+
+        return fmt::format_to(ctx.out(), "{}", name);
+    }
+};
+
 #endif // CALC_H
