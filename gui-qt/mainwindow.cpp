@@ -361,7 +361,7 @@ void MainWindow::refreshDaybyday()
     auto date = to_sys_days(ui->dateEdit->date());
     auto location_string = selected_location();
     const auto flags = flagsForCurrentSettings();
-    vp::text_ui::print_detail_one(date, location_string.c_str(), buf, flags);
+    vp::text_ui::daybyday_print_one(date, location_string.c_str(), buf, flags);
     ui->daybydayBrowser->setPlainText(QString::fromStdString(fmt::to_string(buf)));
 }
 

@@ -69,7 +69,7 @@ TEST_CASE("print_detail_one for Udupi 2020-11-14 does NOT raise exception and in
     using namespace date::literals;
     using Catch::Matchers::Contains;
     const date::year_month_day date{2020_y/11/14};
-    REQUIRE_NOTHROW(vp::text_ui::print_detail_one(date, "Udupi", buf, vp::CalcFlags::Default));
+    REQUIRE_NOTHROW(vp::text_ui::daybyday_print_one(date, "Udupi", buf, vp::CalcFlags::Default));
 
     REQUIRE_THAT(fmt::to_string(buf), Contains("Amavasya"));
 }

@@ -201,7 +201,7 @@ tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month
     return calc_and_report_one(base_date, *coord, buf);
 }
 
-void print_detail_header(date::year_month_day base_date, const Location & coord, fmt::memory_buffer & buf)
+void daybyday_print_header(date::year_month_day base_date, const Location & coord, fmt::memory_buffer & buf)
 {
     fmt::format_to(buf,
                "{} {}\n"
@@ -216,7 +216,7 @@ struct NamedTimePoint {
     Print_Tithi print_tithi = Print_Tithi::Yes;
 };
 
-void detail_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
+void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
     const auto min_tithi = vp::Tithi{std::floor(calc.swe.get_tithi(from).tithi)};
     // need to normalize for amavasya-crossing case (30.5 becomes 0.5)
     const auto max_tithi = vp::Tithi{Tithi::normalize(std::ceil(calc.swe.get_tithi(to).tithi) + 1.0)};
@@ -233,7 +233,7 @@ void detail_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::C
 
 }
 
-void detail_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
+void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
     const auto min_nakshatra = calc.swe.get_nakshatra(from).floor();
     const auto max_nakshatra = calc.swe.get_nakshatra(to).ceil() + 1.0;
     auto start = from - std::chrono::hours{36}; // to ensure we get beginning of first nakshatra
@@ -245,7 +245,7 @@ void detail_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const v
 }
 
 
-std::vector<NamedTimePoint> get_detail_events(date::year_month_day base_date, const vp::Calc & calc) {
+std::vector<NamedTimePoint> daybyday_events(date::year_month_day base_date, const vp::Calc & calc) {
     std::vector<NamedTimePoint> events;
     const auto local_astronomical_midnight = calc.calc_astronomical_midnight(base_date);
     const auto sunrise = calc.swe.find_sunrise(local_astronomical_midnight);
@@ -268,20 +268,20 @@ std::vector<NamedTimePoint> get_detail_events(date::year_month_day base_date, co
                 events.push_back(NamedTimePoint{"next sunrise", *sunrise2});
                 const auto earliest_timepoint = arunodaya ? * arunodaya : *sunrise;
                 const auto latest_timepoint = *sunrise2;
-                detail_add_tithi_events(earliest_timepoint, latest_timepoint, calc, events);
-                detail_add_nakshatra_events(earliest_timepoint, latest_timepoint, calc, events);
+                daybyday_add_tithi_events(earliest_timepoint, latest_timepoint, calc, events);
+                daybyday_add_nakshatra_events(earliest_timepoint, latest_timepoint, calc, events);
             }
         }
     }
     return events;
 }
 
-/* print details (-d mode) for a single date and single location */
-void print_detail_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf, vp::CalcFlags flags) {
-    print_detail_header(base_date, coord, buf);
+/* print day-by-day report (-d mode) for a single date and single location */
+void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf, vp::CalcFlags flags) {
+    daybyday_print_header(base_date, coord, buf);
 
     Calc calc{Swe{coord, flags}};
-    std::vector<NamedTimePoint> events = get_detail_events(base_date, calc);
+    std::vector<NamedTimePoint> events = daybyday_events(base_date, calc);
     std::stable_sort(events.begin(), events.end(), [](const NamedTimePoint & left, const NamedTimePoint & right) {
         return left.time_point < right.time_point;
     });
@@ -297,13 +297,13 @@ void print_detail_one(date::year_month_day base_date, Location coord, fmt::memor
     }
 }
 
-void print_detail_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf, vp::CalcFlags flags) {
+void daybyday_print_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf, vp::CalcFlags flags) {
     const std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
         fmt::format_to(buf, "Location not found: '{}'\n", location_name);
         return;
     }
-    print_detail_one(base_date, *coord, buf, flags);
+    daybyday_print_one(base_date, *coord, buf, flags);
 }
 
 void calc_and_report_all(date::year_month_day d) {
