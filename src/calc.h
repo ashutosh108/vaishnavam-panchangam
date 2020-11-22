@@ -24,6 +24,36 @@ struct CantFindNakshatraAfter {
     JulDays_UT after;
 };
 
+enum class Chandra_Masa {
+    Chaitra = 1,
+    Vaisakha = 2,
+    Jyeshta = 3,
+    Ashadha = 4,
+    Sravana = 5,
+    Bhadrapada = 6,
+    Aswayuja = 7,
+    Kartika = 8,
+    Margashira = 9,
+    Pushya = 10,
+    Magha = 11,
+    Phalguna = 12
+};
+
+enum class Saura_Masa {
+    Mesha = 1,
+    Vrishabha = 2,
+    Mithuna = 3,
+    Karkataka = 4,
+    Simha = 5,
+    Kanya = 6,
+    Tula = 7,
+    Vrishchika = 8,
+    Dhanus = 9,
+    Makara = 10,
+    Kumbha = 11,
+    Mina = 12
+};
+
 class Calc
 {
 public:
@@ -45,6 +75,8 @@ public:
     // find exactly given tithi (Shukla- or Krishna-), even if another paksha's tithi is closer.
     JulDays_UT find_exact_tithi_start(JulDays_UT, Tithi) const;
     JulDays_UT find_nakshatra_start(const JulDays_UT, const Nakshatra) const;
+    Saura_Masa saura_masa(JulDays_UT time) const;
+    Chandra_Masa chandra_masa(JulDays_UT time) const;
 
     static JulDays_UT proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion);
     JulDays_UT calc_astronomical_midnight(date::year_month_day date) const;
@@ -64,6 +96,8 @@ private:
     bool got_atirikta_dvadashi(const Vrata & vrata) const;
     Vrata_Type calc_vrata_type(const Vrata & vrata) const;
 };
+
+int operator-(Saura_Masa m1, Saura_Masa m2);
 
 } // namespace vp
 

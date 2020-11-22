@@ -325,7 +325,35 @@ JulDays_UT Calc::find_nakshatra_start(const JulDays_UT from, const Nakshatra tar
         minimal_delta_between_nakshatras,
         [](Nakshatra target, JulDays_UT from) { throw CantFindNakshatraAfter{target, from}; },
         [](Nakshatra & /*target*/, double & /*delta*/) {}
-        );
+);
+}
+
+Saura_Masa Calc::saura_masa(JulDays_UT time) const
+{
+    auto lng = swe.surya_nirayana_longitude(time);
+    return Saura_Masa{1 + static_cast<int>(lng.longitude * (12.0/360.0))};
+}
+
+Chandra_Masa Calc::chandra_masa(JulDays_UT time) const
+{
+    auto purnima2 = find_exact_tithi_start(time, Tithi::Purnima_End()); // end of purnima is start of pratipat
+    constexpr auto saura_masa_max_length{double_days{32}};
+    auto purnima1 = find_exact_tithi_start(purnima2 - saura_masa_max_length, Tithi::Purnima_End()); // end of purnima is start of pratipat
+    auto saura_masa1 = saura_masa(purnima1);
+    auto saura_masa2 = saura_masa(purnima2);
+    int delta = saura_masa2 - saura_masa1;
+    if (delta == 1) {
+        return Chandra_Masa{saura_masa2};
+    }
+    return Chandra_Masa{0};
+}
+
+std::underlying_type_t<Saura_Masa> operator-(Saura_Masa m1, Saura_Masa m2)
+{
+    using T = std::underlying_type_t<Saura_Masa>;
+    std::make_signed_t<T> delta = static_cast<T>(m1) - static_cast<T>(m2);
+    if (delta < 0) { delta += 12; }
+    return delta;
 }
 
 } // namespace vp

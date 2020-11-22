@@ -1,4 +1,10 @@
-[ ] add find_next_sankramana() (change into next nirayana solar month)
+[ ] day-by-day: print saura masa at the beginning
+[ ] day-by-day: print saura masa changes, if any
+[ ] day-by-day: print chandra masa at the beginning
+[ ] day-by-day: print chandra masa change, if any (purnima=>pratipat)
+[ ] GUI: Ekadashi summary: print chandra masa name
+[ ] chandra masa: add handling for adhika masas
+[ ] chandra masa: add handling for kshaya masas
 [ ] Table: add Russian version
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone):
 [ ] -> lat/long input activated => change text to decimal
@@ -17,7 +23,6 @@
     + works for 2019-04-27
 [ ] generate tests based on existing html tables
 [ ] omit pāraṇam end time when it's less than one muhūrta (≈48min) long. We should only use strict (very short) pāraṇam interval for cases like sAdhana-dvAdashI when it's really justified.
-[ ] determine current masa (from solar masa on Pūrṇimā?)
 [ ] determine ekadāśī names
 [ ] make sure we get reasonable error message when eph folder not found (add overall exception handler? add test?)
 [ ] when eph files not found and the SWE_SWIEPH was supposed to be used: use SWE_MOSEPH but print large warning
@@ -249,3 +254,4 @@ done:
 [+] fix catch2 linking (must only be in test executables) [2020-11-19]
 [+] day-by-day: print nakshatra start times [2020-11-20]
 [+] add surya_nirayana_longitude() [2020-11-21]
+[+] determine chandra masa (from solar masa on Pūrṇimā) for simple cases [2020-11-22]

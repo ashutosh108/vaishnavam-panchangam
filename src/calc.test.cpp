@@ -701,3 +701,15 @@ TEST_CASE("find_exact_tithi_start() works for second paksha (tithis >= 15)") {
     REQUIRE(time - start_time >= double_days{10});
     REQUIRE(calc.swe.get_tithi(time).tithi == Approx(Tithi::Krishna_Saptami().tithi));
 }
+
+TEST_CASE("saura_masa() works for simple cases") {
+    auto calc = Calc{sample_location};
+    REQUIRE(calc.saura_masa(JulDays_UT{2020_y/4/13}) == Saura_Masa::Mina);
+    REQUIRE(calc.saura_masa(JulDays_UT{2020_y/4/15}) == Saura_Masa::Mesha);
+}
+
+TEST_CASE("chandra_masa() works for simple cases") {
+    auto calc = Calc{sample_location};
+    REQUIRE(calc.chandra_masa(JulDays_UT{2020_y/11/21}) == Chandra_Masa::Kartika);
+    REQUIRE(calc.chandra_masa(JulDays_UT{2020_y/12/1}) == Chandra_Masa::Margashira);
+}

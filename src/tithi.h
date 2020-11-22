@@ -34,6 +34,7 @@ struct Tithi {
     static constexpr Tithi Trayodashi() { return Tithi{12.0}; }
     static constexpr Tithi Dvadashi_End() { return Trayodashi(); }
     static constexpr Tithi Krishna_Saptami() { return Tithi{15.0 + 6.0}; }
+    static constexpr Tithi Purnima_End() { return Tithi{15.0}; }
 
     static constexpr std::chrono::duration<double, std::ratio<3600>> AverageLength() {
         using namespace std::literals::chrono_literals;
