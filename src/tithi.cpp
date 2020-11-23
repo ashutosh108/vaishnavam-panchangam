@@ -25,6 +25,11 @@ bool Tithi::is_dashami()
     return (tithi >= 9 && tithi < 10) || (tithi >= 9+15 && tithi < 10+15);
 }
 
+bool Tithi::is_krishna_pratipat() const
+{
+    return (tithi >= 15.0 && tithi < 16.0);
+}
+
 Tithi &Tithi::operator +=(const double delta)
 {
     tithi = normalize(tithi + delta);
@@ -56,6 +61,16 @@ double Tithi::normalize(double raw_tithi)
     double mod_res = std::fmod(raw_tithi, 30.0);
     if (mod_res < 0) { mod_res += 30.0; }
     return mod_res;
+}
+
+Tithi Tithi::floor() const
+{
+    return Tithi{std::floor(tithi)};
+}
+
+Tithi Tithi::ceil() const
+{
+    return Tithi{normalize(std::ceil(tithi))};
 }
 
 bool operator ==(const Tithi &t1, const Tithi &t2)

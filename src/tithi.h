@@ -25,6 +25,7 @@ struct Tithi {
     bool is_dvadashi();
     bool is_ekadashi();
     bool is_dashami();
+    bool is_krishna_pratipat() const;
     // Pratipat is 0.00...0.99, Dvitiya is 1.00..1.99, etc
     static constexpr Tithi Dashami() { return Tithi{9.0}; }
     static constexpr Tithi Ekadashi() { return Tithi{10.0}; }
@@ -57,6 +58,8 @@ struct Tithi {
     double positive_delta_until_tithi(Tithi) const;
     double delta_to_nearest_tithi(Tithi) const;
     static double normalize(double raw_tithi);
+    Tithi floor() const;
+    Tithi ceil() const;
 };
 
 double operator -(Tithi const &, Tithi const &);

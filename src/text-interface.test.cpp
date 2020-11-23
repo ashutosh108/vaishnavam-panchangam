@@ -116,21 +116,21 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
         }
     }
 
-//    SECTION("Chandra-masa info when we DO cross Purnima (2020-11-xx?)") {
-//        fmt::memory_buffer buf;
-//        vp::text_ui::daybyday_print_one(2020_y/12/17, "Udupi", buf, vp::CalcFlags::Default);
+    SECTION("Chandra-masa info when we DO cross Purnima (2020-11-30)") {
+        fmt::memory_buffer buf;
+        vp::text_ui::daybyday_print_one(2020_y/11/30, "Udupi", buf, vp::CalcFlags::Default);
 
-//        auto s = fmt::to_string(buf);
-//        REQUIRE_THAT(s, Contains("Saura māsa: Dhanuṣa"));
-//        REQUIRE_THAT(s, !Contains("sankranti"));
-//    }
+        auto s = fmt::to_string(buf);
+        REQUIRE_THAT(s, Contains("Chandra māsa: Kārtikā"));
+        REQUIRE_THAT(s, Contains("Mārgaśīrṣa"));
+    }
 
-//    SECTION("Chandra-masa info when we DO cross Amavasya (2020-11-xx?)") {
-//        fmt::memory_buffer buf;
-//        vp::text_ui::daybyday_print_one(2020_y/12/17, "Udupi", buf, vp::CalcFlags::Default);
+    SECTION("Chandra-masa info when we DO cross Amavasya (2020-11-14)") {
+        fmt::memory_buffer buf;
+        vp::text_ui::daybyday_print_one(2020_y/11/14, "Udupi", buf, vp::CalcFlags::Default);
 
-//        auto s = fmt::to_string(buf);
-//        REQUIRE_THAT(s, Contains("Saura māsa: Dhanuṣa"));
-//        REQUIRE_THAT(s, !Contains("sankranti"));
-//    }
+        auto s = fmt::to_string(buf);
+        REQUIRE_THAT(s, Contains("Chandra māsa: Kārtikā"));
+        REQUIRE_THAT(s, !Contains("Mārgaśīrṣa"));
+    }
 }

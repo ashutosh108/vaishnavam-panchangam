@@ -215,20 +215,22 @@ struct NamedTimePoint {
 using NamedTimePoints = std::vector<NamedTimePoint>;
 
 void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
-    const auto min_tithi = vp::Tithi{std::floor(calc.swe.get_tithi(from).tithi)};
-    // need to normalize for amavasya-crossing case (30.5 becomes 0.5)
-    const auto max_tithi = vp::Tithi{Tithi::normalize(std::ceil(calc.swe.get_tithi(to).tithi) + 1.0)};
+    const auto min_tithi = calc.swe.get_tithi(from).floor();
+    const auto max_tithi = calc.swe.get_tithi(to).ceil() + 1.0;
     auto start = from - std::chrono::hours{36};
     // need "!=" to handle cross-amavasya cases correctly, when max_tithi is less than min_tithi
     for (vp::Tithi tithi = min_tithi; tithi != max_tithi; tithi += 1.0) {
-        auto tithi_start = calc.find_either_tithi_start(start, tithi);
-        events.push_back(NamedTimePoint{fmt::format("{:d} starts", tithi), tithi_start});
+        auto tithi_start = calc.find_exact_tithi_start(start, tithi);
+        auto description = fmt::format("{:d} starts", tithi);
+        if (tithi.is_krishna_pratipat()) {
+            description += fmt::format(FMT_STRING(", {} māsa starts (?)"), calc.chandra_masa(tithi_start + double_days{1.0}));
+        }
+        events.push_back(NamedTimePoint{description, tithi_start});
         if (tithi.is_dvadashi()) {
-            auto dvadashi_quarter_end = calc.find_either_tithi_start(start, tithi+0.25);
+            auto dvadashi_quarter_end = calc.find_exact_tithi_start(start, tithi+0.25);
             events.push_back(NamedTimePoint{fmt::format("First quarter of {:d} ends", tithi), dvadashi_quarter_end});
         }
     }
-
 }
 
 void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
@@ -313,13 +315,6 @@ void daybyday_add_chandramasa_info(NamedTimePoints & points, const vp::Calc & ca
     const auto initial_time = points[0].time_point;
     const auto initial_masa = calc.chandra_masa(initial_time);
     fmt::format_to(buf, FMT_STRING("Chandra māsa: {} (chandra māsa support is experimental, do not rely on this yet)\n"), initial_masa);
-//    const auto last_time = points.back().time_point;
-//    const auto last_masa = calc.chandra_masa(last_time);
-//    if (last_masa != initial_masa) {
-//        const auto next_sankranti_time = calc.find_sankranti(initial_time, last_masa);
-//        auto event_name = fmt::format(FMT_STRING("{} sankranti"), last_masa);
-//        add_to_sorted(points, NamedTimePoint{event_name, next_sankranti_time});
-//    }
 }
 }
 

@@ -1,4 +1,3 @@
-[ ] day-by-day: print chandra masa change, if any (purnima=>pratipat)
 [ ] GUI: Ekadashi summary: print chandra masa name
 [ ] chandra masa: add handling for adhika masas
 [ ] chandra masa: add handling for kshaya masas
@@ -255,3 +254,4 @@ done:
 [+] day-by-day: print saura masa at the beginning [2020-11-22]
 [+] day-by-day: print saura masa sankranti, if it falls within close range [2020-11-23]
 [+] day-by-day: print chandra masa at the beginning (experimental) [2020-11-23]
+[+] day-by-day: print chandra masa change, if any (purnima=>pratipat) [2020-11-23]

@@ -53,6 +53,14 @@ TEST_CASE("is Dashami") {
     REQUIRE_FALSE(Tithi{10}.is_dashami());
 }
 
+TEST_CASE("is_krishna_pratipat()") {
+    REQUIRE(Tithi{15.0}.is_krishna_pratipat());
+    REQUIRE(Tithi{15.5}.is_krishna_pratipat());
+    REQUIRE_FALSE(Tithi{16.0}.is_krishna_pratipat());
+    REQUIRE_FALSE(Tithi{0.0}.is_krishna_pratipat());
+    REQUIRE_FALSE(Tithi{0.5}.is_krishna_pratipat());
+}
+
 TEST_CASE("can construct and compare Tithi using symbolic names") {
     REQUIRE(Tithi::Dashami() == Tithi{9});
     REQUIRE(Tithi::Dashami() != Tithi{9.1});
@@ -99,4 +107,17 @@ TEST_CASE("Tithi += double should work") {
     Tithi t{Tithi::Ekadashi()};
     t += 1.0;
     REQUIRE(t == Tithi::Dvadashi());
+}
+
+TEST_CASE("Tithi::floor(), ceil, + double work") {
+    REQUIRE(Tithi{0.5}.floor() == Tithi{0.0});
+    REQUIRE(Tithi{1.0}.floor() == Tithi{1.0});
+    REQUIRE(Tithi{29.9}.floor() == Tithi{29.0});
+
+    REQUIRE(Tithi{0.5}.ceil() == Tithi{1.0});
+    REQUIRE(Tithi{0.0}.ceil() == Tithi{0.0});
+    REQUIRE(Tithi{29.9}.ceil() == Tithi{0.0});
+
+    REQUIRE(Tithi{15.0} + 1.0 == Tithi{16.0});
+    REQUIRE(Tithi{29.5} + 1.0 == Tithi{0.5});
 }
