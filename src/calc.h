@@ -26,15 +26,15 @@ struct CantFindNakshatraAfter {
 
 enum class Chandra_Masa {
     Chaitra = 1,
-    Vaisakha = 2,
-    Jyeshta = 3,
+    Vaishakha = 2,
+    Jyeshtha = 3,
     Ashadha = 4,
-    Sravana = 5,
+    Shravana = 5,
     Bhadrapada = 6,
-    Aswayuja = 7,
+    Ashvin = 7,
     Kartika = 8,
-    Margashira = 9,
-    Pushya = 10,
+    Margashirsha = 9,
+    Pausha = 10,
     Magha = 11,
     Phalguna = 12
 };
@@ -48,7 +48,7 @@ enum class Saura_Masa {
     Kanya = 6,
     Tula = 7,
     Vrishchika = 8,
-    Dhanus = 9,
+    Dhanusha = 9,
     Makara = 10,
     Kumbha = 11,
     Mina = 12
@@ -123,12 +123,36 @@ struct fmt::formatter<vp::Saura_Masa> : fmt::formatter<std::string_view> {
         case vp::Saura_Masa::Karkataka: name = "Karkataka"; break;
         case vp::Saura_Masa::Simha: name = "Siṁha"; break;
         case vp::Saura_Masa::Kanya: name = "Kanyā"; break;
-        case vp::Saura_Masa::Tula: name = "Tula"; break;
+        case vp::Saura_Masa::Tula: name = "Tulā"; break;
         case vp::Saura_Masa::Vrishchika: name = "Vṛścika"; break;
-        case vp::Saura_Masa::Dhanus: name = "Dhanus"; break;
+        case vp::Saura_Masa::Dhanusha: name = "Dhanuṣa"; break;
         case vp::Saura_Masa::Makara: name = "Makara"; break;
         case vp::Saura_Masa::Kumbha: name = "Kumbha"; break;
-        case vp::Saura_Masa::Mina: name = "Mina"; break;
+        case vp::Saura_Masa::Mina: name = "Mīna"; break;
+        }
+
+        return fmt::format_to(ctx.out(), "{}", name);
+    }
+};
+
+template<>
+struct fmt::formatter<vp::Chandra_Masa> : fmt::formatter<std::string_view> {
+    template<class FormatCtx>
+    auto format(const vp::Chandra_Masa & m, FormatCtx & ctx) {
+        const char * name = "Unknown";
+        switch (m) {
+        case vp::Chandra_Masa::Chaitra: name = "Chaitra"; break; // (चैत्र)
+        case vp::Chandra_Masa::Vaishakha: name = "Vaiśākha"; break; // (वैशाख)
+        case vp::Chandra_Masa::Jyeshtha: name = "Jyeṣṭha"; break; // (ज्येष्ठ)
+        case vp::Chandra_Masa::Ashadha: name = "Āṣāḍha"; break; // (आषाढ)
+        case vp::Chandra_Masa::Shravana: name = "Śṛāvaṇa"; break; // (श्रावण)
+        case vp::Chandra_Masa::Bhadrapada: name = "Bhādrapada"; break; // (भाद्रपद)
+        case vp::Chandra_Masa::Ashvin: name = "Aśvin"; break; // (अश्विन्)
+        case vp::Chandra_Masa::Kartika: name = "Kārtikā"; break; // (कार्तिक)
+        case vp::Chandra_Masa::Margashirsha: name = "Mārgaśīrṣa"; break; // (मार्गशीर्ष)
+        case vp::Chandra_Masa::Pausha: name = "Pauṣa"; break; // (पौष)
+        case vp::Chandra_Masa::Magha: name = "Māgha"; break; // (माघ)
+        case vp::Chandra_Masa::Phalguna: name = "Phālguna"; break; // (फाल्गुन)
         }
 
         return fmt::format_to(ctx.out(), "{}", name);

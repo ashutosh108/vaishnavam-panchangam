@@ -85,7 +85,7 @@ TEST_CASE("daybyday_print_one() includes sauramasa info") {
 
         auto s = fmt::to_string(buf);
         REQUIRE_THAT(s, Contains("Saura māsa: Vṛścika"));
-        REQUIRE_THAT(s, Contains("Dhanus sankranti"));
+        REQUIRE_THAT(s, Contains("Dhanuṣa sankranti"));
     }
 
     SECTION("'sankranti' event must NOT be present for non-masa-crossing day-by-day report (2020-12-16)") {
@@ -93,7 +93,44 @@ TEST_CASE("daybyday_print_one() includes sauramasa info") {
         vp::text_ui::daybyday_print_one(2020_y/12/17, "Udupi", buf, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
-        REQUIRE_THAT(s, Contains("Saura māsa: Dhanus"));
+        REQUIRE_THAT(s, Contains("Saura māsa: Dhanuṣa"));
         REQUIRE_THAT(s, !Contains("sankranti"));
     }
+}
+
+TEST_CASE("daybyday_print_one() includes chandramasa info") {
+    using namespace date::literals;
+    using Catch::Matchers::Contains;
+    using Catch::Matchers::Matches;
+
+    SECTION("Chandra-masa info when not crossing any Purnima/Amavasya events (2020-11-23)") {
+        fmt::memory_buffer buf;
+        vp::text_ui::daybyday_print_one(2020_y/11/23, "Udupi", buf, vp::CalcFlags::Default);
+
+        auto s = fmt::to_string(buf);
+        SECTION("'Chandra masa: such-and-such is present") {
+            REQUIRE_THAT(s, Contains("Chandra māsa: Kārtikā"));
+        }
+        SECTION("'such-and-such masa starts' is NOT present") {
+            REQUIRE_THAT(s, !Contains("Mārgaśīrṣa"));
+        }
+    }
+
+//    SECTION("Chandra-masa info when we DO cross Purnima (2020-11-xx?)") {
+//        fmt::memory_buffer buf;
+//        vp::text_ui::daybyday_print_one(2020_y/12/17, "Udupi", buf, vp::CalcFlags::Default);
+
+//        auto s = fmt::to_string(buf);
+//        REQUIRE_THAT(s, Contains("Saura māsa: Dhanuṣa"));
+//        REQUIRE_THAT(s, !Contains("sankranti"));
+//    }
+
+//    SECTION("Chandra-masa info when we DO cross Amavasya (2020-11-xx?)") {
+//        fmt::memory_buffer buf;
+//        vp::text_ui::daybyday_print_one(2020_y/12/17, "Udupi", buf, vp::CalcFlags::Default);
+
+//        auto s = fmt::to_string(buf);
+//        REQUIRE_THAT(s, Contains("Saura māsa: Dhanuṣa"));
+//        REQUIRE_THAT(s, !Contains("sankranti"));
+//    }
 }

@@ -211,8 +211,6 @@ void daybyday_print_header(date::year_month_day base_date, const Location & coor
 struct NamedTimePoint {
     std::string name;
     JulDays_UT time_point;
-    enum class Print_Tithi : char { No, Yes };
-    Print_Tithi print_tithi = Print_Tithi::Yes;
 };
 using NamedTimePoints = std::vector<NamedTimePoint>;
 
@@ -224,7 +222,7 @@ void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp:
     // need "!=" to handle cross-amavasya cases correctly, when max_tithi is less than min_tithi
     for (vp::Tithi tithi = min_tithi; tithi != max_tithi; tithi += 1.0) {
         auto tithi_start = calc.find_either_tithi_start(start, tithi);
-        events.push_back(NamedTimePoint{fmt::format("{:d} starts", tithi), tithi_start, NamedTimePoint::Print_Tithi::No});
+        events.push_back(NamedTimePoint{fmt::format("{:d} starts", tithi), tithi_start});
         if (tithi.is_dvadashi()) {
             auto dvadashi_quarter_end = calc.find_either_tithi_start(start, tithi+0.25);
             events.push_back(NamedTimePoint{fmt::format("First quarter of {:d} ends", tithi), dvadashi_quarter_end});
@@ -239,7 +237,7 @@ void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const
     auto start = from - std::chrono::hours{36}; // to ensure we get beginning of first nakshatra
     for (vp::Nakshatra n = min_nakshatra; n != max_nakshatra; ++n) {
         auto nakshatra_start = calc.find_nakshatra_start(start, n);
-        events.push_back(NamedTimePoint{fmt::format(FMT_STRING("{} starts"), n), nakshatra_start, NamedTimePoint::Print_Tithi::No});
+        events.push_back(NamedTimePoint{fmt::format(FMT_STRING("{} starts"), n), nakshatra_start});
     }
     // TODO: implement
 }
@@ -303,8 +301,25 @@ void daybyday_add_sauramasa_info(NamedTimePoints & points, const vp::Calc & calc
     if (last_masa != initial_masa) {
         const auto next_sankranti_time = calc.find_sankranti(initial_time, last_masa);
         auto event_name = fmt::format(FMT_STRING("{} sankranti"), last_masa);
-        add_to_sorted(points, NamedTimePoint{event_name, next_sankranti_time, NamedTimePoint::Print_Tithi::No});
+        add_to_sorted(points, NamedTimePoint{event_name, next_sankranti_time});
     }
+}
+
+void daybyday_add_chandramasa_info(NamedTimePoints & points, const vp::Calc & calc, fmt::memory_buffer & buf) {
+    if (points.empty()) {
+        fmt::format_to(buf, "Can't determine chandra māsa\n");
+        return;
+    }
+    const auto initial_time = points[0].time_point;
+    const auto initial_masa = calc.chandra_masa(initial_time);
+    fmt::format_to(buf, FMT_STRING("Chandra māsa: {} (chandra māsa support is experimental, do not rely on this yet)\n"), initial_masa);
+//    const auto last_time = points.back().time_point;
+//    const auto last_masa = calc.chandra_masa(last_time);
+//    if (last_masa != initial_masa) {
+//        const auto next_sankranti_time = calc.find_sankranti(initial_time, last_masa);
+//        auto event_name = fmt::format(FMT_STRING("{} sankranti"), last_masa);
+//        add_to_sorted(points, NamedTimePoint{event_name, next_sankranti_time});
+//    }
 }
 }
 
@@ -316,15 +331,9 @@ void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::mem
     std::vector<NamedTimePoint> events = daybyday_events(base_date, calc);
     std::stable_sort(events.begin(), events.end(), NamedPointComparator);
     daybyday_add_sauramasa_info(events, calc, buf);
+    daybyday_add_chandramasa_info(events, calc, buf);
     for (const auto & e : events) {
-        if (e.print_tithi == NamedTimePoint::Print_Tithi::Yes) {
-            const auto tithi = calc.swe.get_tithi(e.time_point);
-            const auto nakshatra_angle = calc.swe.get_moon_longitude_sidereal(e.time_point);
-            const auto nakshatra_number = nakshatra_angle.longitude * 27.0 / 360.0;
-            fmt::format_to(buf, "{} {:s} {:06.2f} {:05.2f}: {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, tithi, nakshatra_angle.longitude, nakshatra_number, e.name);
-        } else {
-            fmt::format_to(buf, "{} {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, e.name);
-        }
+        fmt::format_to(buf, "{} {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, e.name);
     }
 }
 
