@@ -713,3 +713,21 @@ TEST_CASE("chandra_masa() works for simple cases") {
     REQUIRE(calc.chandra_masa(JulDays_UT{2020_y/11/21}) == Chandra_Masa::Kartika);
     REQUIRE(calc.chandra_masa(JulDays_UT{2020_y/12/1}) == Chandra_Masa::Margashira);
 }
+
+TEST_CASE("find_sankranti returns reasonable times") {
+    auto calc = Calc{sample_location};
+    auto actual = calc.find_sankranti(JulDays_UT{2020_y/11/21}, Saura_Masa::Dhanus);
+    REQUIRE(actual >= JulDays_UT{2020_y/12/15});
+    REQUIRE(actual <= JulDays_UT{2020_y/12/16});
+}
+
+TEST_CASE("Saura_Masa + operator works") {
+    REQUIRE(Saura_Masa::Dhanus + 1 == Saura_Masa::Makara);
+    REQUIRE(Saura_Masa::Dhanus + (-1) == Saura_Masa::Vrishchika);
+    REQUIRE(Saura_Masa::Mina + 1 == Saura_Masa::Mesha);
+    REQUIRE(Saura_Masa::Mesha + (-1) == Saura_Masa::Mina);
+    REQUIRE(Saura_Masa::Mesha + (-1) == Saura_Masa::Mina);
+    REQUIRE(Saura_Masa::Mina + 25 == Saura_Masa::Mesha);
+    REQUIRE(Saura_Masa::Mina + (-11) == Saura_Masa::Mesha);
+    REQUIRE(Saura_Masa::Mina + (-23) == Saura_Masa::Mesha);
+}

@@ -30,6 +30,13 @@ struct StringMaker<vp::Tithi> {
         return fmt::format(FMT_STRING("Tithi({})"), t.tithi);
     }
 };
+
+template<>
+struct StringMaker<vp::Nirayana_Longitude> {
+    static std::string convert(const vp::Nirayana_Longitude & l) {
+        return fmt::format(FMT_STRING("Nirayana_Longitude({})"), l.longitude);
+    }
+};
 }
 
 #endif // CATCHFORMATTERS_H

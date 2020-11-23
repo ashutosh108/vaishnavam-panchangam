@@ -54,6 +54,14 @@ enum class Saura_Masa {
     Mina = 12
 };
 
+Nirayana_Longitude starting_longitude(Saura_Masa m);
+
+struct CantFindSankrantiAfter {
+    Saura_Masa m;
+    Nirayana_Longitude l;
+    JulDays_UT after;
+};
+
 class Calc
 {
 public:
@@ -77,6 +85,7 @@ public:
     JulDays_UT find_nakshatra_start(const JulDays_UT, const Nakshatra) const;
     Saura_Masa saura_masa(JulDays_UT time) const;
     Chandra_Masa chandra_masa(JulDays_UT time) const;
+    JulDays_UT find_sankranti(JulDays_UT after, Saura_Masa masa) const;
 
     static JulDays_UT proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion);
     JulDays_UT calc_astronomical_midnight(date::year_month_day date) const;
@@ -98,11 +107,9 @@ private:
 };
 
 int operator-(Saura_Masa m1, Saura_Masa m2);
+Saura_Masa operator+(Saura_Masa m, int delta);
 
 } // namespace vp
-
-namespace {
-}
 
 template<>
 struct fmt::formatter<vp::Saura_Masa> : fmt::formatter<std::string_view> {

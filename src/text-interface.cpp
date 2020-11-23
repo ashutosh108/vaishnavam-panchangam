@@ -277,12 +277,34 @@ std::vector<NamedTimePoint> daybyday_events(date::year_month_day base_date, cons
 }
 
 namespace {
+auto NamedPointComparator = [](const NamedTimePoint & left, const NamedTimePoint & right) {
+    return left.time_point < right.time_point;
+};
+void add_to_sorted(NamedTimePoints & points, NamedTimePoint point) {
+    points.insert(
+        std::upper_bound(
+            points.begin(),
+            points.end(),
+            point,
+            NamedPointComparator),
+        point);
+}
+
 void daybyday_add_sauramasa_info(NamedTimePoints & points, const vp::Calc & calc, fmt::memory_buffer & buf) {
     if (points.empty()) {
         fmt::format_to(buf, "Can't determine saura māsa\n");
         return;
     }
-    fmt::format_to(buf, FMT_STRING("Saura māsa: {}\n"), calc.saura_masa(points[0].time_point));
+    const auto initial_time = points[0].time_point;
+    const auto initial_masa = calc.saura_masa(initial_time);
+    const auto last_time = points.back().time_point;
+    const auto last_masa = calc.saura_masa(last_time);
+    fmt::format_to(buf, FMT_STRING("Saura māsa: {}\n"), initial_masa);
+    if (last_masa != initial_masa) {
+        const auto next_sankranti_time = calc.find_sankranti(initial_time, last_masa);
+        auto event_name = fmt::format(FMT_STRING("{} sankranti"), last_masa);
+        add_to_sorted(points, NamedTimePoint{event_name, next_sankranti_time, NamedTimePoint::Print_Tithi::No});
+    }
 }
 }
 
@@ -292,9 +314,7 @@ void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::mem
 
     Calc calc{Swe{coord, flags}};
     std::vector<NamedTimePoint> events = daybyday_events(base_date, calc);
-    std::stable_sort(events.begin(), events.end(), [](const NamedTimePoint & left, const NamedTimePoint & right) {
-        return left.time_point < right.time_point;
-    });
+    std::stable_sort(events.begin(), events.end(), NamedPointComparator);
     daybyday_add_sauramasa_info(events, calc, buf);
     for (const auto & e : events) {
         if (e.print_tithi == NamedTimePoint::Print_Tithi::Yes) {

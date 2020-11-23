@@ -75,10 +75,25 @@ TEST_CASE("print_detail_one for Udupi 2020-11-14 does NOT raise exception and in
 }
 
 TEST_CASE("daybyday_print_one() includes sauramasa info") {
-    fmt::memory_buffer buf;
     using namespace date::literals;
     using Catch::Matchers::Contains;
-    vp::text_ui::daybyday_print_one(2020_y/11/22, "Udupi", buf, vp::CalcFlags::Default);
+    using Catch::Matchers::Matches;
 
-    REQUIRE_THAT(fmt::to_string(buf), Contains("Saura māsa: Vṛścika"));
+    SECTION("'sankranti' event is present for saura masa-crossing day-by-day report (2020-12-16)") {
+        fmt::memory_buffer buf;
+        vp::text_ui::daybyday_print_one(2020_y/12/16, "Udupi", buf, vp::CalcFlags::Default);
+
+        auto s = fmt::to_string(buf);
+        REQUIRE_THAT(s, Contains("Saura māsa: Vṛścika"));
+        REQUIRE_THAT(s, Contains("Dhanus sankranti"));
+    }
+
+    SECTION("'sankranti' event must NOT be present for non-masa-crossing day-by-day report (2020-12-16)") {
+        fmt::memory_buffer buf;
+        vp::text_ui::daybyday_print_one(2020_y/12/17, "Udupi", buf, vp::CalcFlags::Default);
+
+        auto s = fmt::to_string(buf);
+        REQUIRE_THAT(s, Contains("Saura māsa: Dhanus"));
+        REQUIRE_THAT(s, !Contains("sankranti"));
+    }
 }

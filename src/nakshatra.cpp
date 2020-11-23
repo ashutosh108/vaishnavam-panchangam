@@ -64,3 +64,30 @@ vp::Nakshatra vp::operator +(vp::Nakshatra n, double delta)
 {
     return vp::Nakshatra{vp::Nakshatra::normalize(n.nakshatra + delta)};
 }
+
+double vp::positive_delta_between_longitudes(vp::Nirayana_Longitude l1, vp::Nirayana_Longitude l2) {
+    double delta = l2.longitude - l1.longitude;
+    if (delta < 0) delta += 360.0;
+    return delta;
+}
+
+double vp::minimal_delta_between_longitudes(vp::Nirayana_Longitude l1, vp::Nirayana_Longitude l2)
+{
+    double delta = l2.longitude - l1.longitude;
+    if (delta < -(360.0/2.0)) {
+        delta += 360.0;
+    } else if (delta > (360.0/2.0)) {
+        delta -= 360.0;
+    }
+    return delta;
+}
+
+bool vp::operator ==(vp::Nirayana_Longitude l1, vp::Nirayana_Longitude l2)
+{
+    constexpr double epsilon = 0.5e-11;
+    return ( fabs(l2.longitude - l1.longitude) < epsilon );
+}
+
+bool vp::operator !=(vp::Nirayana_Longitude l1, vp::Nirayana_Longitude l2) {
+    return !(l1 == l2);
+}

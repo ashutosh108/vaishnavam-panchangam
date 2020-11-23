@@ -41,3 +41,14 @@ TEST_CASE("Nakshatra formatting works") {
     REQUIRE(fmt::to_string(vp::Nakshatra{1.1}) == "Bharani(.100)");
     REQUIRE(fmt::to_string(vp::Nakshatra{26.99999}) == "Ashvini(.000)");
 }
+
+TEST_CASE("positive/minimal deltas, ==, != work for Nirayana_Longitude") {
+    using namespace vp;;
+    REQUIRE(positive_delta_between_longitudes(Nirayana_Longitude{1.0}, Nirayana_Longitude{2.0}) == 1.0);
+    REQUIRE(positive_delta_between_longitudes(Nirayana_Longitude{2.0}, Nirayana_Longitude{1.0}) == 359.0);
+    REQUIRE(minimal_delta_between_longitudes(Nirayana_Longitude{1.0}, Nirayana_Longitude{2.0}) == 1.0);
+    REQUIRE(minimal_delta_between_longitudes(Nirayana_Longitude{2.0}, Nirayana_Longitude{1.0}) == -1.0);
+    REQUIRE(Nirayana_Longitude{1.0} == Nirayana_Longitude{1.0});
+    REQUIRE(Nirayana_Longitude{0.0} != Nirayana_Longitude{1.0});
+    REQUIRE(Nirayana_Longitude{0.0} == Nirayana_Longitude{1e-15});
+}

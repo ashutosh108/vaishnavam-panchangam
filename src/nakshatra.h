@@ -95,6 +95,10 @@ bool operator == (const Nakshatra n1, const Nakshatra n2);
 bool operator != (const Nakshatra n1, const Nakshatra n2);
 vp::Nakshatra & operator ++(Nakshatra & n);
 vp::Nakshatra operator +(Nakshatra n, double delta);
+double positive_delta_between_longitudes(Nirayana_Longitude l1, Nirayana_Longitude l2);
+double minimal_delta_between_longitudes(Nirayana_Longitude l1, Nirayana_Longitude l2);
+bool operator ==(Nirayana_Longitude l1, Nirayana_Longitude l2);
+bool operator !=(Nirayana_Longitude l1, Nirayana_Longitude l2);
 
 }
 

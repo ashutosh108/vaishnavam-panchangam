@@ -280,6 +280,7 @@ JulDays_UT find_time_with_given_value(
     }
     return time;
 }
+
 }
 
 JulDays_UT Calc::find_exact_tithi_start(JulDays_UT from, Tithi tithi) const {
@@ -325,7 +326,23 @@ JulDays_UT Calc::find_nakshatra_start(const JulDays_UT from, const Nakshatra tar
         minimal_delta_between_nakshatras,
         [](Nakshatra target, JulDays_UT from) { throw CantFindNakshatraAfter{target, from}; },
         [](Nakshatra & /*target*/, double & /*delta*/) {}
-);
+    );
+}
+
+JulDays_UT Calc::find_sankranti(JulDays_UT after, Saura_Masa masa) const
+{
+    auto target_longitude = starting_longitude(masa);
+    constexpr auto average_saura_masa_length_per_degree = date::years{1} / 360.0;
+    return find_time_with_given_value(
+        after,
+        target_longitude,
+        average_saura_masa_length_per_degree,
+        [this](JulDays_UT time) { return swe.surya_nirayana_longitude(time); },
+        positive_delta_between_longitudes,
+        minimal_delta_between_longitudes,
+        [&](Nirayana_Longitude target, JulDays_UT from) { throw CantFindSankrantiAfter{masa, target, from}; },
+        [](Nirayana_Longitude & /*target*/, double & /*delta*/) {}
+        );
 }
 
 Saura_Masa Calc::saura_masa(JulDays_UT time) const
@@ -354,6 +371,20 @@ std::underlying_type_t<Saura_Masa> operator-(Saura_Masa m1, Saura_Masa m2)
     std::make_signed_t<T> delta = static_cast<T>(m1) - static_cast<T>(m2);
     if (delta < 0) { delta += 12; }
     return delta;
+}
+
+Saura_Masa operator+(Saura_Masa m, int delta)
+{
+    using T = std::underlying_type_t<Saura_Masa>;
+    int mod = (static_cast<T>(m) - 1 + delta) % 12;
+    if (mod < 0) { mod += 12; }
+    return Saura_Masa{1 + mod};
+}
+
+Nirayana_Longitude starting_longitude(Saura_Masa m)
+{
+    using T = std::underlying_type_t<Saura_Masa>;
+    return Nirayana_Longitude{(static_cast<T>(m)-1) * (360.0/12.0)};
 }
 
 } // namespace vp
