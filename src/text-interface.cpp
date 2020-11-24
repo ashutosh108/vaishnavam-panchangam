@@ -82,6 +82,7 @@ const std::vector<Location> &LocationDb::locations() {
         { spb_coord },
         { murmansk_coord },
         { kostomuksha_coord },
+        { arhangelsk_coord },
         { smolensk_coord },
         { gomel_coord },
         { minsk_coord },
