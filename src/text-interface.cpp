@@ -228,7 +228,9 @@ void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp:
         }
         events.push_back(NamedTimePoint{description, tithi_start});
         if (tithi.is_dvadashi()) {
-            auto dvadashi_quarter_end = calc.find_exact_tithi_start(start, tithi+0.25);
+            const auto dvadashi_end = calc.find_exact_tithi_start(tithi_start, tithi+1.0);
+            const auto dvadashi_quarter_end = calc.proportional_time(tithi_start, dvadashi_end, 0.25);
+//            auto dvadashi_quarter_end = calc.find_exact_tithi_start(start, tithi+0.25);
             events.push_back(NamedTimePoint{fmt::format("First quarter of {:d} ends", tithi), dvadashi_quarter_end});
         }
     }

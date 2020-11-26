@@ -255,3 +255,4 @@ done:
 [+] day-by-day: print saura masa sankranti, if it falls within close range [2020-11-23]
 [+] day-by-day: print chandra masa at the beginning (experimental) [2020-11-23]
 [+] day-by-day: print chandra masa change, if any (purnima=>pratipat) [2020-11-23]
+[+] day-by-day: improve consistency: use simple proportion for 1/4 of dvadashi time (not search for 0.25 of tithi) [2020-11-26]

@@ -134,3 +134,33 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
         REQUIRE_THAT(s, !Contains("Mārgaśīrṣa"));
     }
 }
+
+namespace {
+std::string get_time_str_for_description(const std::string & buf, const std::string & search_for) {
+    auto pos = buf.find(search_for);
+    if (pos == std::string::npos) { return {}; }
+    auto newline_pos = buf.rfind('\n', pos);
+    if (newline_pos == std::string::npos) { return {}; }
+    return buf.substr(newline_pos+1, strlen("2020-11-26 15:58:14.076468 EET"));
+}
+}
+
+TEST_CASE("ekādaśī details and day-by-day give the same time for dvādaśī's 1/4") {
+    using namespace date::literals;
+    constexpr auto date = 2020_y/11/25;
+    constexpr auto location_name = "Udupi";
+
+    const auto daybyday_dvadashi_quarter_time = [&]() {
+        fmt::memory_buffer buf;
+        vp::text_ui::daybyday_print_one(date, location_name, buf, vp::CalcFlags::Default);
+        return get_time_str_for_description(fmt::to_string(buf), "First quarter of Shukla Dvadashi ends");
+    }();
+
+    const auto details_dvadashi_quarter_time = [&]() {
+        fmt::memory_buffer buf;
+        vp::text_ui::find_calc_and_report_one(date, location_name, buf);
+        return get_time_str_for_description(fmt::to_string(buf), "Dvādaśī's first quarter ends");
+    }();
+
+    REQUIRE(daybyday_dvadashi_quarter_time == details_dvadashi_quarter_time);
+}
