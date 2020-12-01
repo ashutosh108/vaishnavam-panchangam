@@ -108,8 +108,8 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
         vp::text_ui::daybyday_print_one(2020_y/11/23, "Udupi", buf, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
-        SECTION("'Chandra masa: such-and-such is present") {
-            REQUIRE_THAT(s, Contains("Chandra māsa: Kārtikā"));
+        SECTION("'Chāndra māsa: such-and-such is present") {
+            REQUIRE_THAT(s, Contains("Chāndra māsa: Kārtikā"));
         }
         SECTION("'such-and-such masa starts' is NOT present") {
             REQUIRE_THAT(s, !Contains("Mārgaśīrṣa"));
@@ -121,7 +121,7 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
         vp::text_ui::daybyday_print_one(2020_y/11/30, "Udupi", buf, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
-        REQUIRE_THAT(s, Contains("Chandra māsa: Kārtikā"));
+        REQUIRE_THAT(s, Contains("Chāndra māsa: Kārtikā"));
         REQUIRE_THAT(s, Contains("Mārgaśīrṣa"));
     }
 
@@ -130,7 +130,7 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
         vp::text_ui::daybyday_print_one(2020_y/11/14, "Udupi", buf, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
-        REQUIRE_THAT(s, Contains("Chandra māsa: Kārtikā"));
+        REQUIRE_THAT(s, Contains("Chāndra māsa: Kārtikā"));
         REQUIRE_THAT(s, !Contains("Mārgaśīrṣa"));
     }
 }

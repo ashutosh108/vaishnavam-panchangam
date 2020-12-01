@@ -312,12 +312,12 @@ void daybyday_add_sauramasa_info(NamedTimePoints & points, const vp::Calc & calc
 
 void daybyday_add_chandramasa_info(NamedTimePoints & points, const vp::Calc & calc, fmt::memory_buffer & buf) {
     if (points.empty()) {
-        fmt::format_to(buf, "Can't determine chandra māsa\n");
+        fmt::format_to(buf, "Can't determine chāndra māsa\n");
         return;
     }
     const auto initial_time = points[0].time_point;
     const auto initial_masa = calc.chandra_masa(initial_time);
-    fmt::format_to(buf, FMT_STRING("Chandra māsa: {} (chandra māsa support is experimental, do not rely on this yet)\n"), initial_masa);
+    fmt::format_to(buf, FMT_STRING("Chāndra māsa: {} (chāndra māsa support is experimental, do not rely on this yet)\n"), initial_masa);
 }
 }
 
