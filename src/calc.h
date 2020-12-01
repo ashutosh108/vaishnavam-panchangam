@@ -25,6 +25,7 @@ struct CantFindNakshatraAfter {
 };
 
 enum class Chandra_Masa {
+    Unknown = 0,
     Chaitra = 1,
     Vaishakha = 2,
     Jyeshtha = 3,
@@ -36,7 +37,9 @@ enum class Chandra_Masa {
     Margashirsha = 9,
     Pausha = 10,
     Magha = 11,
-    Phalguna = 12
+    Phalguna = 12,
+    Adhika = 13,
+    Kshaya = 14,
 };
 
 enum class Saura_Masa {
@@ -141,6 +144,7 @@ struct fmt::formatter<vp::Chandra_Masa> : fmt::formatter<std::string_view> {
     auto format(const vp::Chandra_Masa & m, FormatCtx & ctx) {
         const char * name = "Unknown";
         switch (m) {
+        case vp::Chandra_Masa::Unknown: name = "Unknown"; break;
         case vp::Chandra_Masa::Chaitra: name = "Chaitra"; break; // (चैत्र)
         case vp::Chandra_Masa::Vaishakha: name = "Vaiśākha"; break; // (वैशाख)
         case vp::Chandra_Masa::Jyeshtha: name = "Jyeṣṭha"; break; // (ज्येष्ठ)
@@ -153,6 +157,8 @@ struct fmt::formatter<vp::Chandra_Masa> : fmt::formatter<std::string_view> {
         case vp::Chandra_Masa::Pausha: name = "Pauṣa"; break; // (पौष)
         case vp::Chandra_Masa::Magha: name = "Māgha"; break; // (माघ)
         case vp::Chandra_Masa::Phalguna: name = "Phālguna"; break; // (फाल्गुन)
+        case vp::Chandra_Masa::Adhika: name = "Adhika"; break; // (फाल्गुन)
+        case vp::Chandra_Masa::Kshaya: name = "Kṣaya"; break;
         }
 
         return fmt::format_to(ctx.out(), "{}", name);

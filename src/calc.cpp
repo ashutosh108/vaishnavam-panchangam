@@ -362,6 +362,12 @@ Chandra_Masa Calc::chandra_masa_amanta(JulDays_UT time) const
     if (delta == 1) {
         return Chandra_Masa{saura_masa2};
     }
+    if (delta == 0) {
+        return Chandra_Masa::Adhika;
+    }
+    if (delta == 2) {
+        return Chandra_Masa::Kshaya;
+    }
     return Chandra_Masa{0};
 }
 

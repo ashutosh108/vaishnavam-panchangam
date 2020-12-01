@@ -732,3 +732,21 @@ TEST_CASE("Saura_Masa + operator works") {
     REQUIRE(Saura_Masa::Mina + (-11) == Saura_Masa::Mesha);
     REQUIRE(Saura_Masa::Mina + (-23) == Saura_Masa::Mesha);
 }
+
+TEST_CASE("chandra_masa_amanta() works for known adhika māsa cases") {
+    auto calc = Calc{sample_location};
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{2023_y/7/20}) == Chandra_Masa::Adhika);
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{2020_y/9/18}) == Chandra_Masa::Adhika);
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{2018_y/5/18}) == Chandra_Masa::Adhika);
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{2015_y/6/25}) == Chandra_Masa::Adhika);
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{2012_y/8/19}) == Chandra_Masa::Adhika);
+}
+
+TEST_CASE("chandra_masa_amanta() works for known kshaya māsa cases") {
+    auto calc = Calc{sample_location};
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{1963_y/10/23}) == Chandra_Masa::Adhika);
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{1963_y/11/23}) == Chandra_Masa::Kshaya);
+
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{1983_y/1/23}) == Chandra_Masa::Kshaya);
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{1983_y/2/23}) == Chandra_Masa::Adhika);
+}
