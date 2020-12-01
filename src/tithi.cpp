@@ -25,6 +25,11 @@ bool Tithi::is_dashami()
     return (tithi >= 9 && tithi < 10) || (tithi >= 9+15 && tithi < 10+15);
 }
 
+bool Tithi::is_shukla_pratipat() const noexcept
+{
+    return (tithi >= 0 && tithi < 1.0);
+}
+
 bool Tithi::is_krishna_pratipat() const
 {
     return (tithi >= 15.0 && tithi < 16.0);

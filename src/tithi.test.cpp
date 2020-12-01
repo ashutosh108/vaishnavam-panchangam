@@ -61,6 +61,14 @@ TEST_CASE("is_krishna_pratipat()") {
     REQUIRE_FALSE(Tithi{0.5}.is_krishna_pratipat());
 }
 
+TEST_CASE("is_shukla_pratipat()") {
+    REQUIRE_FALSE(Tithi{15.0}.is_shukla_pratipat());
+    REQUIRE_FALSE(Tithi{15.5}.is_shukla_pratipat());
+    REQUIRE(Tithi{0.0}.is_shukla_pratipat());
+    REQUIRE(Tithi{0.5}.is_shukla_pratipat());
+    REQUIRE_FALSE(Tithi{1.0}.is_shukla_pratipat());
+}
+
 TEST_CASE("can construct and compare Tithi using symbolic names") {
     REQUIRE(Tithi::Dashami() == Tithi{9});
     REQUIRE(Tithi::Dashami() != Tithi{9.1});
@@ -68,9 +76,15 @@ TEST_CASE("can construct and compare Tithi using symbolic names") {
     REQUIRE(Tithi::Dvadashi() == Tithi{11});
     REQUIRE(Tithi::Trayodashi() == Tithi{12});
 
+    REQUIRE(Tithi::Shukla_Pratipat() == Tithi{0.0});
+    REQUIRE(Tithi::Krishna_Pratipat() == Tithi{15.0});
+
     REQUIRE(Tithi::Dashami_End() == Tithi::Ekadashi());
     REQUIRE(Tithi::Ekadashi_End() == Tithi::Dvadashi());
     REQUIRE(Tithi::Dvadashi_End() == Tithi::Trayodashi());
+    REQUIRE(Tithi::Purnima_End() == Tithi::Krishna_Pratipat());
+
+    REQUIRE(Tithi::Amavasya_End() == Tithi::Shukla_Pratipat());
 }
 
 TEST_CASE("less than and greater than works for Tithi") {
