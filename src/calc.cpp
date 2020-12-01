@@ -351,13 +351,13 @@ Saura_Masa Calc::saura_masa(JulDays_UT time) const
     return Saura_Masa{1 + static_cast<int>(lng.longitude * (12.0/360.0))};
 }
 
-Chandra_Masa Calc::chandra_masa(JulDays_UT time) const
+Chandra_Masa Calc::chandra_masa_amanta(JulDays_UT time) const
 {
-    auto purnima2 = find_exact_tithi_start(time, Tithi::Purnima_End()); // end of purnima is start of pratipat
+    auto amavasya2 = find_exact_tithi_start(time, Tithi::Amavasya_End()); // end of amavasya is start of shukla pratipat
     constexpr auto saura_masa_max_length{double_days{32}};
-    auto purnima1 = find_exact_tithi_start(purnima2 - saura_masa_max_length, Tithi::Purnima_End()); // end of purnima is start of pratipat
-    auto saura_masa1 = saura_masa(purnima1);
-    auto saura_masa2 = saura_masa(purnima2);
+    auto amavasya1 = find_exact_tithi_start(amavasya2 - saura_masa_max_length, Tithi::Amavasya_End()); // end of purnima is start of pratipat
+    auto saura_masa1 = saura_masa(amavasya1);
+    auto saura_masa2 = saura_masa(amavasya2);
     int delta = saura_masa2 - saura_masa1;
     if (delta == 1) {
         return Chandra_Masa{saura_masa2};

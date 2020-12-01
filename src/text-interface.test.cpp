@@ -122,7 +122,7 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
 
         auto s = fmt::to_string(buf);
         REQUIRE_THAT(s, Contains("Chāndra māsa: Kārtikā"));
-        REQUIRE_THAT(s, Contains("Mārgaśīrṣa"));
+        REQUIRE_THAT(s, !Contains("Mārgaśīrṣa"));
     }
 
     SECTION("Chandra-masa info when we DO cross Amavasya (2020-11-14)") {
@@ -130,8 +130,8 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
         vp::text_ui::daybyday_print_one(2020_y/11/14, "Udupi", buf, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
-        REQUIRE_THAT(s, Contains("Chāndra māsa: Kārtikā"));
-        REQUIRE_THAT(s, !Contains("Mārgaśīrṣa"));
+        REQUIRE_THAT(s, Contains("Chāndra māsa: Aśvin"));
+        REQUIRE_THAT(s, Contains("Kārtikā"));
     }
 }
 

@@ -710,8 +710,9 @@ TEST_CASE("saura_masa() works for simple cases") {
 
 TEST_CASE("chandra_masa() works for simple cases") {
     auto calc = Calc{sample_location};
-    REQUIRE(calc.chandra_masa(JulDays_UT{2020_y/11/21}) == Chandra_Masa::Kartika);
-    REQUIRE(calc.chandra_masa(JulDays_UT{2020_y/12/1}) == Chandra_Masa::Margashirsha);
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{2020_y/11/21}) == Chandra_Masa::Kartika);
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{2020_y/12/1}) == Chandra_Masa::Kartika);
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{2020_y/12/16}) == Chandra_Masa::Margashirsha);
 }
 
 TEST_CASE("find_sankranti returns reasonable times") {

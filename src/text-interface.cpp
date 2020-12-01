@@ -223,8 +223,8 @@ void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp:
     for (vp::Tithi tithi = min_tithi; tithi != max_tithi; tithi += 1.0) {
         auto tithi_start = calc.find_exact_tithi_start(start, tithi);
         auto description = fmt::format("{:d} starts", tithi);
-        if (tithi.is_krishna_pratipat()) {
-            description += fmt::format(FMT_STRING(", {} māsa starts (?)"), calc.chandra_masa(tithi_start + double_days{1.0}));
+        if (tithi.is_shukla_pratipat()) {
+            description += fmt::format(FMT_STRING(", {} māsa starts (?)"), calc.chandra_masa_amanta(tithi_start + double_days{1.0}));
         }
         events.push_back(NamedTimePoint{description, tithi_start});
         if (tithi.is_dvadashi()) {
@@ -316,7 +316,7 @@ void daybyday_add_chandramasa_info(NamedTimePoints & points, const vp::Calc & ca
         return;
     }
     const auto initial_time = points[0].time_point;
-    const auto initial_masa = calc.chandra_masa(initial_time);
+    const auto initial_masa = calc.chandra_masa_amanta(initial_time);
     fmt::format_to(buf, FMT_STRING("Chāndra māsa: {} (chāndra māsa support is experimental, do not rely on this yet)\n"), initial_masa);
 }
 }
