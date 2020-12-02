@@ -124,6 +124,7 @@ struct Vrata {
           paksha(_paksha){}
     date::year_month_day local_paran_date() const;
     std::string location_name() const;
+    std::string ekadashi_name() const;
 
     static Vrata SampleVrata();
 };

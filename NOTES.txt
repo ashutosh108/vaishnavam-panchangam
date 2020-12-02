@@ -1,4 +1,5 @@
-[ ] cli: print māsa name and pakṣa
+[ ] ekadashi_name test: add data from Puttige calendar 2020 April-November
+[ ] ekadashi_name test: add data from Palimāru calendar all of 2020
 [ ] Table: add Russian version
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone):
 [ ] -> lat/long input activated => change text to decimal
@@ -257,3 +258,4 @@ done:
 [+] chandra masa: add simple handling for adhika & kshaya masas [2020-12-01]
 [+] GUI: Ekadashi summary: print chāndra māsa name [2020-12-02]
 [+] GUI: summary: print pakṣa [2020-12-02]
+[+] cli: print māsa name and pakṣa [2020-12-02]

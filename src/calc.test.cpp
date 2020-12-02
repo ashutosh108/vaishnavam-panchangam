@@ -765,7 +765,23 @@ TEST_CASE("chandra_masa_amanta() works for known kshaya māsa cases") {
 
 TEST_CASE("vrata::ekadashi_name() works for few known cases") {
     auto calc = Calc{udupi_coord};
-    auto vrata = calc.find_next_vrata(2020_y/12/2);
-    REQUIRE(vrata.has_value());
-//    REQUIRE(vrata->ekadashi_name() == "Utpattikā");
+    auto check = [&](date::year_month_day date, const char * expected_name) {
+        SECTION(fmt::format(FMT_STRING("{} ekādaśī on {}"), expected_name, date)) {
+            auto vrata = calc.find_next_vrata(date);
+            REQUIRE(vrata.has_value());
+            REQUIRE(date == vrata->date);
+            REQUIRE(expected_name == vrata->ekadashi_name());
+        }
+    };
+    // data from Puttige maṭha panchāṅgam 2020-21
+    // TODO: add data from beginning of 2020
+    check(2020_y/12/11, "Utpattikā");
+    check(2020_y/12/25, "Mokṣadā");
+    check(2021_y/1/9, "Saphalā");
+    check(2021_y/1/24, "Putradā");
+    check(2021_y/2/8, "Ṣaṭ-tilā");
+    check(2021_y/2/23, "Jayā");
+    check(2021_y/3/9, "Vijayā");
+    check(2021_y/3/25, "Āmalakī");
+    check(2021_y/4/7, "Pāpamocanī");
 }

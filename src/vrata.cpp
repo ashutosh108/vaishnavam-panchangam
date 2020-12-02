@@ -116,8 +116,18 @@ std::string Vrata::location_name() const
 {
     if (location.latitude_adjusted) {
         return fmt::format("{} (adjusted to {} {})", location.name, location.latitude, location.longitude);
-    }
+    }    
     return std::string{location.name};
+}
+
+std::string Vrata::ekadashi_name() const
+{
+    if (masa <= vp::Chandra_Masa{13}) {
+        int num = (static_cast<int>(masa)-1) * 2; // 1,2,3,4... => 0, 2, 4, 6, ...
+        if (paksha == Paksha::Krishna) { ++num; }
+        return vp::ekadashi_names()[num];
+    }
+    return "Unknown";
 }
 
 Vrata Vrata::SampleVrata()
