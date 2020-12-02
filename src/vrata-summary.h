@@ -24,6 +24,7 @@ struct fmt::formatter<vp::Vrata_Summary> : fmt::formatter<std::string_view> {
             return fmt::format_to(ctx.out(), "(null)");
         }
         fmt::format_to(ctx.out(), "<h1>{}</h1>\n", vs.vrata->location_name());
+        fmt::format_to(ctx.out(), FMT_STRING("<p>{} māsa (amānta)</p>\n"), vs.vrata->masa);
         if (vp::is_atirikta(vs.vrata->type)) {
             date::year_month_day next_day{date::sys_days{vs.vrata->date} + date::days{1}};
             fmt::format_to(ctx.out(), "<p>{} on <span class=\"date-range\"><span class=\"date\">{}</span> and <span class=\"date\">{}</span></span></big></p>\n", vs.vrata->type, vs.vrata->date, next_day);

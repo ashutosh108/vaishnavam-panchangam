@@ -81,6 +81,7 @@ repeat_with_fixed_start_time:
         atirikta_paran(vrata.sunrise3, vrata.sunset3, vrata.times.trayodashi_start)
     :
         get_paran(vrata.sunrise2, vrata.sunset2, vrata.times.dvadashi_start, vrata.times.trayodashi_start);
+    vrata.masa = chandra_masa_amanta(vrata.sunrise1);
 
     return vrata;
 }

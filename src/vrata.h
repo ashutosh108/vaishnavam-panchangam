@@ -5,6 +5,7 @@
 #include "date-fixed.h"
 #include "juldays_ut.h"
 #include "location.h"
+#include "masa.h"
 #include "paran.h"
 #include "tithi.h"
 
@@ -86,6 +87,7 @@ struct Vrata {
     Paran paran;
     Location location;
     Vrata_Time_Points times = dummy_vrata_time_points;
+    Chandra_Masa masa;
 
     static constexpr double_days nan_days = double_days{std::numeric_limits<double>::quiet_NaN()};
     std::optional<JulDays_UT> sunrise0; // only used when sunrise1 is moved one day ahead due to dAshamI viddha
@@ -109,12 +111,13 @@ struct Vrata {
 
     // we always use this constructor for real calculations
     // "dummy" defaults only used in tests.
-    Vrata(Vrata_Type _type, date::year_month_day _date, Paran _paran, Location _location = dummy_coord, Vrata_Time_Points _times = dummy_vrata_time_points)
+    Vrata(Vrata_Type _type, date::year_month_day _date, Chandra_Masa _masa, Paran _paran, Location _location = dummy_coord, Vrata_Time_Points _times = dummy_vrata_time_points)
         : type(_type),
           date(_date),
           paran(_paran),
           location(_location),
-          times(_times){}
+          times(_times),
+          masa(_masa){}
     date::year_month_day local_paran_date() const;
     std::string location_name() const;
 

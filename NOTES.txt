@@ -1,4 +1,4 @@
-[ ] GUI: Ekadashi summary: print chandra masa name
+[ ] cli: print māsa name
 [ ] Table: add Russian version
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone):
 [ ] -> lat/long input activated => change text to decimal
@@ -255,3 +255,4 @@ done:
 [+] day-by-day: print chandra masa change, if any (purnima=>pratipat) [2020-11-23]
 [+] day-by-day: improve consistency: use simple proportion for 1/4 of dvadashi time (not search for 0.25 of tithi) [2020-11-26]
 [+] chandra masa: add simple handling for adhika & kshaya masas [2020-12-01]
+[+] GUI: Ekadashi summary: print chāndra māsa name

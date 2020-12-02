@@ -135,7 +135,7 @@ Vrata Vrata::SampleVrata()
         JulDays_UT{date::sys_days{2000_y/1/2} + 3h}, // dvadashi_start;
         JulDays_UT{date::sys_days{2000_y/1/3} + 3h}, // trayodashi_start;
     };
-    Vrata vrata{Vrata_Type::Ekadashi, date::year{2000}/1/1, Paran{}, sample_location, time_points};
+    Vrata vrata{Vrata_Type::Ekadashi, date::year{2000}/1/1, Chandra_Masa::Margashirsha, Paran{}, sample_location, time_points};
     vrata.sunset0 = vp::JulDays_UT{date::sys_days{1999_y/12/31} + 21h};
     vrata.sunrise1 = vp::JulDays_UT{date::sys_days{2000_y/1/1} + 6h};
     vrata.sunrise2 = vp::JulDays_UT{date::sys_days{2000_y/1/2} + 6h};
