@@ -30,7 +30,7 @@ TEST_CASE("Table_Calendar_Generator returns reasonable table") {
     REQUIRE(table.at(1, 0).text == "+5:30");
     REQUIRE(table.at(1, 1).text == "India");
     REQUIRE_THAT(table.at(1, 2).text, Contains("Udupi"));
-    REQUIRE(table.at(1, 3).text == "Śuddhā Ekādaśī");
+    REQUIRE(table.at(1, 3).text == "Putradā Ekādaśī");
     REQUIRE_THAT(table.at(1, 4).text, Contains(">10:06"));
     REQUIRE(table.at(1, 5).text == "");
 }

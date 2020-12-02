@@ -37,7 +37,7 @@ const std::vector<std::string> & ekadashi_names()
         "Yoginī",             // 06 amānta Jyeṣṭha kṛṣṇa-pakṣa
         "Śayanī",             // 07 amānta Āṣāḍha śukla-pakṣa
         "Kāmikā",             // 08 amānta Āṣāḍha kṛṣṇa-pakṣa
-        "Pāvitrā",            // 09 amānta Śṛāvaṇa śukla-pakṣa
+        "Pavitrā",            // 09 amānta Śṛāvaṇa śukla-pakṣa
         "Ajā",                // 10 amānta Śṛāvaṇa kṛṣṇa-pakṣa
         "Pārśva-parivartinī", // 11 amānta Bhādrapada śukla-pakṣa
         "Indirā",             // 12 amānta Bhādrapada kṛṣṇa-pakṣa

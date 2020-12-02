@@ -207,7 +207,7 @@ struct fmt::formatter<vp::Vrata_Type> : fmt::formatter<std::string_view> {
         const char * name = "unknown";
         switch (vrata) {
         case vp::Vrata_Type::Ekadashi:
-            name = "Śuddhā Ekādaśī"; break;
+            name = "Ekādaśī"; break;
         case vp::Vrata_Type::With_Atirikta_Dvadashi:
             name = "Ekādaśī with Atiriktā Dvādaśī (two days fast)"; break;
         case vp::Vrata_Type::With_Atirikta_Ekadashi:

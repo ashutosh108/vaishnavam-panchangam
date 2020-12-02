@@ -43,8 +43,8 @@ TEST_CASE("atirikta dvAdashI is written from capital 'A'") {
     REQUIRE_THAT(fmt::to_string(Vrata_Type::With_Atirikta_Dvadashi), Contains("with Atiriktā Dvādaśī"));
 }
 
-TEST_CASE("Śuddhā Ekādaśī is written as initial-caps") {
-    REQUIRE_THAT(fmt::to_string(Vrata_Type::Ekadashi), Contains("Śuddhā Ekādaśī"));
+TEST_CASE("Ekādaśī is written as initial-caps") {
+    REQUIRE_THAT(fmt::to_string(Vrata_Type::Ekadashi), Contains("Ekādaśī"));
 }
 
 TEST_CASE("MaybeVrata and VratasForDate types (or aliases) do exist") {

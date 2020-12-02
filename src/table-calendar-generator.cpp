@@ -94,7 +94,7 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
     for (auto date : vrata_dates) {
         std::string classes = "mainpart";
         if (date >= vrata->date && date < vrata->local_paran_date()) {
-            table.add_cell(fmt::to_string(vrata->type), classes + " vrata");
+            table.add_cell(fmt::format(FMT_STRING("{} {}"), vrata->ekadashi_name(), vrata->type), classes + " vrata");
         } else if (date == vrata->local_paran_date()) {
             // 'c' means compact formatting ("*" for standard pAraNam, otherwise something like ">06:45", "<07:45" or "06:45-07.45")
             const auto paran_with_href = fmt::format(R"(<a href="#{}">{:c}</a>)", html::escape_attribute(vrata->location_name()), vrata->paran);
