@@ -66,6 +66,7 @@ add_library(swe STATIC
     src/html-util.cpp src/html-util.h
     src/calc-flags.cpp src/calc-flags.h
     src/nakshatra.cpp src/nakshatra.h
+    src/masa.cpp src/masa.h
 )
 target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)
 target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected fmt::fmt)

@@ -371,22 +371,6 @@ Chandra_Masa Calc::chandra_masa_amanta(JulDays_UT time) const
     return Chandra_Masa{0};
 }
 
-std::underlying_type_t<Saura_Masa> operator-(Saura_Masa m1, Saura_Masa m2)
-{
-    using T = std::underlying_type_t<Saura_Masa>;
-    std::make_signed_t<T> delta = static_cast<T>(m1) - static_cast<T>(m2);
-    if (delta < 0) { delta += 12; }
-    return delta;
-}
-
-Saura_Masa operator+(Saura_Masa m, int delta)
-{
-    using T = std::underlying_type_t<Saura_Masa>;
-    int mod = (static_cast<T>(m) - 1 + delta) % 12;
-    if (mod < 0) { mod += 12; }
-    return Saura_Masa{1 + mod};
-}
-
 Nirayana_Longitude starting_longitude(Saura_Masa m)
 {
     using T = std::underlying_type_t<Saura_Masa>;
