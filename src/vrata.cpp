@@ -28,32 +28,32 @@ bool operator!=(const Vrata &v1, const Vrata &v2)
 const std::vector<std::string> & ekadashi_names()
 {
     static const std::vector<std::string> static_names{
-        "Pāpamocanī",         // 01
-        "Kāmadā",             // 02
-        "Varūthinī",          // 03
-        "Mohinī",             // 04
-        "Aparā",              // 05
-        "Nirjalā",            // 06
-        "Yoginī",             // 07
-        "Śayanī",             // 08
-        "Kāmikā",             // 09
-        "Pāvitrā",            // 10
-        "Ajā",                // 11
-        "Pārśva-parivartinī", // 12
-        "Indirā",             // 13
-        "Pāśāṅkuśā",          // 14
-        "Ramā",               // 15
-        "Prabodhinī",         // 16
-        "Utpattikā",          // 17
-        "Mokṣadā",            // 18
-        "Saphalā",            // 19
-        "Putradā",            // 20
-        "Ṣaṭ-tilā",           // 21
-        "Jayā",               // 22
-        "Vijayā",             // 23
-        "Āmalakī",            // 24
-        "Kamalā",             // 25
-        "Padmā"               // 26
+        "Kāmadā",             // 01 amānta Chaitra śukla-pakṣa
+        "Varūthinī",          // 02 amānta Chaitra kṛṣṇa-pakṣa
+        "Mohinī",             // 03 amānta Vaiśākha śukla-pakṣa
+        "Aparā",              // 04 amānta Vaiśākha kṛṣṇa-pakṣa
+        "Nirjalā",            // 05 amānta Jyeṣṭha śukla-pakṣa
+        "Yoginī",             // 06 amānta Jyeṣṭha kṛṣṇa-pakṣa
+        "Śayanī",             // 07 amānta Āṣāḍha śukla-pakṣa
+        "Kāmikā",             // 08 amānta Āṣāḍha kṛṣṇa-pakṣa
+        "Pāvitrā",            // 09 amānta Śṛāvaṇa śukla-pakṣa
+        "Ajā",                // 10 amānta Śṛāvaṇa kṛṣṇa-pakṣa
+        "Pārśva-parivartinī", // 11 amānta Bhādrapada śukla-pakṣa
+        "Indirā",             // 12 amānta Bhādrapada kṛṣṇa-pakṣa
+        "Pāśāṅkuśā",          // 13 amānta Aśvin śukla-pakṣa
+        "Ramā",               // 14 amānta Aśvin kṛṣṇa-pakṣa
+        "Prabodhinī",         // 15 amānta Kārtika śukla-pakṣa
+        "Utpattikā",          // 16 amānta Kārtika kṛṣṇa-pakṣa
+        "Mokṣadā",            // 17 amānta Mārgaśīrṣa śukla-pakṣa
+        "Saphalā",            // 18 amānta Mārgaśīrṣa kṛṣṇa-pakṣa
+        "Putradā",            // 19 amānta Pauṣa śukla-pakṣa
+        "Ṣaṭ-tilā",           // 20 amānta Pauṣa kṛṣṇa-pakṣa
+        "Jayā",               // 21 amānta Māgha śukla-pakṣa
+        "Vijayā",             // 22 amānta Māgha kṛṣṇa-pakṣa
+        "Āmalakī",            // 23 amānta Phālguna śukla-pakṣa
+        "Pāpamocanī",         // 24 amānta Phālguna kṛṣṇa-pakṣa
+        "Kamalā",             // 25 adhika-māsa śukla-pakṣa
+        "Padmā"               // 26 adhika-māsa kṛṣṇa-pakṣa
     };
     return static_names;
 }
@@ -61,30 +61,30 @@ const std::vector<std::string> & ekadashi_names()
 const std::vector<std::string> & ekadashi_names_rus()
 {
     static const std::vector<std::string> static_names{
-        "Пāпамочанӣ",         // 01
-        "Кāмадā",             // 02
-        "Варӯтӿинӣ",          // 03
-        "Мохинӣ",             // 04
-        "Апарā",              // 05
-        "Нирџалā",            // 06
-        "Йогинӣ",             // 07
-        "Щайанӣ",             // 08
-        "Кāмикā",             // 09
-        "Пāвитрā",            // 10
-        "Аџā",                // 11
-        "Пāрщва-паривартинӣ", // 12
-        "Индирā",             // 13
-        "Пāщāӈкущā",          // 14
-        "Рамā",               // 15
-        "Прабодӿинӣ",         // 16
-        "Утпаттикā",          // 17
-        "Мокшадā",            // 18
-        "Сапӿалā",            // 19
-        "Путрадā",            // 20
-        "Шат̣тилā",            // 21
-        "Џайā",               // 22
-        "Виџайā",             // 23
-        "Āмалакӣ",            // 24
+        "Кāмадā",             // 01
+        "Варӯтӿинӣ",          // 02
+        "Мохинӣ",             // 03
+        "Апарā",              // 04
+        "Нирџалā",            // 05
+        "Йогинӣ",             // 06
+        "Щайанӣ",             // 07
+        "Кāмикā",             // 08
+        "Пāвитрā",            // 09
+        "Аџā",                // 10
+        "Пāрщва-паривартинӣ", // 11
+        "Индирā",             // 12
+        "Пāщāӈкущā",          // 13
+        "Рамā",               // 14
+        "Прабодӿинӣ",         // 15
+        "Утпаттикā",          // 16
+        "Мокшадā",            // 17
+        "Сапӿалā",            // 18
+        "Путрадā",            // 19
+        "Шат̣тилā",            // 20
+        "Џайā",               // 21
+        "Виџайā",             // 22
+        "Āмалакӣ",            // 23
+        "Пāпамочанӣ",         // 24
         "Камалā",             // 25
         "Падмā"               // 26
     };
