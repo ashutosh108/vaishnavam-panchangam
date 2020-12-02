@@ -749,4 +749,10 @@ TEST_CASE("chandra_masa_amanta() works for known kshaya māsa cases") {
 
     REQUIRE(calc.chandra_masa_amanta(JulDays_UT{1983_y/1/23}) == Chandra_Masa::Kshaya);
     REQUIRE(calc.chandra_masa_amanta(JulDays_UT{1983_y/2/23}) == Chandra_Masa::Adhika);
+
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{2123_y/12/23}) == Chandra_Masa::Kshaya);
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{2124_y/3/23}) == Chandra_Masa::Adhika);
+
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{2284_y/1/23}) == Chandra_Masa::Kshaya);
+    REQUIRE(calc.chandra_masa_amanta(JulDays_UT{2284_y/3/23}) == Chandra_Masa::Adhika);
 }
