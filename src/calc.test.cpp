@@ -774,7 +774,23 @@ TEST_CASE("vrata::ekadashi_name() works for few known cases") {
         }
     };
     // data from Puttige maṭha panchāṅgam 2020-21
-    // TODO: add data from beginning of 2020
+    check(2020_y/4/4, "Kāmadā");
+    check(2020_y/4/18, "Varūthinī");
+    check(2020_y/5/4, "Mohinī");
+    check(2020_y/5/18, "Aparā");
+    check(2020_y/6/2, "Nirjalā");
+    check(2020_y/6/17, "Yoginī");
+    check(2020_y/7/1, "Śayanī");
+    check(2020_y/7/16, "Kāmikā");
+    check(2020_y/7/30, "Pavitrā");
+    check(2020_y/8/15, "Ajā");
+    check(2020_y/8/29, "Pārśva-parivartinī");
+    check(2020_y/9/13, "Indirā");
+    check(2020_y/9/27, "Kamalā");
+    check(2020_y/10/13, "Padmā");
+    check(2020_y/10/27, "Pāśāṅkuśā");
+    check(2020_y/11/11, "Ramā");
+    check(2020_y/11/25, "Prabodhinī"); // TODO: why our calculations show atiriktā, but Puttige shows one-day ekādaśī on 26th?
     check(2020_y/12/11, "Utpattikā");
     check(2020_y/12/25, "Mokṣadā");
     check(2021_y/1/9, "Saphalā");

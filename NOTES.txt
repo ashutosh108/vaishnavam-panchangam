@@ -1,4 +1,3 @@
-[ ] ekadashi_name test: add data from Puttige calendar 2020 April-November
 [ ] ekadashi_name test: add data from Palimāru calendar all of 2020
 [ ] Table: add Russian version
 [ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone):
@@ -259,3 +258,4 @@ done:
 [+] GUI: Ekadashi summary: print chāndra māsa name [2020-12-02]
 [+] GUI: summary: print pakṣa [2020-12-02]
 [+] cli: print māsa name and pakṣa [2020-12-02]
+[+] ekadashi_name test: add data from Puttige calendar 2020 April-November [2020-12-02]
