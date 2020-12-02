@@ -4,6 +4,7 @@
 #include "juldays_ut.h"
 #include "nakshatra.h"
 #include "tithi.h"
+#include "vrata.h"
 
 #define CATCH_CONFIG_ENABLE_ALL_STRINGMAKERS
 #include "catch2/catch.hpp"
@@ -35,6 +36,13 @@ template<>
 struct StringMaker<vp::Nirayana_Longitude> {
     static std::string convert(const vp::Nirayana_Longitude & l) {
         return fmt::format(FMT_STRING("Nirayana_Longitude({})"), l.longitude);
+    }
+};
+
+template<>
+struct StringMaker<vp::Vrata> {
+    static std::string convert(const vp::Vrata & v) {
+        return fmt::format(FMT_STRING("{}"), v);
     }
 };
 }

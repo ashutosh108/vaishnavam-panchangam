@@ -10,6 +10,7 @@ bool operator==(const Vrata &v1, const Vrata &v2)
     // if v1's paran_start/end is nullopt, then v2's paran_start_end can be anything.
     // But if v1's paran_start/end is set, then v2's one must match.
     return v1.type == v2.type && v1.date == v2.date && v1.paran.type == v2.paran.type &&
+           v1.masa == v2.masa && v1.paksha == v2.paksha &&
             (
                 (!v1.paran.paran_start.has_value()) ||
                 (v1.paran.paran_start == v2.paran.paran_start)
@@ -135,7 +136,7 @@ Vrata Vrata::SampleVrata()
         JulDays_UT{date::sys_days{2000_y/1/2} + 3h}, // dvadashi_start;
         JulDays_UT{date::sys_days{2000_y/1/3} + 3h}, // trayodashi_start;
     };
-    Vrata vrata{Vrata_Type::Ekadashi, date::year{2000}/1/1, Chandra_Masa::Margashirsha, Paran{}, sample_location, time_points};
+    Vrata vrata{Vrata_Type::Ekadashi, date::year{2000}/1/1, Chandra_Masa::Margashirsha, Paksha::Krishna, Paran{}, sample_location, time_points};
     vrata.sunset0 = vp::JulDays_UT{date::sys_days{1999_y/12/31} + 21h};
     vrata.sunrise1 = vp::JulDays_UT{date::sys_days{2000_y/1/1} + 6h};
     vrata.sunrise2 = vp::JulDays_UT{date::sys_days{2000_y/1/2} + 6h};

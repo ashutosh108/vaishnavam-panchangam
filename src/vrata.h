@@ -87,7 +87,8 @@ struct Vrata {
     Paran paran;
     Location location;
     Vrata_Time_Points times = dummy_vrata_time_points;
-    Chandra_Masa masa;
+    Chandra_Masa masa{Chandra_Masa::Unknown};
+    Paksha paksha{Paksha::Unknown};
 
     static constexpr double_days nan_days = double_days{std::numeric_limits<double>::quiet_NaN()};
     std::optional<JulDays_UT> sunrise0; // only used when sunrise1 is moved one day ahead due to dAshamI viddha
@@ -101,23 +102,26 @@ struct Vrata {
     Vrata(){}
 
     // used only for tests
-    Vrata(date::year_month_day _date)
-        : date(_date){}
+    Vrata(date::year_month_day _date, Chandra_Masa _masa, Paksha _paksha)
+        : date(_date), masa(_masa), paksha(_paksha) {}
 
     // used only for tests
-    Vrata(Vrata_Type _type, date::year_month_day _date)
+    Vrata(Vrata_Type _type, date::year_month_day _date, Chandra_Masa _masa, Paksha _paksha)
         : type(_type),
-          date(_date){}
+          date(_date),
+          masa(_masa),
+          paksha(_paksha) {}
 
     // we always use this constructor for real calculations
     // "dummy" defaults only used in tests.
-    Vrata(Vrata_Type _type, date::year_month_day _date, Chandra_Masa _masa, Paran _paran, Location _location = dummy_coord, Vrata_Time_Points _times = dummy_vrata_time_points)
+    Vrata(Vrata_Type _type, date::year_month_day _date, Chandra_Masa _masa, Paksha _paksha, Paran _paran, Location _location = dummy_coord, Vrata_Time_Points _times = dummy_vrata_time_points)
         : type(_type),
           date(_date),
           paran(_paran),
           location(_location),
           times(_times),
-          masa(_masa){}
+          masa(_masa),
+          paksha(_paksha){}
     date::year_month_day local_paran_date() const;
     std::string location_name() const;
 
@@ -221,6 +225,7 @@ struct fmt::formatter<vp::Vrata> : fmt::formatter<std::string_view> {
             date::year_month_day date2 = date::sys_days{v.date} + date::days{1};
             fmt::format_to(ctx.out(), " & {}", date2);
         }
+        fmt::format_to(ctx.out(), FMT_STRING(", {} māsa, {} pakṣa"), v.masa, v.paksha);
         return ctx.out();
     }
 };

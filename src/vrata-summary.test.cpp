@@ -32,9 +32,10 @@ TEST_CASE("summary for Atiriktā contains both dates") {
     REQUIRE_THAT(actual, Contains("2000-01-02"));
 }
 
-TEST_CASE("summary contains māsa name") {
+TEST_CASE("summary contains māsa name and pakṣa") {
     auto vrata = vp::Vrata::SampleVrata();
     auto actual = fmt::format("{}", vp::Vrata_Summary{&vrata});
     using Catch::Matchers::Contains;
     REQUIRE_THAT(actual, Contains("Mārgaśīrṣa"));
+    REQUIRE_THAT(actual, Contains("kṛṣṇa pakṣa"));
 }

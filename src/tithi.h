@@ -9,8 +9,9 @@
 namespace vp {
 
 enum class Paksha {
-    Shukla,
-    Krishna
+    Unknown = 0,
+    Shukla = 1,
+    Krishna = 2
 };
 
 struct Tithi {
@@ -155,6 +156,20 @@ struct fmt::formatter<vp::Tithi> : fmt::formatter<std::string_view> {
             }
             return ctx.out();
         }
+    }
+};
+
+template<>
+struct fmt::formatter<vp::Paksha> : fmt::formatter<std::string_view> {
+    template<class FormatCtx>
+    auto format(vp::Paksha p, FormatCtx & ctx) {
+        const char * name = "unknown";
+        switch (p) {
+        case vp::Paksha::Unknown: name = "unknown"; break;
+        case vp::Paksha::Shukla: name = "śukla"; break;
+        case vp::Paksha::Krishna: name = "kṛṣṇa"; break;
+        }
+        return fmt::format_to(ctx.out(), "{}", name);
     }
 };
 

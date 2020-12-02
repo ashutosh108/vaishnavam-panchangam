@@ -82,6 +82,7 @@ repeat_with_fixed_start_time:
     :
         get_paran(vrata.sunrise2, vrata.sunset2, vrata.times.dvadashi_start, vrata.times.trayodashi_start);
     vrata.masa = chandra_masa_amanta(vrata.sunrise1);
+    vrata.paksha = tithi_that_must_not_be_dashamI.get_paksha();
 
     return vrata;
 }
