@@ -140,7 +140,7 @@ TEST_CASE("generated table shows year for non-default-year dates when default ye
     const auto table{vp::Table_Calendar_Generator::generate(some_vratas(2019_y/December/20), 2020_y)};
 
     using Catch::Matchers::Contains;
-    std::vector<std::pair<int, int>> to_check{{0, 3}, {0, 4}, {0, 5}, {table.height()-1, 3}, {table.height()-1, 4}, {table.height()-1, 5}};
+    std::vector<std::pair<size_t, size_t>> to_check{{0, 3}, {0, 4}, {0, 5}, {table.height()-1, 3}, {table.height()-1, 4}, {table.height()-1, 5}};
     for (const auto & pair : to_check) {
         CAPTURE(pair.first, pair.second);
         REQUIRE_THAT(table.at(pair.first, pair.second).text, Contains("2019"));
