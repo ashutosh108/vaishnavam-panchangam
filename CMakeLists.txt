@@ -40,8 +40,8 @@ target_link_libraries( tz PUBLIC date::date)
 #
 # HAS_REMOTE_API=0 is a hack to avoid requiring curl (and we don't want to require curl yet).
 target_compile_definitions(tz PRIVATE HAS_REMOTE_API=0 INSTALL=.)
-# glibc on linux seem to require -pthread for std::call_once. Approximate that with "not win32".
-if (NOT WIN32)
+# glibc on linux seem to require -pthread for std::call_once. Approximate that with "gcc and UNIX".
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND UNIX)
     find_package(Threads)
     target_link_libraries(tz PRIVATE Threads::Threads)
 endif()
