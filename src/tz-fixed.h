@@ -25,4 +25,16 @@ struct fmt::formatter<date::zoned_time<Duration>> {
     }
 };
 
+template<class Duration, class TimeZonePtr>
+bool operator>=(const date::zoned_time<Duration, TimeZonePtr> & t1,
+                const date::zoned_time<Duration, TimeZonePtr> & t2) {
+    return t1.get_sys_time() >= t2.get_sys_time();
+}
+
+template<class Duration, class TimeZonePtr>
+bool operator<=(const date::zoned_time<Duration, TimeZonePtr> & t1,
+                const date::zoned_time<Duration, TimeZonePtr> & t2) {
+    return t1.get_sys_time() <= t2.get_sys_time();
+}
+
 #endif

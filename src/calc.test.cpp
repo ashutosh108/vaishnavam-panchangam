@@ -608,18 +608,6 @@ TEST_CASE("we get nearest next ekadashi start for petropavlovsk 2019-03-18") {
     REQUIRE(vrata->times.ekadashi_start < ekadashi_latest);
 }
 
-template<class Duration, class TimeZonePtr>
-bool operator>=(const date::zoned_time<Duration, TimeZonePtr> & t1,
-                const date::zoned_time<Duration, TimeZonePtr> & t2) {
-    return t1.get_sys_time() >= t2.get_sys_time();
-}
-
-template<class Duration, class TimeZonePtr>
-bool operator<=(const date::zoned_time<Duration, TimeZonePtr> & t1,
-                const date::zoned_time<Duration, TimeZonePtr> & t2) {
-    return t1.get_sys_time() <= t2.get_sys_time();
-}
-
 TEST_CASE("arunodaya0 and sunrise0 are from the same morning in the dAshaMi viddha case for Mirny 2020-07-30") {
     auto vrata = Calc{mirnyy_coord}.find_next_vrata(2020_y/July/30);
     CAPTURE(vrata->sunrise0);
