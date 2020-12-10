@@ -370,29 +370,41 @@ void MainWindow::showVersionInStatusLine()
     statusBar()->showMessage(QString::fromStdString(vp::text_ui::program_name_and_version()));
 }
 
+namespace {
+// no need to store QShortcut objects as shortcut object's parent (MainWindow) will remove them properly
+void new_shortcut(const QKeySequence &key, MainWindow *parent, void (MainWindow::*memberptr)()) {
+    auto s = new QShortcut(key, parent);
+    parent->connect(s, &QShortcut::activated, parent, memberptr);
+}
+template<class Lambda>
+void new_shortcut(const QKeySequence &key, MainWindow *parent, Lambda lambda) {
+    auto s = new QShortcut(key, parent);
+    parent->connect(s, &QShortcut::activated, std::move(lambda));
+}
+}
+
 void MainWindow::setupKeyboardShortcuts() {
-    // no need to store as shortcut object's parent (MainWindow) will remove it properly
-    new QShortcut(Qt::CTRL + Qt::Key_PageUp, this, this, &MainWindow::switchToPrevTab);
-    new QShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_Tab, this, this, &MainWindow::switchToPrevTab);
-    new QShortcut(Qt::CTRL + Qt::Key_PageDown, this, this, &MainWindow::switchToNextTab);
-    new QShortcut(Qt::CTRL + Qt::Key_Tab, this, this, &MainWindow::switchToNextTab);
-    new QShortcut(Qt::CTRL + Qt::Key_Left, this, [this](){
+    new_shortcut(Qt::CTRL + Qt::Key_PageUp, this, &MainWindow::switchToPrevTab);
+    new_shortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_Tab, this, &MainWindow::switchToPrevTab);
+    new_shortcut(Qt::CTRL + Qt::Key_PageDown, this, &MainWindow::switchToNextTab);
+    new_shortcut(Qt::CTRL + Qt::Key_Tab, this, &MainWindow::switchToNextTab);
+    new_shortcut(Qt::CTRL + Qt::Key_Left, this, [this](){
         if (ui->tabWidget->tabText(ui->tabWidget->currentIndex()) == "Day-by-day") {
             ui->dateEdit->setDate(ui->dateEdit->date().addDays(-1));
         } else {
             on_datePrevEkadashi_clicked();
         }
     });
-    new QShortcut(Qt::CTRL + Qt::Key_Right, this, [this]() {
+    new_shortcut(Qt::CTRL + Qt::Key_Right, this, [this]() {
         if (ui->tabWidget->tabText(ui->tabWidget->currentIndex()) == "Day-by-day") {
             ui->dateEdit->setDate(ui->dateEdit->date().addDays(+1));
         } else {
             on_dateNextEkadashi_clicked();
         }
     });
-    new QShortcut(Qt::CTRL + Qt::Key_Home, this, this, &MainWindow::switchToHomeDateAndOrLocation);
-    new QShortcut(Qt::CTRL + Qt::Key_Up, this, this, &MainWindow::switchToPrevLocation);
-    new QShortcut(Qt::CTRL + Qt::Key_Down, this, this, &MainWindow::switchToNextLocation);
+    new_shortcut(Qt::CTRL + Qt::Key_Home, this, &MainWindow::switchToHomeDateAndOrLocation);
+    new_shortcut(Qt::CTRL + Qt::Key_Up, this, &MainWindow::switchToPrevLocation);
+    new_shortcut(Qt::CTRL + Qt::Key_Down, this, &MainWindow::switchToNextLocation);
 }
 
 template <typename Widget>
