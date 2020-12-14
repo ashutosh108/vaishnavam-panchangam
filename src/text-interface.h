@@ -21,6 +21,8 @@ struct NamedTimePoint {
 using NamedTimePoints = std::vector<NamedTimePoint>;
 
 struct DayByDayInfo {
+    vp::Location location;
+    date::year_month_day date;
     std::optional<JulDays_UT> sunrise1;
     std::optional<JulDays_UT> sunset1;
     std::optional<JulDays_UT> sunrise2;

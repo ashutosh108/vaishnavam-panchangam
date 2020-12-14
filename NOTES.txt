@@ -1,4 +1,3 @@
-[ ] day-by-day GUI: gray out events outside of target date's sunrise-sunrise period
 [ ] day-by-day: print summary with traditional form year, date, weekday, tithi, nakshatra, saura māsa and candra māsa display
 [ ] day-by-day: add graphical representation. layers: 24h days, sun days, tithis, nakshatras, saura māsas, candra māsas(?)
 [ ] Table: add Russian version
@@ -264,3 +263,4 @@ done:
 [+] daybyday: now chāndra and saura māsas are reported as they are on the sunrise [2020-12-14]
 [+] text-interface: cleanup detail namespace (e.g. hide hash and cache in the anonymous namespace) [2020-12-14]
 [+] day-by-day CLI: mark target date's sunrise-sunrise period with "-----" separator [2020-12-14]
+[+] day-by-day GUI: gray out events outside of target date's sunrise-sunrise period [2020-12-14]

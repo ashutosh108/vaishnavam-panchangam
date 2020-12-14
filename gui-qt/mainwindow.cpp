@@ -354,15 +354,39 @@ void MainWindow::refreshTable()
     }
 }
 
+namespace {
+QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
+    fmt::memory_buffer buf;
+    fmt::format_to(buf,
+                   "<h1>{} on {}</h1>\n",
+                   info.location.name, info.date);
+    fmt::format_to(buf, FMT_STRING("Saura māsa: {}<br>\n"), info.saura_masa);
+    fmt::format_to(buf, FMT_STRING("Chāndra māsa: {}<br>\n"), info.chandra_masa);
+    bool got_first_sunrise = false;
+    bool got_second_sunrise = false;
+    for (auto & e : info.events) {
+        if (e.time_point == info.sunrise2) { got_second_sunrise = true; }
+        std::string color = (!got_first_sunrise || got_second_sunrise) ? "gray" : "";
+        fmt::format_to(buf, FMT_STRING("<font color=\"{}\">"), color);
+        fmt::format_to(buf, FMT_STRING("{} {}</font><br>\n"), vp::JulDays_Zoned{info.location.time_zone(), e.time_point}, e.name);
+        if (e.time_point == info.sunrise1) { got_first_sunrise = true; }
+    }
+    return QString::fromStdString(fmt::to_string(buf));
+}
+}
+
 void MainWindow::refreshDaybyday()
 {
     if (!ui->daybydayBrowser->isVisible()) { return; }
-    fmt::memory_buffer buf;
     auto date = to_sys_days(ui->dateEdit->date());
     auto location_string = selected_location();
     const auto flags = flagsForCurrentSettings();
-    vp::text_ui::daybyday_print_one(date, location_string.c_str(), buf, flags);
-    ui->daybydayBrowser->setPlainText(QString::fromStdString(fmt::to_string(buf)));
+    auto location = vp::text_ui::LocationDb::find_coord(location_string.c_str());
+    if (!location) {
+        ui->daybydayBrowser->setPlainText(QString{"Can't find location: "} + QString::fromStdString(location_string));
+    }
+    auto info = vp::text_ui::daybyday_calc_one(date, *location, flags);
+    ui->daybydayBrowser->setHtml(html_for_daybyday(info));
 }
 
 void MainWindow::showVersionInStatusLine()

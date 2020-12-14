@@ -321,6 +321,8 @@ DayByDayInfo daybyday_calc_one(date::year_month_day base_date, Location coord, C
 {
     Calc calc{Swe{coord, flags}};
     DayByDayInfo info = daybyday_events(base_date, calc);
+    info.location = coord;
+    info.date = base_date;
     std::stable_sort(info.events.begin(), info.events.end(), NamedPointComparator);
     daybyday_add_sauramasa_info(info, calc);
     daybyday_add_chandramasa_info(info, calc);
