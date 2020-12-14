@@ -26,6 +26,7 @@ enum class Chandra_Masa {
 };
 
 enum class Saura_Masa {
+    Unknown = 0,
     Mesha = 1,
     Vrishabha = 2,
     Mithuna = 3,

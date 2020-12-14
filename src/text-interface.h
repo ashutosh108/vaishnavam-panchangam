@@ -24,8 +24,8 @@ struct DayByDayInfo {
     std::optional<JulDays_UT> sunrise1;
     std::optional<JulDays_UT> sunset1;
     std::optional<JulDays_UT> sunrise2;
-    Saura_Masa saura_masa;
-    Chandra_Masa chandra_masa;
+    Saura_Masa saura_masa = Saura_Masa::Unknown;
+    Chandra_Masa chandra_masa = Chandra_Masa::Unknown;
     NamedTimePoints events;
 };
 
@@ -65,26 +65,6 @@ namespace detail {
 
 fs::path determine_exe_dir(const char* argv0);
 fs::path determine_working_dir(const char* argv0);
-
-struct CalcSettings {
-    date::year_month_day date;
-    vp::CalcFlags flags;
-};
-
-bool operator==(const CalcSettings & left, const CalcSettings & right);
-
-struct MyHash {
-    std::size_t operator()(const CalcSettings & key) const {
-        auto hy = std::hash<int>{}(key.date.year().operator int());
-        auto hm = std::hash<unsigned int>{}(key.date.month().operator unsigned int());
-        auto hd = std::hash<unsigned int>{}(key.date.day().operator unsigned int());
-        using FlagsT = std::underlying_type_t<vp::CalcFlags>;
-        auto hash_flags = std::hash<FlagsT>{}(static_cast<FlagsT>(key.flags));
-        return hy ^ (hm << 1) ^ (hd << 2) ^ (hash_flags << 3);
-    }
-};
-
-extern std::unordered_map<CalcSettings, vp::VratasForDate, MyHash> cache;
 
 } // namespace detail
 

@@ -378,6 +378,27 @@ namespace detail {
         // fallback: return whatever we got, even if we couldn't find proper working dir.
         return exe_dir;
     }
+}
+
+namespace {
+    struct CalcSettings {
+        date::year_month_day date;
+        vp::CalcFlags flags;
+    };
+
+    bool operator==(const CalcSettings & left, const CalcSettings & right);
+
+    struct MyHash {
+        std::size_t operator()(const CalcSettings & key) const {
+            auto hy = std::hash<int>{}(key.date.year().operator int());
+            auto hm = std::hash<unsigned int>{}(key.date.month().operator unsigned int());
+            auto hd = std::hash<unsigned int>{}(key.date.day().operator unsigned int());
+            using FlagsT = std::underlying_type_t<vp::CalcFlags>;
+            auto hash_flags = std::hash<FlagsT>{}(static_cast<FlagsT>(key.flags));
+            return hy ^ (hm << 1) ^ (hd << 2) ^ (hash_flags << 3);
+        }
+    };
+
     std::unordered_map<CalcSettings, vp::VratasForDate, MyHash> cache;
 
     bool operator==(const CalcSettings & left, const CalcSettings & right)
@@ -423,8 +444,8 @@ bool try_calc_all(date::year_month_day base_date, vp::VratasForDate & vratas, Ca
 
 vp::VratasForDate calc_all(date::year_month_day base_date, CalcFlags flags)
 {
-    const auto key = detail::CalcSettings{base_date, flags};
-    if (auto found = detail::cache.find(key); found != detail::cache.end()) {
+    const auto key = CalcSettings{base_date, flags};
+    if (auto found = cache.find(key); found != cache.end()) {
         return found->second;
     }
     vp::VratasForDate vratas;
@@ -434,7 +455,7 @@ vp::VratasForDate calc_all(date::year_month_day base_date, CalcFlags flags)
         date::year_month_day adjusted_base_date = date::sys_days{base_date} - date::days{1};
         try_calc_all(adjusted_base_date, vratas, flags);
     }
-    detail::cache[key] = vratas;
+    cache[key] = vratas;
     return vratas;
 }
 
