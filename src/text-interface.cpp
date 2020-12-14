@@ -293,14 +293,18 @@ void add_to_sorted(NamedTimePoints & points, NamedTimePoint point) {
 }
 
 void daybyday_add_sauramasa_info(DayByDayInfo & info, const vp::Calc & calc) {
-    if (!info.sunrise1.has_value()) {
+    if (info.events.empty()) {
         return;
     }
-    const auto initial_time = *info.sunrise1;
+
+    if (info.sunrise1) {
+        info.saura_masa = calc.saura_masa(*info.sunrise1);
+    }
+
+    const auto initial_time = info.events[0].time_point;
     const auto initial_masa = calc.saura_masa(initial_time);
     const auto last_time = info.events.back().time_point;
     const auto last_masa = calc.saura_masa(last_time);
-    info.saura_masa = initial_masa;
     if (last_masa != initial_masa) {
         const auto next_sankranti_time = calc.find_sankranti(initial_time, last_masa);
         auto event_name = fmt::format(FMT_STRING("{} sankranti"), last_masa);
