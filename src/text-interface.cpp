@@ -202,18 +202,15 @@ tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month
     return calc_and_report_one(base_date, *coord, buf);
 }
 
-void daybyday_print_header(date::year_month_day base_date, const Location & coord, fmt::memory_buffer & buf)
+namespace {
+void daybyday_print_header(date::year_month_day base_date, const Location & coord, const DayByDayInfo & info, fmt::memory_buffer & buf)
 {
     fmt::format_to(buf,
-               "{} {}\n",
-               coord.name, base_date);
+                   "{} {}\n",
+                   coord.name, base_date);
+    fmt::format_to(buf, FMT_STRING("Saura māsa: {}\n"), info.saura_masa);
+    fmt::format_to(buf, FMT_STRING("Chāndra māsa: {} (chāndra māsa support is experimental, do not rely on this yet)\n"), info.chandra_masa);
 }
-
-struct NamedTimePoint {
-    std::string name;
-    JulDays_UT time_point;
-};
-using NamedTimePoints = std::vector<NamedTimePoint>;
 
 void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
     const auto min_tithi = calc.swe.get_tithi(from).floor();
@@ -230,7 +227,7 @@ void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp:
         if (tithi.is_dvadashi()) {
             const auto dvadashi_end = calc.find_exact_tithi_start(tithi_start, tithi+1.0);
             const auto dvadashi_quarter_end = calc.proportional_time(tithi_start, dvadashi_end, 0.25);
-//            auto dvadashi_quarter_end = calc.find_exact_tithi_start(start, tithi+0.25);
+            //            auto dvadashi_quarter_end = calc.find_exact_tithi_start(start, tithi+0.25);
             events.push_back(NamedTimePoint{fmt::format("First quarter of {:d} ends", tithi), dvadashi_quarter_end});
         }
     }
@@ -248,38 +245,40 @@ void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const
 }
 
 
-std::vector<NamedTimePoint> daybyday_events(date::year_month_day base_date, const vp::Calc & calc) {
-    std::vector<NamedTimePoint> events;
+DayByDayInfo daybyday_events(date::year_month_day base_date, const vp::Calc & calc) {
+    DayByDayInfo info;
     const auto local_astronomical_midnight = calc.calc_astronomical_midnight(base_date);
     const auto sunrise = calc.swe.find_sunrise(local_astronomical_midnight);
     if (sunrise) {
+        info.sunrise1 = *sunrise;
+        info.events.push_back(NamedTimePoint{"sunrise", *sunrise});
         const auto arunodaya = calc.arunodaya_for_sunrise(*sunrise);
         if (arunodaya) {
-            events.push_back(NamedTimePoint{"arunodaya", *arunodaya});
+            info.events.push_back(NamedTimePoint{"arunodaya", *arunodaya});
         }
-        events.push_back(NamedTimePoint{"sunrise", *sunrise});
 
         const auto sunset = calc.swe.find_sunset(*sunrise);
         if (sunset) {
-            events.push_back(NamedTimePoint{"sunset", *sunset});
-            events.push_back(NamedTimePoint{"1/5 of daytime", calc.proportional_time(*sunrise, *sunset, 0.2)});
-            events.push_back(NamedTimePoint{"middle of the day", calc.proportional_time(*sunrise, *sunset, 0.5)});
+            info.sunset1 = *sunset;
+            info.events.push_back(NamedTimePoint{"sunset", *sunset});
+            info.events.push_back(NamedTimePoint{"1/5 of daytime", calc.proportional_time(*sunrise, *sunset, 0.2)});
+            info.events.push_back(NamedTimePoint{"middle of the day", calc.proportional_time(*sunrise, *sunset, 0.5)});
             const auto sunrise2 = calc.swe.find_sunrise(*sunset);
             if (sunrise2) {
+                info.sunrise2 = *sunrise2;
                 const auto middle_of_night = calc.proportional_time(*sunset, *sunrise2, 0.5);
-                events.push_back(NamedTimePoint{"middle of the night", middle_of_night});
-                events.push_back(NamedTimePoint{"next sunrise", *sunrise2});
+                info.events.push_back(NamedTimePoint{"middle of the night", middle_of_night});
+                info.events.push_back(NamedTimePoint{"next sunrise", *sunrise2});
                 const auto earliest_timepoint = arunodaya ? * arunodaya : *sunrise;
                 const auto latest_timepoint = *sunrise2;
-                daybyday_add_tithi_events(earliest_timepoint, latest_timepoint, calc, events);
-                daybyday_add_nakshatra_events(earliest_timepoint, latest_timepoint, calc, events);
+                daybyday_add_tithi_events(earliest_timepoint, latest_timepoint, calc, info.events);
+                daybyday_add_nakshatra_events(earliest_timepoint, latest_timepoint, calc, info.events);
             }
         }
     }
-    return events;
+    return info;
 }
 
-namespace {
 auto NamedPointComparator = [](const NamedTimePoint & left, const NamedTimePoint & right) {
     return left.time_point < right.time_point;
 };
@@ -293,44 +292,48 @@ void add_to_sorted(NamedTimePoints & points, NamedTimePoint point) {
         point);
 }
 
-void daybyday_add_sauramasa_info(NamedTimePoints & points, const vp::Calc & calc, fmt::memory_buffer & buf) {
-    if (points.empty()) {
-        fmt::format_to(buf, "Can't determine saura māsa\n");
+void daybyday_add_sauramasa_info(DayByDayInfo & info, const vp::Calc & calc) {
+    if (!info.sunrise1.has_value()) {
         return;
     }
-    const auto initial_time = points[0].time_point;
+    const auto initial_time = *info.sunrise1;
     const auto initial_masa = calc.saura_masa(initial_time);
-    const auto last_time = points.back().time_point;
+    const auto last_time = info.events.back().time_point;
     const auto last_masa = calc.saura_masa(last_time);
-    fmt::format_to(buf, FMT_STRING("Saura māsa: {}\n"), initial_masa);
+    info.saura_masa = initial_masa;
     if (last_masa != initial_masa) {
         const auto next_sankranti_time = calc.find_sankranti(initial_time, last_masa);
         auto event_name = fmt::format(FMT_STRING("{} sankranti"), last_masa);
-        add_to_sorted(points, NamedTimePoint{event_name, next_sankranti_time});
+        add_to_sorted(info.events, NamedTimePoint{event_name, next_sankranti_time});
     }
 }
 
-void daybyday_add_chandramasa_info(NamedTimePoints & points, const vp::Calc & calc, fmt::memory_buffer & buf) {
-    if (points.empty()) {
-        fmt::format_to(buf, "Can't determine chāndra māsa\n");
+void daybyday_add_chandramasa_info(DayByDayInfo & info, const vp::Calc & calc) {
+    if (!info.sunrise1.has_value()) {
         return;
     }
-    const auto initial_time = points[0].time_point;
-    const auto initial_masa = calc.chandra_masa_amanta(initial_time);
-    fmt::format_to(buf, FMT_STRING("Chāndra māsa: {} (chāndra māsa support is experimental, do not rely on this yet)\n"), initial_masa);
+    const auto initial_time = *info.sunrise1;
+    info.chandra_masa = calc.chandra_masa_amanta(initial_time);
 }
+} // anonymous namespace
+
+DayByDayInfo daybyday_calc_one(date::year_month_day base_date, Location coord, CalcFlags flags)
+{
+    Calc calc{Swe{coord, flags}};
+    DayByDayInfo info = daybyday_events(base_date, calc);
+    std::stable_sort(info.events.begin(), info.events.end(), NamedPointComparator);
+    daybyday_add_sauramasa_info(info, calc);
+    daybyday_add_chandramasa_info(info, calc);
+    return info;
 }
 
 /* print day-by-day report (-d mode) for a single date and single location */
 void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf, vp::CalcFlags flags) {
-    daybyday_print_header(base_date, coord, buf);
+    auto info = daybyday_calc_one(base_date, coord, flags);
 
-    Calc calc{Swe{coord, flags}};
-    std::vector<NamedTimePoint> events = daybyday_events(base_date, calc);
-    std::stable_sort(events.begin(), events.end(), NamedPointComparator);
-    daybyday_add_sauramasa_info(events, calc, buf);
-    daybyday_add_chandramasa_info(events, calc, buf);
-    for (const auto & e : events) {
+    daybyday_print_header(base_date, coord, info, buf);
+
+    for (const auto & e : info.events) {
         fmt::format_to(buf, "{} {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, e.name);
     }
 }

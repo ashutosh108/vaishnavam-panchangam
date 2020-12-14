@@ -79,9 +79,9 @@ TEST_CASE("daybyday_print_one() includes sauramasa info") {
     using Catch::Matchers::Contains;
     using Catch::Matchers::Matches;
 
-    SECTION("'sankranti' event is present for saura masa-crossing day-by-day report (2020-12-16)") {
+    SECTION("'sankranti' event is present for saura masa-crossing day-by-day report (2020-12-15)") {
         fmt::memory_buffer buf;
-        vp::text_ui::daybyday_print_one(2020_y/12/16, "Udupi", buf, vp::CalcFlags::Default);
+        vp::text_ui::daybyday_print_one(2020_y/12/15, "Udupi", buf, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
         REQUIRE_THAT(s, Contains("Saura māsa: Vṛścika"));
@@ -90,7 +90,7 @@ TEST_CASE("daybyday_print_one() includes sauramasa info") {
 
     SECTION("'sankranti' event must NOT be present for non-masa-crossing day-by-day report (2020-12-16)") {
         fmt::memory_buffer buf;
-        vp::text_ui::daybyday_print_one(2020_y/12/17, "Udupi", buf, vp::CalcFlags::Default);
+        vp::text_ui::daybyday_print_one(2020_y/12/16, "Udupi", buf, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
         REQUIRE_THAT(s, Contains("Saura māsa: Dhanuṣa"));
@@ -163,4 +163,14 @@ TEST_CASE("ekādaśī details and day-by-day give the same time for dvādaśī's
     }();
 
     REQUIRE(daybyday_dvadashi_quarter_time == details_dvadashi_quarter_time);
+}
+
+TEST_CASE("daybyday_calc_one() gives both sunrises and sunset for the target date") {
+    using namespace date::literals;
+    auto info = vp::text_ui::daybyday_calc_one(2020_y/12/14, vp::kiev_coord, vp::CalcFlags::Default);
+    REQUIRE(info.sunrise1.has_value());
+    REQUIRE(info.sunset1.has_value());
+    REQUIRE(info.sunrise2.has_value());
+    REQUIRE(info.saura_masa == vp::Saura_Masa::Vrishchika);
+    REQUIRE(info.chandra_masa == vp::Chandra_Masa::Kartika);
 }

@@ -14,6 +14,22 @@
 
 namespace vp::text_ui {
 
+struct NamedTimePoint {
+    std::string name;
+    JulDays_UT time_point;
+};
+using NamedTimePoints = std::vector<NamedTimePoint>;
+
+struct DayByDayInfo {
+    std::optional<JulDays_UT> sunrise1;
+    std::optional<JulDays_UT> sunset1;
+    std::optional<JulDays_UT> sunrise2;
+    Saura_Masa saura_masa;
+    Chandra_Masa chandra_masa;
+    NamedTimePoints events;
+};
+
+
 /* Change dir to the directory with eph and tzdata data files (usually it's .exe dir) */
 void change_to_data_dir(const char* argv0);
 
@@ -25,7 +41,8 @@ tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day 
 tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf);
 void report_details(const vp::MaybeVrata & vrata, fmt::memory_buffer & buf);
 
-void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf);
+DayByDayInfo daybyday_calc_one(date::year_month_day base_date, Location coord, vp::CalcFlags flags);
+void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf, vp::CalcFlags flags);
 void daybyday_print_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf, vp::CalcFlags flags);
 void calc_and_report_all(date::year_month_day d);
 vp::VratasForDate calc_all(date::year_month_day, CalcFlags flags = CalcFlags::Default);
