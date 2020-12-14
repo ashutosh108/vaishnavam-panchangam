@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <array>
 #include "catch-formatters.h"
+#include <regex>
 
 TEST_CASE("get_exe_dir() exists and returns something") {
     auto exe_dir = vp::text_ui::detail::determine_exe_dir("imaginary/path/to/exe/file");
@@ -173,4 +174,17 @@ TEST_CASE("daybyday_calc_one() gives both sunrises and sunset for the target dat
     REQUIRE(info.sunrise2.has_value());
     REQUIRE(info.saura_masa == vp::Saura_Masa::Vrishchika);
     REQUIRE(info.chandra_masa == vp::Chandra_Masa::Kartika);
+}
+
+TEST_CASE("daybyday_print_one() add '-----' separators before both sunrises") {
+    using namespace date::literals;
+    fmt::memory_buffer buf;
+    vp::text_ui::daybyday_print_one(2020_y/12/14, vp::kiev_coord, buf, vp::CalcFlags::Default);
+
+    auto s = fmt::to_string(buf);
+    std::regex r{R"(----\n[^\n]*sunrise)"};
+    auto iter_begin = std::sregex_iterator(s.begin(), s.end(), r);
+    auto iter_end = std::sregex_iterator{};
+    CAPTURE(s);
+    REQUIRE(std::distance(iter_begin, iter_end) == 2);
 }

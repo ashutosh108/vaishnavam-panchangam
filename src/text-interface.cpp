@@ -334,6 +334,10 @@ void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::mem
     daybyday_print_header(base_date, coord, info, buf);
 
     for (const auto & e : info.events) {
+        // add separator before sunrises to mark current day better
+        if ((info.sunrise1 && e.time_point == *info.sunrise1) || (info.sunrise2 && e.time_point == *info.sunrise2)) {
+            fmt::format_to(buf, FMT_STRING("-----\n"));
+        }
         fmt::format_to(buf, "{} {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, e.name);
     }
 }
