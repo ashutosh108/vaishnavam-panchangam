@@ -89,9 +89,9 @@ TEST_CASE("daybyday_print_one() includes sauramasa info") {
         REQUIRE_THAT(s, Contains("Dhanuṣa sankranti"));
     }
 
-    SECTION("'sankranti' event must NOT be present for non-masa-crossing day-by-day report (2020-12-16)") {
+    SECTION("'sankranti' event must NOT be present for non-masa-crossing day-by-day report (2020-12-17)") {
         fmt::memory_buffer buf;
-        vp::text_ui::daybyday_print_one(2020_y/12/16, "Udupi", buf, vp::CalcFlags::Default);
+        vp::text_ui::daybyday_print_one(2020_y/12/17, "Udupi", buf, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
         REQUIRE_THAT(s, Contains("Saura māsa: Dhanuṣa"));
