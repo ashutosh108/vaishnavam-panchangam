@@ -64,6 +64,7 @@ struct fmt::formatter<vp::Saura_Masa> : fmt::formatter<std::string_view> {
         case vp::Saura_Masa::Makara: name = "Makara"; break;
         case vp::Saura_Masa::Kumbha: name = "Kumbha"; break;
         case vp::Saura_Masa::Mina: name = "Mīna"; break;
+        case vp::Saura_Masa::Unknown: break;
         }
 
         return fmt::format_to(ctx.out(), "{}", name);
