@@ -6,6 +6,7 @@
 #include "vrata.h"
 
 #include <ostream>
+#include <unordered_map>
 
 namespace vp {
 
