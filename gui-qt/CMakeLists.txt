@@ -26,6 +26,7 @@ set(CMAKE_AUTORCC ON)
 
 #LinguistTools 
 find_package(Qt5 COMPONENTS Widgets Core REQUIRED)
+message(STATUS "Qt5 ${Qt5_VERSION} ${Qt5_DIR}")
 
 set(TS_FILES gui-qt_en_US.ts)
 
