@@ -94,4 +94,4 @@ cmake_policy(SET CMP0079 NEW)
 
 target_sources(test-main PRIVATE mainwindow.test.cpp)
 target_sources(test-main PRIVATE edit-custom-dates.test.cpp)
-target_link_libraries(test-main PUBLIC mainwindow)
+target_link_libraries(test-main PRIVATE mainwindow)

@@ -1,9 +1,10 @@
 [ ] day-by-day: print summary with traditional form year, date, weekday, tithi, nakshatra, saura māsa and candra māsa display
 [ ] day-by-day: add graphical representation. layers: 24h days, sun days, tithis, nakshatras, saura māsas, candra māsas(?)
 [ ] Table: add Russian version
-[ ] allow entering arbitrary location/coordinates (latitude/longitude/timezone):
-[ ] -> lat/long input activated => change text to decimal
-[ ] -> change lat/long/TZ => change location to "Custom"
+[ ] ArbitraryLocations: allow entering arbitrary location/coordinates (latitude/longitude/timezone):
+[ ] ArbitraryLocations: add compile-time option in CMake defaulting to old coordinate selector
+[ ] ArbitraryLocations: new CoordInputLine class to input both latitude and longitude
+[ ] ArbitraryLocations: change lat/long/TZ => change location to "Custom"
 [ ] switch from std::regex to some other, saner and faster, regex library.
 [ ] "copy to clipboard" function (with link to the program)
 [ ] "copy as image to clipboard"
