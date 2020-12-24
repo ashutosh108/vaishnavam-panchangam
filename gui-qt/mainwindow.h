@@ -73,6 +73,7 @@ private:
     void setupToolbar();
     vp::CalcFlags flagsForCurrentSettings();
     int getTableVerticalScrollValue() const;
+    void setupLocationInput();
 };
 
 QString htmlify_line(const std::string_view & line);

@@ -11,6 +11,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 
+option(VP_ARBITRARY_LOCATION_SELECTOR "use new location selector for arbitrary coordinate input (temporary option)" OFF)
+
 # QtCreator supports the following variables for Android, which are identical to qmake Android variables.
 # Check http://doc.qt.io/qt-5/deployment-android.html for more information.
 # They need to be set before the find_package(Qt5 ...) call.
@@ -44,7 +46,6 @@ target_link_libraries(mainwindow PUBLIC
     swe
     fmt::fmt
 )
-
 if(ANDROID)
   add_library(${VP_QT_GUI_EXE} SHARED
     main.cpp
@@ -62,6 +63,9 @@ target_link_libraries(${VP_QT_GUI_EXE} PRIVATE
     mainwindow
 )
 target_include_directories(${VP_QT_GUI_EXE} PRIVATE ../src)
+if (VP_ARBITRARY_LOCATION_SELECTOR)
+    target_compile_definitions(mainwindow PRIVATE VP_ARBITRARY_LOCATION_SELECTOR)
+endif()
 
 #qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 install(TARGETS ${VP_QT_GUI_EXE} DESTINATION .)

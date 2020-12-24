@@ -2,7 +2,6 @@
 [ ] day-by-day: add graphical representation. layers: 24h days, sun days, tithis, nakshatras, saura māsas, candra māsas(?)
 [ ] Table: add Russian version
 [ ] ArbitraryLocations: allow entering arbitrary location/coordinates (latitude/longitude/timezone):
-[ ] ArbitraryLocations: add compile-time option in CMake defaulting to old coordinate selector
 [ ] ArbitraryLocations: new CoordInputLine class to input both latitude and longitude
 [ ] ArbitraryLocations: change lat/long/TZ => change location to "Custom"
 [ ] switch from std::regex to some other, saner and faster, regex library.
@@ -265,3 +264,4 @@ done:
 [+] text-interface: cleanup detail namespace (e.g. hide hash and cache in the anonymous namespace) [2020-12-14]
 [+] day-by-day CLI: mark target date's sunrise-sunrise period with "-----" separator [2020-12-14]
 [+] day-by-day GUI: gray out events outside of target date's sunrise-sunrise period [2020-12-14]
+[+] ArbitraryLocations: add VP_ARBITRARY_LOCATION_SELECTOR compile-time option in CMake defaulting to OFF (old coordinate selector) [2020-12-24]

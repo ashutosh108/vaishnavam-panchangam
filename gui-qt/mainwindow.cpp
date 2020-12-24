@@ -111,6 +111,7 @@ MainWindow::MainWindow(QWidget *parent)
     setupToolbar();
     connectSignals();
     addTableContextMenu();
+    setupLocationInput();
     gui_ready = true;
     refreshAllTabs();
 }
@@ -338,6 +339,14 @@ int MainWindow::getTableVerticalScrollValue() const
 {
     const QScrollBar * scroll_bar = ui->tableTextBrowser->verticalScrollBar();
     return scroll_bar ? scroll_bar->value() : 0;
+}
+
+void MainWindow::setupLocationInput()
+{
+#ifdef VP_ARBITRARY_LOCATION_SELECTOR
+    ui->latitude->setEnabled(true);
+    ui->longitude->setEnabled(true);
+#endif
 }
 
 void MainWindow::refreshTable()
