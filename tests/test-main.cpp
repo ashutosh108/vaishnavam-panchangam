@@ -10,13 +10,22 @@
 
 int main(int argc, char* argv[]) {
     auto start = std::chrono::high_resolution_clock::now();
+    int ret_code = 0;
+    try {
 
 #ifdef _WIN32
-    SetConsoleOutputCP(CP_UTF8);
+        SetConsoleOutputCP(CP_UTF8);
 #endif
 
-    date::set_install("tzdata");
-    auto ret_code = Catch::Session().run(argc, argv);
+        date::set_install("tzdata");
+        ret_code = Catch::Session().run(argc, argv);
+    } catch (std::exception & e) {
+        fmt::print(FMT_STRING("Unexpected exception during test run, aborting: {}\n"), e.what());
+        ret_code = 1;
+    } catch(...) {
+        fmt::print(FMT_STRING("Unexpected exception (not std::exception) during test run, aborting\n"));
+        ret_code = 1;
+    }
 
     std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
     fmt::print(FMT_STRING("Run time: {}\n"), duration);
