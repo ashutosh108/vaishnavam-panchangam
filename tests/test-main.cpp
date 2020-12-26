@@ -1,4 +1,5 @@
 #define CATCH_CONFIG_RUNNER
+//#define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include "catch-formatters.h"
 
 #ifdef _WIN32

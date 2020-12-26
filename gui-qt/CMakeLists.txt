@@ -39,6 +39,7 @@ add_library(mainwindow STATIC
     htmlbrowser.cpp
     latitude-edit.cpp
     edit-custom-dates.cpp
+    latlongedit.cpp
 )
 #target_include_directories(mainwindow PUBLIC ../src)
 target_link_libraries(mainwindow PUBLIC
@@ -98,4 +99,5 @@ cmake_policy(SET CMP0079 NEW)
 
 target_sources(test-main PRIVATE mainwindow.test.cpp)
 target_sources(test-main PRIVATE edit-custom-dates.test.cpp)
+target_sources(test-main PRIVATE latlongedit.test.cpp)
 target_link_libraries(test-main PRIVATE mainwindow)
