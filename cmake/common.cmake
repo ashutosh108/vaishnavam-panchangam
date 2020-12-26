@@ -76,7 +76,7 @@ macro(common_init)
                 -Wnon-virtual-dtor -pedantic
                 -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual
                 -Wconversion
-                -Wformat=2)
+                -Wformat=2 -Wno-format-nonliteral)
         endif()
         SET(WARN_FLAGS_NO_WX ${WARN_FLAGS})
     endif()
