@@ -77,6 +77,13 @@ macro(common_init)
                 -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual
                 -Wconversion
                 -Wformat=2 -Wno-format-nonliteral)
+
+            # we are forcing SSE math for correct math on x86 (32-bit) platform
+            # to avoid bugs with wrong rounding due to using internal 10-byte results.
+            # This is not required on x86 64-bit platforms because 387 10-bytes registers are not used there.
+            # see https://stackoverflow.com/q/65150649/19905 for details
+            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mfpmath=sse -msse2")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfpmath=sse -msse2")
         endif()
         SET(WARN_FLAGS_NO_WX ${WARN_FLAGS})
     endif()
