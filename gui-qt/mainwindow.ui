@@ -139,9 +139,9 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout">
+              <layout class="QVBoxLayout" name="locationVLayout">
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout">
+                <layout class="QHBoxLayout" name="locationHLayout">
                  <item>
                   <widget class="QLabel" name="locationLabel">
                    <property name="sizePolicy">
@@ -167,7 +167,7 @@
                 </layout>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="hlLatLong">
+                <layout class="QHBoxLayout" name="latLongHLayout">
                  <item>
                   <widget class="QLabel" name="latitudeLabel">
                    <property name="toolTip">
@@ -223,7 +223,7 @@
                 </layout>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="hlTimezone">
+                <layout class="QHBoxLayout" name="timezoneHLayout">
                  <item>
                   <widget class="QLabel" name="timezoneLabel">
                    <property name="text">
@@ -249,7 +249,7 @@
               </layout>
              </item>
              <item>
-              <spacer name="verticalSpacer">
+              <spacer name="locationVerticalSpacer">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
@@ -281,7 +281,7 @@
                <x>0</x>
                <y>0</y>
                <width>498</width>
-               <height>452</height>
+               <height>450</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_4">

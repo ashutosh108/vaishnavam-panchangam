@@ -3,6 +3,7 @@
 
 #include "edit-custom-dates.h"
 #include "html-table-writer.h"
+#include "latlongedit.h"
 #include "location.h"
 #include "table-calendar-generator.h"
 #include "text-interface.h"
@@ -344,8 +345,9 @@ int MainWindow::getTableVerticalScrollValue() const
 void MainWindow::setupLocationInput()
 {
 #ifdef VP_ARBITRARY_LOCATION_SELECTOR
-    ui->latitude->setEnabled(true);
-    ui->longitude->setEnabled(true);
+    auto latlong_index = ui->locationVLayout->indexOf(ui->latLongHLayout);
+    latlong_edit = new LatLongEdit({ui->latitude->getValue(), vp::Longitude{0.0}}, this);
+    ui->locationVLayout->insertWidget(latlong_index+1, latlong_edit);
 #endif
 }
 
@@ -516,6 +518,11 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
 //            ui->latitude->setText(QString::fromStdString(fmt::to_string(location->latitude)));
             ui->longitude->setText(QString::fromStdString(fmt::to_string(location->longitude)));
             ui->timezone->setText(QString::fromStdString(location->time_zone()->name()));
+#ifdef VP_ARBITRARY_LOCATION_SELECTOR
+            if (latlong_edit) {
+                latlong_edit->setCoord({location->latitude, location->longitude});
+            }
+#endif
         }
     }
     refreshAllTabs();

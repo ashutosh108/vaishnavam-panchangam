@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "latlongedit.h"
 #include "table-calendar-generator.h"
 #include "vrata.h"
 
@@ -49,6 +50,7 @@ private:
     QAction * refraction_toggle = nullptr;
     QAction * sunrise_by_disc_center = nullptr;
     QAction * ephemeris_swiss = nullptr;
+    LatLongEdit * latlong_edit = nullptr;
 
     void setupLocationsComboBox();
     void setDateToToday();
