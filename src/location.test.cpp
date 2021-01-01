@@ -26,3 +26,81 @@ TEST_CASE("Location prints coordinates nicely, with unicode etc") {
     test_location_print(89'59'59_S, 179'59'59_W, "89°59′59″S, 179°59′59″W");
     test_location_print(0'00'01_N, 0'00'01_W,     "0°00′01″N, 0°00′01″W");
 }
+
+TEST_CASE("Latitude implements all six comparison operators") {
+    Latitude lat1{10.0}, lat2{20.0};
+
+    REQUIRE(lat1 < lat2);
+    REQUIRE(!(lat2 < lat1));
+    REQUIRE(!(lat1 < lat1));
+
+    REQUIRE(lat1 <= lat2);
+    REQUIRE(!(lat2 <= lat1));
+    REQUIRE(lat1 <= lat1);
+
+    REQUIRE(lat2 > lat1);
+    REQUIRE(!(lat1 > lat2));
+    REQUIRE(!(lat1 > lat1));
+
+    REQUIRE(lat2 >= lat1);
+    REQUIRE(!(lat1 >= lat2));
+    REQUIRE(lat1 >= lat1);
+
+    REQUIRE(!(lat1 == lat2));
+    REQUIRE(lat1 == lat1);
+
+    REQUIRE(lat1 != lat2);
+    REQUIRE(!(lat1 != lat1));
+}
+
+TEST_CASE("Longitude implements all six comparison operators") {
+    Longitude lng1{10.0}, lng2{20.0};
+
+    REQUIRE(lng1 < lng2);
+    REQUIRE(!(lng2 < lng1));
+    REQUIRE(!(lng1 < lng1));
+
+    REQUIRE(lng1 <= lng2);
+    REQUIRE(!(lng2 <= lng1));
+    REQUIRE(lng1 <= lng1);
+
+    REQUIRE(lng2 > lng1);
+    REQUIRE(!(lng1 > lng2));
+    REQUIRE(!(lng1 > lng1));
+
+    REQUIRE(lng2 >= lng1);
+    REQUIRE(!(lng1 >= lng2));
+    REQUIRE(lng1 >= lng1);
+
+    REQUIRE(!(lng1 == lng2));
+    REQUIRE(lng1 == lng1);
+
+    REQUIRE(lng1 != lng2);
+    REQUIRE(!(lng1 != lng1));
+}
+
+TEST_CASE("Coord implements all six comparison operators") {
+    Coord c1{Latitude{10.0}, Longitude{20.0}}, c2{Latitude{10.0}, Longitude{30.0}};
+
+    REQUIRE(c1 < c2);
+    REQUIRE(!(c2 < c1));
+    REQUIRE(!(c1 < c1));
+
+    REQUIRE(c1 <= c2);
+    REQUIRE(!(c2 <= c1));
+    REQUIRE(c1 <= c1);
+
+    REQUIRE(c2 > c1);
+    REQUIRE(!(c1 > c2));
+    REQUIRE(!(c1 > c1));
+
+    REQUIRE(c2 >= c1);
+    REQUIRE(!(c1 >= c2));
+    REQUIRE(c1 >= c1);
+
+    REQUIRE(!(c1 == c2));
+    REQUIRE(c1 == c1);
+
+    REQUIRE(c1 != c2);
+    REQUIRE(!(c1 != c1));
+}

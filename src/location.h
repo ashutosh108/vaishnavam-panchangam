@@ -14,9 +14,35 @@ struct Latitude {
     double latitude;
 };
 
+bool operator ==(Latitude l1, Latitude l2);
+bool operator !=(Latitude l1, Latitude l2);
+bool operator <(Latitude l1, Latitude l2);
+bool operator <=(Latitude l1, Latitude l2);
+bool operator >(Latitude l1, Latitude l2);
+bool operator >=(Latitude l1, Latitude l2);
+
 struct Longitude {
     double longitude;
 };
+
+bool operator ==(Longitude l1, Longitude l2);
+bool operator !=(Longitude l1, Longitude l2);
+bool operator <(Longitude l1, Longitude l2);
+bool operator <=(Longitude l1, Longitude l2);
+bool operator >(Longitude l1, Longitude l2);
+bool operator >=(Longitude l1, Longitude l2);
+
+struct Coord {
+    Latitude latitude{0.0};
+    Longitude longitude{0.0};
+};
+
+bool operator ==(Coord c1, Coord c2);
+bool operator !=(Coord c1, Coord c2);
+bool operator <(Coord c1, Coord c2);
+bool operator <=(Coord c1, Coord c2);
+bool operator >(Coord c1, Coord c2);
+bool operator >=(Coord c1, Coord c2);
 
 constexpr double int_deg_min_sec_to_double_degrees(const unsigned long long val) {
     if (val > 180'00'00) { throw std::logic_error("Value for degrees must be in 0..180'00'00 range"); }
