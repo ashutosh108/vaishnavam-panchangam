@@ -376,11 +376,11 @@ QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
     bool got_first_sunrise = false;
     bool got_second_sunrise = false;
     for (auto & e : info.events) {
+        if (e.time_point == info.sunrise1) { got_first_sunrise = true; }
         if (e.time_point == info.sunrise2) { got_second_sunrise = true; }
         std::string color = (!got_first_sunrise || got_second_sunrise) ? "gray" : "";
         fmt::format_to(buf, FMT_STRING("<font color=\"{}\">"), color);
         fmt::format_to(buf, FMT_STRING("{} {}</font><br>\n"), vp::JulDays_Zoned{info.location.time_zone(), e.time_point}, e.name);
-        if (e.time_point == info.sunrise1) { got_first_sunrise = true; }
     }
     return QString::fromStdString(fmt::to_string(buf));
 }
