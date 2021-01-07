@@ -166,25 +166,38 @@ TEST_CASE("ekādaśī details and day-by-day give the same time for dvādaśī's
     REQUIRE(daybyday_dvadashi_quarter_time == details_dvadashi_quarter_time);
 }
 
-TEST_CASE("daybyday_calc_one() gives both sunrises and sunset for the target date") {
+TEST_CASE("daybyday_calc_one()") {
     using namespace date::literals;
     auto info = vp::text_ui::daybyday_calc_one(2020_y/12/14, vp::kiev_coord, vp::CalcFlags::Default);
-    REQUIRE(info.sunrise1.has_value());
-    REQUIRE(info.sunset1.has_value());
-    REQUIRE(info.sunrise2.has_value());
-    REQUIRE(info.saura_masa == vp::Saura_Masa::Vrishchika);
-    REQUIRE(info.chandra_masa == vp::Chandra_Masa::Kartika);
+    SECTION("gives both sunrises and sunset for the target date") {
+        REQUIRE(info.sunrise1.has_value());
+        REQUIRE(info.sunset1.has_value());
+        REQUIRE(info.sunrise2.has_value());
+        REQUIRE(info.saura_masa == vp::Saura_Masa::Vrishchika);
+        REQUIRE(info.chandra_masa == vp::Chandra_Masa::Kartika);
+    }
+
+    SECTION("contains 'until' time for saura māsa") {
+        using namespace std::chrono_literals;
+        REQUIRE(info.saura_masa_until.has_value());
+        REQUIRE(info.saura_masa_until->round_to_minute() == date::sys_days{2020_y/12/15} + 16h + 2min);
+    }
 }
 
-TEST_CASE("daybyday_print_one() add '-----' separators before both sunrises") {
+TEST_CASE("daybyday_print_one()") {
     using namespace date::literals;
+    using namespace Catch::Matchers;
     fmt::memory_buffer buf;
     vp::text_ui::daybyday_print_one(2020_y/12/14, vp::kiev_coord, buf, vp::CalcFlags::Default);
-
     auto s = fmt::to_string(buf);
-    std::regex r{R"(----\n[^\n]*sunrise)"};
-    auto iter_begin = std::sregex_iterator(s.begin(), s.end(), r);
-    auto iter_end = std::sregex_iterator{};
-    CAPTURE(s);
-    REQUIRE(std::distance(iter_begin, iter_end) == 2);
+    SECTION("add '-----' separators before both sunrises") {
+        std::regex r{R"(----\n[^\n]*sunrise)"};
+        auto iter_begin = std::sregex_iterator(s.begin(), s.end(), r);
+        auto iter_end = std::sregex_iterator{};
+        CAPTURE(s);
+        REQUIRE(std::distance(iter_begin, iter_end) == 2);
+    }
+    SECTION("saura masa 'until' is present") {
+        REQUIRE_THAT(s, Contains("Vṛścika (until 2020-12-15"));
+    }
 }

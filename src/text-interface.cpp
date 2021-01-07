@@ -208,7 +208,11 @@ void daybyday_print_header(date::year_month_day base_date, const Location & coor
     fmt::format_to(buf,
                    "{} {}\n",
                    coord.name, base_date);
-    fmt::format_to(buf, FMT_STRING("Saura māsa: {}\n"), info.saura_masa);
+    fmt::format_to(buf, FMT_STRING("Saura māsa: {}"), info.saura_masa);
+    if (info.saura_masa_until) {
+        fmt::format_to(buf, FMT_STRING(" (until {})"), *info.saura_masa_until);
+    }
+    fmt::format_to(buf, FMT_STRING("\n"));
     fmt::format_to(buf, FMT_STRING("Chāndra māsa: {} (chāndra māsa support is experimental, do not rely on this yet)\n"), info.chandra_masa);
 }
 
@@ -304,11 +308,13 @@ void daybyday_add_sauramasa_info(DayByDayInfo & info, const vp::Calc & calc) {
     const auto initial_time = info.events[0].time_point;
     const auto initial_masa = calc.saura_masa(initial_time);
     const auto last_time = info.events.back().time_point;
-    const auto last_masa = calc.saura_masa(last_time);
-    if (last_masa != initial_masa) {
-        const auto next_sankranti_time = calc.find_sankranti(initial_time, last_masa);
-        auto event_name = fmt::format(FMT_STRING("{} sankranti"), last_masa);
-        add_to_sorted(info.events, NamedTimePoint{event_name, next_sankranti_time});
+
+    const auto next_masa = initial_masa + 1;
+    const auto next_masa_start = calc.find_sankranti(initial_time, next_masa);
+    info.saura_masa_until = next_masa_start;
+    if (next_masa_start <= last_time) {
+        auto event_name = fmt::format(FMT_STRING("{} sankranti"), next_masa);
+        add_to_sorted(info.events, NamedTimePoint{event_name, next_masa_start});
     }
 }
 

@@ -371,7 +371,12 @@ QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
     fmt::format_to(buf,
                    "<h1>{} on {}</h1>\n",
                    info.location.name, info.date);
-    fmt::format_to(buf, FMT_STRING("Saura māsa: {}<br>\n"), info.saura_masa);
+    if (info.saura_masa_until) {
+        const auto saura_masa_until = date::make_zoned(info.location.time_zone(), info.saura_masa_until->round_to_second());
+        fmt::format_to(buf, FMT_STRING("Saura māsa: {} <small style=\"color:gray\">(until {})</small><br>\n"), info.saura_masa, date::format("%Y-%m-%d %H:%M:%S %Z", saura_masa_until));
+    } else {
+        fmt::format_to(buf, FMT_STRING("Saura māsa: {}<br>\n"), info.saura_masa);
+    }
     fmt::format_to(buf, FMT_STRING("Chāndra māsa: {}<br>\n"), info.chandra_masa);
     bool got_first_sunrise = false;
     bool got_second_sunrise = false;

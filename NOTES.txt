@@ -265,3 +265,4 @@ done:
 [+] day-by-day CLI: mark target date's sunrise-sunrise period with "-----" separator [2020-12-14]
 [+] day-by-day GUI: gray out events outside of target date's sunrise-sunrise period [2020-12-14]
 [+] ArbitraryLocations: add VP_ARBITRARY_LOCATION_SELECTOR compile-time option in CMake defaulting to OFF (old coordinate selector) [2020-12-24]
+[+] day-by-day: print 'until' time for Saura māsa [2021-01-07]
