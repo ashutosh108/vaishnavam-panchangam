@@ -29,6 +29,7 @@ struct DayByDayInfo {
     Saura_Masa saura_masa = Saura_Masa::Unknown;
     std::optional<JulDays_UT> saura_masa_until;
     Chandra_Masa chandra_masa = Chandra_Masa::Unknown;
+    std::optional<JulDays_UT> chandra_masa_until;
     NamedTimePoints events;
 };
 

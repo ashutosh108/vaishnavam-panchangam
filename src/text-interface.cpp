@@ -213,7 +213,11 @@ void daybyday_print_header(date::year_month_day base_date, const Location & coor
         fmt::format_to(buf, FMT_STRING(" (until {})"), *info.saura_masa_until);
     }
     fmt::format_to(buf, FMT_STRING("\n"));
-    fmt::format_to(buf, FMT_STRING("Chāndra māsa: {} (chāndra māsa support is experimental, do not rely on this yet)\n"), info.chandra_masa);
+    fmt::format_to(buf, FMT_STRING("Chāndra māsa: {}"), info.chandra_masa);
+    if (info.chandra_masa_until) {
+        fmt::format_to(buf, FMT_STRING(" (until {})"), *info.chandra_masa_until);
+    }
+    fmt::format_to(buf, FMT_STRING("\n"));
 }
 
 void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
@@ -323,7 +327,7 @@ void daybyday_add_chandramasa_info(DayByDayInfo & info, const vp::Calc & calc) {
         return;
     }
     const auto initial_time = *info.sunrise1;
-    info.chandra_masa = calc.chandra_masa_amanta(initial_time);
+    info.chandra_masa = calc.chandra_masa_amanta(initial_time, &info.chandra_masa_until);
 }
 } // anonymous namespace
 

@@ -182,6 +182,12 @@ TEST_CASE("daybyday_calc_one()") {
         REQUIRE(info.saura_masa_until.has_value());
         REQUIRE(info.saura_masa_until->round_to_minute() == date::sys_days{2020_y/12/15} + 16h + 2min);
     }
+
+    SECTION("contains 'until' time for chandra māsa") {
+        using namespace std::chrono_literals;
+        REQUIRE(info.chandra_masa_until.has_value());
+        REQUIRE(info.chandra_masa_until->round_to_minute() == date::sys_days{2020_y/12/14} + 16h + 17min);
+    }
 }
 
 TEST_CASE("daybyday_print_one()") {
@@ -199,5 +205,9 @@ TEST_CASE("daybyday_print_one()") {
     }
     SECTION("saura masa 'until' is present") {
         REQUIRE_THAT(s, Contains("Vṛścika (until 2020-12-15"));
+    }
+
+    SECTION("chandra māsa 'until' is present") {
+        REQUIRE_THAT(s, Contains("Kārtikā (until 2020-12-14"));
     }
 }
