@@ -30,6 +30,10 @@ struct DayByDayInfo {
     std::optional<JulDays_UT> saura_masa_until;
     Chandra_Masa chandra_masa = Chandra_Masa::Unknown;
     std::optional<JulDays_UT> chandra_masa_until;
+    DiscreteTithi tithi = DiscreteTithi::Unknown();
+    std::optional<JulDays_UT> tithi_until;
+    DiscreteTithi tithi2 = DiscreteTithi::Unknown();
+    std::optional<JulDays_UT> tithi2_until;
     NamedTimePoints events;
 };
 

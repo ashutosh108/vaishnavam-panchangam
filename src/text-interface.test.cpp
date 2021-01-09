@@ -188,6 +188,14 @@ TEST_CASE("daybyday_calc_one()") {
         REQUIRE(info.chandra_masa_until.has_value());
         REQUIRE(info.chandra_masa_until->round_to_minute() == date::sys_days{2020_y/12/14} + 16h + 17min);
     }
+
+    SECTION("contains one tithi and correponding 'until' time") {
+        using namespace std::chrono_literals;
+        REQUIRE(info.tithi == vp::DiscreteTithi::Amavasya());
+        REQUIRE(info.tithi_until->round_to_minute() == date::sys_days{2020_y/12/14} + 16h + 17min);
+        REQUIRE(info.tithi2 == vp::DiscreteTithi::Unknown());
+        REQUIRE_FALSE(info.tithi2_until.has_value());
+    }
 }
 
 TEST_CASE("daybyday_print_one()") {
@@ -210,4 +218,10 @@ TEST_CASE("daybyday_print_one()") {
     SECTION("chandra māsa 'until' is present") {
         REQUIRE_THAT(s, Contains("Kārtikā (until 2020-12-14"));
     }
+}
+
+TEST_CASE("DayByDay for 2021-02-17 Udupi gives tithi (which does not change from sunrise till next sunrise)") {
+    using namespace date::literals;
+    auto info = vp::text_ui::daybyday_calc_one(2021_y/2/17, vp::udupi_coord, vp::CalcFlags::Default);
+    REQUIRE(info.tithi == vp::DiscreteTithi::Shukla_Shashthi());
 }

@@ -45,6 +45,13 @@ struct StringMaker<vp::Vrata> {
         return fmt::format(FMT_STRING("{}"), v);
     }
 };
+
+template<>
+struct StringMaker<vp::DiscreteTithi> {
+    static std::string convert(const vp::DiscreteTithi t) {
+        return fmt::format(FMT_STRING("{}"), t);
+    }
+};
 }
 
 #endif // CATCHFORMATTERS_H

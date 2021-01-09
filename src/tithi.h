@@ -71,6 +71,51 @@ double operator -(Tithi const &, Tithi const &);
 Tithi operator +(Tithi const &, double);
 Tithi operator -(Tithi const &, double);
 
+// DiscreteTithi could have been an enum class but it's a class instead to make uninitialized values impossible.
+struct DiscreteTithi {
+    explicit DiscreteTithi(Tithi t);
+    static constexpr DiscreteTithi Unknown() { return DiscreteTithi{-1}; }
+    static constexpr DiscreteTithi Amavasya() { return DiscreteTithi{0}; }
+    static constexpr DiscreteTithi Shukla_Pratipat() { return DiscreteTithi{1}; }
+    static constexpr DiscreteTithi Shukla_Dvitiya() { return DiscreteTithi{2}; }
+    static constexpr DiscreteTithi Shukla_Tritiya() { return DiscreteTithi{3}; }
+    static constexpr DiscreteTithi Shukla_Chaturthi() { return DiscreteTithi{4}; }
+    static constexpr DiscreteTithi Shukla_Panchami() { return DiscreteTithi{5}; }
+    static constexpr DiscreteTithi Shukla_Shashthi() { return DiscreteTithi{6}; }
+    static constexpr DiscreteTithi Shukla_Saptami() { return DiscreteTithi{7}; }
+    static constexpr DiscreteTithi Shukla_Ashtami() { return DiscreteTithi{8}; }
+    static constexpr DiscreteTithi Shukla_Navami() { return DiscreteTithi{9}; }
+    static constexpr DiscreteTithi Shukla_Dashami() { return DiscreteTithi{10}; }
+    static constexpr DiscreteTithi Shukla_Ekadashi() { return DiscreteTithi{11}; }
+    static constexpr DiscreteTithi Shukla_Dvadashi() { return DiscreteTithi{12}; }
+    static constexpr DiscreteTithi Shukla_Trayodashi() { return DiscreteTithi{13}; }
+    static constexpr DiscreteTithi Shukla_Chaturdashi() { return DiscreteTithi{14}; }
+    static constexpr DiscreteTithi Purnima() { return DiscreteTithi{15}; }
+    static constexpr DiscreteTithi Krishna_Pratipat() { return DiscreteTithi{16}; }
+    static constexpr DiscreteTithi Krishna_Dvitiya() { return DiscreteTithi{17}; }
+    static constexpr DiscreteTithi Krishna_Tritiya() { return DiscreteTithi{18}; }
+    static constexpr DiscreteTithi Krishna_Chaturthi() { return DiscreteTithi{19}; }
+    static constexpr DiscreteTithi Krishna_Panchami() { return DiscreteTithi{20}; }
+    static constexpr DiscreteTithi Krishna_Shashthi() { return DiscreteTithi{21}; }
+    static constexpr DiscreteTithi Krishna_Saptami() { return DiscreteTithi{22}; }
+    static constexpr DiscreteTithi Krishna_Ashtami() { return DiscreteTithi{23}; }
+    static constexpr DiscreteTithi Krishna_Navami() { return DiscreteTithi{24}; }
+    static constexpr DiscreteTithi Krishna_Dashami() { return DiscreteTithi{25}; }
+    static constexpr DiscreteTithi Krishna_Ekadashi() { return DiscreteTithi{26}; }
+    static constexpr DiscreteTithi Krishna_Dvadashi() { return DiscreteTithi{27}; }
+    static constexpr DiscreteTithi Krishna_Trayodashi() { return DiscreteTithi{28}; }
+    static constexpr DiscreteTithi Krishna_Chaturdashi() { return DiscreteTithi{29}; }
+    friend bool operator ==(DiscreteTithi t1, DiscreteTithi t2) {
+        return t1.num == t2.num;
+    }
+    friend bool operator !=(DiscreteTithi t1, DiscreteTithi t2) {
+        return t1.num != t2.num;
+    }
+    int num = Unknown().num;
+private:
+    explicit constexpr DiscreteTithi(int n) : num(n){}
+};
+
 } // namespace vp
 
 template<>
@@ -170,6 +215,47 @@ struct fmt::formatter<vp::Paksha> : fmt::formatter<std::string_view> {
         case vp::Paksha::Krishna: name = "kṛṣṇa"; break;
         }
         return fmt::format_to(ctx.out(), "{}", name);
+    }
+};
+
+template<>
+struct fmt::formatter<vp::DiscreteTithi> : fmt::formatter<std::string_view> {
+    template<class FormatCtx>
+    auto format(vp::DiscreteTithi t, FormatCtx & ctx) {
+        using namespace std::string_view_literals;
+
+        constexpr const static string_view tithi_names[] = {
+            "Pratipat"sv,
+            "Dvitīyā"sv,
+            "Tṛtīyā"sv,
+            "Caturthī"sv,
+            "Pañcamī"sv,
+            "Ṣaṣṭhī"sv,
+            "Saptamī"sv,
+            "Aśtamī"sv,
+            "Navamī"sv,
+            "Daśamī"sv,
+            "Ekādaśī"sv,
+            "Dvādaśī"sv,
+            "Trayodaśī"sv,
+            "Caturdaśī"sv
+        };
+        if (t.num < -1 || t.num >= 30) {
+            return fmt::format_to(ctx.out(), FMT_STRING("Invalid tithi"));
+        } else if (t.num == -1) {
+            return fmt::format_to(ctx.out(), FMT_STRING("Unknown tithi"));
+        } else if (t.num == 0) {
+            return fmt::format_to(ctx.out(), FMT_STRING("Amāvāsyā"));
+        } else if (t.num >= 1 && t.num <= 14) {
+            fmt::format_to(ctx.out(), FMT_STRING("Śukla "));
+        } else if (t.num == 15) {
+            return fmt::format_to(ctx.out(), FMT_STRING("Pūrṇimā"));
+        } else if (t.num >= 16 && t.num <= 29) {
+            fmt::format_to(ctx.out(), FMT_STRING("Kṛṣṇa "));
+        }
+        auto tithi_name_index = (t.num-1) % 15;
+        fmt::format_to(ctx.out(), FMT_STRING("{}"), tithi_names[tithi_name_index]);
+        return ctx.out();
     }
 };
 

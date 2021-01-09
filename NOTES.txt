@@ -267,3 +267,4 @@ done:
 [+] ArbitraryLocations: add VP_ARBITRARY_LOCATION_SELECTOR compile-time option in CMake defaulting to OFF (old coordinate selector) [2020-12-24]
 [+] day-by-day: print 'until' time for saura māsa [2021-01-07]
 [+] day-by-day: print 'until' time for chandra māsa [2021-01-07]
+[+] day-by-day: print tithi (one or two) and corresponding 'until' times [2021-01-09]

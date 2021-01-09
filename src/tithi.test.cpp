@@ -135,3 +135,13 @@ TEST_CASE("Tithi::floor(), ceil, + double work") {
     REQUIRE(Tithi{15.0} + 1.0 == Tithi{16.0});
     REQUIRE(Tithi{29.5} + 1.0 == Tithi{0.5});
 }
+
+TEST_CASE("Tithi enum class") {
+    SECTION("can compare") {
+        vp::DiscreteTithi t1{vp::DiscreteTithi::Amavasya()};
+        vp::DiscreteTithi t2{vp::DiscreteTithi::Shukla_Pratipat()};
+        vp::DiscreteTithi t3{vp::DiscreteTithi::Amavasya()};
+        REQUIRE(t1 != t2);
+        REQUIRE(t1 == t3);
+    }
+}

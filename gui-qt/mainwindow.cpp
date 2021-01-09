@@ -373,16 +373,24 @@ QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
                    info.location.name, info.date);
     if (info.saura_masa_until) {
         const auto saura_masa_until = date::make_zoned(info.location.time_zone(), info.saura_masa_until->round_to_second());
-        fmt::format_to(buf, FMT_STRING("Saura māsa: {} <small style=\"color:gray\">(until {})</small><br>\n"), info.saura_masa, date::format("%Y-%m-%d %H:%M:%S %Z", saura_masa_until));
+        fmt::format_to(buf, FMT_STRING("Saura māsa: <big><b>{}</b></big> <small style=\"color:gray\">(until {})</small><br>\n"), info.saura_masa, date::format("%Y-%m-%d %H:%M:%S %Z", saura_masa_until));
     } else {
-        fmt::format_to(buf, FMT_STRING("Saura māsa: {}<br>\n"), info.saura_masa);
+        fmt::format_to(buf, FMT_STRING("Saura māsa: <big><b>{}</b></big><br>\n"), info.saura_masa);
     }
-    fmt::format_to(buf, FMT_STRING("Chāndra māsa: {}"), info.chandra_masa);
+    fmt::format_to(buf, FMT_STRING("Chāndra māsa: <big><b>{}</b></big>"), info.chandra_masa);
     if (info.chandra_masa_until) {
         const auto chandra_masa_until = date::make_zoned(info.location.time_zone(), info.chandra_masa_until->round_to_second());
         fmt::format_to(buf, FMT_STRING(" <small style=\"color:gray\">(until {})</small>"), date::format("%Y-%m-%d %H:%M:%S %Z", chandra_masa_until));
     }
     fmt::format_to(buf, FMT_STRING("<br>\n"));
+    if (info.tithi_until) {
+        const auto tithi_until = date::make_zoned(info.location.time_zone(), info.tithi_until->round_to_second());
+        fmt::format_to(buf, FMT_STRING("<big><b>{}</b></big> until {}<br>\n"), info.tithi, date::format("%Y-%m-%d %H:%M:%S %Z", tithi_until));
+    }
+    if (info.tithi2 != vp::DiscreteTithi::Unknown() && info.tithi2_until) {
+        const auto tithi2_until = date::make_zoned(info.location.time_zone(), info.tithi2_until->round_to_second());
+        fmt::format_to(buf, FMT_STRING("<big><b>{}</b></big> until {}<br>\n"), info.tithi2, date::format("%Y-%m-%d %H:%M:%S %Z", tithi2_until));
+    }
     bool got_first_sunrise = false;
     bool got_second_sunrise = false;
     for (auto & e : info.events) {

@@ -220,23 +220,32 @@ void daybyday_print_header(date::year_month_day base_date, const Location & coor
     fmt::format_to(buf, FMT_STRING("\n"));
 }
 
-void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
+void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, DayByDayInfo & info) {
     const auto min_tithi = calc.swe.get_tithi(from).floor();
     const auto max_tithi = calc.swe.get_tithi(to).ceil() + 1.0;
     auto start = from - std::chrono::hours{36};
     // need "!=" to handle cross-amavasya cases correctly, when max_tithi is less than min_tithi
     for (vp::Tithi tithi = min_tithi; tithi != max_tithi; tithi += 1.0) {
         auto tithi_start = calc.find_exact_tithi_start(start, tithi);
+        if (tithi_start >= info.sunrise1) {
+            if (info.tithi == vp::DiscreteTithi::Unknown()) {
+                info.tithi = vp::DiscreteTithi{tithi};
+                info.tithi_until = tithi_start;
+            } else if (tithi_start < info.sunrise2 && info.tithi2 == vp::DiscreteTithi::Unknown()) {
+                info.tithi2 = vp::DiscreteTithi{tithi};
+                info.tithi2_until = tithi_start;
+            }
+        }
         auto description = fmt::format("{:d} starts", tithi);
         if (tithi.is_shukla_pratipat()) {
-            description += fmt::format(FMT_STRING(", {} māsa starts (?)"), calc.chandra_masa_amanta(tithi_start + double_days{1.0}));
+            description += fmt::format(FMT_STRING(", {} māsa starts"), calc.chandra_masa_amanta(tithi_start + double_days{1.0}));
         }
-        events.push_back(NamedTimePoint{description, tithi_start});
+        info.events.push_back(NamedTimePoint{description, tithi_start});
         if (tithi.is_dvadashi()) {
             const auto dvadashi_end = calc.find_exact_tithi_start(tithi_start, tithi+1.0);
             const auto dvadashi_quarter_end = calc.proportional_time(tithi_start, dvadashi_end, 0.25);
             //            auto dvadashi_quarter_end = calc.find_exact_tithi_start(start, tithi+0.25);
-            events.push_back(NamedTimePoint{fmt::format("First quarter of {:d} ends", tithi), dvadashi_quarter_end});
+            info.events.push_back(NamedTimePoint{fmt::format("First quarter of {:d} ends", tithi), dvadashi_quarter_end});
         }
     }
 }
@@ -279,7 +288,7 @@ DayByDayInfo daybyday_events(date::year_month_day base_date, const vp::Calc & ca
                 info.events.push_back(NamedTimePoint{"next sunrise", *sunrise2});
                 const auto earliest_timepoint = arunodaya ? * arunodaya : *sunrise;
                 const auto latest_timepoint = *sunrise2;
-                daybyday_add_tithi_events(earliest_timepoint, latest_timepoint, calc, info.events);
+                daybyday_add_tithi_events(earliest_timepoint, latest_timepoint, calc, info);
                 daybyday_add_nakshatra_events(earliest_timepoint, latest_timepoint, calc, info.events);
             }
         }

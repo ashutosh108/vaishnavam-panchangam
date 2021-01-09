@@ -127,4 +127,9 @@ Tithi operator -(const Tithi &t, double delta)
     return Tithi{Tithi::normalize(t.tithi - delta)};
 }
 
+DiscreteTithi::DiscreteTithi(Tithi t)
+{
+    num = static_cast<int>(t.tithi);
+}
+
 } // namespace vp
