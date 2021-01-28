@@ -35,7 +35,7 @@ enum class Saura_Masa {
     Kanya = 6,
     Tula = 7,
     Vrishchika = 8,
-    Dhanusha = 9,
+    Dhanu = 9,
     Makara = 10,
     Kumbha = 11,
     Mina = 12
@@ -60,7 +60,7 @@ struct fmt::formatter<vp::Saura_Masa> : fmt::formatter<std::string_view> {
         case vp::Saura_Masa::Kanya: name = "Kanyā"; break;
         case vp::Saura_Masa::Tula: name = "Tulā"; break;
         case vp::Saura_Masa::Vrishchika: name = "Vṛścika"; break;
-        case vp::Saura_Masa::Dhanusha: name = "Dhanuṣa"; break;
+        case vp::Saura_Masa::Dhanu: name = "Dhanu"; break;
         case vp::Saura_Masa::Makara: name = "Makara"; break;
         case vp::Saura_Masa::Kumbha: name = "Kumbha"; break;
         case vp::Saura_Masa::Mina: name = "Mīna"; break;
@@ -90,7 +90,7 @@ struct fmt::formatter<vp::Chandra_Masa> : fmt::formatter<std::string_view> {
         case vp::Chandra_Masa::Pausha: name = "Pauṣa"; break; // (पौष)
         case vp::Chandra_Masa::Magha: name = "Māgha"; break; // (माघ)
         case vp::Chandra_Masa::Phalguna: name = "Phālguna"; break; // (फाल्गुन)
-        case vp::Chandra_Masa::Adhika: name = "Adhika"; break; // (फाल्गुन)
+        case vp::Chandra_Masa::Adhika: name = "Adhika"; break;
         case vp::Chandra_Masa::Kshaya: name = "Kṣaya"; break;
         }
 

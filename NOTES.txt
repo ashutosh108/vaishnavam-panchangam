@@ -268,4 +268,4 @@ done:
 [+] day-by-day: print 'until' time for saura māsa [2021-01-07]
 [+] day-by-day: print 'until' time for chandra māsa [2021-01-07]
 [+] day-by-day: print tithi (one or two) and corresponding 'until' times [2021-01-09]
-[+] day-by-day gui: improve tithi end times format ("HH:MM" or "HH:MM next day")
+[+] day-by-day: improve tithi end times format ("HH:MM" or "HH:MM next day") [2021-01-28]
