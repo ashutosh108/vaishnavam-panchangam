@@ -218,6 +218,28 @@ void daybyday_print_header(date::year_month_day base_date, const Location & coor
         fmt::format_to(buf, FMT_STRING(" (until {})"), *info.chandra_masa_until);
     }
     fmt::format_to(buf, FMT_STRING("\n"));
+    auto tz = info.location.time_zone();
+    if (info.sunrise1) {
+        auto sunrise_date = date::floor<date::days>(date::make_zoned(tz, info.sunrise1->as_sys_time()).get_local_time());
+        if (info.tithi_until) {
+            const auto tithi_until = date::make_zoned(tz, info.tithi_until->round_to_minute());
+            auto tithi_until_date{date::floor<date::days>(tithi_until.get_local_time())};
+            fmt::format_to(buf,
+                           FMT_STRING("{} until {}{}\n"),
+                           info.tithi,
+                           date::format("%H:%M", tithi_until),
+                           tithi_until_date == sunrise_date ? "" : " next day");
+        }
+        if (info.tithi2_until) {
+            const auto tithi2_until = date::make_zoned(tz, info.tithi2_until->round_to_minute());
+            auto tithi2_until_date{date::floor<date::days>(tithi2_until.get_local_time())};
+            fmt::format_to(buf,
+                           FMT_STRING("{} until {}{}\n"),
+                           info.tithi2,
+                           date::format("%H:%M", tithi2_until),
+                           tithi2_until_date == sunrise_date ? "" : " next day");
+        }
+    }
 }
 
 void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, DayByDayInfo & info) {
