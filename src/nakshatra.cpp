@@ -65,6 +65,11 @@ vp::Nakshatra vp::operator +(vp::Nakshatra n, double delta)
     return vp::Nakshatra{vp::Nakshatra::normalize(n.nakshatra + delta)};
 }
 
+vp::Nakshatra vp::operator -(vp::Nakshatra n, double delta)
+{
+    return vp::Nakshatra{vp::Nakshatra::normalize(n.nakshatra - delta)};
+}
+
 double vp::positive_delta_between_longitudes(vp::Nirayana_Longitude l1, vp::Nirayana_Longitude l2) {
     double delta = l2.longitude - l1.longitude;
     if (delta < 0) delta += 360.0;
@@ -90,4 +95,9 @@ bool vp::operator ==(vp::Nirayana_Longitude l1, vp::Nirayana_Longitude l2)
 
 bool vp::operator !=(vp::Nirayana_Longitude l1, vp::Nirayana_Longitude l2) {
     return !(l1 == l2);
+}
+
+vp::DiscreteNakshatra::DiscreteNakshatra(vp::Nakshatra n)
+{
+    num = static_cast<int>(n.nakshatra);
 }

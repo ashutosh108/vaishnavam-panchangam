@@ -196,6 +196,14 @@ TEST_CASE("daybyday_calc_one()") {
         REQUIRE(info.tithi2 == vp::DiscreteTithi::Unknown());
         REQUIRE_FALSE(info.tithi2_until.has_value());
     }
+
+    SECTION("contains nakshatra{,2} and correponding 'until' time(s)") {
+        using namespace std::chrono_literals;
+        REQUIRE(info.nakshatra == vp::DiscreteNakshatra::Jyeshtha());
+        REQUIRE(info.nakshatra_until->round_to_minute() == date::sys_days{2020_y/12/14} + 17h + 56min); // 19:56 local time
+        REQUIRE(info.nakshatra2 == vp::DiscreteNakshatra::Mula());
+        REQUIRE(info.nakshatra2_until->round_to_minute() == date::sys_days{2020_y/12/15} + 16h + 1min); // 18:01 local time
+    }
 }
 
 TEST_CASE("daybyday_print_one()") {
@@ -217,6 +225,13 @@ TEST_CASE("daybyday_print_one()") {
 
     SECTION("chandra māsa 'until' is present") {
         REQUIRE_THAT(s, Contains("Kārtikā (until 2020-12-14"));
+    }
+    SECTION("Tithi/until is present") {
+        REQUIRE_THAT(s, Contains("Amāvāsyā until 18:17"));
+    }
+    SECTION("nakshatra/until are present") {
+        REQUIRE_THAT(s, Contains("Jyeṣṭhā until 19:56"));
+        REQUIRE_THAT(s, Contains("Mūla until 18:01 next day"));
     }
 }
 

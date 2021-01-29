@@ -38,8 +38,8 @@ TEST_CASE("floor and ceil work") {
 }
 
 TEST_CASE("Nakshatra formatting works") {
-    REQUIRE(fmt::to_string(vp::Nakshatra{1.1}) == "Bharani(.100)");
-    REQUIRE(fmt::to_string(vp::Nakshatra{26.99999}) == "Ashvini(.000)");
+    REQUIRE(fmt::to_string(vp::Nakshatra{1.1}) == "Bharaṇī(.100)");
+    REQUIRE(fmt::to_string(vp::Nakshatra{26.99999}) == "Aśvinī(.000)");
 }
 
 TEST_CASE("positive/minimal deltas, ==, != work for Nirayana_Longitude") {

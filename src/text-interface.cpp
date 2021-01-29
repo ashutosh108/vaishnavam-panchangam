@@ -239,6 +239,25 @@ void daybyday_print_header(date::year_month_day base_date, const Location & coor
                            date::format("%H:%M", tithi2_until),
                            tithi2_until_date == sunrise_date ? "" : " next day");
         }
+
+        if (info.nakshatra_until) {
+            const auto until = date::make_zoned(tz, info.nakshatra_until->round_to_minute());
+            const auto date = date::floor<date::days>(until.get_local_time());
+            fmt::format_to(buf,
+                           FMT_STRING("{} until {}{}\n"),
+                           info.nakshatra,
+                           date::format("%H:%M", until),
+                           date == sunrise_date ? "" : " next day");
+        }
+        if (info.nakshatra2_until) {
+            const auto until = date::make_zoned(tz, info.nakshatra2_until->round_to_minute());
+            const auto date = date::floor<date::days>(until.get_local_time());
+            fmt::format_to(buf,
+                           FMT_STRING("{} until {}{}\n"),
+                           info.nakshatra2,
+                           date::format("%H:%M", until),
+                           date == sunrise_date ? "" : " next day");
+        }
     }
 }
 
@@ -272,13 +291,22 @@ void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp:
     }
 }
 
-void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, std::vector<NamedTimePoint> & events) {
+void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, DayByDayInfo & info) {
     const auto min_nakshatra = calc.swe.get_nakshatra(from).floor();
     const auto max_nakshatra = calc.swe.get_nakshatra(to).ceil() + 1.0;
     auto start = from - std::chrono::hours{36}; // to ensure we get beginning of first nakshatra
     for (vp::Nakshatra n = min_nakshatra; n != max_nakshatra; ++n) {
         auto nakshatra_start = calc.find_nakshatra_start(start, n);
-        events.push_back(NamedTimePoint{fmt::format(FMT_STRING("{} starts"), n), nakshatra_start});
+        if (nakshatra_start >= info.sunrise1) {
+            if (info.nakshatra == DiscreteNakshatra::Unknown()) {
+                info.nakshatra = DiscreteNakshatra{n - 1.0}; // we mark the end of the previous nakshatra
+                info.nakshatra_until = nakshatra_start;
+            } else if (info.nakshatra2 == DiscreteNakshatra::Unknown()) {
+                info.nakshatra2 = DiscreteNakshatra{n - 1.0}; // we mark the end of the previous nakshatra
+                info.nakshatra2_until = nakshatra_start;
+            }
+        }
+        info.events.push_back(NamedTimePoint{fmt::format(FMT_STRING("{} starts"), DiscreteNakshatra{n}), nakshatra_start});
     }
     // TODO: implement
 }
@@ -311,7 +339,7 @@ DayByDayInfo daybyday_events(date::year_month_day base_date, const vp::Calc & ca
                 const auto earliest_timepoint = arunodaya ? * arunodaya : *sunrise;
                 const auto latest_timepoint = *sunrise2;
                 daybyday_add_tithi_events(earliest_timepoint, latest_timepoint, calc, info);
-                daybyday_add_nakshatra_events(earliest_timepoint, latest_timepoint, calc, info.events);
+                daybyday_add_nakshatra_events(earliest_timepoint, latest_timepoint, calc, info);
             }
         }
     }

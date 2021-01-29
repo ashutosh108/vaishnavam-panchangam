@@ -52,6 +52,13 @@ struct StringMaker<vp::DiscreteTithi> {
         return fmt::format(FMT_STRING("{}"), t);
     }
 };
+
+template<>
+struct StringMaker<vp::DiscreteNakshatra> {
+    static std::string convert(const vp::DiscreteNakshatra n) {
+        return fmt::format(FMT_STRING("{}"), n);
+    }
+};
 }
 
 #endif // CATCHFORMATTERS_H

@@ -3,6 +3,7 @@
 
 #include "calc-flags.h"
 #include "location.h"
+#include "nakshatra.h"
 #include "tz-fixed.h"
 #include "vrata.h"
 
@@ -34,6 +35,10 @@ struct DayByDayInfo {
     std::optional<JulDays_UT> tithi_until;
     DiscreteTithi tithi2 = DiscreteTithi::Unknown();
     std::optional<JulDays_UT> tithi2_until;
+    DiscreteNakshatra nakshatra = DiscreteNakshatra::Unknown();
+    std::optional<JulDays_UT> nakshatra_until;
+    DiscreteNakshatra nakshatra2 = DiscreteNakshatra::Unknown();
+    std::optional<JulDays_UT> nakshatra2_until;
     NamedTimePoints events;
 };
 

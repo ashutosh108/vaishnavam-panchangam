@@ -87,6 +87,48 @@ public:
     }
 };
 
+class DiscreteNakshatra {
+public:
+    DiscreteNakshatra(Nakshatra n);
+    static constexpr DiscreteNakshatra Unknown() { return DiscreteNakshatra{-1}; }
+    static constexpr DiscreteNakshatra Ashvini() { return DiscreteNakshatra{0}; }
+    static constexpr DiscreteNakshatra Bharani() { return DiscreteNakshatra{1}; }
+    static constexpr DiscreteNakshatra Kritika() { return DiscreteNakshatra{2}; }
+    static constexpr DiscreteNakshatra Rohini() { return DiscreteNakshatra{3}; }
+    static constexpr DiscreteNakshatra Mrgashirsha() { return DiscreteNakshatra{4}; }
+    static constexpr DiscreteNakshatra Ardra() { return DiscreteNakshatra{5}; }
+    static constexpr DiscreteNakshatra Punarvasu() { return DiscreteNakshatra{6}; }
+    static constexpr DiscreteNakshatra Pushya() { return DiscreteNakshatra{7}; }
+    static constexpr DiscreteNakshatra Ashlesha() { return DiscreteNakshatra{8}; }
+    static constexpr DiscreteNakshatra Magha() { return DiscreteNakshatra{9}; }
+    static constexpr DiscreteNakshatra PurvaPhalguni() { return DiscreteNakshatra{10}; }
+    static constexpr DiscreteNakshatra UttaraPhalguni() { return DiscreteNakshatra{11}; }
+    static constexpr DiscreteNakshatra Hasta() { return DiscreteNakshatra{12}; }
+    static constexpr DiscreteNakshatra Chitra() { return DiscreteNakshatra{13}; }
+    static constexpr DiscreteNakshatra Svati() { return DiscreteNakshatra{14}; }
+    static constexpr DiscreteNakshatra Vishakha() { return DiscreteNakshatra{15}; }
+    static constexpr DiscreteNakshatra Arundhati() { return DiscreteNakshatra{16}; }
+    static constexpr DiscreteNakshatra Jyeshtha() { return DiscreteNakshatra{17}; }
+    static constexpr DiscreteNakshatra Mula() { return DiscreteNakshatra{18}; }
+    static constexpr DiscreteNakshatra PurvaAshadha() { return DiscreteNakshatra{19}; }
+    static constexpr DiscreteNakshatra UttaraAshadha() { return DiscreteNakshatra{20}; }
+    static constexpr DiscreteNakshatra Shravana() { return DiscreteNakshatra{21}; }
+    static constexpr DiscreteNakshatra Dhanistha() { return DiscreteNakshatra{22}; }
+    static constexpr DiscreteNakshatra Shatabhisha() { return DiscreteNakshatra{23}; }
+    static constexpr DiscreteNakshatra PurvaBhadrapada() { return DiscreteNakshatra{24}; }
+    static constexpr DiscreteNakshatra UttaraBhadrapada() { return DiscreteNakshatra{25}; }
+    static constexpr DiscreteNakshatra Revati() { return DiscreteNakshatra{26}; }
+    friend bool operator ==(DiscreteNakshatra t1, DiscreteNakshatra t2) {
+        return t1.num == t2.num;
+    }
+    friend bool operator !=(DiscreteNakshatra t1, DiscreteNakshatra t2) {
+        return t1.num != t2.num;
+    }
+    std::string_view name() const;
+private:
+    int num = Unknown().num;
+    explicit constexpr DiscreteNakshatra(int n) : num(n) {}
+};
 
 
 double positive_delta_between_nakshatras(Nakshatra n1, Nakshatra n2);
@@ -95,6 +137,7 @@ bool operator == (const Nakshatra n1, const Nakshatra n2);
 bool operator != (const Nakshatra n1, const Nakshatra n2);
 vp::Nakshatra & operator ++(Nakshatra & n);
 vp::Nakshatra operator +(Nakshatra n, double delta);
+vp::Nakshatra operator -(Nakshatra n, double delta);
 double positive_delta_between_longitudes(Nirayana_Longitude l1, Nirayana_Longitude l2);
 double minimal_delta_between_longitudes(Nirayana_Longitude l1, Nirayana_Longitude l2);
 bool operator ==(Nirayana_Longitude l1, Nirayana_Longitude l2);
@@ -103,36 +146,37 @@ bool operator !=(Nirayana_Longitude l1, Nirayana_Longitude l2);
 }
 
 namespace  {
-std::string nakshatra_name(int n) {
+std::string_view nakshatra_name(int n) {
     static const char * const names[] {
-        "Ashvini",
-        "Bharani",
-        "Kritika",
-        "Rohini",
-        "Mrgashirsha",
-        "Ardra",
+        "Aśvinī",
+        "Bharaṇī",
+        "Kṛttikā",
+        "Rohiṇī",
+        "Mrgaśirā",
+        "Ādrā",
         "Punarvasu",
-        "Pushya",
-        "Ashlesha",
-        "Magha",
-        "Purva Phalguni",
-        "Uttara Phalguni",
+        "Puṣya",
+        "Āśleṣā",
+        "Maghā",
+        "Pūrvā Phalgunī",
+        "Uttarā Phalgunī",
         "Hasta",
-        "Chitra",
-        "Svati",
-        "Vishakha",
-        "Arundhati",
-        "Jyeshtha",
-        "Mula",
-        "Purva Ashadha",
-        "Uttara Ashadha",
-        "Shravana",
-        "Dhanistha",
-        "Shatabhisha",
-        "Purva Bhadrapada",
-        "Uttara Bhadrapada",
-        "Revati"
+        "Citrā",
+        "Svātī",
+        "Viśākhā",
+        "Anurādhā",
+        "Jyeṣṭhā",
+        "Mūla",
+        "Pūrvā Aṣāḍha",
+        "Uttarā Aṣāḍha",
+        "Śravaṇā",
+        "Dhaniṣṭhā",
+        "Śatabhiṣā",
+        "Pūrvā Bhādrapada",
+        "Uttarā Bhādrapada",
+        "Revatī"
     };
+    static_assert (sizeof (names) / sizeof(*names) == 27, "there must be exactly 27 nakshatra names");
     if (n < 0 || n > 26) {
         return "Unknown";
     }
@@ -152,6 +196,22 @@ struct fmt::formatter<vp::Nakshatra> {
         long nakshatra_num = raw_nakshatra_by_thousand / 1000; // 0...26
         long nakshatra_fract = raw_nakshatra_by_thousand % 1000;
         return fmt::format_to(ctx.out(), FMT_STRING("{}(.{:03})"), nakshatra_name(nakshatra_num), nakshatra_fract);
+    }
+};
+
+inline std::string_view vp::DiscreteNakshatra::name() const {
+    return nakshatra_name(num);
+}
+
+template<>
+struct fmt::formatter<vp::DiscreteNakshatra> {
+    template<class ParseContext>
+    auto parse(ParseContext & ctx) {
+        return ctx.begin();
+    }
+    template<class FormatContext>
+    auto format(const vp::DiscreteNakshatra n, FormatContext & ctx) {
+        return fmt::format_to(ctx.out(), FMT_STRING("{}"), n.name());
     }
 };
 

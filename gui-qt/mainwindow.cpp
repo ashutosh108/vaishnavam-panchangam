@@ -404,6 +404,24 @@ QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
                            date::format("%H:%M", tithi2_until),
                            tithi2_until_date == sunrise_date ? "" : " next day");
         }
+        if (info.nakshatra_until) {
+            const auto until = date::make_zoned(tz, info.nakshatra_until->round_to_minute());
+            const auto date = date::floor<date::days>(until.get_local_time());
+            fmt::format_to(buf,
+                           FMT_STRING("<big><b>{}</b></big> until <big><b>{}{}</b></big><br>\n"),
+                           info.nakshatra,
+                           date::format("%H:%M", until),
+                           date == sunrise_date ? "" : " next day");
+        }
+        if (info.nakshatra2_until) {
+            const auto until = date::make_zoned(tz, info.nakshatra2_until->round_to_minute());
+            const auto date = date::floor<date::days>(until.get_local_time());
+            fmt::format_to(buf,
+                           FMT_STRING("<big><b>{}</b></big> until <big><b>{}{}</b></big><br>\n"),
+                           info.nakshatra2,
+                           date::format("%H:%M", until),
+                           date == sunrise_date ? "" : " next day");
+        }
     }
     bool got_first_sunrise = false;
     bool got_second_sunrise = false;
