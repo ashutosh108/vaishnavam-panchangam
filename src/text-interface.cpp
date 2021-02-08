@@ -301,7 +301,7 @@ void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const
             if (info.nakshatra == DiscreteNakshatra::Unknown()) {
                 info.nakshatra = DiscreteNakshatra{n - 1.0}; // we mark the end of the previous nakshatra
                 info.nakshatra_until = nakshatra_start;
-            } else if (info.nakshatra2 == DiscreteNakshatra::Unknown()) {
+            } else if (info.nakshatra2 == DiscreteNakshatra::Unknown() && nakshatra_start < info.sunrise2) {
                 info.nakshatra2 = DiscreteNakshatra{n - 1.0}; // we mark the end of the previous nakshatra
                 info.nakshatra2_until = nakshatra_start;
             }

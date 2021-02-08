@@ -201,9 +201,20 @@ TEST_CASE("daybyday_calc_one()") {
         using namespace std::chrono_literals;
         REQUIRE(info.nakshatra == vp::DiscreteNakshatra::Jyeshtha());
         REQUIRE(info.nakshatra_until->round_to_minute() == date::sys_days{2020_y/12/14} + 17h + 56min); // 19:56 local time
-        REQUIRE(info.nakshatra2 == vp::DiscreteNakshatra::Mula());
-        REQUIRE(info.nakshatra2_until->round_to_minute() == date::sys_days{2020_y/12/15} + 16h + 1min); // 18:01 local time
+        REQUIRE(info.nakshatra2 == vp::DiscreteNakshatra::Unknown());
+        REQUIRE(!info.nakshatra2_until.has_value());
     }
+}
+
+TEST_CASE("two nakshatra starts within the same day are reported properly") {
+    using namespace date::literals;
+    using namespace std::chrono_literals;
+    auto info = vp::text_ui::daybyday_calc_one(2021_y/3/1, vp::udupi_coord, vp::CalcFlags::Default);
+    REQUIRE(info.nakshatra == vp::DiscreteNakshatra::UttaraPhalguni());
+    const auto tz_offset = 5h+30min; //IST
+    REQUIRE(info.nakshatra_until->round_to_minute() == date::sys_days{2021_y/3/1} + 7h + 37min - tz_offset); // 07:37 local time
+    REQUIRE(info.nakshatra2 == vp::DiscreteNakshatra::Hasta());
+    REQUIRE(info.nakshatra2_until->round_to_minute() == date::sys_days{2021_y/3/2} + 5h + 32min - tz_offset); // 05:32 next day
 }
 
 TEST_CASE("daybyday_print_one()") {
@@ -231,7 +242,7 @@ TEST_CASE("daybyday_print_one()") {
     }
     SECTION("nakshatra/until are present") {
         REQUIRE_THAT(s, Contains("Jyeṣṭhā until 19:56"));
-        REQUIRE_THAT(s, Contains("Mūla until 18:01 next day"));
+        REQUIRE_THAT(s, !Contains("Mūla until"));
     }
 }
 

@@ -270,3 +270,4 @@ done:
 [+] day-by-day: print tithi (one or two) and corresponding 'until' times [2021-01-09]
 [+] day-by-day: improve tithi end times format ("HH:MM" or "HH:MM next day") [2021-01-28]
 [+] day-by-day: show nakshatras along with "until" times [2021-01-29]
+[+] day-by-day: do not list additional nakshatras ending after tomorrow's sunrise as today's nakshatra [2021-02-08]
