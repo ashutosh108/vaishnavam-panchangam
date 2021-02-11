@@ -444,10 +444,13 @@ void MainWindow::refreshDaybyday()
     const auto flags = flagsForCurrentSettings();
     auto location = vp::text_ui::LocationDb::find_coord(location_string.c_str());
     if (!location) {
-        ui->daybydayBrowser->setPlainText(QString{"Can't find location: "} + QString::fromStdString(location_string));
+        if (location_string != "all") {
+            ui->daybydayBrowser->setPlainText(QString{"Can't find location: "} + QString::fromStdString(location_string));
+        }
+    } else {
+        auto info = vp::text_ui::daybyday_calc_one(date, *location, flags);
+        ui->daybydayBrowser->setHtml(html_for_daybyday(info));
     }
-    auto info = vp::text_ui::daybyday_calc_one(date, *location, flags);
-    ui->daybydayBrowser->setHtml(html_for_daybyday(info));
 }
 
 void MainWindow::showVersionInStatusLine()

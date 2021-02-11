@@ -1,3 +1,4 @@
+[ ] day-by-day: calculate saura masa end day (verify by panchangas)
 [ ] day-by-day: print summary with traditional form year, date, weekday, tithi, nakshatra, saura māsa and candra māsa display
 [ ] day-by-day: add graphical representation. layers: 24h days, sun days, tithis, nakshatras, saura māsas, candra māsas(?)
 [ ] Table: add Russian version
