@@ -32,7 +32,6 @@ date::year_month_day parse_ymd(const std::string_view s) {
     return date::year{year}/date::month{month}/date::day{day};
 }
 
-namespace {
 const std::vector<Location> &LocationDb::locations() {
     static std::vector<Location> locations_ {
         { udupi_coord },
@@ -114,7 +113,6 @@ const std::vector<Location> &LocationDb::locations() {
         { meadowlake_coord },
     };
     return locations_;
-}
 }
 
 std::optional<Location> LocationDb::find_coord(const char *location_name) {
