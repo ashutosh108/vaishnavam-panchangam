@@ -10,8 +10,6 @@
 #include <Windows.h>
 #endif
 
-using namespace vp::text_ui;
-
 void print_usage() {
     fmt::print("{}\n"
                "USAGE:\n"
@@ -19,7 +17,7 @@ void print_usage() {
                "vaishnavam-panchangam YYYY-MM-DD location-name\n"
                "\n"
                "    latitude and longitude are given as decimal degrees (e.g. 30.7)\n",
-               program_name_and_version());
+               vp::text_ui::program_name_and_version());
 }
 
 int main(int argc, char *argv[]) try
@@ -34,10 +32,10 @@ int main(int argc, char *argv[]) try
             print_usage();
             exit(-1);
         }
-        auto base_date = parse_ymd(argv[2]);
+        auto base_date = vp::text_ui::parse_ymd(argv[2]);
         const char * const location_name = argv[3];
         fmt::memory_buffer buf;
-        daybyday_print_one(base_date, location_name, buf, vp::CalcFlags::Default);
+        vp::text_ui::daybyday_print_one(base_date, location_name, buf, vp::CalcFlags::Default);
         fmt::print("{}", std::string_view{buf.data(), buf.size()});
     } else {
         if (argc-1 != 1 && argc-1 != 2 && argc-1 != 3) {
@@ -45,19 +43,19 @@ int main(int argc, char *argv[]) try
             exit(-1);
         }
 
-        auto base_date = parse_ymd(argv[1]);
+        auto base_date = vp::text_ui::parse_ymd(argv[1]);
         if (argc-1 <= 1) {
-            calc_and_report_all(base_date);
+            vp::text_ui::calc_and_report_all(base_date);
         } else if (argc-1 == 2) {
             const char * const location_name = argv[2];
             fmt::memory_buffer buf;
-            find_calc_and_report_one(base_date, location_name, buf);
+            vp::text_ui::find_calc_and_report_one(base_date, location_name, buf);
             fmt::print("{}", std::string_view{buf.data(), buf.size()});
         } else {
             double latitude = std::stod(argv[2]);
             double longitude = std::stod(argv[3]);
             fmt::memory_buffer buf;
-            calc_and_report_one(base_date, vp::Location{vp::Latitude{latitude}, vp::Longitude{longitude}}, buf);
+            vp::text_ui::calc_and_report_one(base_date, vp::Location{vp::Latitude{latitude}, vp::Longitude{longitude}}, buf);
             fmt::print("{}", std::string_view{buf.data(), buf.size()});
         }
     }
