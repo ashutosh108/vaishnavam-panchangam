@@ -59,7 +59,7 @@ void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::mem
 void daybyday_print_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf, vp::CalcFlags flags);
 void calc_and_report_all(date::year_month_day d);
 vp::VratasForDate calc_all(date::year_month_day, CalcFlags flags = CalcFlags::Default);
-vp::VratasForDate calc_one(date::year_month_day base_date, std::string location_name, CalcFlags flags = CalcFlags::Default);
+vp::VratasForDate calc(date::year_month_day base_date, std::string location_name, CalcFlags flags = CalcFlags::Default);
 std::string version();
 std::string program_name_and_version();
 

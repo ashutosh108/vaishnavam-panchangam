@@ -141,7 +141,7 @@ tl::expected<vp::Vrata, vp::CalcError> decrease_latitude_and_find_vrata(date::ye
     }
 }
 
-vp::VratasForDate calc_one(date::year_month_day base_date, std::string location_name, CalcFlags flags)
+vp::VratasForDate calc(date::year_month_day base_date, std::string location_name, CalcFlags flags)
 {
     vp::VratasForDate vratas;
     auto location = LocationDb::find_coord(location_name.c_str());

@@ -203,7 +203,7 @@ void MainWindow::recalcVratasForSelectedDateAndLocation() {
     if (location_string == "all") {
         vratas = vp::text_ui::calc_all(date, flags);
     } else {
-        vratas = vp::text_ui::calc_one(date, location_string, flags);
+        vratas = vp::text_ui::calc(date, location_string, flags);
     }
 }
 
