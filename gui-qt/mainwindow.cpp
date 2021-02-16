@@ -200,11 +200,7 @@ void MainWindow::recalcVratasForSelectedDateAndLocation() {
     auto location_string = selected_location();
     const auto flags = flagsForCurrentSettings();
 
-    if (location_string == "all") {
-        vratas = vp::text_ui::calc_all(date, flags);
-    } else {
-        vratas = vp::text_ui::calc(date, location_string, flags);
-    }
+    vratas = vp::text_ui::calc(date, location_string, flags);
 }
 
 void MainWindow::refreshAllTabs()

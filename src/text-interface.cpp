@@ -32,6 +32,7 @@ date::year_month_day parse_ymd(const std::string_view s) {
     return date::year{year}/date::month{month}/date::day{day};
 }
 
+namespace {
 const std::vector<Location> &LocationDb::locations() {
     static std::vector<Location> locations_ {
         { udupi_coord },
@@ -114,6 +115,7 @@ const std::vector<Location> &LocationDb::locations() {
     };
     return locations_;
 }
+}
 
 std::optional<Location> LocationDb::find_coord(const char *location_name) {
     auto found = std::find_if(
@@ -127,6 +129,7 @@ std::optional<Location> LocationDb::find_coord(const char *location_name) {
     return *found;
 }
 
+namespace {
 // try decreasing latitude until we get all necessary sunrises/sunsets
 tl::expected<vp::Vrata, vp::CalcError> decrease_latitude_and_find_vrata(date::year_month_day base_date, Location location) {
     auto l = location;
@@ -141,19 +144,7 @@ tl::expected<vp::Vrata, vp::CalcError> decrease_latitude_and_find_vrata(date::ye
     }
 }
 
-vp::VratasForDate calc(date::year_month_day base_date, std::string location_name, CalcFlags flags)
-{
-    vp::VratasForDate vratas;
-    auto location = LocationDb::find_coord(location_name.c_str());
-    if (!location) {
-        vratas.push_back(tl::make_unexpected(CantFindLocation{std::move(location_name)}));
-        return vratas;
-    }
-    vratas.push_back(calc_one(base_date, *location, flags));
-    return vratas;
-}
-
-tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, Location location, CalcFlags flags) {
+tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, Location location, CalcFlags flags = CalcFlags::Default) {
     // Use immediately-called lambda to ensure Calc is destroyed before more
     // will be created in decrease_latitude_and_find_vrata()
     auto vrata = [&](){
@@ -170,7 +161,80 @@ tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, 
     return vrata;
 }
 
+// Try calculating, return true if resulting date range is small enough (suggesting that it's the same ekAdashI for all locations),
+// false otherwise (suggesting that we should repeat calculation with adjusted base_date
+bool try_calc_all(date::year_month_day base_date, vp::VratasForDate & vratas, CalcFlags flags) {
+    std::transform(
+        LocationDb().begin(),
+        LocationDb().end(),
+        std::back_inserter(vratas),
+        [base_date, flags](const vp::Location & location) {
+            return calc_one(base_date, location, flags);
+        });
+    return vratas.all_from_same_ekadashi();
+}
 
+struct CalcSettings {
+    date::year_month_day date;
+    vp::CalcFlags flags;
+};
+
+bool operator==(const CalcSettings & left, const CalcSettings & right);
+
+struct MyHash {
+    std::size_t operator()(const CalcSettings & key) const {
+        auto hy = std::hash<int>{}(key.date.year().operator int());
+        auto hm = std::hash<unsigned int>{}(key.date.month().operator unsigned int());
+        auto hd = std::hash<unsigned int>{}(key.date.day().operator unsigned int());
+        using FlagsT = std::underlying_type_t<vp::CalcFlags>;
+        auto hash_flags = std::hash<FlagsT>{}(static_cast<FlagsT>(key.flags));
+        return hy ^ (hm << 1) ^ (hd << 2) ^ (hash_flags << 3);
+    }
+};
+
+std::unordered_map<CalcSettings, vp::VratasForDate, MyHash> cache;
+
+bool operator==(const CalcSettings & left, const CalcSettings & right)
+{
+    return (left.date == right.date) && (left.flags == right.flags);
+}
+
+vp::VratasForDate calc_all(date::year_month_day base_date, CalcFlags flags)
+{
+    const auto key = CalcSettings{base_date, flags};
+    if (auto found = cache.find(key); found != cache.end()) {
+        return found->second;
+    }
+    vp::VratasForDate vratas;
+
+    if (!try_calc_all(base_date, vratas, flags)) {
+        vratas.clear();
+        date::year_month_day adjusted_base_date = date::sys_days{base_date} - date::days{1};
+        try_calc_all(adjusted_base_date, vratas, flags);
+    }
+    cache[key] = vratas;
+    return vratas;
+}
+
+}
+
+vp::VratasForDate calc(date::year_month_day base_date, std::string location_name, CalcFlags flags)
+{
+    vp::VratasForDate vratas;
+    if (location_name == "all") {
+        vratas = calc_all(base_date, flags);
+    } else {
+        auto location = LocationDb::find_coord(location_name.c_str());
+        if (!location) {
+            vratas.push_back(tl::make_unexpected(CantFindLocation{std::move(location_name)}));
+        } else {
+            vratas.push_back(calc_one(base_date, *location, flags));
+        }
+    }
+    return vratas;
+}
+
+namespace {
 void report_details(const vp::MaybeVrata & vrata, fmt::memory_buffer & buf) {
     if (!vrata.has_value()) {
         fmt::format_to(buf,
@@ -184,6 +248,7 @@ void report_details(const vp::MaybeVrata & vrata, fmt::memory_buffer & buf) {
         fmt::format_to(buf, "{}\n\n", vd);
     }
 
+}
 }
 
 // Find next ekAdashI vrata for the named location, report details to the output buffer.
@@ -402,6 +467,7 @@ DayByDayInfo daybyday_calc_one(date::year_month_day base_date, Location coord, C
     return info;
 }
 
+namespace {
 /* print day-by-day report (-d mode) for a single date and single location */
 void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf, vp::CalcFlags flags) {
     auto info = daybyday_calc_one(base_date, coord, flags);
@@ -415,6 +481,7 @@ void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::mem
         }
         fmt::format_to(buf, "{} {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, e.name);
     }
+}
 }
 
 void daybyday_print_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf, vp::CalcFlags flags) {
@@ -459,34 +526,6 @@ namespace detail {
     }
 }
 
-namespace {
-    struct CalcSettings {
-        date::year_month_day date;
-        vp::CalcFlags flags;
-    };
-
-    bool operator==(const CalcSettings & left, const CalcSettings & right);
-
-    struct MyHash {
-        std::size_t operator()(const CalcSettings & key) const {
-            auto hy = std::hash<int>{}(key.date.year().operator int());
-            auto hm = std::hash<unsigned int>{}(key.date.month().operator unsigned int());
-            auto hd = std::hash<unsigned int>{}(key.date.day().operator unsigned int());
-            using FlagsT = std::underlying_type_t<vp::CalcFlags>;
-            auto hash_flags = std::hash<FlagsT>{}(static_cast<FlagsT>(key.flags));
-            return hy ^ (hm << 1) ^ (hd << 2) ^ (hash_flags << 3);
-        }
-    };
-
-    std::unordered_map<CalcSettings, vp::VratasForDate, MyHash> cache;
-
-    bool operator==(const CalcSettings & left, const CalcSettings & right)
-    {
-        return (left.date == right.date) && (left.flags == right.flags);
-    }
-
-} // namespace detail
-
 /* Change dir to the directory with eph and tzdata data files (usually it's .exe dir or the one above) */
 void change_to_data_dir(const char* argv0)
 {
@@ -494,6 +533,7 @@ void change_to_data_dir(const char* argv0)
     fs::current_path(working_dir);
 }
 
+namespace {
 std::string version()
 {
 #ifdef VP_VERSION
@@ -502,40 +542,11 @@ std::string version()
     return std::string{"unknown"};
 #endif
 }
+}
 
 std::string program_name_and_version()
 {
     return "Vaiṣṇavaṁ Pañcāṅgam " + version();
-}
-
-// Try calculating, return true if resulting date range is small enough (suggesting that it's the same ekAdashI for all locations),
-// false otherwise (suggesting that we should repeat calculation with adjusted base_date
-bool try_calc_all(date::year_month_day base_date, vp::VratasForDate & vratas, CalcFlags flags) {
-    std::transform(
-        LocationDb().begin(),
-        LocationDb().end(),
-        std::back_inserter(vratas),
-        [base_date, flags](const vp::Location & location) {
-            return calc_one(base_date, location, flags);
-        });
-    return vratas.all_from_same_ekadashi();
-}
-
-vp::VratasForDate calc_all(date::year_month_day base_date, CalcFlags flags)
-{
-    const auto key = CalcSettings{base_date, flags};
-    if (auto found = cache.find(key); found != cache.end()) {
-        return found->second;
-    }
-    vp::VratasForDate vratas;
-
-    if (!try_calc_all(base_date, vratas, flags)) {
-        vratas.clear();
-        date::year_month_day adjusted_base_date = date::sys_days{base_date} - date::days{1};
-        try_calc_all(adjusted_base_date, vratas, flags);
-    }
-    cache[key] = vratas;
-    return vratas;
 }
 
 } // namespace vp::text_ui

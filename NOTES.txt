@@ -1,4 +1,23 @@
+[ ] calculate additional days and show them in table and summary:
+    Vasanta-pañćamī		Māgha (amā.)	ś5
+    Ratha-saptamī		Māgha (amā.)	ś7
+    Bhīṣmāṣṭamī			Māgha (amā.)	ś8
+    Madhva-navamī ćāndra	Māgha (amā.)	ś9
+    Madhva-navamī saura		Makara		ś9
 [ ] day-by-day: calculate saura masa end day (verify by panchangas)
+    Meśa: 2020-04-14..
+    Vṛṣabha: 2020-05-15..
+    Mithuna: 2020-06-15..
+    Karkata: 2020-07-17..
+    Siṁha: 2020-08-17..
+    Kanya: 2020-09-17..
+    Tula: 2020-10-18..
+    Vṛścika: 2020-11-17..
+    Dhanu: 2020-12-16..
+    Makara: 2021-01-15..
+    Kumbha: 2021-02-13..
+    Mina: 2021-03-15..
+    Meśa: 2021-04-14..
 [ ] day-by-day: print summary with traditional form year, date, weekday, tithi, nakshatra, saura māsa and candra māsa display
 [ ] day-by-day: add graphical representation. layers: 24h days, sun days, tithis, nakshatras, saura māsas, candra māsas(?)
 [ ] Table: add Russian version

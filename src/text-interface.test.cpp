@@ -21,11 +21,12 @@ TEST_CASE("get_exe_dir() exists and returns something") {
 TEST_CASE("no sunset: we decrease latitude until we get all necessary sunrises/sunsets") {
     using namespace date;
     auto date = 2020_y/June/3;
-    auto vrata = vp::text_ui::calc_one(date, vp::murmansk_coord);
-    REQUIRE(vrata.has_value());
+    auto vratas = vp::text_ui::calc(date, "Murmansk");
+    REQUIRE(vratas.size() == 1);
+    REQUIRE(vratas.begin()->has_value());
 
     // expect location name to contain "adjusted" because there is no sunset in the original location at those dates.
-    auto location_name = vrata->location_name();
+    auto location_name = vratas.begin()->value().location_name();
     REQUIRE(location_name.find("adjusted") != std::string::npos);
 }
 
@@ -40,7 +41,7 @@ TEST_CASE("parse_ymd returns some old date when given non-date string") {
 
 TEST_CASE("calc_all returns array with non-error results") {
     using namespace date;
-    auto vratas = vp::text_ui::calc_all(2020_y/January/1);
+    auto vratas = vp::text_ui::calc(2020_y/January/1, "all");
 
     REQUIRE(vratas.size() > 0);
     REQUIRE(std::all_of(vratas.cbegin(), vratas.cend(), [](const auto & vrata) {
@@ -50,7 +51,7 @@ TEST_CASE("calc_all returns array with non-error results") {
 
 TEST_CASE("calc_all adjusts start date to ensure all locations have the same ekAdashI") {
     using namespace date;
-    auto vratas = vp::text_ui::calc_all(2020_y/September/14);
+    auto vratas = vp::text_ui::calc(2020_y/September/14, "all");
 
     auto [it_min_date, it_max_date] = std::minmax_element(vratas.cbegin(), vratas.cend(), [](const vp::MaybeVrata &l, const vp::MaybeVrata &r) { return l->date < r->date; });
     auto length = date::sys_days{it_max_date->value().date} - date::sys_days{it_min_date->value().date};
@@ -221,7 +222,7 @@ TEST_CASE("daybyday_print_one()") {
     using namespace date::literals;
     using namespace Catch::Matchers;
     fmt::memory_buffer buf;
-    vp::text_ui::daybyday_print_one(2020_y/12/14, vp::kiev_coord, buf, vp::CalcFlags::Default);
+    vp::text_ui::daybyday_print_one(2020_y/12/14, "Kiev", buf, vp::CalcFlags::Default);
     auto s = fmt::to_string(buf);
     SECTION("add '-----' separators before both sunrises") {
         std::regex r{R"(----\n[^\n]*sunrise)"};

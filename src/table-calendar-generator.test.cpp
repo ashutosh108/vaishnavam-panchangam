@@ -8,7 +8,7 @@
 
 namespace {
 auto some_vratas(date::year_month_day date = date::year{2020}/1/1) {
-    return vp::text_ui::calc_all(date);
+    return vp::text_ui::calc(date, "all");
 }
 
 auto some_table(date::year_month_day date = date::year{2020}/1/1) {
