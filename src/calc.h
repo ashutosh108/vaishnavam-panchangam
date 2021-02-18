@@ -53,6 +53,7 @@ public:
     JulDays_UT find_either_tithi_start(JulDays_UT, Tithi) const;
     // find exactly given tithi (Shukla- or Krishna-), even if another paksha's tithi is closer.
     JulDays_UT find_exact_tithi_start(JulDays_UT, Tithi) const;
+    date::sys_days find_exact_tithi_date(JulDays_UT, DiscreteTithi) const;
     JulDays_UT find_nakshatra_start(const JulDays_UT, const Nakshatra) const;
     Saura_Masa saura_masa(JulDays_UT time) const;
     Chandra_Masa chandra_masa_amanta(JulDays_UT time, std::optional<JulDays_UT> * end_time = nullptr) const;

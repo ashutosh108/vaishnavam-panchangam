@@ -294,8 +294,13 @@ JulDays_UT Calc::find_exact_tithi_start(JulDays_UT from, Tithi tithi) const {
         [](Tithi t1, Tithi t2) { return t1.positive_delta_until_tithi(t2); },
         [](Tithi t1, Tithi t2) { return t1.delta_to_nearest_tithi(t2); },
         [](Tithi target, JulDays_UT from) { throw CantFindTithiAfter{target, from}; },
-        [](Tithi & /*target*/, double & /*delta*/) {}
-        );
+        [](Tithi & /*target*/, double & /*delta*/) {} );
+}
+
+date::sys_days Calc::find_exact_tithi_date(JulDays_UT /*from*/, DiscreteTithi /*tithi*/) const
+{
+    // TODO: finish tests and implement
+    return date::sys_days{};
 }
 
 JulDays_UT Calc::find_either_tithi_start(JulDays_UT from, Tithi tithi) const

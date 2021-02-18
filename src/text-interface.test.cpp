@@ -63,7 +63,8 @@ TEST_CASE("can call calc_one with string for location name") {
     using namespace date;
     auto vratas = vp::text_ui::calc(2020_y/January/1, std::string("Kiev"));
     REQUIRE(!vratas.empty());
-    REQUIRE(vratas.begin()->has_value());
+    auto & vrata = *vratas.begin();
+    REQUIRE(vrata.has_value());
 }
 
 TEST_CASE("print_detail_one for Udupi 2020-11-14 does NOT raise exception and includes Amavasya") {
@@ -251,4 +252,13 @@ TEST_CASE("DayByDay for 2021-02-17 Udupi gives tithi (which does not change from
     using namespace date::literals;
     auto info = vp::text_ui::daybyday_calc_one(2021_y/2/17, vp::udupi_coord, vp::CalcFlags::Default);
     REQUIRE(info.tithi == vp::DiscreteTithi::Shukla_Shashthi());
+}
+
+TEST_CASE("Vasanta-pañcamī etc are present in 2021") {
+    using namespace date;
+    auto vratas = vp::text_ui::calc(2021_y/February/10, std::string("Kiev"));
+    REQUIRE(!vratas.empty());
+    auto & vrata = *vratas.begin();
+    REQUIRE(vrata.has_value());
+    REQUIRE(!vrata->dates_for_this_paksha.empty());
 }

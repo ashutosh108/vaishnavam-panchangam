@@ -14,6 +14,8 @@ enum class Paksha {
     Krishna = 2
 };
 
+struct DiscreteTithi;
+
 struct Tithi {
     explicit constexpr Tithi(double _tithi) : tithi(_tithi)
     {

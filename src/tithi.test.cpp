@@ -144,4 +144,12 @@ TEST_CASE("Tithi enum class") {
         REQUIRE(t1 != t2);
         REQUIRE(t1 == t3);
     }
+//    SECTION("initialize from Tithi class works as expected") {
+//        CAPTURE(vp::Tithi::Dashami());
+//        REQUIRE(vp::DiscreteTithi{vp::Tithi::Dashami()} == vp::DiscreteTithi::Shukla_Dashami());
+//        REQUIRE(vp::DiscreteTithi{vp::Tithi::Dashami() + 0.99} == vp::DiscreteTithi::Shukla_Dashami());
+//        REQUIRE(vp::DiscreteTithi{vp::Tithi::Dashami() + 1.0} == vp::DiscreteTithi::Shukla_Ekadashi());
+//        REQUIRE(vp::DiscreteTithi{vp::Tithi::Ekadashi()} == vp::DiscreteTithi::Shukla_Ekadashi());
+//        REQUIRE(vp::DiscreteTithi{vp::Tithi::Ekadashi() + 0.99} == vp::DiscreteTithi::Shukla_Ekadashi());
+//    }
 }

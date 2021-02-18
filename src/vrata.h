@@ -67,6 +67,14 @@ struct Vrata_Time_Points {
     JulDays_UT ativrddhaditvam_timepoint() const;
 };
 
+struct NamedDate {
+    date::sys_days date;
+    std::string name;
+    NamedDate(date::sys_days date_, std::string && name_) : date(date_), name(std::move(name_)) {}
+};
+
+using NamedDates = std::vector<NamedDate>;
+
 // For tests where we need to initialize ativrddhatvam and we don't care about
 // it's value, so it's arbitrary.
 [[maybe_unused]] constexpr Vrata_Time_Points dummy_vrata_time_points{
@@ -98,6 +106,8 @@ struct Vrata {
     JulDays_UT sunset2{nan_days};       // on second day after vrata start (≈Dvādaśī)
     JulDays_UT sunrise3{nan_days};      // on third day after vrata start (≈Trayodaśī)
     JulDays_UT sunset3{nan_days};       // on third day after vrata start (≈Trayodaśī)
+
+    NamedDates dates_for_this_paksha;
 
     Vrata(){}
 

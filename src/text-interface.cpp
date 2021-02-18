@@ -1,6 +1,7 @@
 #include "text-interface.h"
 
 #include "calc.h"
+#include "nameworthy-dates.h"
 #include "vrata_detail_printer.h"
 
 #include <charconv>
@@ -214,6 +215,15 @@ vp::VratasForDate calc_all(date::year_month_day base_date, CalcFlags flags)
     return vratas;
 }
 
+// Add other interesting dates to the
+void add_nameworthy_dates_for_this_paksha(VratasForDate & vratas) {
+    for (auto & vrata : vratas) {
+        if (vrata) {
+            vrata->dates_for_this_paksha = vp::nameworthy_dates_for_this_paksha(vrata.value());
+        }
+    }
+}
+
 }
 
 vp::VratasForDate calc(date::year_month_day base_date, std::string location_name, CalcFlags flags)
@@ -229,6 +239,7 @@ vp::VratasForDate calc(date::year_month_day base_date, std::string location_name
             vratas.push_back(calc_one(base_date, *location, flags));
         }
     }
+    add_nameworthy_dates_for_this_paksha(vratas);
     return vratas;
 }
 
