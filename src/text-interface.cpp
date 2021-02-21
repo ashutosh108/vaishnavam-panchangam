@@ -344,10 +344,14 @@ void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp:
         auto tithi_start = calc.find_exact_tithi_start(start, tithi);
         if (tithi_start >= info.sunrise1) {
             if (info.tithi == vp::DiscreteTithi::Unknown()) {
-                info.tithi = vp::DiscreteTithi{tithi};
+                // -1.0 because local "tithi" variable holds the next tithi,
+                // but info.{tithi,_until} refer to the previous tithi and it's end
+                info.tithi = vp::DiscreteTithi{tithi-1.0};
                 info.tithi_until = tithi_start;
             } else if (tithi_start < info.sunrise2 && info.tithi2 == vp::DiscreteTithi::Unknown()) {
-                info.tithi2 = vp::DiscreteTithi{tithi};
+                // -1.0 because local "tithi" variable holds the next tithi,
+                // but info.{tithi,_until} refer to the previous tithi and it's end
+                info.tithi2 = vp::DiscreteTithi{tithi-1.0};
                 info.tithi2_until = tithi_start;
             }
         }

@@ -144,12 +144,43 @@ TEST_CASE("Tithi enum class") {
         REQUIRE(t1 != t2);
         REQUIRE(t1 == t3);
     }
-//    SECTION("initialize from Tithi class works as expected") {
-//        CAPTURE(vp::Tithi::Dashami());
-//        REQUIRE(vp::DiscreteTithi{vp::Tithi::Dashami()} == vp::DiscreteTithi::Shukla_Dashami());
-//        REQUIRE(vp::DiscreteTithi{vp::Tithi::Dashami() + 0.99} == vp::DiscreteTithi::Shukla_Dashami());
-//        REQUIRE(vp::DiscreteTithi{vp::Tithi::Dashami() + 1.0} == vp::DiscreteTithi::Shukla_Ekadashi());
-//        REQUIRE(vp::DiscreteTithi{vp::Tithi::Ekadashi()} == vp::DiscreteTithi::Shukla_Ekadashi());
-//        REQUIRE(vp::DiscreteTithi{vp::Tithi::Ekadashi() + 0.99} == vp::DiscreteTithi::Shukla_Ekadashi());
-//    }
+    SECTION("can format OK") {
+        CHECK("Śukla Pratipat" == fmt::to_string(vp::DiscreteTithi::Shukla_Pratipat()));
+        CHECK("Śukla Dvitīyā" == fmt::to_string(vp::DiscreteTithi::Shukla_Dvitiya()));
+        CHECK("Śukla Tṛtīyā" == fmt::to_string(vp::DiscreteTithi::Shukla_Tritiya()));
+        CHECK("Śukla Caturthī" == fmt::to_string(vp::DiscreteTithi::Shukla_Chaturthi()));
+        CHECK("Śukla Pañcamī" == fmt::to_string(vp::DiscreteTithi::Shukla_Panchami()));
+        CHECK("Śukla Ṣaṣṭhī" == fmt::to_string(vp::DiscreteTithi::Shukla_Shashthi()));
+        CHECK("Śukla Saptamī" == fmt::to_string(vp::DiscreteTithi::Shukla_Saptami()));
+        CHECK("Śukla Aśtamī" == fmt::to_string(vp::DiscreteTithi::Shukla_Ashtami()));
+        CHECK("Śukla Navamī" == fmt::to_string(vp::DiscreteTithi::Shukla_Navami()));
+        CHECK("Śukla Daśamī" == fmt::to_string(vp::DiscreteTithi::Shukla_Dashami()));
+        CHECK("Śukla Ekādaśī" == fmt::to_string(vp::DiscreteTithi::Shukla_Ekadashi()));
+        CHECK("Śukla Dvādaśī" == fmt::to_string(vp::DiscreteTithi::Shukla_Dvadashi()));
+        CHECK("Śukla Trayodaśī" == fmt::to_string(vp::DiscreteTithi::Shukla_Trayodashi()));
+        CHECK("Śukla Caturdaśī" == fmt::to_string(vp::DiscreteTithi::Shukla_Chaturdashi()));
+        CHECK("Pūrṇimā" == fmt::to_string(vp::DiscreteTithi::Purnima()));
+        CHECK("Kṛṣṇa Pratipat" == fmt::to_string(vp::DiscreteTithi::Krishna_Pratipat()));
+        CHECK("Kṛṣṇa Dvitīyā" == fmt::to_string(vp::DiscreteTithi::Krishna_Dvitiya()));
+        CHECK("Kṛṣṇa Tṛtīyā" == fmt::to_string(vp::DiscreteTithi::Krishna_Tritiya()));
+        CHECK("Kṛṣṇa Caturthī" == fmt::to_string(vp::DiscreteTithi::Krishna_Chaturthi()));
+        CHECK("Kṛṣṇa Pañcamī" == fmt::to_string(vp::DiscreteTithi::Krishna_Panchami()));
+        CHECK("Kṛṣṇa Ṣaṣṭhī" == fmt::to_string(vp::DiscreteTithi::Krishna_Shashthi()));
+        CHECK("Kṛṣṇa Saptamī" == fmt::to_string(vp::DiscreteTithi::Krishna_Saptami()));
+        CHECK("Kṛṣṇa Aśtamī" == fmt::to_string(vp::DiscreteTithi::Krishna_Ashtami()));
+        CHECK("Kṛṣṇa Navamī" == fmt::to_string(vp::DiscreteTithi::Krishna_Navami()));
+        CHECK("Kṛṣṇa Daśamī" == fmt::to_string(vp::DiscreteTithi::Krishna_Dashami()));
+        CHECK("Kṛṣṇa Ekādaśī" == fmt::to_string(vp::DiscreteTithi::Krishna_Ekadashi()));
+        CHECK("Kṛṣṇa Dvādaśī" == fmt::to_string(vp::DiscreteTithi::Krishna_Dvadashi()));
+        CHECK("Kṛṣṇa Trayodaśī" == fmt::to_string(vp::DiscreteTithi::Krishna_Trayodashi()));
+        CHECK("Kṛṣṇa Caturdaśī" == fmt::to_string(vp::DiscreteTithi::Krishna_Chaturdashi()));
+        CHECK("Amāvāsyā" == fmt::to_string(vp::DiscreteTithi::Amavasya()));
+    }
+    SECTION("initialization from Tithi class works as expected") {
+        REQUIRE(vp::DiscreteTithi{vp::Tithi::Dashami()} == vp::DiscreteTithi::Shukla_Dashami());
+        REQUIRE(vp::DiscreteTithi{vp::Tithi::Dashami() + 0.99} == vp::DiscreteTithi::Shukla_Dashami());
+        REQUIRE(vp::DiscreteTithi{vp::Tithi::Dashami() + 1.0} == vp::DiscreteTithi::Shukla_Ekadashi());
+        REQUIRE(vp::DiscreteTithi{vp::Tithi::Ekadashi()} == vp::DiscreteTithi::Shukla_Ekadashi());
+        REQUIRE(vp::DiscreteTithi{vp::Tithi::Ekadashi() + 0.99} == vp::DiscreteTithi::Shukla_Ekadashi());
+    }
 }

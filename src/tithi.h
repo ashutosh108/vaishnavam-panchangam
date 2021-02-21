@@ -77,36 +77,36 @@ Tithi operator -(Tithi const &, double);
 struct DiscreteTithi {
     explicit DiscreteTithi(Tithi t);
     static constexpr DiscreteTithi Unknown() { return DiscreteTithi{-1}; }
-    static constexpr DiscreteTithi Amavasya() { return DiscreteTithi{0}; }
-    static constexpr DiscreteTithi Shukla_Pratipat() { return DiscreteTithi{1}; }
-    static constexpr DiscreteTithi Shukla_Dvitiya() { return DiscreteTithi{2}; }
-    static constexpr DiscreteTithi Shukla_Tritiya() { return DiscreteTithi{3}; }
-    static constexpr DiscreteTithi Shukla_Chaturthi() { return DiscreteTithi{4}; }
-    static constexpr DiscreteTithi Shukla_Panchami() { return DiscreteTithi{5}; }
-    static constexpr DiscreteTithi Shukla_Shashthi() { return DiscreteTithi{6}; }
-    static constexpr DiscreteTithi Shukla_Saptami() { return DiscreteTithi{7}; }
-    static constexpr DiscreteTithi Shukla_Ashtami() { return DiscreteTithi{8}; }
-    static constexpr DiscreteTithi Shukla_Navami() { return DiscreteTithi{9}; }
-    static constexpr DiscreteTithi Shukla_Dashami() { return DiscreteTithi{10}; }
-    static constexpr DiscreteTithi Shukla_Ekadashi() { return DiscreteTithi{11}; }
-    static constexpr DiscreteTithi Shukla_Dvadashi() { return DiscreteTithi{12}; }
-    static constexpr DiscreteTithi Shukla_Trayodashi() { return DiscreteTithi{13}; }
-    static constexpr DiscreteTithi Shukla_Chaturdashi() { return DiscreteTithi{14}; }
-    static constexpr DiscreteTithi Purnima() { return DiscreteTithi{15}; }
-    static constexpr DiscreteTithi Krishna_Pratipat() { return DiscreteTithi{16}; }
-    static constexpr DiscreteTithi Krishna_Dvitiya() { return DiscreteTithi{17}; }
-    static constexpr DiscreteTithi Krishna_Tritiya() { return DiscreteTithi{18}; }
-    static constexpr DiscreteTithi Krishna_Chaturthi() { return DiscreteTithi{19}; }
-    static constexpr DiscreteTithi Krishna_Panchami() { return DiscreteTithi{20}; }
-    static constexpr DiscreteTithi Krishna_Shashthi() { return DiscreteTithi{21}; }
-    static constexpr DiscreteTithi Krishna_Saptami() { return DiscreteTithi{22}; }
-    static constexpr DiscreteTithi Krishna_Ashtami() { return DiscreteTithi{23}; }
-    static constexpr DiscreteTithi Krishna_Navami() { return DiscreteTithi{24}; }
-    static constexpr DiscreteTithi Krishna_Dashami() { return DiscreteTithi{25}; }
-    static constexpr DiscreteTithi Krishna_Ekadashi() { return DiscreteTithi{26}; }
-    static constexpr DiscreteTithi Krishna_Dvadashi() { return DiscreteTithi{27}; }
-    static constexpr DiscreteTithi Krishna_Trayodashi() { return DiscreteTithi{28}; }
-    static constexpr DiscreteTithi Krishna_Chaturdashi() { return DiscreteTithi{29}; }
+    static constexpr DiscreteTithi Shukla_Pratipat() { return DiscreteTithi{0}; }
+    static constexpr DiscreteTithi Shukla_Dvitiya() { return DiscreteTithi{1}; }
+    static constexpr DiscreteTithi Shukla_Tritiya() { return DiscreteTithi{2}; }
+    static constexpr DiscreteTithi Shukla_Chaturthi() { return DiscreteTithi{3}; }
+    static constexpr DiscreteTithi Shukla_Panchami() { return DiscreteTithi{4}; }
+    static constexpr DiscreteTithi Shukla_Shashthi() { return DiscreteTithi{5}; }
+    static constexpr DiscreteTithi Shukla_Saptami() { return DiscreteTithi{6}; }
+    static constexpr DiscreteTithi Shukla_Ashtami() { return DiscreteTithi{7}; }
+    static constexpr DiscreteTithi Shukla_Navami() { return DiscreteTithi{8}; }
+    static constexpr DiscreteTithi Shukla_Dashami() { return DiscreteTithi{9}; }
+    static constexpr DiscreteTithi Shukla_Ekadashi() { return DiscreteTithi{10}; }
+    static constexpr DiscreteTithi Shukla_Dvadashi() { return DiscreteTithi{11}; }
+    static constexpr DiscreteTithi Shukla_Trayodashi() { return DiscreteTithi{12}; }
+    static constexpr DiscreteTithi Shukla_Chaturdashi() { return DiscreteTithi{13}; }
+    static constexpr DiscreteTithi Purnima() { return DiscreteTithi{14}; }
+    static constexpr DiscreteTithi Krishna_Pratipat() { return DiscreteTithi{15}; }
+    static constexpr DiscreteTithi Krishna_Dvitiya() { return DiscreteTithi{16}; }
+    static constexpr DiscreteTithi Krishna_Tritiya() { return DiscreteTithi{17}; }
+    static constexpr DiscreteTithi Krishna_Chaturthi() { return DiscreteTithi{18}; }
+    static constexpr DiscreteTithi Krishna_Panchami() { return DiscreteTithi{19}; }
+    static constexpr DiscreteTithi Krishna_Shashthi() { return DiscreteTithi{20}; }
+    static constexpr DiscreteTithi Krishna_Saptami() { return DiscreteTithi{21}; }
+    static constexpr DiscreteTithi Krishna_Ashtami() { return DiscreteTithi{22}; }
+    static constexpr DiscreteTithi Krishna_Navami() { return DiscreteTithi{23}; }
+    static constexpr DiscreteTithi Krishna_Dashami() { return DiscreteTithi{24}; }
+    static constexpr DiscreteTithi Krishna_Ekadashi() { return DiscreteTithi{25}; }
+    static constexpr DiscreteTithi Krishna_Dvadashi() { return DiscreteTithi{26}; }
+    static constexpr DiscreteTithi Krishna_Trayodashi() { return DiscreteTithi{27}; }
+    static constexpr DiscreteTithi Krishna_Chaturdashi() { return DiscreteTithi{28}; }
+    static constexpr DiscreteTithi Amavasya() { return DiscreteTithi{29}; }
     friend bool operator ==(DiscreteTithi t1, DiscreteTithi t2) {
         return t1.num == t2.num;
     }
@@ -246,16 +246,16 @@ struct fmt::formatter<vp::DiscreteTithi> : fmt::formatter<std::string_view> {
             return fmt::format_to(ctx.out(), FMT_STRING("Invalid tithi"));
         } else if (t.num == -1) {
             return fmt::format_to(ctx.out(), FMT_STRING("Unknown tithi"));
-        } else if (t.num == 0) {
-            return fmt::format_to(ctx.out(), FMT_STRING("Amāvāsyā"));
-        } else if (t.num >= 1 && t.num <= 14) {
+        } else if (t.num >= 0 && t.num <= 13) {
             fmt::format_to(ctx.out(), FMT_STRING("Śukla "));
-        } else if (t.num == 15) {
+        } else if (t.num == 14) {
             return fmt::format_to(ctx.out(), FMT_STRING("Pūrṇimā"));
-        } else if (t.num >= 16 && t.num <= 29) {
+        } else if (t.num >= 15 && t.num <= 28) {
             fmt::format_to(ctx.out(), FMT_STRING("Kṛṣṇa "));
+        } else if (t.num == 29) {
+            return fmt::format_to(ctx.out(), FMT_STRING("Amāvāsyā"));
         }
-        auto tithi_name_index = (t.num-1) % 15;
+        auto tithi_name_index = t.num % 15;
         fmt::format_to(ctx.out(), FMT_STRING("{}"), tithi_names[tithi_name_index]);
         return ctx.out();
     }
