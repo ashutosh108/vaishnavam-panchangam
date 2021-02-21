@@ -5,6 +5,9 @@
 
 namespace vp {
 
+Tithi::Tithi(DiscreteTithi t) : tithi(static_cast<double>(t.num))
+{}
+
 Paksha Tithi::get_paksha()
 {
     return tithi < 15 ? Paksha::Shukla : Paksha::Krishna;

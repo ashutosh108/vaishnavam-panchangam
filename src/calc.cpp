@@ -297,10 +297,16 @@ JulDays_UT Calc::find_exact_tithi_start(JulDays_UT from, Tithi tithi) const {
         [](Tithi & /*target*/, double & /*delta*/) {} );
 }
 
-date::sys_days Calc::find_exact_tithi_date(JulDays_UT /*from*/, DiscreteTithi /*tithi*/) const
+tl::expected<date::local_days, CalcError> Calc::find_exact_tithi_date(const JulDays_UT from, const DiscreteTithi tithi, const date::time_zone * tz) const
 {
+    const auto tithi_start = find_exact_tithi_start(from, Tithi{tithi});
+    const auto sunrise = swe.find_sunrise(tithi_start);
+    if (!sunrise) {
+        return tl::make_unexpected(sunrise.error());
+    }
     // TODO: finish tests and implement
-    return date::sys_days{};
+    const auto date = date::floor<date::days>(sunrise->as_zoned_time(tz).get_local_time());
+    return date;
 }
 
 JulDays_UT Calc::find_either_tithi_start(JulDays_UT from, Tithi tithi) const

@@ -256,9 +256,17 @@ TEST_CASE("DayByDay for 2021-02-17 Udupi gives tithi (which does not change from
 
 TEST_CASE("Vasanta-pañcamī etc are present in 2021") {
     using namespace date;
-    auto vratas = vp::text_ui::calc(2021_y/February/10, std::string("Kiev"));
+    auto vratas = vp::text_ui::calc(2021_y/February/10, std::string("Udupi"));
     REQUIRE(!vratas.empty());
     auto & vrata = *vratas.begin();
     REQUIRE(vrata.has_value());
-    REQUIRE(!vrata->dates_for_this_paksha.empty());
+    REQUIRE(vrata->dates_for_this_paksha.size() == 4);
+    REQUIRE(vrata->dates_for_this_paksha[0].name == "Vasanta-pañcamī");
+    REQUIRE(date::year_month_day{vrata->dates_for_this_paksha[0].date} == 2021_y/February/16);
+    REQUIRE(vrata->dates_for_this_paksha[1].name == "Ratha-saptamī");
+    REQUIRE(date::year_month_day{vrata->dates_for_this_paksha[1].date} == 2021_y/February/19);
+    REQUIRE(vrata->dates_for_this_paksha[2].name == "Bhīṣmāṣtamī");
+    REQUIRE(date::year_month_day{vrata->dates_for_this_paksha[2].date} == 2021_y/February/20);
+    REQUIRE(vrata->dates_for_this_paksha[3].name == "Madhva-navamī (cāndra)");
+    REQUIRE(date::year_month_day{vrata->dates_for_this_paksha[3].date} == 2021_y/February/21);
 }

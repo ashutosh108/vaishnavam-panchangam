@@ -23,6 +23,7 @@ struct Tithi {
             throw std::range_error(fmt::format("Wrong tithi value: {}", tithi));
         }
     }
+    explicit Tithi(DiscreteTithi t);
     double tithi;
     Paksha get_paksha();
     bool is_dvadashi();

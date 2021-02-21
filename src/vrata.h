@@ -68,9 +68,9 @@ struct Vrata_Time_Points {
 };
 
 struct NamedDate {
-    date::sys_days date;
+    date::local_days date;
     std::string name;
-    NamedDate(date::sys_days date_, std::string && name_) : date(date_), name(std::move(name_)) {}
+    NamedDate(date::local_days date_, std::string && name_) : date(date_), name(std::move(name_)) {}
 };
 
 using NamedDates = std::vector<NamedDate>;
