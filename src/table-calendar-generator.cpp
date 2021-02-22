@@ -17,6 +17,9 @@ std::set<date::year_month_day> get_vrata_dates(const vp::VratasForDate & vratas,
             if (vp::is_atirikta(vrata->type)) {
                 dates.insert(date::year_month_day{date::sys_days{vrata->date} + date::days{1}});
             }
+            for (const auto & nameworthy_date : vrata->dates_for_this_paksha) {
+                dates.insert(date::year_month_day{nameworthy_date.date});
+            }
         }
     }
     for (const auto & date_desc_pair : custom_dates) {
