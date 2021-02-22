@@ -19,7 +19,8 @@ int main(int argc, char* argv[]) {
 #endif
 
         date::set_install("tzdata");
-        ret_code = Catch::Session().run(argc, argv);
+        auto session = Catch::Session();
+        ret_code = session.run(argc, argv);
     } catch (std::exception & e) {
         fmt::print(FMT_STRING("Unexpected exception during test run, aborting: {}\n"), e.what());
         ret_code = 1;

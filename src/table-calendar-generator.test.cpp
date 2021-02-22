@@ -14,63 +14,7 @@ auto some_vratas(date::year_month_day date = date::year{2020}/1/1) {
 auto some_table(date::year_month_day date = date::year{2020}/1/1) {
     return vp::Table_Calendar_Generator::generate(some_vratas(date));
 }
-}
 
-TEST_CASE("Table_Calendar_Generator returns reasonable table") {
-    const auto table = some_table();
-    REQUIRE(table.width() == 6);
-    REQUIRE(table.at(0, 3).text == "January&nbsp;6");
-    REQUIRE(table.at(0, 4).text == "January&nbsp;7");
-    REQUIRE(table.at(0, 5).text == "January&nbsp;8");
-
-    REQUIRE(table.height() >= 20);
-
-    using Catch::Matchers::Contains;
-
-    REQUIRE(table.at(1, 0).text == "+5:30");
-    REQUIRE(table.at(1, 1).text == "India");
-    REQUIRE_THAT(table.at(1, 2).text, Contains("Udupi"));
-    REQUIRE(table.at(1, 3).text == "Putradā Ekādaśī");
-    REQUIRE_THAT(table.at(1, 4).text, Contains(">10:06"));
-    REQUIRE(table.at(1, 5).text == "");
-}
-
-TEST_CASE("Table_Calendar_Generator generates 'shrIH'/'Om tatsat' with dates as the top and bottom rows") {
-    const auto table = some_table();
-
-    size_t rows = table.height();
-
-    REQUIRE(rows >= 3);
-
-    REQUIRE(table.at(0, 3).text == "January&nbsp;6");
-    REQUIRE(table.at(rows-1, 3).text == "January&nbsp;6");
-    REQUIRE(table.at(0, 4).text == "January&nbsp;7");
-    REQUIRE(table.at(rows-1, 4).text == "January&nbsp;7");
-    REQUIRE(table.at(0, 5).text == "January&nbsp;8");
-    REQUIRE(table.at(rows-1, 5).text == "January&nbsp;8");
-
-    using Catch::Matchers::Contains;
-    REQUIRE_THAT(table.at(0, 0).text, Contains("श्रीः"));
-    REQUIRE_THAT(table.at(rows-1, 0).text, Contains("ॐ तत्सत्"));
-}
-
-TEST_CASE("generated table has 'mainpart' as a class for top/bottom date headers") {
-    const auto table = some_table();
-    using Catch::Matchers::Contains;
-
-    REQUIRE_THAT(table.at(0, 3).classes, Contains("mainpart"));
-    REQUIRE_THAT(table.at(0, 4).classes, Contains("mainpart"));
-    REQUIRE_THAT(table.at(0, 5).classes, Contains("mainpart"));
-
-    size_t rows = table.height();
-    REQUIRE(rows >= 3);
-
-    REQUIRE_THAT(table.at(rows-1, 3).classes, Contains("mainpart"));
-    REQUIRE_THAT(table.at(rows-1, 4).classes, Contains("mainpart"));
-    REQUIRE_THAT(table.at(rows-1, 5).classes, Contains("mainpart"));
-}
-
-namespace {
 std::chrono::seconds utc_offset_string_to_seconds(std::string utc_offset_string) {
     // e.g. +5:30
     if (utc_offset_string.size() < strlen("+5:30")) { throw std::runtime_error("can't parse UTC offset (too short)" + utc_offset_string); }
@@ -91,50 +35,99 @@ std::chrono::seconds utc_offset_string_to_seconds(std::string utc_offset_string)
         throw std::runtime_error("can't parse UTC offset (sign is neither + or -)" + utc_offset_string);
     }
 }
+
 }
 
-TEST_CASE("generated table has a separator row when switching to timezone 7 or more hours away from the previous one (e.g. between Petropavlovsk-Kamchatskiy and Yerevan") {
-    using namespace std::chrono_literals;
-    constexpr auto max_delta = 7h;
+TEST_CASE("default table") {
     const auto table = some_table();
-    size_t separator_rows_count = 0;
-    // skip first two rows (top-header and row without top-neighbor) and last two row (bottom-header and without bottom-neighbor)
-    for (std::size_t row=2; row < table.height()-2; ++row) {
-        if (table.row(row).has_class("separator")) {
-            REQUIRE(table.has_cell(row-1, 0));
-            REQUIRE(table.has_cell(row+1, 0));
-            const auto next_offset = utc_offset_string_to_seconds(table.at(row+1, 0).text);
-            const auto prev_offset = utc_offset_string_to_seconds(table.at(row-1,0).text);
-            REQUIRE(abs(next_offset - prev_offset) > max_delta);
-            ++separator_rows_count;
-        }
+
+    SECTION("Table_Calendar_Generator returns reasonable table") {
+        REQUIRE(table.width() == 6);
+        REQUIRE(table.at(0, 3).text == "January&nbsp;6");
+        REQUIRE(table.at(0, 4).text == "January&nbsp;7");
+        REQUIRE(table.at(0, 5).text == "January&nbsp;8");
+
+        REQUIRE(table.height() >= 20);
+
+        using Catch::Matchers::Contains;
+
+        REQUIRE(table.at(1, 0).text == "+5:30");
+        REQUIRE(table.at(1, 1).text == "India");
+        REQUIRE_THAT(table.at(1, 2).text, Contains("Udupi"));
+        REQUIRE(table.at(1, 3).text == "Putradā Ekādaśī");
+        REQUIRE_THAT(table.at(1, 4).text, Contains(">10:06"));
+        REQUIRE(table.at(1, 5).text == "");
     }
-    REQUIRE(separator_rows_count == 1);
-}
 
-TEST_CASE("generated table has &nbsp; as date separators") {
-    const auto table = some_table();
-    REQUIRE(table.at(0, 3).text == "January&nbsp;6");
-}
+    SECTION("Table_Calendar_Generator generates 'shrIH'/'Om tatsat' with dates as the top and bottom rows") {
+        size_t rows = table.height();
 
-TEST_CASE("generated table contains titles for PAraNam details") {
-    auto table = some_table();
+        REQUIRE(rows >= 3);
 
-    using Catch::Matchers::Contains;
-    REQUIRE_THAT(table.at(1, 4).title, Contains("10:05:34 (1/4th of dvādaśī)…"));
-}
+        REQUIRE(table.at(0, 3).text == "January&nbsp;6");
+        REQUIRE(table.at(rows-1, 3).text == "January&nbsp;6");
+        REQUIRE(table.at(0, 4).text == "January&nbsp;7");
+        REQUIRE(table.at(rows-1, 4).text == "January&nbsp;7");
+        REQUIRE(table.at(0, 5).text == "January&nbsp;8");
+        REQUIRE(table.at(rows-1, 5).text == "January&nbsp;8");
 
-TEST_CASE("generated table contains titles with timezone name for cell with location name") {
-    auto table = some_table();
+        using Catch::Matchers::Contains;
+        REQUIRE_THAT(table.at(0, 0).text, Contains("श्रीः"));
+        REQUIRE_THAT(table.at(rows-1, 0).text, Contains("ॐ तत्सत्"));
+    }
 
-    using Catch::Matchers::Contains;
-    REQUIRE_THAT(table.at(1, 2).title, Contains("Asia/Kolkata"));
-}
+    SECTION("generated table has 'mainpart' as a class for top/bottom date headers") {
+        using Catch::Matchers::Contains;
 
-TEST_CASE("generated table contains links with details in cells with location name, vrata, pAraNam") {
-    auto table = some_table();
-    using Catch::Matchers::Contains;
-    REQUIRE_THAT(table.at(1, 2).text, Contains("<a href"));
+        REQUIRE_THAT(table.at(0, 3).classes, Contains("mainpart"));
+        REQUIRE_THAT(table.at(0, 4).classes, Contains("mainpart"));
+        REQUIRE_THAT(table.at(0, 5).classes, Contains("mainpart"));
+
+        size_t rows = table.height();
+        REQUIRE(rows >= 3);
+
+        REQUIRE_THAT(table.at(rows-1, 3).classes, Contains("mainpart"));
+        REQUIRE_THAT(table.at(rows-1, 4).classes, Contains("mainpart"));
+        REQUIRE_THAT(table.at(rows-1, 5).classes, Contains("mainpart"));
+    }
+
+    SECTION("generated table has a separator row when switching to timezone 7 or more hours away from the previous one (e.g. between Petropavlovsk-Kamchatskiy and Yerevan") {
+        using namespace std::chrono_literals;
+        constexpr auto max_delta = 7h;
+        size_t separator_rows_count = 0;
+        // skip first two rows (top-header and row without top-neighbor) and last two row (bottom-header and without bottom-neighbor)
+        for (std::size_t row=2; row < table.height()-2; ++row) {
+            if (table.row(row).has_class("separator")) {
+                REQUIRE(table.has_cell(row-1, 0));
+                REQUIRE(table.has_cell(row+1, 0));
+                const auto next_offset = utc_offset_string_to_seconds(table.at(row+1, 0).text);
+                const auto prev_offset = utc_offset_string_to_seconds(table.at(row-1,0).text);
+                REQUIRE(abs(next_offset - prev_offset) > max_delta);
+                ++separator_rows_count;
+            }
+        }
+        REQUIRE(separator_rows_count == 1);
+    }
+
+    SECTION("generated table has &nbsp; as date separators") {
+        REQUIRE(table.at(0, 3).text == "January&nbsp;6");
+    }
+
+    SECTION("generated table contains titles for PAraNam details") {
+        using Catch::Matchers::Contains;
+        REQUIRE_THAT(table.at(1, 4).title, Contains("10:05:34 (1/4th of dvādaśī)…"));
+    }
+
+    SECTION("generated table contains titles with timezone name for cell with location name") {
+        using Catch::Matchers::Contains;
+        REQUIRE_THAT(table.at(1, 2).title, Contains("Asia/Kolkata"));
+    }
+
+    SECTION("generated table contains links with details in cells with location name, vrata, pAraNam") {
+        using Catch::Matchers::Contains;
+        REQUIRE_THAT(table.at(1, 2).text, Contains("<a href"));
+    }
+
 }
 
 TEST_CASE("Table_Calendar_Generator returns reasonable table adds ' (DST)' for 'summer' times") {
