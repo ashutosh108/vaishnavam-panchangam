@@ -885,7 +885,7 @@ void test_one_precalculated_table_slug(const char * slug, const Fixes & fixes={}
     check_precalculated_vratas(vratas);
 }
 
-TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
+TEST_CASE("precalculated ekAdashIs part 1", "[.][precalc]") {
     test_one_precalculated_table_slug(
                 "2017-11-12", {
                     {vp::riga_coord, {FixEnd{std::nullopt, 9h + 40min}}},
@@ -1419,10 +1419,10 @@ TEST_CASE("precalculated ekAdashIs part 1", "[!hide][precalc]") {
                 });
 }
 
-TEST_CASE("precalculacted ekAdashIs interim test (to be moved under [!hide][precalc] tags later)") {
+TEST_CASE("precalculacted ekAdashIs interim test (to be moved under [.][precalc] tags later)") {
 }
 
-TEST_CASE("precalculated ekAdashIs part 2", "[!hide][precalc]") {
+TEST_CASE("precalculated ekAdashIs part 2", "[.][precalc]") {
 //    test_one_precalculated_table_slug("2019-05-28");
 //    test_one_precalculated_table_slug("2019-06-11");
 //    test_one_precalculated_table_slug("2019-06-26");
