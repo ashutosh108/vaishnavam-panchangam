@@ -230,6 +230,17 @@ static inline QString detailsLinkExpanded(const vp::Vrata & vrata) {
     return detail_string;
 }
 
+namespace {
+QString nameworthy_dates_summary(const vp::Vrata & vrata) {
+    if (vrata.dates_for_this_paksha.empty()) { return ""; }
+    QString summary = "Also:<br>\n";
+    for (const auto & [date, named_date] : vrata.dates_for_this_paksha) {
+        summary += QString::fromStdString(fmt::format(FMT_STRING("{}: {}<br>\n"), date::year_month_day{date}, named_date.name));
+    }
+    return summary;
+}
+}
+
 void MainWindow::refreshSummary()
 {
     QString summary = R"CSS(
@@ -253,6 +264,7 @@ p.paran { margin-bottom: 0; } /* to ensure "Details->" link is not separated fro
             } else {
                 summary += detailsLinkNonExpanded();
             }
+            summary += nameworthy_dates_summary(*vrata);
             first = false;
         }
     }
