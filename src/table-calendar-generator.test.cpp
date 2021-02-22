@@ -171,9 +171,10 @@ TEST_CASE("Generated table contains additional custom dates with given descripti
 TEST_CASE("Generated table contains Vasanta-pañcamī and other dates from that pakṣa", "[wip]") {
     using namespace date::literals;
     auto table = vp::Table_Calendar_Generator::generate(some_vratas(2021_y/2/10));
-    REQUIRE(table.width() == 12); // TODO: add the end of Māgha-snāna vrata
+    REQUIRE(table.width() == 14);
     REQUIRE(table.at(1, 3).text == "Vasanta-pañcamī");
     REQUIRE(table.at(1, 6).text == "Ratha-saptamī");
     REQUIRE(table.at(1, 7).text == "Bhīṣmāṣtamī");
     REQUIRE(table.at(1, 8).text == "Madhva-navamī (cāndra)");
+    REQUIRE(table.at(1, 13).text == "Pūrṇimā, End of Māgha-snāna-vrata");
 }

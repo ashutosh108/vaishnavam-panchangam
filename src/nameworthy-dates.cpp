@@ -7,13 +7,13 @@
 #include <array>
 #include <string>
 
-vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata)
+vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata, CalcFlags flags)
 {
     // TODO: complete this function.
     vp::NamedDates dates;
     if (vrata.masa == vp::Chandra_Masa::Magha && vrata.paksha == vp::Paksha::Shukla) {
         auto base_time = vrata.sunrise1 - double_days{10};
-        auto calc = vp::Calc{vrata.location};
+        auto calc = vp::Calc{Swe{vrata.location, flags}};
 
         struct TithiWithName {
             vp::DiscreteTithi tithi;
@@ -24,6 +24,7 @@ vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata)
             { vp::DiscreteTithi::Shukla_Saptami(), "Ratha-saptamī" },
             { vp::DiscreteTithi::Shukla_Ashtami(), "Bhīṣmāṣtamī" },
             { vp::DiscreteTithi::Shukla_Navami(), "Madhva-navamī (cāndra)" },
+            { vp::DiscreteTithi::Purnima(), "Pūrṇimā, End of Māgha-snāna-vrata" },
         };
 
         for (const auto & tithi_with_name : tithis_with_name) {

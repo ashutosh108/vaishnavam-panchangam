@@ -1,3 +1,4 @@
+[ ] table: show separator column for non-sequential dates
 [ ] calculate Madhva-navamī (saura): Makara, ś9
 [ ] day-by-day: calculate saura masa end day (verify by panchangas)
     Meśa: 2020-04-14..

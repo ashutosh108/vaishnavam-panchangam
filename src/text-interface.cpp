@@ -216,10 +216,10 @@ vp::VratasForDate calc_all(date::year_month_day base_date, CalcFlags flags)
 }
 
 // Add other interesting dates to the
-void add_nameworthy_dates_for_this_paksha(VratasForDate & vratas) {
+void add_nameworthy_dates_for_this_paksha(VratasForDate & vratas, CalcFlags flags) {
     for (auto & vrata : vratas) {
         if (vrata) {
-            vrata->dates_for_this_paksha = vp::nameworthy_dates_for_this_paksha(vrata.value());
+            vrata->dates_for_this_paksha = vp::nameworthy_dates_for_this_paksha(vrata.value(), flags);
         }
     }
 }
@@ -239,7 +239,7 @@ vp::VratasForDate calc(date::year_month_day base_date, std::string location_name
             vratas.push_back(calc_one(base_date, *location, flags));
         }
     }
-    add_nameworthy_dates_for_this_paksha(vratas);
+    add_nameworthy_dates_for_this_paksha(vratas, flags);
     return vratas;
 }
 
