@@ -172,4 +172,8 @@ TEST_CASE("Generated table contains Vasanta-pañcamī and other dates from that 
     using namespace date::literals;
     auto table = vp::Table_Calendar_Generator::generate(some_vratas(2021_y/2/10));
     REQUIRE(table.width() == 12); // TODO: add the end of Māgha-snāna vrata
+    REQUIRE(table.at(1, 3).text == "Vasanta-pañcamī");
+    REQUIRE(table.at(1, 6).text == "Ratha-saptamī");
+    REQUIRE(table.at(1, 7).text == "Bhīṣmāṣtamī");
+    REQUIRE(table.at(1, 8).text == "Madhva-navamī (cāndra)");
 }

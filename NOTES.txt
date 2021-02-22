@@ -1,9 +1,4 @@
-[ ] calculate additional days and show them in table and summary:
-    Vasanta-pañćamī		Māgha (amā.)	ś5
-    Ratha-saptamī		Māgha (amā.)	ś7
-    Bhīṣmāṣṭamī			Māgha (amā.)	ś8
-    Madhva-navamī ćāndra	Māgha (amā.)	ś9
-    Madhva-navamī saura		Makara		ś9
+[ ] calculate Madhva-navamī (saura): Makara, ś9
 [ ] day-by-day: calculate saura masa end day (verify by panchangas)
     Meśa: 2020-04-14..
     Vṛṣabha: 2020-05-15..
@@ -291,3 +286,4 @@ done:
 [+] day-by-day: improve tithi end times format ("HH:MM" or "HH:MM next day") [2021-01-28]
 [+] day-by-day: show nakshatras along with "until" times [2021-01-29]
 [+] day-by-day: do not list additional nakshatras ending after tomorrow's sunrise as today's nakshatra [2021-02-08]
+[+] GUI: calculate Vasanta-pañćamī etc, show them in table for Jayā Ekādaśī [2021-02-22]

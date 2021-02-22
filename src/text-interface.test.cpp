@@ -261,12 +261,8 @@ TEST_CASE("Vasanta-pañcamī etc are present in 2021") {
     auto & vrata = *vratas.begin();
     REQUIRE(vrata.has_value());
     REQUIRE(vrata->dates_for_this_paksha.size() == 4);
-    REQUIRE(vrata->dates_for_this_paksha[0].name == "Vasanta-pañcamī");
-    REQUIRE(date::year_month_day{vrata->dates_for_this_paksha[0].date} == 2021_y/February/16);
-    REQUIRE(vrata->dates_for_this_paksha[1].name == "Ratha-saptamī");
-    REQUIRE(date::year_month_day{vrata->dates_for_this_paksha[1].date} == 2021_y/February/19);
-    REQUIRE(vrata->dates_for_this_paksha[2].name == "Bhīṣmāṣtamī");
-    REQUIRE(date::year_month_day{vrata->dates_for_this_paksha[2].date} == 2021_y/February/20);
-    REQUIRE(vrata->dates_for_this_paksha[3].name == "Madhva-navamī (cāndra)");
-    REQUIRE(date::year_month_day{vrata->dates_for_this_paksha[3].date} == 2021_y/February/21);
+    REQUIRE(vrata->dates_for_this_paksha[date::local_days{2021_y/February/16}].name == "Vasanta-pañcamī");
+    REQUIRE(vrata->dates_for_this_paksha[date::local_days{2021_y/February/19}].name == "Ratha-saptamī");
+    REQUIRE(vrata->dates_for_this_paksha[date::local_days{2021_y/February/20}].name == "Bhīṣmāṣtamī");
+    REQUIRE(vrata->dates_for_this_paksha[date::local_days{2021_y/February/21}].name == "Madhva-navamī (cāndra)");
 }

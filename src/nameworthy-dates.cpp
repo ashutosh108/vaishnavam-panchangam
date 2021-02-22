@@ -29,7 +29,7 @@ vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata)
         for (const auto & tithi_with_name : tithis_with_name) {
             const auto date = calc.find_exact_tithi_date(base_time, tithi_with_name.tithi, vrata.location.time_zone());
             if (date) {
-                dates.emplace_back(*date, tithi_with_name.name);
+                dates[*date] = NamedDate{tithi_with_name.name};
             }
         }
     }

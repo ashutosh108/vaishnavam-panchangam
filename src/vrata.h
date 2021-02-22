@@ -12,6 +12,7 @@
 #include <tl/expected.hpp>
 #include "fmt-format-fixed.h"
 #include <limits>
+#include <map>
 #include <optional>
 
 namespace vp {
@@ -68,12 +69,10 @@ struct Vrata_Time_Points {
 };
 
 struct NamedDate {
-    date::local_days date;
     std::string name;
-    NamedDate(date::local_days date_, std::string && name_) : date(date_), name(std::move(name_)) {}
 };
 
-using NamedDates = std::vector<NamedDate>;
+using NamedDates = std::map<date::local_days, NamedDate>;
 
 // For tests where we need to initialize ativrddhatvam and we don't care about
 // it's value, so it's arbitrary.
