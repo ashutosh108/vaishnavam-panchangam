@@ -35,24 +35,6 @@ TEST_CASE("Table_Calendar_Generator returns reasonable table") {
     REQUIRE(table.at(1, 5).text == "");
 }
 
-TEST_CASE("Table_Calendar_Generator returns reasonable table adds ' (DST)' for 'summer' times") {
-    using namespace date;
-    const auto table = some_table(2020_y/July/1);
-    int num_with_dst = 0;
-    int num_without_dst = 0;
-    for (std::size_t row=0; row < table.height(); ++row) {
-        if (!table.has_cell(row, 0)) { continue; }
-        auto text = table.at(row, 0).text;
-        if (text.find("DST") != std::string::npos) {
-            ++num_with_dst;
-        } else {
-            ++num_without_dst;
-        }
-    }
-    REQUIRE(num_with_dst > 0);
-    REQUIRE(num_without_dst > 0);
-}
-
 TEST_CASE("Table_Calendar_Generator generates 'shrIH'/'Om tatsat' with dates as the top and bottom rows") {
     const auto table = some_table();
 
@@ -135,18 +117,6 @@ TEST_CASE("generated table has &nbsp; as date separators") {
     REQUIRE(table.at(0, 3).text == "January&nbsp;6");
 }
 
-TEST_CASE("generated table shows year for non-default-year dates when default year is specified") {
-    using namespace date;
-    const auto table{vp::Table_Calendar_Generator::generate(some_vratas(2019_y/December/20), 2020_y)};
-
-    using Catch::Matchers::Contains;
-    std::vector<std::pair<size_t, size_t>> to_check{{0, 3}, {0, 4}, {0, 5}, {table.height()-1, 3}, {table.height()-1, 4}, {table.height()-1, 5}};
-    for (const auto & pair : to_check) {
-        CAPTURE(pair.first, pair.second);
-        REQUIRE_THAT(table.at(pair.first, pair.second).text, Contains("2019"));
-    }
-}
-
 TEST_CASE("generated table contains titles for PAraNam details") {
     auto table = some_table();
 
@@ -165,6 +135,36 @@ TEST_CASE("generated table contains links with details in cells with location na
     auto table = some_table();
     using Catch::Matchers::Contains;
     REQUIRE_THAT(table.at(1, 2).text, Contains("<a href"));
+}
+
+TEST_CASE("Table_Calendar_Generator returns reasonable table adds ' (DST)' for 'summer' times") {
+    using namespace date;
+    const auto table = some_table(2020_y/July/1);
+    int num_with_dst = 0;
+    int num_without_dst = 0;
+    for (std::size_t row=0; row < table.height(); ++row) {
+        if (!table.has_cell(row, 0)) { continue; }
+        auto text = table.at(row, 0).text;
+        if (text.find("DST") != std::string::npos) {
+            ++num_with_dst;
+        } else {
+            ++num_without_dst;
+        }
+    }
+    REQUIRE(num_with_dst > 0);
+    REQUIRE(num_without_dst > 0);
+}
+
+TEST_CASE("generated table shows year for non-default-year dates when default year is specified") {
+    using namespace date;
+    const auto table{vp::Table_Calendar_Generator::generate(some_vratas(2019_y/December/20), 2020_y)};
+
+    using Catch::Matchers::Contains;
+    std::vector<std::pair<size_t, size_t>> to_check{{0, 3}, {0, 4}, {0, 5}, {table.height()-1, 3}, {table.height()-1, 4}, {table.height()-1, 5}};
+    for (const auto & pair : to_check) {
+        CAPTURE(pair.first, pair.second);
+        REQUIRE_THAT(table.at(pair.first, pair.second).text, Contains("2019"));
+    }
 }
 
 TEST_CASE("Generated table contains additional custom dates with given descriptions") {

@@ -304,7 +304,6 @@ tl::expected<date::local_days, CalcError> Calc::find_exact_tithi_date(const JulD
     if (!sunrise) {
         return tl::make_unexpected(sunrise.error());
     }
-    // TODO: finish tests and implement
     const auto date = date::floor<date::days>(sunrise->as_zoned_time(tz).get_local_time());
     return date;
 }
