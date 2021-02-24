@@ -43,6 +43,24 @@
 [ ] encapsulate tzdata (so we can run bare executable, wihout any tzdata files at all)
 [ ] encapsulate swe's ephemeris database (so we can run with higher precision while having no data files at hand)
 [ ] check all tests for 2019-March-1,2
+[ ] nameworthy dates:
+    [ ] Cāturmāsya 1st month vrata begins, Тапта-мудрā-дӿāран̣ам: Щайанӣ экāдащӣ
+    [ ] Гуру-пӯрн̣имā: after Щайанӣ экāдащӣ?
+    [ ] Нāга-пањчамӣ: before Путрадā экāдащӣ? (Pavitrā?)
+    [ ] Cāturmāsya 2nd month vrata begins: Путрадā экāдащӣ (Pavitrā?)
+    [ ] Щрӣ-Хайагрӣва-џайантӣ, Павитрāропан̣а-утсав: pūrṇimā after Путрадā экāдащӣ? (Pavitrā?)
+    [ ] Рāгӿавендра-Свāмӣ-пун̣йа-динам: dvitīyā before Аџā экāдащӣ?
+    [ ] Ган̣еща-чатуртӿӣ: before Пāрщва-паривартинӣ-экāдащӣ?
+    [ ] Бӿӯ-Варāха-џайантӣ, Рьши-пањчамӣ: before Пāрщва-паривартинӣ-экāдащӣ?
+    [ ] Сӯрйа-шашт̣ӿӣ: before Пāрщва-паривартинӣ-экāдащӣ?
+    [ ] Дадӿи-Вāмана-џайантӣ: dvādaśī after Пāрщва-паривартинӣ-экāдащӣ?
+    [ ] cāturmāsya 3rd month vrata begins: Пāрщва-паривартинӣ-экāдащӣ
+    [ ] Ананта-чатурдащӣ: after Пāрщва-паривартинӣ-экāдащӣ?
+    [ ] Ананта-пӯрн̣имā, начало Махāлайā-пакша: after Пāрщва-паривартинӣ-экāдащӣ?
+    [ ] Сарвапитрь амāвāсйā: after Индирā экāдащӣ?
+    [ ] Начало Наваратротсава: pratipat before Pāśāṅkuśā Ekādaśī?
+    [ ] Махāнавамӣ, завершеніе Наваратротсава: +8 days
+    [ ] Буддӿа-џайантӣ, Мадӿва-џайантӣ, Виџайā дащамӣ: before Pāśāṅkuśā Ekādaśī?
 [ ] shravaNA dvAdashI: {fred,tor,meadowlake} 2019-09-09-10
 Двāдащӣ-титӿи в сопряженіи со Щраван̣ā-накшатром от восхода Сӯрьи до полудня дают Щраван̣ā двāдащӣ, день таких же обѣтов, как и в щуддӿā экāдащӣ. Двāдащӣ является Хари-вāсаром, а Щраван̣ā является Хари-накшатром, поэтому их соединеніе особо чтимо вәишн̣авами. Если такое сочетаніе приходится на слѣдующій день после чистой экāдащӣ, то пост надлежит соблюдать два дня подряд.
 द्वादशीं श्रवणोपेतां यो नोपोष्यात्स मूढधीः ।
@@ -288,3 +306,4 @@ done:
 [+] day-by-day: show nakshatras along with "until" times [2021-01-29]
 [+] day-by-day: do not list additional nakshatras ending after tomorrow's sunrise as today's nakshatra [2021-02-08]
 [+] GUI: calculate Vasanta-pañćamī etc, show them in table for Jayā Ekādaśī [2021-02-22]
+[+] Śravaṇā Dvādaśī [2021-02-24]

@@ -156,6 +156,14 @@ date::year_month_day Calc::get_vrata_date(const JulDays_UT sunrise) const
 
 Vrata_Type Calc::calc_vrata_type(const Vrata &vrata) const
 {
+    if (got_shravana_nakshatra_next_day(vrata)) {
+        return Vrata_Type::With_Shravana_Dvadashi_Next_Day;
+    }
+
+    if (got_shravana_nakshatra_same_day(vrata)) {
+        return Vrata_Type::With_Shravana_Dvadashi_Same_Day;
+    }
+
     if (got_atirikta_ekadashi(vrata)) {
         return Vrata_Type::With_Atirikta_Ekadashi;
     }
@@ -165,6 +173,52 @@ Vrata_Type Calc::calc_vrata_type(const Vrata &vrata) const
     }
 
     return Vrata_Type::Ekadashi;
+}
+
+namespace {
+bool got_shravana_for_sunrise_sunset(JulDays_UT sunrise, JulDays_UT sunset, JulDays_UT next_sunrise, const vp::Swe & swe) {
+    using ghatikas = std::chrono::duration<double, std::ratio_multiply<std::chrono::minutes::period, std::ratio<24>>>;
+    using namespace std::chrono_literals;
+
+    DiscreteNakshatra nakshatra_on_sunrise = swe.get_nakshatra(sunrise);
+    if (nakshatra_on_sunrise != DiscreteNakshatra::Shravana()) { return false; }
+    Tithi tithi_on_sunrise = swe.get_tithi(sunrise);
+    if (!tithi_on_sunrise.is_dvadashi()) { return false; }
+
+    // limit until which both Dvādaśī and Śravaṇa must hold. 12 or 14 ghaṭikas
+    // from sunrise, depending on which Kṛṣṇāmṛta-mahārṇava commentaries we rely upon.
+    constexpr auto madhyahna_limit_ratio_from_daytime = ghatikas{12} / 12h;
+    static_assert (madhyahna_limit_ratio_from_daytime > 0.0, "12 or 14 ghatikas do not get rounded down to zero");
+    static_assert (madhyahna_limit_ratio_from_daytime >= 2.0/5 - DBL_EPSILON, "12 or 14ghatikas must be 2/5th or 7/15th of daytime (30 ghatikas)");
+    static_assert (madhyahna_limit_ratio_from_daytime <= 7.0/15 + DBL_EPSILON, "12 or 14 ghatikas must be 2/5th or 7/15th of daytime (30 ghatikas)");
+    const auto madhyahna_limit = Calc::proportional_time(sunrise, sunset, madhyahna_limit_ratio_from_daytime);
+    DiscreteNakshatra nakshantra_at_limit = swe.get_nakshatra(madhyahna_limit);
+    if (nakshantra_at_limit != DiscreteNakshatra::Shravana()) { return false; }
+    Tithi tithi_at_limit = swe.get_tithi(madhyahna_limit);
+    if (!tithi_at_limit.is_dvadashi()) { return false; }
+
+    // If Śravaṇa nakṣatra extends till another sunrise, then Śravaṇa dvādaśī condition is not fulfilled.
+    // Since nakshatras cannot reach 72 ghatikas (60 for full ekādaśī day + 12 to reach madhyahnam on dvādaśī),
+    // we don't have to check the previoud sunrise (sunrise1) for Śravaṇa.
+    // So we only need to check for next sunrise.
+    const DiscreteNakshatra nakshatra_at_next_sunrise = swe.get_nakshatra(next_sunrise);
+    if (nakshatra_at_next_sunrise == DiscreteNakshatra::Shravana()) {
+        return false;
+    }
+    return true;
+}
+}
+
+bool Calc::got_shravana_nakshatra_next_day(const Vrata &vrata) const
+{
+    return got_shravana_for_sunrise_sunset(vrata.sunrise2, vrata.sunset2, vrata.sunrise3, swe);
+}
+
+bool Calc::got_shravana_nakshatra_same_day(const Vrata &vrata) const
+{
+    auto sunset1 = swe.find_sunset(vrata.sunrise1);
+    if (!sunset1) return false;
+    return got_shravana_for_sunrise_sunset(vrata.sunrise1, *sunset1, vrata.sunrise2, swe);
 }
 
 /* Find out if we have "atiriktA ekAdashI" situation (shuddha ekAdashI encompasses two sunrises).

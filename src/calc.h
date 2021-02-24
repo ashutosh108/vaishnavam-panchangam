@@ -73,6 +73,8 @@ private:
 
     tl::expected<JulDays_UT, CalcError> next_sunrise(JulDays_UT sunrise) const;
     JulDays_UT next_sunrise_v(JulDays_UT sunrise) const;
+    bool got_shravana_nakshatra_next_day(const Vrata & vrata) const;
+    bool got_shravana_nakshatra_same_day(const Vrata & vrata) const;
     bool got_atirikta_ekadashi(const Vrata & vrata) const;
     bool got_atirikta_dvadashi(const Vrata & vrata) const;
     Vrata_Type calc_vrata_type(const Vrata & vrata) const;

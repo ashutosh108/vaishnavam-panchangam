@@ -108,8 +108,10 @@ TEST_CASE("arunodaya_for_sunrise") {
     REQUIRE(arunodaya->round_to_minute_down() == date::sys_days(2019_y/March/2) + 3h + 0min /*+ 17.512880s*/);
 }
 
+namespace {
 Vrata vrata(const Calc &c, date::year_month_day base_date) {
     return c.find_next_vrata(base_date).value();
+}
 }
 
 TEST_CASE("Ekadashi 2019-02-28") {
@@ -788,4 +790,29 @@ TEST_CASE("vrata::ekadashi_name() works for few known cases") {
     check(2021_y/3/9, "Vijayā");
     check(2021_y/3/25, "Āmalakī");
     check(2021_y/4/7, "Pāpamocanī");
+}
+
+TEST_CASE("shravana dvadashi") {
+    SECTION("Udupi 2020-03-19..20: Ekādaśī + Śravaṇa-dvādaśī next day") {
+        Vrata v{Vrata_Type::With_Shravana_Dvadashi_Next_Day, 2020_y/3/19, Chandra_Masa::Phalguna, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
+        REQUIRE(v == vrata(Calc{udupi_coord}, 2020_y/3/19));
+        REQUIRE(is_atirikta(v.type));
+    }
+
+    SECTION("Fredericton, Toronto, Meadow Lake : 2019-09-09..10") {
+        Vrata v{Vrata_Type::With_Shravana_Dvadashi_Next_Day, 2019_y/9/9, Chandra_Masa::Bhadrapada, Paksha::Shukla, Paran{Paran::Type::Puccha_Dvadashi}};
+        REQUIRE(v == vrata(Calc{fredericton_coord}, 2019_y/9/9));
+        REQUIRE(v == vrata(Calc{toronto_coord}, 2019_y/9/9));
+        REQUIRE(v == vrata(Calc{meadowlake_coord}, 2019_y/9/9));
+    }
+
+    SECTION("Cancun 2020-03-19: Ekādaśī without Śravaṇa-dvādaśī") {
+        Vrata v{Vrata_Type::Ekadashi, 2020_y/3/19, Chandra_Masa::Phalguna, Paksha::Krishna, Paran{Paran::Type::Standard}};
+        REQUIRE(v == vrata(Calc{cancun_coord}, 2020_y/3/19));
+    }
+
+    SECTION("Tekeli 2020-03-20: Ekādaśī + Śravaṇa-dvādaśī same day") {
+        Vrata v{Vrata_Type::With_Shravana_Dvadashi_Same_Day, 2020_y/3/20, Chandra_Masa::Phalguna, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
+        REQUIRE(v == vrata(Calc{tekeli_coord}, 2020_y/3/20));
+    }
 }
