@@ -22,6 +22,7 @@ enum class Vrata_Type {
     With_Atirikta_Ekadashi,
     With_Atirikta_Dvadashi,
     With_Shravana_Dvadashi_Next_Day,
+    With_Shravana_Dvadashi_Same_Day,
 };
 
 constexpr inline bool is_atirikta(Vrata_Type type)
@@ -226,6 +227,8 @@ struct fmt::formatter<vp::Vrata_Type> : fmt::formatter<std::string_view> {
             name = "Ekādaśī with Atiriktā Ekādaśī (two days fast)"; break;
         case vp::Vrata_Type::With_Shravana_Dvadashi_Next_Day:
             name = "Ekādaśī with next-day Śravaṇa-dvādaśī (two days fast)"; break;
+        case vp::Vrata_Type::With_Shravana_Dvadashi_Same_Day:
+            name = "Ekādaśī with same-day Śravaṇa-dvādaśī"; break;
         }
         return fmt::format_to(ctx.out(), "{}", name);
     }
