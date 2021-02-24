@@ -51,3 +51,17 @@ TEST_CASE("MaybeVrata and VratasForDate types (or aliases) do exist") {
     [[maybe_unused]] vp::MaybeVrata vrata;
     [[maybe_unused]] vp::VratasForDate vratas;
 }
+
+TEST_CASE("is_atirikta() works for all types") {
+    REQUIRE(!vp::is_atirikta(vp::Vrata_Type::Ekadashi));
+    REQUIRE(vp::is_atirikta(vp::Vrata_Type::With_Atirikta_Ekadashi));
+    REQUIRE(vp::is_atirikta(vp::Vrata_Type::With_Atirikta_Dvadashi));
+    REQUIRE(vp::is_atirikta(vp::Vrata_Type::With_Shravana_Dvadashi_Next_Day));
+}
+
+TEST_CASE("Vrata_Type formatting") {
+    REQUIRE(fmt::to_string(vp::Vrata_Type::Ekadashi) == "Ekādaśī");
+    REQUIRE(fmt::to_string(vp::Vrata_Type::With_Atirikta_Ekadashi) == "Ekādaśī with Atiriktā Ekādaśī (two days fast)");
+    REQUIRE(fmt::to_string(vp::Vrata_Type::With_Atirikta_Dvadashi) == "Ekādaśī with Atiriktā Dvādaśī (two days fast)");
+    REQUIRE(fmt::to_string(vp::Vrata_Type::With_Shravana_Dvadashi_Next_Day) == "Ekādaśī with next-day Śravaṇa-dvādaśī (two days fast)");
+}
