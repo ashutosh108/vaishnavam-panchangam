@@ -241,6 +241,7 @@ struct fmt::formatter<vp::Vrata> : fmt::formatter<std::string_view> {
             fmt::format_to(ctx.out(), " & {}", date2);
         }
         fmt::format_to(ctx.out(), FMT_STRING(", {} māsa, {} pakṣa"), v.masa, v.paksha);
+        fmt::format_to(ctx.out(), FMT_STRING(", parāṇ: {}"), v.paran);
         return ctx.out();
     }
 };
