@@ -72,14 +72,24 @@ void MainWindow::setupToolbar()
 
     ui->toolBar->addSeparator();
 
-    ephemeris_swiss = ui->toolBar->addAction("Ephemeris: Swiss (click to change)", [this](bool checked) {
-        const auto text = QString{"Ephemeris: %1 (click to change)"}.arg(checked ? "Swiss" : "Moshier");
+    ephemeris_swiss = ui->toolBar->addAction("Ephemeris: Swiss", [this](bool checked) {
+        const auto text = QString{"Ephemeris: %1"}.arg(checked ? "Swiss" : "Moshier");
         ephemeris_swiss->setText(text);
         refreshAllTabs();
     });
     ephemeris_swiss->setCheckable(true);
     ephemeris_swiss->setChecked(true);
     ephemeris_swiss->setToolTip("use Swiss ephemeris (better accuracy, requires se*.se1 files) or Moshier (less accurate, no data files required)");
+
+    ui->toolBar->addSeparator();
+
+    shravana_dvadashi_14gh = ui->toolBar->addAction("Śravaṇa: 12+gh.", [this](bool checked) {
+        const auto text = QString{"Śravaṇa: %1+gh."}.arg(checked ? "14" : "12");
+        shravana_dvadashi_14gh->setText(text);
+        refreshAllTabs();
+    });
+    shravana_dvadashi_14gh->setCheckable(true);
+    shravana_dvadashi_14gh->setToolTip("For Śravaṇa-dvādaśī to be valid, require Śravaṇa-nakṣatra to be present for 12+ or 14+ ghaṭikas after sunrise");
 }
 
 vp::CalcFlags MainWindow::flagsForCurrentSettings()
@@ -96,7 +106,9 @@ vp::CalcFlags MainWindow::flagsForCurrentSettings()
         vp::CalcFlags::EphemerisSwiss
         :
         vp::CalcFlags::EphemerisMoshier;
-    return refraction_flags | disc_flags | ephemeris_flags;
+    const auto shravana_dvadashi_flags = shravana_dvadashi_14gh->isChecked() ?
+        vp::CalcFlags::ShravanaDvadashi14ghPlus : vp::CalcFlags::ShravanaDvadashi12ghPlus;
+    return refraction_flags | disc_flags | ephemeris_flags | shravana_dvadashi_flags;
 }
 
 MainWindow::MainWindow(QWidget *parent)

@@ -50,6 +50,7 @@ private:
     QAction * refraction_toggle = nullptr;
     QAction * sunrise_by_disc_center = nullptr;
     QAction * ephemeris_swiss = nullptr;
+    QAction * shravana_dvadashi_14gh = nullptr;
     LatLongEdit * latlong_edit = nullptr;
 
     void setupLocationsComboBox();
