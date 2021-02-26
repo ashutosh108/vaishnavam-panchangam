@@ -7,6 +7,7 @@
 #include "catch-formatters.h"
 #include <cstdlib>
 #include "date-fixed.h"
+#include "fmt-format-fixed.h"
 #include "filesystem-fixed.h"
 #include <fstream>
 #include <map>
@@ -124,17 +125,6 @@ TEST_CASE("get_ekadashi_name works") {
     REQUIRE(get_ekadashi_name("Варӯтӿинӣ экāдащӣ") == "Варӯтӿинӣ");
     REQUIRE(get_ekadashi_name(", Варӯтӿинӣ экāдащӣ, ") == "Варӯтӿинӣ");
 }
-
-template<typename SomeTimeType>
-struct fmt::formatter<std::optional<SomeTimeType>> : fmt::formatter<std::string_view> {
-    template<typename FormatContext>
-    auto format(const std::optional<SomeTimeType> & t, FormatContext & ctx) {
-        if (!t.has_value()) {
-            return fmt::format_to(ctx.out(), "unspecified");
-        }
-        return fmt::format_to(ctx.out(), "{}", *t);
-    }
-};
 
 struct Paranam {
     enum class Precision {
