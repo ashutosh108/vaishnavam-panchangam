@@ -23,6 +23,7 @@ enum class CalcFlags {
     ShravanaDvadashi12ghPlus = 0,   // after sunrise for Śravaṇa-dvādaśī (i.e. enter Madhyāhna-kāla at least briefly)
     ShravanaDvadashi14ghPlus = 16,  // OR, require 14+ ghaṭikas (i.e. Śr-nakṣatra must not only enter Madhyahna-kāla, but also enter it's middle ghaṭika, 15th ghaṭika from suryodaya)
     Default = 0, // Default must be zero because we are ORing it with flags sometimes
+    Invalid = -1,
 };
 
 CalcFlags operator&(CalcFlags lhs, CalcFlags rhs);
