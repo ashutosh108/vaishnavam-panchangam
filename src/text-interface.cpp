@@ -408,6 +408,9 @@ DayByDayInfo daybyday_events(date::year_month_day base_date, const vp::Calc & ca
             info.events.push_back(NamedTimePoint{"sunset", *sunset});
             info.events.push_back(NamedTimePoint{"1/5 of daytime (saṅgava-kāla begins)", calc.proportional_time(*sunrise, *sunset, 0.2)});
             info.events.push_back(NamedTimePoint{"2/5 of daytime (madhyāhna-kāla begins)", calc.proportional_time(*sunrise, *sunset, 0.4)});
+            if ((calc.swe.calc_flags & CalcFlags::ShravanaDvadashiMask) == CalcFlags::ShravanaDvadashi14ghPlus) {
+                info.events.push_back(NamedTimePoint{"14/30 of daytime (15th ghaṭika begins)", calc.proportional_time(*sunrise, *sunset, 14.0/30)});
+            }
             info.events.push_back(NamedTimePoint{"3/5 of daytime (aparāhna-kāla begins)", calc.proportional_time(*sunrise, *sunset, 0.6)});
             info.events.push_back(NamedTimePoint{"4/5 of daytime (sāyāhna-kāla begins)", calc.proportional_time(*sunrise, *sunset, 0.8)});
             info.events.push_back(NamedTimePoint{"middle of the day", calc.proportional_time(*sunrise, *sunset, 0.5)});
