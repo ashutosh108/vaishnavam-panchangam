@@ -35,7 +35,11 @@ public:
           std::optional<JulDays_UT> _paran_start = std::nullopt,
           std::optional<JulDays_UT> _paran_end = std::nullopt,
           const date::time_zone * _time_zone = utc()
-          ): type(_type), paran_start(_paran_start), paran_end(_paran_end), time_zone(_time_zone){}
+          ): type(_type), paran_start(_paran_start), paran_end(_paran_end), time_zone(_time_zone){
+        if (paran_start > paran_end && paran_end) {
+            throw std::runtime_error(fmt::format("internal error: paran_start({}) is later than paran_end({})", paran_start, paran_end));
+        }
+    }
     bool operator==(Paran const &other) const {
         return std::tie(type, paran_start, paran_end) == std::tie(other.type, other.paran_start, other.paran_end);
     }

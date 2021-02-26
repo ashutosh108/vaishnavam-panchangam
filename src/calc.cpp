@@ -282,11 +282,11 @@ Paran Calc::get_paran(const JulDays_UT sunrise2, const JulDays_UT sunset2, const
 
 Paran Calc::atirikta_paran(const JulDays_UT sunrise3, const JulDays_UT sunset3, const JulDays_UT dvadashi_end) const
 {
-    auto fifth_of_paran_daytime = proportional_time(sunrise3, sunset3, 0.2);
-    if (fifth_of_paran_daytime < dvadashi_end) {
-        return Paran{Paran::Type::Standard, sunrise3, fifth_of_paran_daytime, swe.location.time_zone()};
+    if (dvadashi_end > sunrise3) {
+        return Paran{Paran::Type::Puccha_Dvadashi, sunrise3, dvadashi_end, swe.location.time_zone()};
     }
-    return Paran{Paran::Type::Puccha_Dvadashi, sunrise3, dvadashi_end, swe.location.time_zone()};
+    auto fifth_of_paran_daytime = proportional_time(sunrise3, sunset3, 0.2);
+    return Paran{Paran::Type::Standard, sunrise3, fifth_of_paran_daytime, swe.location.time_zone()};
 }
 
 tl::expected<JulDays_UT, CalcError> Calc::arunodaya_for_sunrise(JulDays_UT const sunrise) const

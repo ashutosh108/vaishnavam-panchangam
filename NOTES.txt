@@ -1,4 +1,3 @@
-[ ] atirikta pāraṇam: make sure it's never "start after end"
 [ ] table: show separator column for non-sequential dates
 [ ] calculate Madhva-navamī (saura): Makara, ś9
 [ ] day-by-day: calculate saura masa end day (verify by panchangas)
@@ -308,3 +307,4 @@ done:
 [+] day-by-day: do not list additional nakshatras ending after tomorrow's sunrise as today's nakshatra [2021-02-08]
 [+] GUI: calculate Vasanta-pañćamī etc, show them in table for Jayā Ekādaśī [2021-02-22]
 [+] Śravaṇā Dvādaśī [2021-02-24]
+[+] fix atirikta pāraṇam: it's never "start after end" [2021-02-26]
