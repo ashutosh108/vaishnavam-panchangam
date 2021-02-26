@@ -6,6 +6,7 @@
 #include <tl/expected.hpp>
 
 #include "calc.h"
+#include "calc-flags.h"
 #include "swe.h"
 
 // VP_TRY_AUTO: declare auto var, assign given value to it.
@@ -187,10 +188,13 @@ bool got_shravana_for_sunrise_sunset(JulDays_UT sunrise, JulDays_UT sunset, JulD
 
     // limit until which both Dvādaśī and Śravaṇa must hold. 12 or 14 ghaṭikas
     // from sunrise, depending on which Kṛṣṇāmṛta-mahārṇava commentaries we rely upon.
-    constexpr auto madhyahna_limit_ratio_from_daytime = ghatikas{12} / 12h;
-    static_assert (madhyahna_limit_ratio_from_daytime > 0.0, "12 or 14 ghatikas do not get rounded down to zero");
-    static_assert (madhyahna_limit_ratio_from_daytime >= 2.0/5 - DBL_EPSILON, "12 or 14ghatikas must be 2/5th or 7/15th of daytime (30 ghatikas)");
-    static_assert (madhyahna_limit_ratio_from_daytime <= 7.0/15 + DBL_EPSILON, "12 or 14 ghatikas must be 2/5th or 7/15th of daytime (30 ghatikas)");
+    constexpr auto ratio_for_12gh = ghatikas{12} / 12h;
+    constexpr auto ratio_for_14gh = ghatikas{14} / 12h;
+    static_assert (ratio_for_12gh > 0.0, "12 or 14 ghatikas do not get rounded down to zero");
+    static_assert (ratio_for_12gh == 2.0/5, "12ghatikas must be 2/5th of daytime (30 ghatikas)");
+    static_assert (ratio_for_14gh == 7.0/15, "14 ghatikas must be 7/15th of daytime (30 ghatikas)");
+    const bool require_14gh = ((swe.calc_flags & CalcFlags::ShravanaDvadashiMask) == CalcFlags::ShravanaDvadashi14ghPlus);
+    const auto madhyahna_limit_ratio_from_daytime = require_14gh ? ratio_for_14gh : ratio_for_12gh;
     const auto madhyahna_limit = Calc::proportional_time(sunrise, sunset, madhyahna_limit_ratio_from_daytime);
     DiscreteNakshatra nakshantra_at_limit = swe.get_nakshatra(madhyahna_limit);
     if (nakshantra_at_limit != DiscreteNakshatra::Shravana()) { return false; }
@@ -199,7 +203,7 @@ bool got_shravana_for_sunrise_sunset(JulDays_UT sunrise, JulDays_UT sunset, JulD
 
     // If Śravaṇa nakṣatra extends till another sunrise, then Śravaṇa dvādaśī condition is not fulfilled.
     // Since nakshatras cannot reach 72 ghatikas (60 for full ekādaśī day + 12 to reach madhyahnam on dvādaśī),
-    // we don't have to check the previoud sunrise (sunrise1) for Śravaṇa.
+    // we don't have to check the previous sunrise (aka "sunrise1") for Śravaṇa.
     // So we only need to check for next sunrise.
     const DiscreteNakshatra nakshatra_at_next_sunrise = swe.get_nakshatra(next_sunrise);
     if (nakshatra_at_next_sunrise == DiscreteNakshatra::Shravana()) {

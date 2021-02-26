@@ -815,4 +815,12 @@ TEST_CASE("shravana dvadashi") {
         Vrata v{Vrata_Type::With_Shravana_Dvadashi_Same_Day, 2020_y/3/20, Chandra_Masa::Phalguna, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
         REQUIRE(v == vrata(Calc{tekeli_coord}, 2020_y/3/20));
     }
+
+    SECTION("Kiev 2021-03-09..10: Śravaṇa-dvādaśī with 12gh+ rule (default), simple Ekādaśī with 14gh+ rule") {
+        const auto date = 2021_y/3/9;
+        Vrata v_12gh_rule{Vrata_Type::With_Shravana_Dvadashi_Next_Day, date, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
+        Vrata v_14gh_rule{Vrata_Type::Ekadashi, date, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Standard}};
+        REQUIRE(v_12gh_rule == vrata(Calc{Swe{kiev_coord, CalcFlags::ShravanaDvadashi12ghPlus}}, date));
+        REQUIRE(v_14gh_rule == vrata(Calc{Swe{kiev_coord, CalcFlags::ShravanaDvadashi14ghPlus}}, date));
+    }
 }
