@@ -144,3 +144,17 @@ TEST_CASE("surya_nirayana_longitude() works for known date of Mesha sankranti") 
     REQUIRE(l1.longitude > 357.0);
     REQUIRE(l2.longitude < 3.0);
 }
+
+TEST_CASE("Swe keeps both default and non-default flags after move") {
+    SECTION("default (move-construct)") {
+        Swe swe_default{arbitrary_coord};
+        Swe swe2_default{std::move(swe_default)};
+        REQUIRE(swe2_default.calc_flags == CalcFlags::Default);
+    }
+
+    SECTION("non-default") {
+        Swe swe_nondefault{arbitrary_coord, CalcFlags::ShravanaDvadashi14ghPlus};
+        Swe swe2_nondefault{std::move(swe_nondefault)};
+        REQUIRE(swe2_nondefault.calc_flags == CalcFlags::ShravanaDvadashi14ghPlus);
+    }
+}

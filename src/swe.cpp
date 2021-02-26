@@ -69,7 +69,7 @@ int32_t Swe::calc_ephemeris_flags(CalcFlags flags) const noexcept
     }
 }
 
-Swe::Swe(Location coord_, CalcFlags flags):location(coord_)
+Swe::Swe(Location coord_, CalcFlags flags):location(coord_), calc_flags(flags)
 {
     rise_flags = get_rise_flags(flags);
     ephemeris_flags = calc_ephemeris_flags(flags);
@@ -97,18 +97,9 @@ Swe::Swe(Swe && other) noexcept
     need_to_close = false;
     std::swap(need_to_close, other.need_to_close);
     std::swap(location, other.location);
+    std::swap(calc_flags, other.calc_flags);
     std::swap(rise_flags, other.rise_flags);
     std::swap(ephemeris_flags, other.ephemeris_flags);
-}
-
-Swe &Swe::operator=(Swe && other) noexcept
-{
-    need_to_close = false;
-    std::swap(need_to_close, other.need_to_close);
-    std::swap(location, other.location);
-    std::swap(rise_flags, other.rise_flags);
-    std::swap(ephemeris_flags, other.ephemeris_flags);
-    return *this;
 }
 
 tl::expected<JulDays_UT, CalcError> Swe::find_sunrise(JulDays_UT after) const
