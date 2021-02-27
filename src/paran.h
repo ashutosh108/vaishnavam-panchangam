@@ -31,15 +31,22 @@ public:
         OneFifthOfDaytime, EndOfDvadashi, Unspecified
     };
 
-    Paran(Type _type = Type::Standard,
-          std::optional<JulDays_UT> _paran_start = std::nullopt,
-          std::optional<JulDays_UT> _paran_end = std::nullopt,
-          const date::time_zone * _time_zone = utc()
-          ): type(_type), paran_start(_paran_start), paran_end(_paran_end), time_zone(_time_zone){
+    Paran(Type _type,
+          std::optional<JulDays_UT> _paran_start,
+          std::optional<JulDays_UT> _paran_end,
+          std::optional<JulDays_UT> _paran_limit,
+          const date::time_zone * _time_zone
+          ): type(_type), paran_start(_paran_start), paran_end(_paran_end), paran_limit(_paran_limit), time_zone(_time_zone) {
         if (paran_start > paran_end && paran_end) {
             throw std::runtime_error(fmt::format("internal error: paran_start({}) is later than paran_end({})", paran_start, paran_end));
         }
     }
+    Paran(Type _type = Type::Standard,
+          std::optional<JulDays_UT> _paran_start = std::nullopt,
+          std::optional<JulDays_UT> _paran_end = std::nullopt,
+          const date::time_zone * _time_zone = utc()
+          ): Paran(_type, _paran_start, _paran_end, std::nullopt, _time_zone) {}
+
     bool operator==(Paran const &other) const {
         return std::tie(type, paran_start, paran_end) == std::tie(other.type, other.paran_start, other.paran_end);
     }
@@ -57,6 +64,7 @@ public:
     Type type;
     std::optional<JulDays_UT> paran_start{};
     std::optional<JulDays_UT> paran_end{};
+    std::optional<JulDays_UT> paran_limit{};
     const date::time_zone * time_zone;
 };
 

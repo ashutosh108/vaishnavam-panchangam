@@ -1,3 +1,6 @@
+[ ] table: show e.g. "* (>9:45)" for std pāraṇams with viśeṣa (paran_limit set)
+[ ] table: show next-day Śravaṇa-dvādaśī in separate cell
+[ ] table: show atiriktā dvādaśī in separate cell
 [ ] table: show separator column for non-sequential dates
 [ ] calculate Madhva-navamī (saura): Makara, ś9
 [ ] day-by-day: calculate saura masa end day (verify by panchangas)
@@ -308,3 +311,4 @@ done:
 [+] GUI: calculate Vasanta-pañćamī etc, show them in table for Jayā Ekādaśī [2021-02-22]
 [+] Śravaṇā Dvādaśī [2021-02-24]
 [+] fix atirikta pāraṇam: it's never "start after end" [2021-02-26]
+[+] introduce "Standard Pāraṇ with viśeṣa (absolute limit)" for Pāraṇs after two-day events [2021-02-27]
