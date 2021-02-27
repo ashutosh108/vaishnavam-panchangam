@@ -100,7 +100,8 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
             table.add_cell(fmt::format(FMT_STRING("{} {}"), vrata->ekadashi_name(), vrata->type), classes + " vrata");
         } else if (date == vrata->local_paran_date()) {
             // 'c' means compact formatting ("*" for standard pAraNam, otherwise something like ">06:45", "<07:45" or "06:45-07.45")
-            const auto paran_with_href = fmt::format(R"(<a href="#{}">{:c}</a>)", html::escape_attribute(vrata->location_name()), vrata->paran);
+            const auto paran = fmt::format(FMT_STRING("{:c}"), vrata->paran);
+            const auto paran_with_href = fmt::format(R"(<a href="#{}">{}</a>)", html::escape_attribute(vrata->location_name()), html::escape_attribute(paran));
             table.add_unmergeable_cell(paran_with_href, classes).set_title(paran_title(vrata->paran));
         } else if (auto found_it = custom_dates.find(date); found_it != custom_dates.end()) {
             table.add_cell(found_it->second, "custom");

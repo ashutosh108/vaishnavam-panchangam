@@ -103,7 +103,7 @@ struct fmt::formatter<vp::Paran> : fmt::formatter<std::string_view> {
     bool use_compact_form = false;
 
     template<typename ParseCtx>
-    auto parse(ParseCtx & ctx) {
+    constexpr auto parse(ParseCtx & ctx) {
         auto it = ctx.begin();
         auto end = ctx.end();
         if (it != end && *it == 'c') {
@@ -117,7 +117,12 @@ struct fmt::formatter<vp::Paran> : fmt::formatter<std::string_view> {
     auto format_compact(const vp::Paran & p, FormatCtx & ctx) {
         assert(p.time_zone != nullptr);
         if (p.type == vp::Paran::Type::Standard) {
-            return fmt::format_to(ctx.out(), "*");
+            fmt::format_to(ctx.out(), "*");
+            if (p.paran_limit) {
+                const auto local = p.paran_limit->as_zoned_time(p.time_zone).get_local_time();
+                fmt::format_to(ctx.out(), FMT_STRING(" (<{})"), date::format("%H:%M", date::floor<std::chrono::minutes>(local)));
+            }
+            return ctx.out();
         } else if (p.paran_start && !p.paran_end) {
             return fmt::format_to(ctx.out(), ">{}", p.start_str());
         } else if (!p.paran_start && p.paran_end) {

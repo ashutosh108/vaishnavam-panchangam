@@ -44,11 +44,21 @@ TEST_CASE("Can compare paran types") {
 }
 
 TEST_CASE("compact paran format: standard paran is '*'") {
-    JulDays_UT arbitrary_time{2019_y/March/19, 5h + 3min + 5s};
-    auto timezone = date::locate_zone("Europe/Moscow");
-    Paran p{Paran::Type::Standard, arbitrary_time, std::nullopt, timezone};
+    SECTION("standard pāraṇam without limit") {
+        JulDays_UT arbitrary_time{2019_y/March/19, 5h + 3min + 5s};
+        auto timezone = date::locate_zone("Europe/Moscow");
+        Paran p{Paran::Type::Standard, arbitrary_time, std::nullopt, timezone};
 
-    REQUIRE("*" == fmt::format("{:c}", p));
+        REQUIRE("*" == fmt::format("{:c}", p));
+    }
+    SECTION("standard pāraṇam *with* limit") {
+        JulDays_UT arbitrary_time{2019_y/March/19, 5h + 3min + 5s};
+        JulDays_UT limit_time{2019_y/March/19, 9h + 3min + 5s};
+        auto timezone = date::locate_zone("Europe/Moscow");
+        Paran p{Paran::Type::Standard, arbitrary_time, std::nullopt, limit_time, timezone};
+
+        REQUIRE("* (<12:03)" == fmt::format("{:c}", p));
+    }
 }
 
 TEST_CASE("compact paran format: >08:04 case") {

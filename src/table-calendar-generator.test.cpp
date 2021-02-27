@@ -7,11 +7,11 @@
 #include <sstream>
 
 namespace {
-auto some_vratas(date::year_month_day date = date::year{2020}/1/1) {
+auto some_vratas(date::year_month_day date = date::year{2020}/8/15) {
     return vp::text_ui::calc(date, "all");
 }
 
-auto some_table(date::year_month_day date = date::year{2020}/1/1) {
+auto some_table(date::year_month_day date = date::year{2018}/8/15) {
     return vp::Table_Calendar_Generator::generate(some_vratas(date));
 }
 
@@ -43,9 +43,9 @@ TEST_CASE("default table") {
 
     SECTION("Table_Calendar_Generator returns reasonable table") {
         REQUIRE(table.width() == 6);
-        REQUIRE(table.at(0, 3).text == "January&nbsp;6");
-        REQUIRE(table.at(0, 4).text == "January&nbsp;7");
-        REQUIRE(table.at(0, 5).text == "January&nbsp;8");
+        REQUIRE(table.at(0, 3).text == "August&nbsp;21");
+        REQUIRE(table.at(0, 4).text == "August&nbsp;22");
+        REQUIRE(table.at(0, 5).text == "August&nbsp;23");
 
         REQUIRE(table.height() >= 20);
 
@@ -54,9 +54,9 @@ TEST_CASE("default table") {
         REQUIRE(table.at(1, 0).text == "+5:30");
         REQUIRE(table.at(1, 1).text == "India");
         REQUIRE_THAT(table.at(1, 2).text, Contains("Udupi"));
-        REQUIRE(table.at(1, 3).text == "Putradā Ekādaśī");
-        REQUIRE_THAT(table.at(1, 4).text, Contains(">10:06"));
-        REQUIRE(table.at(1, 5).text == "");
+        REQUIRE(table.at(1, 3).text == "");
+        REQUIRE(table.at(1, 4).text == "Pavitrā Ekādaśī");
+        REQUIRE_THAT(table.at(1, 5).text, Contains("*"));
     }
 
     SECTION("Table_Calendar_Generator generates 'shrIH'/'Om tatsat' with dates as the top and bottom rows") {
@@ -64,12 +64,12 @@ TEST_CASE("default table") {
 
         REQUIRE(rows >= 3);
 
-        REQUIRE(table.at(0, 3).text == "January&nbsp;6");
-        REQUIRE(table.at(rows-1, 3).text == "January&nbsp;6");
-        REQUIRE(table.at(0, 4).text == "January&nbsp;7");
-        REQUIRE(table.at(rows-1, 4).text == "January&nbsp;7");
-        REQUIRE(table.at(0, 5).text == "January&nbsp;8");
-        REQUIRE(table.at(rows-1, 5).text == "January&nbsp;8");
+        REQUIRE(table.at(0, 3).text == "August&nbsp;21");
+        REQUIRE(table.at(rows-1, 3).text == "August&nbsp;21");
+        REQUIRE(table.at(0, 4).text == "August&nbsp;22");
+        REQUIRE(table.at(rows-1, 4).text == "August&nbsp;22");
+        REQUIRE(table.at(0, 5).text == "August&nbsp;23");
+        REQUIRE(table.at(rows-1, 5).text == "August&nbsp;23");
 
         using Catch::Matchers::Contains;
         REQUIRE_THAT(table.at(0, 0).text, Contains("श्रीः"));
@@ -110,12 +110,12 @@ TEST_CASE("default table") {
     }
 
     SECTION("generated table has &nbsp; as date separators") {
-        REQUIRE(table.at(0, 3).text == "January&nbsp;6");
+        REQUIRE(table.at(0, 3).text == "August&nbsp;21");
     }
 
     SECTION("generated table contains titles for PAraNam details") {
         using Catch::Matchers::Contains;
-        REQUIRE_THAT(table.at(1, 4).title, Contains("10:05:34 (1/4th of dvādaśī)…"));
+        REQUIRE_THAT(table.at(1, 5).title, Contains("06:22:42 (sunrise)…08:51:03 (1/5th of daytime)"));
     }
 
     SECTION("generated table contains titles with timezone name for cell with location name") {
