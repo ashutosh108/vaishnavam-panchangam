@@ -7,7 +7,7 @@
 #include <sstream>
 
 namespace {
-auto some_vratas(date::year_month_day date = date::year{2020}/8/15) {
+auto some_vratas(date::year_month_day date) {
     return vp::text_ui::calc(date, "all");
 }
 
@@ -15,7 +15,7 @@ auto some_table(date::year_month_day date = date::year{2018}/8/15) {
     return vp::Table_Calendar_Generator::generate(some_vratas(date));
 }
 
-std::chrono::seconds utc_offset_string_to_seconds(std::string utc_offset_string) {
+std::chrono::seconds utc_offset_string_to_seconds(const std::string & utc_offset_string) {
     // e.g. +5:30
     if (utc_offset_string.size() < strlen("+5:30")) { throw std::runtime_error("can't parse UTC offset (too short)" + utc_offset_string); }
     std::regex regex{R"(^([+-])(\d?\d):(\d\d).*)"};
@@ -128,7 +128,7 @@ TEST_CASE("default table") {
         REQUIRE_THAT(table.at(1, 2).text, Contains("<a href"));
     }
 
-    auto find_row = [&table](std::string location_name) -> std::size_t {
+    auto find_row = [&table](const std::string & location_name) -> std::size_t {
         for (std::size_t row=1; row<table.height(); ++row) {
             CAPTURE(row);
             const auto text = table.at(row, 2).text;
