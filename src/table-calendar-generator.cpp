@@ -76,6 +76,10 @@ std::string paran_title(const vp::Paran & paran) {
     if (paran.paran_end) {
         title += fmt::format("{} ({})", paran.end_str_seconds(), paran.end_type());
     }
+    if (paran.paran_limit) {
+        const auto limit_str = date::format("%H:%M:%S", date::floor<std::chrono::seconds>(paran.paran_limit->as_zoned_time(paran.time_zone).get_local_time()));
+        title += fmt::format(FMT_STRING(", absolute limit is {} (dvādaśī end)"), limit_str);
+    }
     return title;
 }
 }

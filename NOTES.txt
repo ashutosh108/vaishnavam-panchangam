@@ -1,4 +1,3 @@
-[ ] table: show e.g. "* (>9:45)" for std pāraṇams with viśeṣa (paran_limit set)
 [ ] table: show next-day Śravaṇa-dvādaśī in separate cell
 [ ] table: show atiriktā dvādaśī in separate cell
 [ ] table: show separator column for non-sequential dates
@@ -312,3 +311,4 @@ done:
 [+] Śravaṇā Dvādaśī [2021-02-24]
 [+] fix atirikta pāraṇam: it's never "start after end" [2021-02-26]
 [+] introduce "Standard Pāraṇ with viśeṣa (absolute limit)" for Pāraṇs after two-day events [2021-02-27]
+[+] table: show e.g. "* (>9:45)" for std pāraṇams with viśeṣa (paran_limit set), incl. "title" text [2021-02-28]

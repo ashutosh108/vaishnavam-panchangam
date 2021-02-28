@@ -128,6 +128,22 @@ TEST_CASE("default table") {
         REQUIRE_THAT(table.at(1, 2).text, Contains("<a href"));
     }
 
+    auto find_row = [&table](std::string location_name) -> std::size_t {
+        for (std::size_t row=1; row<table.height(); ++row) {
+            CAPTURE(row);
+            const auto text = table.at(row, 2).text;
+            if (text.find(location_name) != std::string::npos) {
+                return row;
+            }
+        }
+        return 0;
+    };
+
+    SECTION("'title' attribute of Pāraṇam includes limit when paran_limit is set") {
+        using Catch::Matchers::Contains;
+        std::size_t row = find_row("Aktau");
+        REQUIRE_THAT(table.at(row, 5).title, Contains("absolute limit is 09:45:38 (dvādaśī end)"));
+    }
 }
 
 TEST_CASE("Table_Calendar_Generator returns reasonable table adds ' (DST)' for 'summer' times") {
