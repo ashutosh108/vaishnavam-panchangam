@@ -109,20 +109,20 @@ TEST_CASE("arunodaya_for_sunrise") {
 }
 
 namespace {
-Vrata vrata(const Calc &c, date::year_month_day base_date) {
-    return c.find_next_vrata(date::local_days{base_date}).value();
+Vrata vrata(const Calc &c, date::local_days base_date) {
+    return c.find_next_vrata(base_date).value();
 }
 }
 
 TEST_CASE("Ekadashi 2019-02-28") {
     // https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-02-28/
-    date::year_month_day d{2019_y/February/28};
-    Vrata v01{2019_y/March/1, Chandra_Masa::Magha, Paksha::Krishna};
-    Vrata v02{2019_y/March/2, Chandra_Masa::Magha, Paksha::Krishna};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
-    Vrata v01_atirikta_dvadashi_std_paran{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Standard}};
-    Vrata v01_atirikta_ekadashi{Vrata_Type::With_Atirikta_Ekadashi, 2019_y/March/1, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
-    Vrata v01_atirikta_ekadashi_std_paran{Vrata_Type::With_Atirikta_Ekadashi, 2019_y/March/1, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Standard}};
+    const date::local_days d{2019_y/February/28};
+    Vrata v01{date::local_days{2019_y/March/1}, Chandra_Masa::Magha, Paksha::Krishna};
+    Vrata v02{date::local_days{2019_y/March/2}, Chandra_Masa::Magha, Paksha::Krishna};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, date::local_days{2019_y/March/1}, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
+    Vrata v01_atirikta_dvadashi_std_paran{Vrata_Type::With_Atirikta_Dvadashi, date::local_days{2019_y/March/1}, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Standard}};
+    Vrata v01_atirikta_ekadashi{Vrata_Type::With_Atirikta_Ekadashi, date::local_days{2019_y/March/1}, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
+    Vrata v01_atirikta_ekadashi_std_paran{Vrata_Type::With_Atirikta_Ekadashi, date::local_days{2019_y/March/1}, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Standard}};
     REQUIRE(v02 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v02 == vrata(Calc{gokarna_coord}, d));
     REQUIRE(v02 == vrata(Calc{newdelhi_coord}, d));
@@ -215,7 +215,7 @@ std::ostream & operator<<(std::ostream & s, const NamedVrata &nv) {
     return s;
 }
 
-void check_atirikta_at_location(const char * name, const Location & location, const Vrata & expected_vrata, date::year_month_day date) {
+void check_atirikta_at_location(const char * name, const Location & location, const Vrata & expected_vrata, date::local_days date) {
     CAPTURE(name);
     auto actual_vrata = vrata(Calc{location}, date);
     NamedVrata expected_named_vrata{name, expected_vrata};
@@ -246,9 +246,9 @@ void check_atirikta_at_location(const char * name, const Location & location, co
 }
 
 TEST_CASE("atiriktA-dvAdashI {vena,marsel,madrid,london} 2019-03-01-2 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-02-28/") {
-    date::year_month_day d{2019_y/February/28};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
-    Vrata v01_atirikta_dvadashi_std_paran{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/March/1, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Standard}};
+    const date::local_days d{2019_y/February/28};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, date::local_days{2019_y/March/1}, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
+    Vrata v01_atirikta_dvadashi_std_paran{Vrata_Type::With_Atirikta_Dvadashi, date::local_days{2019_y/March/1}, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Standard}};
 
     check_atirikta_at_location("vena", vena_coord, v01_atirikta_dvadashi_std_paran, d);
     check_atirikta_at_location("marsel", marsel_coord, v01_atirikta_dvadashi, d);
@@ -257,8 +257,8 @@ TEST_CASE("atiriktA-dvAdashI {vena,marsel,madrid,london} 2019-03-01-2 https://ta
 }
 
 TEST_CASE("atiriktA-dvAdashI {aktau, surgut, chelyabinsk, yerevan, tbilisi} 2019-12-07-8 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-12-01/") {
-    date::year_month_day d{2019_y/December/6};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/December/7, Chandra_Masa::Margashirsha, Paksha::Shukla, Paran{Paran::Type::Puccha_Dvadashi}};
+    const date::local_days d{2019_y/December/6};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, date::local_days{2019_y/December/7}, Chandra_Masa::Margashirsha, Paksha::Shukla, Paran{Paran::Type::Puccha_Dvadashi}};
 
     check_atirikta_at_location("aktau", aktau_coord, v01_atirikta_dvadashi, d);
     check_atirikta_at_location("surgut", surgut_coord, v01_atirikta_dvadashi, d);
@@ -269,30 +269,30 @@ TEST_CASE("atiriktA-dvAdashI {aktau, surgut, chelyabinsk, yerevan, tbilisi} 2019
 
 
 TEST_CASE("atiriktA-dvAdashI {madrid,london} 2019-11-07-8 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-11-05/") {
-    date::year_month_day d{2019_y/November/6};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/November/7, Chandra_Masa::Kartika, Paksha::Shukla, Paran{Paran::Type::Standard}};
+    const date::local_days d{2019_y/November/6};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, date::local_days{2019_y/November/7}, Chandra_Masa::Kartika, Paksha::Shukla, Paran{Paran::Type::Standard}};
 
     check_atirikta_at_location("madrid", madrid_coord, v01_atirikta_dvadashi, d);
     check_atirikta_at_location("london", london_coord, v01_atirikta_dvadashi, d);
 }
 
 TEST_CASE("atiriktA-dvAdashI meadowlake 2019-10-08-9 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-10-04/") {
-    date::year_month_day d{2019_y/October/6};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/October/8, Chandra_Masa::Ashvin, Paksha::Shukla, Paran{Paran::Type::Puccha_Dvadashi}};
+    const date::local_days d{2019_y/October/6};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, date::local_days{2019_y/October/8}, Chandra_Masa::Ashvin, Paksha::Shukla, Paran{Paran::Type::Puccha_Dvadashi}};
 
     check_atirikta_at_location("meadowlake", meadowlake_coord, v01_atirikta_dvadashi, d);
 }
 
 TEST_CASE("atiriktA-dvAdashI {hab,vlad} 2019-09-09-10 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-09-07/") {
-    date::year_month_day d{2019_y/September/6};
-    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, 2019_y/September/9, Chandra_Masa::Bhadrapada, Paksha::Shukla, Paran{Paran::Type::Puccha_Dvadashi}};
+    const date::local_days d{2019_y/September/6};
+    Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, date::local_days{2019_y/September/9}, Chandra_Masa::Bhadrapada, Paksha::Shukla, Paran{Paran::Type::Puccha_Dvadashi}};
 
     check_atirikta_at_location("habarovsk", habarovsk_coord, v01_atirikta_dvadashi, d);
     check_atirikta_at_location("vladivostok", vladivostok_coord, v01_atirikta_dvadashi, d);
 }
 
 TEST_CASE("atiriktA-dvAdashI {mirny,hab,vlad} 2019-04-30-01 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-04-27/") {
-    date::year_month_day d{2019_y/April/30};
+    const date::local_days d{2019_y/April/30};
     Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Dvadashi, d, Chandra_Masa::Chaitra, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
 
     check_atirikta_at_location("mirnyy", mirnyy_coord, v01_atirikta_dvadashi, d);
@@ -301,22 +301,22 @@ TEST_CASE("atiriktA-dvAdashI {mirny,hab,vlad} 2019-04-30-01 https://tatvavadi.ru
 }
 
 TEST_CASE("atiriktA-ekAdashI {ppk} 2019-04-30-01 https://tatvavadi.ru/pa,.nchaa,ngam/posts/2019-04-27/") {
-    date::year_month_day d{2019_y/April/30};
+    const date::local_days d{2019_y/April/30};
     Vrata v01_atirikta_dvadashi{Vrata_Type::With_Atirikta_Ekadashi, d, Chandra_Masa::Chaitra, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
 
     check_atirikta_at_location("petropavlovskkamchatskiy", petropavlovskkamchatskiy_coord, v01_atirikta_dvadashi, d);
 }
 
 TEST_CASE("Ekadashi 2019-03-17") {
-    date::year_month_day d{2019_y/March/15};
-    Vrata v17{2019_y/March/17, Chandra_Masa::Phalguna, Paksha::Shukla};
+    const date::local_days d{2019_y/March/15};
+    Vrata v17{date::local_days{2019_y/March/17}, Chandra_Masa::Phalguna, Paksha::Shukla};
     Expected_Vrata v17_paran_before{
         Vrata_Type::Ekadashi,
         2019_y/March/17,
         Paran{Paran::Type::Puccha_Dvadashi, std::nullopt, JulDays_UT{2019_y/March/18, 12h + 13min + 36.459301s}},
         Chandra_Masa::Phalguna,
         Paksha::Shukla};
-    Vrata v18{Vrata_Type::Ekadashi, 2019_y/March/18, Chandra_Masa::Phalguna, Paksha::Shukla};
+    Vrata v18{Vrata_Type::Ekadashi, date::local_days{2019_y/March/18}, Chandra_Masa::Phalguna, Paksha::Shukla};
     REQUIRE(v17 == vrata(Calc{udupi_coord}, d));
     REQUIRE(v17 == vrata(Calc{gokarna_coord}, d));
     REQUIRE(v17 == vrata(Calc{newdelhi_coord}, d));
@@ -802,30 +802,30 @@ TEST_CASE("vrata::ekadashi_name() works for few known cases") {
 
 TEST_CASE("shravana dvadashi") {
     SECTION("Udupi 2020-03-19..20: Ekādaśī + Śravaṇa-dvādaśī next day") {
-        Vrata v{Vrata_Type::With_Shravana_Dvadashi_Next_Day, 2020_y/3/19, Chandra_Masa::Phalguna, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
-        REQUIRE(v == vrata(Calc{udupi_coord}, 2020_y/3/19));
+        Vrata v{Vrata_Type::With_Shravana_Dvadashi_Next_Day, date::local_days{2020_y/3/19}, Chandra_Masa::Phalguna, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
+        REQUIRE(v == vrata(Calc{udupi_coord}, date::local_days{2020_y/3/19}));
         REQUIRE(is_atirikta(v.type));
     }
 
     SECTION("Fredericton, Toronto, Meadow Lake : 2019-09-09..10") {
-        Vrata v{Vrata_Type::With_Shravana_Dvadashi_Next_Day, 2019_y/9/9, Chandra_Masa::Bhadrapada, Paksha::Shukla, Paran{Paran::Type::Standard}};
-        REQUIRE(v == vrata(Calc{fredericton_coord}, 2019_y/9/9));
-        REQUIRE(v == vrata(Calc{toronto_coord}, 2019_y/9/9));
-        REQUIRE(v == vrata(Calc{meadowlake_coord}, 2019_y/9/9));
+        Vrata v{Vrata_Type::With_Shravana_Dvadashi_Next_Day, date::local_days{2019_y/9/9}, Chandra_Masa::Bhadrapada, Paksha::Shukla, Paran{Paran::Type::Standard}};
+        REQUIRE(v == vrata(Calc{fredericton_coord}, date::local_days{2019_y/9/9}));
+        REQUIRE(v == vrata(Calc{toronto_coord}, date::local_days{2019_y/9/9}));
+        REQUIRE(v == vrata(Calc{meadowlake_coord}, date::local_days{2019_y/9/9}));
     }
 
     SECTION("Cancun 2020-03-19: Ekādaśī without Śravaṇa-dvādaśī") {
-        Vrata v{Vrata_Type::Ekadashi, 2020_y/3/19, Chandra_Masa::Phalguna, Paksha::Krishna, Paran{Paran::Type::Standard}};
-        REQUIRE(v == vrata(Calc{cancun_coord}, 2020_y/3/19));
+        Vrata v{Vrata_Type::Ekadashi, date::local_days{2020_y/3/19}, Chandra_Masa::Phalguna, Paksha::Krishna, Paran{Paran::Type::Standard}};
+        REQUIRE(v == vrata(Calc{cancun_coord}, date::local_days{2020_y/3/19}));
     }
 
     SECTION("Tekeli 2020-03-20: Ekādaśī + Śravaṇa-dvādaśī same day") {
-        Vrata v{Vrata_Type::With_Shravana_Dvadashi_Same_Day, 2020_y/3/20, Chandra_Masa::Phalguna, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
-        REQUIRE(v == vrata(Calc{tekeli_coord}, 2020_y/3/20));
+        Vrata v{Vrata_Type::With_Shravana_Dvadashi_Same_Day, date::local_days{2020_y/3/20}, Chandra_Masa::Phalguna, Paksha::Krishna, Paran{Paran::Type::Puccha_Dvadashi}};
+        REQUIRE(v == vrata(Calc{tekeli_coord}, date::local_days{2020_y/3/20}));
     }
 
     SECTION("Kiev 2021-03-09..10: Śravaṇa-dvādaśī with 12gh+ rule (default), simple Ekādaśī with 14gh+ rule") {
-        const auto date = 2021_y/3/9;
+        const date::local_days date{2021_y/3/9};
         Vrata v_12gh_rule{Vrata_Type::With_Shravana_Dvadashi_Next_Day, date, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Standard}};
         Vrata v_14gh_rule{Vrata_Type::Ekadashi, date, Chandra_Masa::Magha, Paksha::Krishna, Paran{Paran::Type::Standard}};
         REQUIRE(v_12gh_rule == vrata(Calc{Swe{kiev_coord, CalcFlags::ShravanaDvadashi12ghPlus}}, date));

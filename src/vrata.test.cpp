@@ -9,9 +9,9 @@ using namespace std::literals::chrono_literals;
 using Catch::Matchers::Contains;
 
 TEST_CASE("Can compare Vrata") {
-    Vrata v1{2019_y/March/19, Chandra_Masa::Phalguna, Paksha::Shukla};
-    Vrata v2{2019_y/March/19, Chandra_Masa::Phalguna, Paksha::Shukla};
-    Vrata v3{2019_y/March/20, Chandra_Masa::Phalguna, Paksha::Shukla};
+    Vrata v1{date::local_days{2019_y/March/19}, Chandra_Masa::Phalguna, Paksha::Shukla};
+    Vrata v2{date::local_days{2019_y/March/19}, Chandra_Masa::Phalguna, Paksha::Shukla};
+    Vrata v3{date::local_days{2019_y/March/20}, Chandra_Masa::Phalguna, Paksha::Shukla};
     REQUIRE(v1 == v2);
     REQUIRE(v2 == v1);
     REQUIRE(v1 != v3);
@@ -19,12 +19,12 @@ TEST_CASE("Can compare Vrata") {
 }
 
 TEST_CASE("Can print vrata") {
-    REQUIRE(!fmt::to_string(Vrata{2019_y/March/19, Chandra_Masa::Phalguna, Paksha::Shukla}).empty());
+    REQUIRE(!fmt::to_string(Vrata{date::local_days{2019_y/March/19}, Chandra_Masa::Phalguna, Paksha::Shukla}).empty());
 }
 
 TEST_CASE("Can create with \"before this time\" paran") {
     Vrata v{Vrata_Type::Ekadashi,
-            2019_y/March/19,
+            date::local_days{2019_y/March/19},
             Chandra_Masa::Phalguna,
             Paksha::Shukla,
             Paran{Paran::Type::Standard, std::nullopt, JulDays_UT{2019_y/March/19, 11h + 13min}}};

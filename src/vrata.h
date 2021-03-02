@@ -116,11 +116,11 @@ struct Vrata {
     Vrata(){}
 
     // used only for tests
-    Vrata(date::year_month_day _date, Chandra_Masa _masa, Paksha _paksha)
+    Vrata(date::local_days _date, Chandra_Masa _masa, Paksha _paksha)
         : date(_date), masa(_masa), paksha(_paksha) {}
 
     // used only for tests
-    Vrata(Vrata_Type _type, date::year_month_day _date, Chandra_Masa _masa, Paksha _paksha)
+    Vrata(Vrata_Type _type, date::local_days _date, Chandra_Masa _masa, Paksha _paksha)
         : type(_type),
           date(_date),
           masa(_masa),
@@ -128,7 +128,7 @@ struct Vrata {
 
     // we always use this constructor for real calculations
     // "dummy" defaults only used in tests.
-    Vrata(Vrata_Type _type, date::year_month_day _date, Chandra_Masa _masa, Paksha _paksha, Paran _paran, const Location & _location = dummy_coord, const Vrata_Time_Points & _times = dummy_vrata_time_points)
+    Vrata(Vrata_Type _type, date::local_days _date, Chandra_Masa _masa, Paksha _paksha, Paran _paran, const Location & _location = dummy_coord, const Vrata_Time_Points & _times = dummy_vrata_time_points)
         : type(_type),
           date(_date),
           paran(_paran),
