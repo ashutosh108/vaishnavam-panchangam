@@ -404,11 +404,11 @@ TEST_CASE("find_tithi_start gives what we expect (close to the target tithi)") {
     REQUIRE(expected_tithi == actual_tithi);
 }
 
-auto get_next_tithi_wrapper(Calc const &calc, JulDays_UT from, Tithi tithi) {
+auto get_next_tithi_wrapper(Calc const & calc, JulDays_UT from, Tithi tithi) {
     return calc.find_either_tithi_start(from, tithi);
 }
 
-auto get_next_tithi_wrapper(Location coord, JulDays_UT from, Tithi tithi) {
+auto get_next_tithi_wrapper(const Location & coord, JulDays_UT from, Tithi tithi) {
     Calc calc{coord};
     return get_next_tithi_wrapper(calc, from, tithi);
 }

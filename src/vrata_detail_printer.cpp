@@ -4,7 +4,7 @@
 
 namespace vp {
 
-Vrata_Detail_Printer::Vrata_Detail_Printer(Vrata _vrata):vrata(_vrata) {
+Vrata_Detail_Printer::Vrata_Detail_Printer(const Vrata & _vrata):vrata(_vrata) {
     if (vrata.sunrise0) {
         events.push_back({"sunrise0", *vrata.sunrise0});
     }

@@ -47,12 +47,12 @@ struct DayByDayInfo {
 void change_to_data_dir(const char* argv0);
 
 date::year_month_day parse_ymd(const std::string_view s);
-tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf);
+tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, const Location & coord, fmt::memory_buffer & buf);
 
 // Find next ekAdashI vrata for the named location, report details to the output buffer.
 tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf);
 
-DayByDayInfo daybyday_calc_one(date::year_month_day base_date, Location coord, vp::CalcFlags flags);
+DayByDayInfo daybyday_calc_one(date::year_month_day base_date, const Location & coord, vp::CalcFlags flags);
 void daybyday_print_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf, vp::CalcFlags flags);
 void calc_and_report_all(date::year_month_day d);
 vp::VratasForDate calc(date::year_month_day base_date, std::string location_name, CalcFlags flags = CalcFlags::Default);

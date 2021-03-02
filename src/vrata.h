@@ -127,7 +127,7 @@ struct Vrata {
 
     // we always use this constructor for real calculations
     // "dummy" defaults only used in tests.
-    Vrata(Vrata_Type _type, date::year_month_day _date, Chandra_Masa _masa, Paksha _paksha, Paran _paran, Location _location = dummy_coord, Vrata_Time_Points _times = dummy_vrata_time_points)
+    Vrata(Vrata_Type _type, date::year_month_day _date, Chandra_Masa _masa, Paksha _paksha, Paran _paran, const Location & _location = dummy_coord, const Vrata_Time_Points & _times = dummy_vrata_time_points)
         : type(_type),
           date(_date),
           paran(_paran),

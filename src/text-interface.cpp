@@ -120,7 +120,7 @@ std::optional<Location> LocationDb::find_coord(const char *location_name) {
     auto found = std::find_if(
         std::begin(locations()),
         std::end(locations()),
-        [=](auto named_coord){
+        [=](const auto & named_coord){
             return named_coord.name == location_name;
         }
     );
@@ -130,7 +130,7 @@ std::optional<Location> LocationDb::find_coord(const char *location_name) {
 
 namespace {
 // try decreasing latitude until we get all necessary sunrises/sunsets
-tl::expected<vp::Vrata, vp::CalcError> decrease_latitude_and_find_vrata(date::year_month_day base_date, Location location) {
+tl::expected<vp::Vrata, vp::CalcError> decrease_latitude_and_find_vrata(date::year_month_day base_date, const Location & location) {
     auto l = location;
     l.latitude_adjusted = true;
     while (1) {
@@ -143,7 +143,7 @@ tl::expected<vp::Vrata, vp::CalcError> decrease_latitude_and_find_vrata(date::ye
     }
 }
 
-tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, Location location, CalcFlags flags = CalcFlags::Default) {
+tl::expected<vp::Vrata, vp::CalcError> calc_one(date::year_month_day base_date, const Location & location, CalcFlags flags = CalcFlags::Default) {
     // Use immediately-called lambda to ensure Calc is destroyed before more
     // will be created in decrease_latitude_and_find_vrata()
     auto vrata = [&](){
@@ -261,7 +261,7 @@ void report_details(const vp::MaybeVrata & vrata, fmt::memory_buffer & buf) {
 }
 
 // Find next ekAdashI vrata for the named location, report details to the output buffer.
-tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, Location location, fmt::memory_buffer & buf) {
+tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, const Location & location, fmt::memory_buffer & buf) {
     auto vrata = calc_one(base_date, location);
     report_details(vrata, buf);
     return vrata;
@@ -474,7 +474,7 @@ void daybyday_add_chandramasa_info(DayByDayInfo & info, const vp::Calc & calc) {
 }
 } // anonymous namespace
 
-DayByDayInfo daybyday_calc_one(date::year_month_day base_date, Location coord, CalcFlags flags)
+DayByDayInfo daybyday_calc_one(date::year_month_day base_date, const Location & coord, CalcFlags flags)
 {
     Calc calc{Swe{coord, flags}};
     DayByDayInfo info = daybyday_events(base_date, calc);
@@ -488,7 +488,7 @@ DayByDayInfo daybyday_calc_one(date::year_month_day base_date, Location coord, C
 
 namespace {
 /* print day-by-day report (-d mode) for a single date and single location */
-void daybyday_print_one(date::year_month_day base_date, Location coord, fmt::memory_buffer & buf, vp::CalcFlags flags) {
+void daybyday_print_one(date::year_month_day base_date, const Location & coord, fmt::memory_buffer & buf, vp::CalcFlags flags) {
     auto info = daybyday_calc_one(base_date, coord, flags);
 
     daybyday_print_header(base_date, coord, info, buf);

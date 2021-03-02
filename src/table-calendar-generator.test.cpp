@@ -39,6 +39,7 @@ std::chrono::seconds utc_offset_string_to_seconds(const std::string & utc_offset
 }
 
 TEST_CASE("default table") {
+    using Catch::Matchers::Contains;
     const auto table = some_table();
 
     SECTION("Table_Calendar_Generator returns reasonable table") {
@@ -48,8 +49,6 @@ TEST_CASE("default table") {
         REQUIRE(table.at(0, 5).text == "August&nbsp;23");
 
         REQUIRE(table.height() >= 20);
-
-        using Catch::Matchers::Contains;
 
         REQUIRE(table.at(1, 0).text == "+5:30");
         REQUIRE(table.at(1, 1).text == "India");
@@ -71,14 +70,11 @@ TEST_CASE("default table") {
         REQUIRE(table.at(0, 5).text == "August&nbsp;23");
         REQUIRE(table.at(rows-1, 5).text == "August&nbsp;23");
 
-        using Catch::Matchers::Contains;
         REQUIRE_THAT(table.at(0, 0).text, Contains("श्रीः"));
         REQUIRE_THAT(table.at(rows-1, 0).text, Contains("ॐ तत्सत्"));
     }
 
     SECTION("generated table has 'mainpart' as a class for top/bottom date headers") {
-        using Catch::Matchers::Contains;
-
         REQUIRE_THAT(table.at(0, 3).classes, Contains("mainpart"));
         REQUIRE_THAT(table.at(0, 4).classes, Contains("mainpart"));
         REQUIRE_THAT(table.at(0, 5).classes, Contains("mainpart"));
@@ -114,23 +110,22 @@ TEST_CASE("default table") {
     }
 
     SECTION("generated table contains titles for PAraNam details") {
-        using Catch::Matchers::Contains;
         REQUIRE_THAT(table.at(1, 5).title, Contains("06:22:42 (sunrise)…08:51:03 (1/5th of daytime)"));
     }
 
     SECTION("generated table contains titles with timezone name for cell with location name") {
-        using Catch::Matchers::Contains;
         REQUIRE_THAT(table.at(1, 2).title, Contains("Asia/Kolkata"));
     }
 
     SECTION("generated table contains links with details in cells with location name, vrata, pAraNam") {
-        using Catch::Matchers::Contains;
         REQUIRE_THAT(table.at(1, 2).text, Contains("<a href"));
     }
 
     auto find_row = [&table](const std::string & location_name) -> std::size_t {
         for (std::size_t row=1; row<table.height(); ++row) {
             CAPTURE(row);
+            // skip empty row (e.g. separator between far-east and central Russia)
+            if (table.row(row).data.size() < 2) { continue; }
             const auto text = table.at(row, 2).text;
             if (text.find(location_name) != std::string::npos) {
                 return row;
@@ -140,10 +135,18 @@ TEST_CASE("default table") {
     };
 
     SECTION("'title' attribute of Pāraṇam includes limit when paran_limit is set") {
-        using Catch::Matchers::Contains;
         std::size_t row = find_row("Aktau");
         REQUIRE_THAT(table.at(row, 5).title, Contains("absolute limit is 09:45:38 (dvādaśī end)"));
     }
+
+//    SECTION("atirikā-dvādaśī is in separate cell from previous ekādaśī") {
+//        // TODO: implement after refactoring Vrata, nameworthy_dates and table
+//        std::size_t row = find_row("Simferopol");
+//        REQUIRE_THAT(table.at(row, 3).text, Contains("Pavitrā Ekādaśī"));
+//        REQUIRE_THAT(table.at(row, 3).text, !Contains("Atiriktā Dvādaśī"));
+//        REQUIRE_THAT(table.at(row, 4).text, Contains("Atiriktā Dvādaśī"));
+//        REQUIRE_THAT(table.at(row, 4).text, !Contains("Pavitrā Ekādaśī"));
+//    }
 }
 
 TEST_CASE("Table_Calendar_Generator returns reasonable table adds ' (DST)' for 'summer' times") {

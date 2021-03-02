@@ -19,7 +19,7 @@ public:
     Location location{};
     CalcFlags calc_flags = CalcFlags::Invalid;
 
-    Swe(Location coord_, CalcFlags flags=CalcFlags::Default);
+    Swe(const Location & coord_, CalcFlags flags=CalcFlags::Default);
     ~Swe();
     // Swe is kind of hanlde for sweph and thus we can't really copy it.
     // Copying it would allow for muiltiple swe_close() calls.

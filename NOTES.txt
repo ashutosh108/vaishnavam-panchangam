@@ -1,4 +1,4 @@
-[ ] table: show next-day Śravaṇa-dvādaśī in separate cell
+[ ] table: show next-day Śravaṇa-dvādaśī and atirikta-dvādaśī in separate cell
 [ ] table: show atiriktā dvādaśī in separate cell
 [ ] table: show separator column for non-sequential dates
 [ ] calculate Madhva-navamī (saura): Makara, ś9

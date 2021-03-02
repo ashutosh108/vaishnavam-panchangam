@@ -69,7 +69,7 @@ int32_t Swe::calc_ephemeris_flags(CalcFlags flags) const noexcept
     }
 }
 
-Swe::Swe(Location coord_, CalcFlags flags):location(coord_), calc_flags(flags)
+Swe::Swe(const Location & coord_, CalcFlags flags):location(coord_), calc_flags(flags)
 {
     rise_flags = get_rise_flags(flags);
     ephemeris_flags = calc_ephemeris_flags(flags);
