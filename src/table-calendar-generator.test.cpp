@@ -181,7 +181,7 @@ TEST_CASE("generated table shows year for non-default-year dates when default ye
 
 TEST_CASE("Generated table contains additional custom dates with given descriptions") {
     using namespace date;
-    auto table = vp::Table_Calendar_Generator::generate(some_vratas(2020_y/1/1), 2020_y, {{2020_y/1/5, "custom1"}, {2020_y/1/9, "custom2"}});
+    auto table = vp::Table_Calendar_Generator::generate(some_vratas(2020_y/1/1), 2020_y, {{date::local_days{2020_y/1/5}, "custom1"}, {date::local_days{2020_y/1/9}, "custom2"}});
     REQUIRE(table.width() == 8);
     REQUIRE(table.at(1, 3).text == "custom1");
     REQUIRE(table.at(1, 7).text == "custom2");

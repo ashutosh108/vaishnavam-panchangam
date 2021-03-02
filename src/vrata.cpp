@@ -106,10 +106,10 @@ bool ekadashi_name_rus_is_valid(const std::string &name)
     return valid_names.find(name) != valid_names.end();
 }
 
-date::year_month_day Vrata::local_paran_date() const
+date::local_days Vrata::local_paran_date() const
 {
     auto delta = date::days{vp::is_atirikta(type) ? 2 : 1};
-    return date::year_month_day{date::sys_days{date} + delta};
+    return date::local_days{date} + delta;
 }
 
 std::string Vrata::location_name() const
@@ -211,24 +211,24 @@ MinMaxDate VratasForDate::minmax_date() const
             if (!r.has_value()) return false; // ! (date < nullopt)
             return l->date < r->date;
         });
-    std::optional<date::year_month_day> min_date;
+    std::optional<date::local_days> min_date;
     if (it_min != vector.cend()) {
         min_date = it_min->value().date;
     }
-    std::optional<date::year_month_day> max_date;
+    std::optional<date::local_days> max_date;
     if (it_max != vector.cend()) {
         max_date = it_max->value().date;
     }
     return {min_date, max_date};
 }
 
-std::optional<date::sys_days> VratasForDate::min_date() const
+std::optional<date::local_days> VratasForDate::min_date() const
 {
     auto [l_min_date, l_max_date] = minmax_date();
     return l_min_date;
 }
 
-std::optional<date::sys_days> VratasForDate::max_date() const
+std::optional<date::local_days> VratasForDate::max_date() const
 {
     auto [l_min_date, l_max_date] = minmax_date();
     return l_max_date;
@@ -243,11 +243,11 @@ bool VratasForDate::all_from_same_ekadashi() const
 {
     auto [min_date, max_date] = minmax_date();
     if (!min_date || !max_date) return true;
-    date::days length = date::sys_days{*max_date} - date::sys_days{*min_date};
+    date::days length = *max_date - *min_date;
     return length <= date::days{2};
 }
 
-date::sys_days VratasForDate::guess_start_date_for_next_ekadashi(date::sys_days current_start_date)
+date::local_days VratasForDate::guess_start_date_for_next_ekadashi(date::local_days current_start_date)
 {
     auto l_max_date = max_date();
     if (!l_max_date) {
@@ -256,7 +256,7 @@ date::sys_days VratasForDate::guess_start_date_for_next_ekadashi(date::sys_days 
     return *l_max_date + date::days{1};
 }
 
-date::sys_days VratasForDate::guess_start_date_for_prev_ekadashi(date::sys_days current_start_date)
+date::local_days VratasForDate::guess_start_date_for_prev_ekadashi(date::local_days current_start_date)
 {
     auto l_min_date = min_date();
     if (!l_min_date) {

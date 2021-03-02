@@ -7,18 +7,18 @@
 
 namespace {
 
-std::set<date::year_month_day> get_vrata_dates(const vp::VratasForDate & vratas, const vp::Custom_Dates & custom_dates) {
-    std::set<date::year_month_day> dates;
+std::set<date::local_days> get_vrata_dates(const vp::VratasForDate & vratas, const vp::Custom_Dates & custom_dates) {
+    std::set<date::local_days> dates;
     for (const auto & vrata : vratas) {
         if (vrata) {
-            dates.insert(vrata->date);
+            dates.insert(date::local_days{vrata->date});
             dates.insert(vrata->local_paran_date());
             // insert "date + 1 day" in atirikta case, since paran is "date + 2 days"
             if (vp::is_atirikta(vrata->type)) {
-                dates.insert(date::year_month_day{date::sys_days{vrata->date} + date::days{1}});
+                dates.insert(date::local_days{vrata->date} + date::days{1});
             }
             for (const auto & [date, name] : vrata->dates_for_this_paksha) {
-                dates.insert(date::year_month_day{date});
+                dates.insert(date);
             }
         }
     }
@@ -28,17 +28,18 @@ std::set<date::year_month_day> get_vrata_dates(const vp::VratasForDate & vratas,
     return dates;
 }
 
-void add_header(vp::Table & table, const std::set<date::year_month_day> & vrata_dates, date::year default_year, std::string text) {
+void add_header(vp::Table & table, const std::set<date::local_days> & vrata_dates, date::year default_year, const std::string & text) {
     table.start_new_row();
     table.add_header_cell(text);
     table.add_header_cell(text);
     table.add_header_cell(text);
 
     for (auto date : vrata_dates) {
-        if (default_year != date::year::min() && date.year() != default_year) {
-            table.add_header_cell(fmt::format("{:lhy}", date), "mainpart");
+        const auto ymd = date::year_month_day{date};
+        if (default_year != date::year::min() && ymd.year() != default_year) {
+            table.add_header_cell(fmt::format(FMT_STRING("{:lhy}"), ymd), "mainpart");
         } else {
-            table.add_header_cell(fmt::format("{:lh}", date), "mainpart");
+            table.add_header_cell(fmt::format(FMT_STRING("{:lh}"), ymd), "mainpart");
         }
     }
 }
@@ -60,9 +61,9 @@ std::string get_timezone_text(const vp::MaybeVrata & vrata) {
     std::string dst = info.save != std::chrono::seconds{0} ? " (DST)" : "";
 
     if (seconds != 0) {
-        return fmt::format("{}{}:{:02}:{:02}{}", sign, hours, minutes, seconds, dst);
+        return fmt::format(FMT_STRING("{}{}:{:02}:{:02}{}"), sign, hours, minutes, seconds, dst);
     }
-    return fmt::format("{}{}:{:02}{}", sign, hours, minutes, dst);
+    return fmt::format(FMT_STRING("{}{}:{:02}{}"), sign, hours, minutes, dst);
 }
 
 namespace {
@@ -70,11 +71,11 @@ std::string paran_title(const vp::Paran & paran) {
     std::string title;
 
     if (paran.paran_start) {
-        title += fmt::format("{} ({})", paran.start_str_seconds(), paran.start_type());
+        title += fmt::format(FMT_STRING("{} ({})"), paran.start_str_seconds(), paran.start_type());
     }
     title += "…";
     if (paran.paran_end) {
-        title += fmt::format("{} ({})", paran.end_str_seconds(), paran.end_type());
+        title += fmt::format(FMT_STRING("{} ({})"), paran.end_str_seconds(), paran.end_type());
     }
     if (paran.paran_limit) {
         const auto limit_str = date::format("%H:%M:%S", date::floor<std::chrono::seconds>(paran.paran_limit->as_zoned_time(paran.time_zone).get_local_time()));
@@ -84,13 +85,13 @@ std::string paran_title(const vp::Paran & paran) {
 }
 }
 
-void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::year_month_day> & vrata_dates, std::string tr_classes, const vp::Custom_Dates & custom_dates) {
+void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::local_days> & vrata_dates, std::string tr_classes, const vp::Custom_Dates & custom_dates) {
     table.start_new_row(std::move(tr_classes));
     table.add_cell(get_timezone_text(vrata));
     table.add_cell(vrata->location.country);
     {
-        auto location_with_href = fmt::format(R"(<a href="#{}">{}</a>)", html::escape_attribute(vrata->location_name()), vrata->location_name());
-        table.add_cell(location_with_href).set_title(fmt::format("Timezone: {}", vrata->location.time_zone_name));
+        auto location_with_href = fmt::format(FMT_STRING(R"(<a href="#{}">{}</a>)"), html::escape_attribute(vrata->location_name()), vrata->location_name());
+        table.add_cell(location_with_href).set_title(fmt::format(FMT_STRING("Timezone: {}"), vrata->location.time_zone_name));
     }
     if (!vrata) {
         for (std::size_t i=0; i < vrata_dates.size(); ++i) {
@@ -100,12 +101,12 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
     }
     for (auto date : vrata_dates) {
         std::string classes = "mainpart";
-        if (date >= vrata->date && date < vrata->local_paran_date()) {
+        if (date >= date::local_days{vrata->date} && date < vrata->local_paran_date()) {
             table.add_cell(fmt::format(FMT_STRING("{} {}"), vrata->ekadashi_name(), vrata->type), classes + " vrata");
         } else if (date == vrata->local_paran_date()) {
             // 'c' means compact formatting ("*" for standard pAraNam, otherwise something like ">06:45", "<07:45" or "06:45-07.45")
             const auto paran = fmt::format(FMT_STRING("{:c}"), vrata->paran);
-            const auto paran_with_href = fmt::format(R"(<a href="#{}">{}</a>)", html::escape_attribute(vrata->location_name()), html::escape_attribute(paran));
+            const auto paran_with_href = fmt::format(FMT_STRING(R"(<a href="#{}">{}</a>)"), html::escape_attribute(vrata->location_name()), html::escape_attribute(paran));
             table.add_unmergeable_cell(paran_with_href, classes).set_title(paran_title(vrata->paran));
         } else if (auto found_it = custom_dates.find(date); found_it != custom_dates.end()) {
             table.add_cell(found_it->second, "custom");

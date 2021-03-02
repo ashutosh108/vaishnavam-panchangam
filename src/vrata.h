@@ -92,9 +92,10 @@ using NamedDates = std::map<date::local_days, NamedDate>;
     JulDays_UT{double_days{std::numeric_limits<double>::quiet_NaN()}}, // trayodashi_start;
 };
 
+// stores events for given pakṣa, including details for Ekādaśī vrata
 struct Vrata {
     Vrata_Type type = Vrata_Type::Ekadashi;
-    date::year_month_day date;
+    date::local_days date;
     Paran paran;
     Location location;
     Vrata_Time_Points times = dummy_vrata_time_points;
@@ -135,7 +136,7 @@ struct Vrata {
           times(_times),
           masa(_masa),
           paksha(_paksha){}
-    date::year_month_day local_paran_date() const;
+    date::local_days local_paran_date() const;
     std::string location_name() const;
     std::string ekadashi_name() const;
 
@@ -153,8 +154,8 @@ bool ekadashi_name_rus_is_valid(const std::string & name);
 using MaybeVrata = tl::expected<Vrata, CalcError>;
 
 struct MinMaxDate {
-    std::optional<date::sys_days> min;
-    std::optional<date::sys_days> max;
+    std::optional<date::local_days> min;
+    std::optional<date::local_days> max;
 };
 
 // All calculated vratas for the same date but different locations.
@@ -165,12 +166,12 @@ public:
     // true if all vratas in the set are within 1 day from one another.
     bool all_from_same_ekadashi() const;
 
-    date::sys_days guess_start_date_for_next_ekadashi(date::sys_days current_start_date);
-    date::sys_days guess_start_date_for_prev_ekadashi(date::sys_days current_start_date);
+    date::local_days guess_start_date_for_next_ekadashi(date::local_days current_start_date);
+    date::local_days guess_start_date_for_prev_ekadashi(date::local_days current_start_date);
 
     MinMaxDate minmax_date() const;
-    std::optional<date::sys_days> min_date() const;
-    std::optional<date::sys_days> max_date() const;
+    std::optional<date::local_days> min_date() const;
+    std::optional<date::local_days> max_date() const;
 
     inline void push_back(const MaybeVrata & vrata) {
         vector.push_back(vrata);
@@ -238,10 +239,10 @@ template<>
 struct fmt::formatter<vp::Vrata> : fmt::formatter<std::string_view> {
     template <typename FormatContext>
     auto format(const vp::Vrata & v, FormatContext & ctx) {
-        fmt::format_to(ctx.out(), "{} on {}", v.type, v.date);
+        fmt::format_to(ctx.out(), FMT_STRING("{} on {}"), v.type, date::year_month_day{v.date});
         if (is_atirikta(v.type)) {
-            date::year_month_day date2 = date::sys_days{v.date} + date::days{1};
-            fmt::format_to(ctx.out(), " & {}", date2);
+            date::year_month_day date2{v.date + date::days{1}};
+            fmt::format_to(ctx.out(), FMT_STRING(" & {}"), date2);
         }
         fmt::format_to(ctx.out(), FMT_STRING(", {} māsa, {} pakṣa"), v.masa, v.paksha);
         fmt::format_to(ctx.out(), FMT_STRING(", parāṇ: {}"), v.paran);

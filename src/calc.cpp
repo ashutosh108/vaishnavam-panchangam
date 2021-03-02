@@ -39,7 +39,7 @@ Calc::Calc(Swe swe_):swe(std::move(swe_)) {}
  * It happens e.g. mid-summer and mid-winter in ~68+ degrees latitudes,
  * like Murmank on 2020-06-05 (no sunset) or 2017-11-27 (no sunrise).
  */
-tl::expected<Vrata, CalcError> Calc::find_next_vrata(date::year_month_day after) const
+tl::expected<Vrata, CalcError> Calc::find_next_vrata(date::local_days after) const
 {
     auto midnight = calc_astronomical_midnight(after);
     auto start_time = midnight - double_days{3.0};
@@ -88,7 +88,7 @@ repeat_with_fixed_start_time:
     return vrata;
 }
 
-JulDays_UT Calc::calc_astronomical_midnight(date::year_month_day date) const {
+JulDays_UT Calc::calc_astronomical_midnight(date::local_days date) const {
     const double_days adjustment{swe.location.longitude.longitude * (1.0/360.0)};
     return JulDays_UT{date} - adjustment;
 }
@@ -149,10 +149,10 @@ Vrata_Time_Points Calc::calc_key_times_from_sunset_and_sunrise(JulDays_UT sunset
  * Returns the formal date for the vrata i.e. date for the vrata sunrise
  * in local timezone.
  */
-date::year_month_day Calc::get_vrata_date(const JulDays_UT sunrise) const
+date::local_days Calc::get_vrata_date(const JulDays_UT sunrise) const
 {
     auto zoned = sunrise.as_zoned_time(swe.location.time_zone());
-    return date::year_month_day{date::floor<date::days>(zoned.get_local_time())};
+    return date::floor<date::days>(zoned.get_local_time());
 }
 
 Vrata_Type Calc::calc_vrata_type(const Vrata &vrata) const

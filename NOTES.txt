@@ -1,3 +1,6 @@
+[ ] Vrata: allow multiple nameworthy events per day
+[ ] Vrata: store ekādaśī/atiriktā-{ekā,dvā}daśī/Śravaṇa-dvādaśī/pāraṇam in nameworthy events
+[ ] table: only show nameworthy events (no manual ekādaśī/pāraṇam cells)
 [ ] table: show next-day Śravaṇa-dvādaśī and atirikta-dvādaśī in separate cell
 [ ] table: show atiriktā dvādaśī in separate cell
 [ ] table: show separator column for non-sequential dates

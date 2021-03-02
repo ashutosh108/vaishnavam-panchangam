@@ -25,6 +25,7 @@ public:
     explicit JulDays_UT(date::year_month_day d, double_hours hours=double_hours{});
     explicit JulDays_UT(date::local_time<double_days> t, const date::time_zone * tz);
     explicit JulDays_UT(date::sys_time<double_days> t);
+    explicit JulDays_UT(date::local_days);
 
     double_days raw_julian_days_ut() const { return juldays_ut_; }
     bool operator==(JulDays_UT const &to) const;

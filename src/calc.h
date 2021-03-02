@@ -38,7 +38,7 @@ class Calc
 public:
     Calc(Swe swe);
     // main interface: get info for nearest future Vrata after given date
-    tl::expected<Vrata, CalcError> find_next_vrata(date::year_month_day after) const;
+    tl::expected<Vrata, CalcError> find_next_vrata(date::local_days after) const;
 
     // Helper functions. They are public for easier testing,
     // but should be considered private otherwise.
@@ -60,14 +60,14 @@ public:
     JulDays_UT find_sankranti(JulDays_UT after, Saura_Masa masa) const;
 
     static JulDays_UT proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion);
-    JulDays_UT calc_astronomical_midnight(date::year_month_day date) const;
+    JulDays_UT calc_astronomical_midnight(date::local_days date) const;
 
     vp::Swe swe;
 
 private:
     Vrata_Time_Points calc_key_times_from_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const;
     tl::expected<JulDays_UT, CalcError> sunset_before_sunrise(JulDays_UT const sunrise) const;
-    date::year_month_day get_vrata_date(const JulDays_UT sunrise) const;
+    date::local_days get_vrata_date(const JulDays_UT sunrise) const;
     Paran get_paran(const JulDays_UT sunrise2, const JulDays_UT sunset2, const JulDays_UT dvadashi_start, const JulDays_UT dvadashi_end) const;
     Paran atirikta_paran(const JulDays_UT sunrise3, const JulDays_UT sunset3, const JulDays_UT dvadashi_end) const;
 

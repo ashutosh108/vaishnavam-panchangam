@@ -134,12 +134,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-date::sys_days to_sys_days(QDate qd)
+namespace {
+date::year_month_day to_ymd(QDate qd)
 {
     using namespace date;
     constexpr auto sys_epoch = sys_days{1970_y/January/1};
     constexpr auto jd_epoch = sys_days{year{-4713}/November/24};
     return sys_days{days{qd.toJulianDay()} - (sys_epoch - jd_epoch)};
+}
+
+date::local_days to_local_days(QDate qd)
+{
+    using namespace date;
+    constexpr auto sys_epoch = sys_days{1970_y/January/1};
+    constexpr auto jd_epoch = sys_days{year{-4713}/November/24};
+    return local_days{days{qd.toJulianDay()} - (sys_epoch - jd_epoch)};
+}
 }
 
 // parse tiny subset of markdown in a single plain text line, return HTML version
@@ -208,7 +218,7 @@ std::string MainWindow::selected_location() {
 }
 
 void MainWindow::recalcVratasForSelectedDateAndLocation() {
-    auto date = to_sys_days(ui->dateEdit->date());
+    auto date = to_ymd(ui->dateEdit->date());
     auto location_string = selected_location();
     const auto flags = flagsForCurrentSettings();
 
@@ -459,7 +469,7 @@ QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
 void MainWindow::refreshDaybyday()
 {
     if (!ui->daybydayBrowser->isVisible()) { return; }
-    auto date = to_sys_days(ui->dateEdit->date());
+    auto date = to_ymd(ui->dateEdit->date());
     auto location_string = selected_location();
     const auto flags = flagsForCurrentSettings();
     auto location = vp::text_ui::LocationDb::find_coord(location_string.c_str());
@@ -617,7 +627,7 @@ void MainWindow::on_todayButton_clicked()
     refreshAllTabs();
 }
 
-static date::days to_juldays(date::sys_days date) {
+static date::days to_juldays(date::local_days date) {
     using namespace date;
     constexpr auto sys_epoch = sys_days{1970_y/January/1};
     constexpr auto jd_epoch = sys_days{year{-4713}/November/24};
@@ -625,18 +635,18 @@ static date::days to_juldays(date::sys_days date) {
     return date.time_since_epoch() + sys_to_jd;
 }
 
-static QDate to_qdate(date::sys_days date) {
+static QDate to_qdate(date::local_days date) {
     return QDate::fromJulianDay(to_juldays(date).count());
 }
 
 void MainWindow::on_dateNextEkadashi_clicked()
 {
-    auto next_date = vratas.guess_start_date_for_next_ekadashi(to_sys_days(ui->dateEdit->date()));
+    auto next_date = vratas.guess_start_date_for_next_ekadashi(to_local_days(ui->dateEdit->date()));
     ui->dateEdit->setDate(to_qdate(next_date));
 }
 
 void MainWindow::on_datePrevEkadashi_clicked()
 {
-    auto prev_date = vratas.guess_start_date_for_prev_ekadashi(to_sys_days(ui->dateEdit->date()));
+    auto prev_date = vratas.guess_start_date_for_prev_ekadashi(to_local_days(ui->dateEdit->date()));
     ui->dateEdit->setDate(to_qdate(prev_date));
 }

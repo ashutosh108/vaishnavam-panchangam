@@ -20,7 +20,7 @@ using namespace std::literals::chrono_literals;
 class Expected_Vrata {
 public:
     Vrata_Type type;
-    date::year_month_day date;
+    date::local_days date;
     Paran paran;
     Chandra_Masa masa;
     Paksha paksha;
@@ -92,13 +92,13 @@ TEST_CASE("find_ekadashi_sunrise") {
 }
 
 TEST_CASE("Vijaya Ekadashi Kiev 2019") {
-    date::year_month_day base_date{2019_y/February/28};
+    date::local_days base_date{2019_y/February/28};
     Location kiev{50.45_N, 30.523333_E};
     auto vrata = Calc{kiev}.find_next_vrata(base_date);
     REQUIRE(vrata.has_value());
     REQUIRE(vp::Swe{kiev}.get_tithi(JulDays_UT{vrata->date}).get_paksha() == Paksha::Krishna);
     REQUIRE(vrata->type == Vrata_Type::Ekadashi);
-    REQUIRE(vrata->date == 2019_y/March/2);
+    REQUIRE(date::year_month_day{vrata->date} == 2019_y/March/2);
 }
 
 TEST_CASE("arunodaya_for_sunrise") {
@@ -110,7 +110,7 @@ TEST_CASE("arunodaya_for_sunrise") {
 
 namespace {
 Vrata vrata(const Calc &c, date::year_month_day base_date) {
-    return c.find_next_vrata(base_date).value();
+    return c.find_next_vrata(date::local_days{base_date}).value();
 }
 }
 
@@ -447,7 +447,7 @@ TEST_CASE("get_next_tithi() gives closest Ekadashi tithi for petropavlovsk after
 
 TEST_CASE("paran not earlier than quarter of Dvadashi tithi") {
     Calc const calc{kiev_coord};
-    date::year_month_day const from{2019_y/August/24};
+    date::local_days const from{2019_y/August/24};
     auto vrata = calc.find_next_vrata(from);
     REQUIRE(vrata.has_value());
     REQUIRE(vrata->paran.type == Paran::Type::From_Quarter_Dvadashi);
@@ -461,42 +461,42 @@ TEST_CASE("paran not earlier than quarter of Dvadashi tithi") {
 
 TEST_CASE("Udupi after 2019-11-20 returns an actual date") {
     Calc const calc{udupi_coord};
-    date::year_month_day const from{2019_y/November/20};
+    date::local_days const from{2019_y/November/20};
     auto vrata = calc.find_next_vrata(from);
     REQUIRE(vrata.has_value());
 }
 
 TEST_CASE("Udupi after 2020-02-06 does NOT return 2020-02-06") {
     Calc const calc{udupi_coord};
-    date::year_month_day const from{2020_y/February/6};
+    date::local_days const from{2020_y/February/6};
     auto vrata = calc.find_next_vrata(from);
     REQUIRE(vrata->date != from);
 }
 
 TEST_CASE("Kiev after 2020-01-21 does NOT return 2020-01-21") {
     Calc const calc{kiev_coord};
-    date::year_month_day const from{2020_y/January/21};
+    date::local_days const from{2020_y/January/21};
     auto vrata = calc.find_next_vrata(from);
     REQUIRE(vrata->date != from);
 }
 
 TEST_CASE("get_astronomical_midnight returns time *before* utc midnight for location to the east from greenwich") {
     vp::Calc c{moskva_coord};
-    auto date = 2019_y/January/1;
+    const date::local_days date{2019_y/January/1};
 
     REQUIRE(c.calc_astronomical_midnight(date) < vp::JulDays_UT{date});
 }
 
 TEST_CASE("get_astronomical_midnight returns time *after* utc midnight for location to the west from greenwich") {
     vp::Calc c{losanjeles_coord};
-    auto date = 2019_y/January/1;
+    const date::local_days date{2019_y/January/1};
 
     REQUIRE(c.calc_astronomical_midnight(date) > vp::JulDays_UT{date});
 }
 
 TEST_CASE("get_astronomical_midnight() adjusts to the right side") {
     Calc c{petropavlovskkamchatskiy_coord};
-    auto date = 2019_y/March/18;
+    const date::local_days date{2019_y/March/18};
 
     auto local_midnight = c.calc_astronomical_midnight(date);
     JulDays_UT local_midnight_in_utc_earliest{2019_y/March/17};
@@ -506,7 +506,7 @@ TEST_CASE("get_astronomical_midnight() adjusts to the right side") {
 }
 
 TEST_CASE("Surgut 2019-12-07 gets paranam time +2days after atiriktA as it should") {
-    auto vrata = Calc{surgut_coord}.find_next_vrata(2019_y/December/7);
+    auto vrata = Calc{surgut_coord}.find_next_vrata(date::local_days{2019_y/December/7});
     REQUIRE(vrata.has_value());
     auto expected_ymd = 2019_y/December/9;
     date::year_month_day local_ymd{date::floor<date::days>(vrata->paran.paran_start->as_zoned_time(surgut_coord.time_zone()).get_local_time())};
@@ -515,9 +515,9 @@ TEST_CASE("Surgut 2019-12-07 gets paranam time +2days after atiriktA as it shoul
 }
 
 TEST_CASE("after atiriktA when 1/5 of day fits before end of dvAdashI, pAraNam must be standard, not 'pucchA-dvAdashI'") {
-    auto vrata = Calc{aktau_coord}.find_next_vrata(2018_y/August/21);
+    auto vrata = Calc{aktau_coord}.find_next_vrata(date::local_days{2018_y/August/21});
     REQUIRE(vrata.has_value());
-    REQUIRE(vrata->date == 2018_y/August/21);
+    REQUIRE(date::year_month_day{vrata->date} == 2018_y/August/21);
     CAPTURE(Vrata_Detail_Printer{*vrata});
     REQUIRE(vrata->paran.type == Paran::Type::Standard);
     REQUIRE(vrata->paran.paran_limit.has_value());
@@ -537,7 +537,7 @@ double_days operator ""_hms(const char *s, const std::size_t size) {
 TEST_CASE("ativRddhAdi gives correct sunset, sunris and four time points") {
     using namespace std::chrono_literals;
     Calc calc{kiev_coord};
-    auto vrata = calc.find_next_vrata(2020_y/May/17);
+    auto vrata = calc.find_next_vrata(date::local_days{2020_y/May/17});
     REQUIRE(vrata.has_value());
 
     REQUIRE(vrata->sunset0                     == ApproximateJulDays_UT{2020_y/May/17, "17:36:09.669959"_hms});
@@ -550,7 +550,7 @@ TEST_CASE("ativRddhAdi gives correct sunset, sunris and four time points") {
 
 TEST_CASE("ativRddhAdi gives dashamI ekAdashI, dvAdashI and trayodashI start") {
     Calc calc{kiev_coord};
-    auto vrata = calc.find_next_vrata(2020_y/May/17);
+    auto vrata = calc.find_next_vrata(date::local_days{2020_y/May/17});
     REQUIRE(vrata.has_value());
 
     REQUIRE(ApproximateJulDays_UT{vrata->times.dashami_start}    == JulDays_UT{2020_y/May/16, "04:53:25.843109"_hms});
@@ -561,7 +561,7 @@ TEST_CASE("ativRddhAdi gives dashamI ekAdashI, dvAdashI and trayodashI start") {
 
 TEST_CASE("ativRddhAdi gives expected dashamI ekAdashI and dvAdashI length") {
     Calc calc{kiev_coord};
-    auto vrata = calc.find_next_vrata(2020_y/May/17);
+    auto vrata = calc.find_next_vrata(date::local_days{2020_y/May/17});
     REQUIRE(vrata.has_value());
 
     REQUIRE(vrata->times.dashami_length().count() == Approx{65.805});
@@ -570,28 +570,28 @@ TEST_CASE("ativRddhAdi gives expected dashamI ekAdashI and dvAdashI length") {
 }
 
 TEST_CASE("ativRddhAdi gives expected status for known cases (samyam)") {
-    auto vrata = Calc{kiev_coord}.find_next_vrata(2020_y/May/17);
+    auto vrata = Calc{kiev_coord}.find_next_vrata(date::local_days{2020_y/May/17});
     REQUIRE(vrata.has_value());
 
     REQUIRE(vrata->times.ativrddhaadi() == Vrata_Time_Points::Ativrddhaadi::samyam);
 }
 
 TEST_CASE("ativRddhAdi gives expected status for known cases (hrasva)") {
-    auto vrata = Calc{kiev_coord}.find_next_vrata(2020_y/May/25);
+    auto vrata = Calc{kiev_coord}.find_next_vrata(date::local_days{2020_y/May/25});
     REQUIRE(vrata.has_value());
 
     REQUIRE(vrata->times.ativrddhaadi() == Vrata_Time_Points::Ativrddhaadi::hrasva);
 }
 
 TEST_CASE("ativRddhAdi gives expected status for known cases (vRddha)") {
-    auto vrata = Calc{kiev_coord}.find_next_vrata(2020_y/August/25);
+    auto vrata = Calc{kiev_coord}.find_next_vrata(date::local_days{2020_y/August/25});
     REQUIRE(vrata.has_value());
 
     REQUIRE(vrata->times.ativrddhaadi() == Vrata_Time_Points::Ativrddhaadi::vrddha);
 }
 
 TEST_CASE("ativRddhatvam gives relevant timpoint to be checked for being 'dashamI-free'") {
-    auto vrata = Calc{kiev_coord}.find_next_vrata(2020_y/August/25);
+    auto vrata = Calc{kiev_coord}.find_next_vrata(date::local_days{2020_y/August/25});
     REQUIRE(vrata.has_value());
 
     REQUIRE(vrata->times.ativrddhaditvam_timepoint() == ApproximateJulDays_UT{2020_y/August/28, "01:27:50.835060"_hms});
@@ -599,19 +599,18 @@ TEST_CASE("ativRddhatvam gives relevant timpoint to be checked for being 'dasham
 }
 
 TEST_CASE("ensure we get an error when we search for ekAdashI in Murmansk in the summer (with no sunset)") {
-    auto date = 2020_y/June/3;
+    const date::local_days date{2020_y/June/3};
     auto vrata = Calc{murmansk_coord}.find_next_vrata(date);
     REQUIRE_FALSE(vrata.has_value());
     const auto error = vrata.error();
     REQUIRE(std::holds_alternative<CantFindSunriseAfter>(error));
     auto e = std::get<CantFindSunriseAfter>(error);
     REQUIRE(e.after < JulDays_UT{date});
-    auto date_minus_4_days = date::year_month_day{date::sys_days{date} - date::days{4}};
-    REQUIRE(e.after > JulDays_UT{date_minus_4_days});
+    REQUIRE(e.after > JulDays_UT{date - date::days{4}});
 }
 
 TEST_CASE("we get nearest next ekadashi start for petropavlovsk 2019-03-18") {
-    auto vrata = Calc{petropavlovskkamchatskiy_coord}.find_next_vrata(2019_y/March/18);
+    auto vrata = Calc{petropavlovskkamchatskiy_coord}.find_next_vrata(date::local_days{2019_y/March/18});
     REQUIRE(vrata.has_value());
     JulDays_UT ekadashi_earliest{2019_y/March/16};
     JulDays_UT ekadashi_latest{2019_y/March/17};
@@ -620,7 +619,7 @@ TEST_CASE("we get nearest next ekadashi start for petropavlovsk 2019-03-18") {
 }
 
 TEST_CASE("arunodaya0 and sunrise0 are from the same morning in the dAshaMi viddha case for Mirny 2020-07-30") {
-    auto vrata = Calc{mirnyy_coord}.find_next_vrata(2020_y/July/30);
+    auto vrata = Calc{mirnyy_coord}.find_next_vrata(date::local_days{2020_y/July/30});
     CAPTURE(vrata->sunrise0);
     REQUIRE(vrata->sunrise0.has_value());
     JulDays_Zoned local_sunrise{vrata->location.time_zone(), *vrata->sunrise0};
@@ -638,13 +637,13 @@ TEST_CASE("arunodaya0 and sunrise0 are from the same morning in the dAshaMi vidd
 }
 
 TEST_CASE("paran after 1/4 of dvAdashI: don't specify end time when interval is short") {
-    auto vrata = Calc{gokarna_coord}.find_next_vrata(2020_y/September/13);
+    auto vrata = Calc{gokarna_coord}.find_next_vrata(date::local_days{2020_y/September/13});
     REQUIRE(vrata);
     REQUIRE(!vrata->paran.paran_end);
 }
 
 TEST_CASE("paran after 1/4 of dvAdashI: don't specify end time even when interval is long enough") {
-    auto vrata = Calc{erevan_coord}.find_next_vrata(2020_y/September/13);
+    auto vrata = Calc{erevan_coord}.find_next_vrata(date::local_days{2020_y/September/13});
     REQUIRE(vrata);
     REQUIRE(!vrata->paran.paran_end);
 }
@@ -766,9 +765,9 @@ TEST_CASE("vrata::ekadashi_name() works for few known cases") {
     auto calc = Calc{udupi_coord};
     auto check = [&](date::year_month_day date, const char * expected_name) {
         SECTION(fmt::format(FMT_STRING("{} ekādaśī on {}"), expected_name, date)) {
-            auto vrata = calc.find_next_vrata(date);
+            auto vrata = calc.find_next_vrata(date::local_days{date});
             REQUIRE(vrata.has_value());
-            REQUIRE(date == vrata->date);
+            REQUIRE(date == date::year_month_day{vrata->date});
             REQUIRE(expected_name == vrata->ekadashi_name());
         }
     };

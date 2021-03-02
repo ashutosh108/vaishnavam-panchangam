@@ -41,7 +41,11 @@ JulDays_UT::JulDays_UT(date::sys_time<double_days> t)
                        static_cast<int>(static_cast<unsigned>(ymd.month())),
                        static_cast<int>(static_cast<unsigned>(ymd.day())),
                        hours.count(),
-                       SE_GREG_CAL)};
+                   SE_GREG_CAL)};
+}
+
+JulDays_UT::JulDays_UT(date::local_days date) : JulDays_UT(date::year_month_day{date})
+{
 }
 
 bool JulDays_UT::operator==(const JulDays_UT &to) const

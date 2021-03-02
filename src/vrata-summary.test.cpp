@@ -31,7 +31,9 @@ TEST_CASE("summary for Atiriktā contains both dates") {
     auto actual = fmt::format("{}", vp::Vrata_Summary{&vrata});
     using Catch::Matchers::Contains;
     REQUIRE_THAT(actual, Contains("2000-01-01"));
+    REQUIRE_THAT(actual, !Contains("2000-01-01 0")); // must not print date as YYYY-mm-dd HH:MM:SS.SSSSSS
     REQUIRE_THAT(actual, Contains("2000-01-02"));
+    REQUIRE_THAT(actual, !Contains("2000-01-02 0")); // must not print date as YYYY-mm-dd HH:MM:SS.SSSSSS
 }
 
 TEST_CASE("summary contains ekādaśī name, māsa name and pakṣa") {

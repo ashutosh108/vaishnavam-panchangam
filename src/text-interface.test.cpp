@@ -54,9 +54,9 @@ TEST_CASE("calc_all adjusts start date to ensure all locations have the same ekA
     auto vratas = vp::text_ui::calc(2020_y/September/14, "all");
 
     auto [it_min_date, it_max_date] = std::minmax_element(vratas.cbegin(), vratas.cend(), [](const vp::MaybeVrata &l, const vp::MaybeVrata &r) { return l->date < r->date; });
-    auto length = date::sys_days{it_max_date->value().date} - date::sys_days{it_min_date->value().date};
+    auto length = it_max_date->value().date - it_min_date->value().date;
 
-    REQUIRE(length.count() <= date::days{1}.count());
+    REQUIRE(length <= date::days{1});
 }
 
 TEST_CASE("can call calc_one with string for location name") {

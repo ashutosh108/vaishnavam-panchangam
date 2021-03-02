@@ -182,7 +182,7 @@ bool precalc_paranam_time_matches_ours(const Paranam & precalc, const vp::Paran 
 }
 
 struct Precalculated_Vrata {
-    date::year_month_day date;
+    date::local_days date;
     vp::Vrata_Type type;
     vp::Location location;
     bool skip = false;
@@ -659,7 +659,7 @@ void check_precalculated_vrata(const Precalculated_Vrata & vrata) {
     // differ with old calculations (arddha-ghaTika before aruNodaya).
     // So sometimes by our calculations it is clean ekAdashI (so the fast is "today", on the first ekAdashI sunrise)
     // whereas old rules (incorrectly) state it was dashamI viddhA (so the fast is one day later).
-    date::year_month_day start_date = date::sys_days{vrata.date} - date::days{1};
+    const date::local_days start_date = vrata.date - date::days{1};
     // calculate sunrise/sunset by TOP EDGE of sun disc crossing the horizon because
     // the old precalc tables are based on data from "Panchaga" program which used
     // "by edge" setting. Our usual default is "by disc center".
@@ -706,8 +706,9 @@ struct FixRemoveParanEndTime{
     std::chrono::seconds expected;
 };
 struct FixVrataDate{
-    date::year_month_day expected;
-    date::year_month_day new_date;
+    date::local_days expected;
+    date::local_days new_date;
+    FixVrataDate(date::year_month_day expected_, date::year_month_day new_date_) : expected(expected_), new_date(new_date_) {}
 };
 struct FixVrataType{
     vp::Vrata_Type expected;

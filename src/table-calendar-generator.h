@@ -10,7 +10,7 @@
 
 namespace vp {
 
-using Custom_Dates = std::unordered_map<date::year_month_day, std::string>;
+using Custom_Dates = std::unordered_map<date::local_days, std::string>;
 
 class Table_Calendar_Generator
 {

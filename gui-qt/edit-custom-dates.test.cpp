@@ -9,9 +9,9 @@ TEST_CASE("qstring_to_custom_dates works for simple two-line case") {
     using namespace date;
     auto set = vp::detail::qstring_to_custom_dates("2020-01-01  text\n2020-01-02");
     REQUIRE(!set.empty());
-    REQUIRE(set[2020_y/1/1] == "text");
-    REQUIRE(set.find(2020_y/1/2) != set.end()); // otherwise next line could match non-existing key
-    REQUIRE(set[2020_y/1/2] == "");
+    REQUIRE(set[date::local_days{2020_y/1/1}] == "text");
+    REQUIRE(set.find(date::local_days{2020_y/1/2}) != set.end()); // otherwise next line could match non-existing key
+    REQUIRE(set[date::local_days{2020_y/1/2}] == "");
 }
 
 TEST_CASE("qstring_to_custom_dates for almost default case") {
@@ -24,8 +24,8 @@ TEST_CASE("qstring_to_custom_dates for almost default case") {
 2020-01-10 Another extra day)");
     using namespace date;
     REQUIRE(!set.empty());
-    REQUIRE(set[2020_y/1/1] == "Extra day");
-    REQUIRE(set[2020_y/1/10] == "Another extra day");
+    REQUIRE(set[date::local_days{2020_y/1/1}] == "Extra day");
+    REQUIRE(set[date::local_days{2020_y/1/10}] == "Another extra day");
 }
 
 
@@ -48,7 +48,7 @@ TEST_CASE("custom_dates_to_qstring returns no non-comment lines for empty set") 
 
 TEST_CASE("custom_dates_to_qstring retains dates and text for a test case") {
     using namespace date;
-    vp::Custom_Dates dates{{2020_y/1/1, "custom1"}, {2020_y/1/2, ""}};
+    vp::Custom_Dates dates{{date::local_days{2020_y/1/1}, "custom1"}, {date::local_days{2020_y/1/2}, ""}};
     const auto str = vp::detail::custom_dates_to_qstring(dates);
     CAPTURE(str.toStdString());
     REQUIRE(str.contains("\n2020-01-01 custom1\n"));
