@@ -6,6 +6,10 @@
 #include <regex>
 #include <sstream>
 
+using namespace date;
+using Catch::Matchers::Contains;
+using namespace std::chrono_literals;
+
 namespace {
 auto some_vratas(date::year_month_day date) {
     return vp::text_ui::calc(date, "all");
@@ -39,7 +43,6 @@ std::chrono::seconds utc_offset_string_to_seconds(const std::string & utc_offset
 }
 
 TEST_CASE("default table") {
-    using Catch::Matchers::Contains;
     const auto table = some_table();
 
     SECTION("Table_Calendar_Generator returns reasonable table") {
@@ -88,7 +91,6 @@ TEST_CASE("default table") {
     }
 
     SECTION("generated table has a separator row when switching to timezone 7 or more hours away from the previous one (e.g. between Petropavlovsk-Kamchatskiy and Yerevan") {
-        using namespace std::chrono_literals;
         constexpr auto max_delta = 7h;
         size_t separator_rows_count = 0;
         // skip first two rows (top-header and row without top-neighbor) and last two row (bottom-header and without bottom-neighbor)
@@ -150,7 +152,6 @@ TEST_CASE("default table") {
 }
 
 TEST_CASE("Table_Calendar_Generator returns reasonable table adds ' (DST)' for 'summer' times") {
-    using namespace date;
     const auto table = some_table(2020_y/July/1);
     int num_with_dst = 0;
     int num_without_dst = 0;
@@ -168,10 +169,8 @@ TEST_CASE("Table_Calendar_Generator returns reasonable table adds ' (DST)' for '
 }
 
 TEST_CASE("generated table shows year for non-default-year dates when default year is specified") {
-    using namespace date;
     const auto table{vp::Table_Calendar_Generator::generate(some_vratas(2019_y/December/20), 2020_y)};
 
-    using Catch::Matchers::Contains;
     std::vector<std::pair<size_t, size_t>> to_check{{0, 3}, {0, 4}, {0, 5}, {table.height()-1, 3}, {table.height()-1, 4}, {table.height()-1, 5}};
     for (const auto & pair : to_check) {
         CAPTURE(pair.first, pair.second);
@@ -180,7 +179,6 @@ TEST_CASE("generated table shows year for non-default-year dates when default ye
 }
 
 TEST_CASE("Generated table contains additional custom dates with given descriptions") {
-    using namespace date;
     auto table = vp::Table_Calendar_Generator::generate(some_vratas(2020_y/1/1), 2020_y, {{date::local_days{2020_y/1/5}, "custom1"}, {date::local_days{2020_y/1/9}, "custom2"}});
     REQUIRE(table.width() == 8);
     REQUIRE(table.at(1, 3).text == "custom1");
@@ -188,7 +186,6 @@ TEST_CASE("Generated table contains additional custom dates with given descripti
 }
 
 TEST_CASE("Generated table contains Vasanta-pañcamī and other dates from that pakṣa", "[wip]") {
-    using namespace date::literals;
     auto table = vp::Table_Calendar_Generator::generate(some_vratas(2021_y/2/10));
     REQUIRE(table.width() == 14);
     REQUIRE(table.at(1, 3).text == "Vasanta-pañcamī");
