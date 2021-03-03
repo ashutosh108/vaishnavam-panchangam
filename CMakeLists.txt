@@ -67,6 +67,7 @@ add_library(swe STATIC
     src/calc-flags.cpp src/calc-flags.h
     src/nakshatra.cpp src/nakshatra.h
     src/masa.cpp src/masa.h
+    src/named-dates.h
     src/nameworthy-dates.cpp src/nameworthy-dates.h
 )
 target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)

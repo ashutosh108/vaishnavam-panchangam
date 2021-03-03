@@ -6,6 +6,7 @@
 #include "juldays_ut.h"
 #include "location.h"
 #include "masa.h"
+#include "named-dates.h"
 #include "paran.h"
 #include "tithi.h"
 
@@ -71,12 +72,6 @@ struct Vrata_Time_Points {
 
     JulDays_UT ativrddhaditvam_timepoint() const;
 };
-
-struct NamedDate {
-    std::string name;
-};
-
-using NamedDates = std::map<date::local_days, NamedDate>;
 
 // For tests where we need to initialize ativrddhatvam and we don't care about
 // it's value, so it's arbitrary.

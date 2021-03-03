@@ -261,9 +261,16 @@ TEST_CASE("Vasanta-pañcamī etc are present in 2021") {
     auto & vrata = *vratas.begin();
     REQUIRE(vrata.has_value());
     REQUIRE(vrata->dates_for_this_paksha.size() == 5);
-    REQUIRE(vrata->dates_for_this_paksha[date::local_days{2021_y/February/16}].name == "Vasanta-pañcamī");
-    REQUIRE(vrata->dates_for_this_paksha[date::local_days{2021_y/February/18}].name == "Ratha-saptamī");
-    REQUIRE(vrata->dates_for_this_paksha[date::local_days{2021_y/February/20}].name == "Bhīṣmāṣtamī");
-    REQUIRE(vrata->dates_for_this_paksha[date::local_days{2021_y/February/21}].name == "Madhva-navamī (cāndra)");
-    REQUIRE(vrata->dates_for_this_paksha[date::local_days{2021_y/February/27}].name == "Pūrṇimā, End of Māgha-snāna-vrata");
+    const auto any_date_for = [&](date::year_month_day date) {
+        const auto iter = vrata->dates_for_this_paksha.find(date::local_days{date});
+        if (iter == vrata->dates_for_this_paksha.end()) {
+            throw std::runtime_error(fmt::format(FMT_STRING("can't find nameworthy date for {}"), date));
+        }
+        return iter->second;
+    };
+    REQUIRE(any_date_for(2021_y/February/16).name == "Vasanta-pañcamī");
+    REQUIRE(any_date_for(2021_y/February/18).name == "Ratha-saptamī");
+    REQUIRE(any_date_for(2021_y/February/20).name == "Bhīṣmāṣtamī");
+    REQUIRE(any_date_for(2021_y/February/21).name == "Madhva-navamī (cāndra)");
+    REQUIRE(any_date_for(2021_y/February/27).name == "Pūrṇimā, End of Māgha-snāna-vrata");
 }

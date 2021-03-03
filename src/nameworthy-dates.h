@@ -2,6 +2,7 @@
 #define NAMEWORTHYDATES_H
 
 #include "calc-flags.h"
+#include "named-dates.h"
 #include "vrata.h"
 
 namespace vp {
