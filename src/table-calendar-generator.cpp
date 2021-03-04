@@ -66,25 +66,6 @@ std::string get_timezone_text(const vp::MaybeVrata & vrata) {
     return fmt::format(FMT_STRING("{}{}:{:02}{}"), sign, hours, minutes, dst);
 }
 
-namespace {
-std::string paran_title(const vp::Paran & paran) {
-    std::string title;
-
-    if (paran.paran_start) {
-        title += fmt::format(FMT_STRING("{} ({})"), paran.start_str_seconds(), paran.start_type());
-    }
-    title += "…";
-    if (paran.paran_end) {
-        title += fmt::format(FMT_STRING("{} ({})"), paran.end_str_seconds(), paran.end_type());
-    }
-    if (paran.paran_limit) {
-        const auto limit_str = date::format("%H:%M:%S", date::floor<std::chrono::seconds>(paran.paran_limit->as_zoned_time(paran.time_zone).get_local_time()));
-        title += fmt::format(FMT_STRING(", absolute limit is {} (dvādaśī end)"), limit_str);
-    }
-    return title;
-}
-}
-
 void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<date::local_days> & vrata_dates, std::string tr_classes, const vp::Custom_Dates & custom_dates) {
     table.start_new_row(std::move(tr_classes));
     table.add_cell(get_timezone_text(vrata));
@@ -100,25 +81,25 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
         return;
     }
     for (auto date : vrata_dates) {
-        std::string classes = "mainpart";
-        if (date >= date::local_days{vrata->date} && date < vrata->local_paran_date()) {
+/*        if (date >= date::local_days{vrata->date} && date < vrata->local_paran_date()) {
             table.add_cell(fmt::format(FMT_STRING("{} {}"), vrata->ekadashi_name(), vrata->type), classes + " vrata");
         } else if (date == vrata->local_paran_date()) {
-            // 'c' means compact formatting ("*" for standard pAraNam, otherwise something like ">06:45", "<07:45" or "06:45-07.45")
             const auto paran = fmt::format(FMT_STRING("{:c}"), vrata->paran);
             const auto paran_with_href = fmt::format(FMT_STRING(R"(<a href="#{}">{}</a>)"), html::escape_attribute(vrata->location_name()), html::escape_attribute(paran));
             table.add_unmergeable_cell(paran_with_href, classes).set_title(paran_title(vrata->paran));
-        } else if (auto found_it = custom_dates.find(date); found_it != custom_dates.end()) {
+        } else */if (auto found_it = custom_dates.find(date); found_it != custom_dates.end()) {
             table.add_cell(found_it->second, "custom");
         } else if (auto [begin, end] = vrata->dates_for_this_paksha.equal_range(date); std::distance(begin, end) != 0) {
             // since std::distance(begin, end) != 0, we can safely use *begin and do ++begin before the loop
             std::string text = begin->second.name;
+            std::string title = begin->second.title;
             for (++begin; begin != end; ++begin) {
-                text += ". " + begin->second.name;
+                text += (text.empty() ? "" : ". ") + begin->second.name;
+                title += (title.empty() ? "" : ". ") + begin->second.title;
             }
-            table.add_cell(text, "custom");
+            table.add_cell(text, "mainpart custom").set_title(title);
         } else {
-            table.add_unmergeable_cell("", classes);
+            table.add_unmergeable_cell("", "mainpart");
         }
     }
 }

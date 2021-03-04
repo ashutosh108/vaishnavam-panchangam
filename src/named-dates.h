@@ -8,6 +8,7 @@
 namespace vp{
 struct NamedDate {
     std::string name;
+    std::string title;
 };
 
 using NamedDates = std::multimap<date::local_days, NamedDate>;

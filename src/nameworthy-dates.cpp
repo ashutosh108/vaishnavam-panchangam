@@ -8,14 +8,34 @@
 #include <array>
 #include <string>
 
+namespace {
+std::string paran_title(const vp::Paran & paran) {
+    std::string title;
+
+    if (paran.paran_start) {
+        title += fmt::format(FMT_STRING("{} ({})"), paran.start_str_seconds(), paran.start_type());
+    }
+    title += "…";
+    if (paran.paran_end) {
+        title += fmt::format(FMT_STRING("{} ({})"), paran.end_str_seconds(), paran.end_type());
+    }
+    if (paran.paran_limit) {
+        const auto limit_str = date::format("%H:%M:%S", date::floor<std::chrono::seconds>(paran.paran_limit->as_zoned_time(paran.time_zone).get_local_time()));
+        title += fmt::format(FMT_STRING(", absolute limit is {} (dvādaśī end)"), limit_str);
+    }
+    return title;
+}
+}
+
 void insert_ekadashi_paran_etc(vp::NamedDates & dates, const vp::Vrata & vrata) {
     dates.emplace(vrata.date, vp::NamedDate{fmt::format(FMT_STRING("{} {}"), vrata.ekadashi_name(), vrata.type)});
     if (vp::is_atirikta(vrata.type)) {
         dates.emplace(vrata.date + date::days{1}, vp::NamedDate{fmt::format(FMT_STRING("{} {}"), vrata.ekadashi_name(), vrata.type)});
     }
+    // 'c' means compact formatting ("*" for standard pAraNam, otherwise something like ">06:45", "<07:45" or "06:45-07.45")
     const auto paran = fmt::format(FMT_STRING("{:c}"), vrata.paran);
     const auto paran_with_href = fmt::format(FMT_STRING(R"(<a href="#{}">{}</a>)"), html::escape_attribute(vrata.location_name()), html::escape_attribute(paran));
-    dates.emplace(vrata.local_paran_date(), vp::NamedDate{paran_with_href});
+    dates.emplace(vrata.local_paran_date(), vp::NamedDate{paran_with_href, paran_title(vrata.paran)});
     // TODO: specify "vrata" class for NamedDate?
 }
 

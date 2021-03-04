@@ -1,4 +1,4 @@
-[ ] table: only show nameworthy events (no manual ekādaśī/pāraṇam cells)
+[ ] table: test classes as well (mainpart, vrata, custom, etc)
 [ ] table: show next-day Śravaṇa-dvādaśī and atirikta-dvādaśī in separate cell
 [ ] table: show atiriktā dvādaśī in separate cell
 [ ] table: show separator column for non-sequential dates
@@ -315,3 +315,5 @@ done:
 [+] table: show e.g. "* (>9:45)" for std pāraṇams with viśeṣa (paran_limit set), incl. "title" text [2021-02-28]
 [+] Vrata: allow multiple nameworthy events per day
 [+] Vrata: store ekādaśī/atiriktā-{ekā,dvā}daśī/Śravaṇa-dvādaśī/pāraṇam in nameworthy events
+[+] table: only show nameworthy events (no manual ekādaśī/pāraṇam cells)
+[+] table: set title for paranam from nameworthy dates as well
