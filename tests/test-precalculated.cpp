@@ -782,26 +782,26 @@ struct VrataFixer {
     }
     void operator()(const FixStart & fix) {
         auto old_time = replace_hms(vrata.paranam.start, fix.expected);
-        auto new_date = date::local_days(vrata.date) + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
+        auto new_date = vrata.date + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
         auto new_time = local_paran_hms_to_zone(vrata.location.time_zone(), new_date, fix.new_time);
         replace_time(vrata.paranam.start, old_time, new_time);
     }
     void operator()(const FixStartSeconds & fix) {
         auto old_time = replace_hms(vrata.paranam.start, fix.expected);
-        auto new_date = date::local_days(vrata.date) + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
+        auto new_date = vrata.date + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
         auto new_time = local_paran_hms_to_zone(vrata.location.time_zone(), new_date, fix.new_time);
         replace_time(vrata.paranam.start, old_time, new_time);
         vrata.paranam.precision = Paranam::Precision::Seconds;
     }
     void operator()(const FixEnd & fix) {
         auto old_time = replace_hms(vrata.paranam.end, fix.expected);
-        auto new_date = date::local_days(vrata.date) + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
+        auto new_date = vrata.date + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
         auto new_time = local_paran_hms_to_zone(vrata.location.time_zone(), new_date, fix.new_time);
         replace_time(vrata.paranam.end, old_time, new_time);
     }
     void operator()(const FixEndSeconds & fix) {
         auto old_time = replace_hms(vrata.paranam.end, fix.expected);
-        auto new_date = date::local_days(vrata.date) + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
+        auto new_date = vrata.date + date::days(vp::is_atirikta(vrata.type) ? 2 : 1);
         auto new_time = local_paran_hms_to_zone(vrata.location.time_zone(), new_date, fix.new_time);
         replace_time(vrata.paranam.end, old_time, new_time);
         vrata.paranam.precision = Paranam::Precision::Seconds;

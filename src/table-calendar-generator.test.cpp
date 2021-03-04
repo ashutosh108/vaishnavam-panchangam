@@ -15,7 +15,9 @@ auto some_vratas(date::year_month_day date) {
     return vp::text_ui::calc(date, "all");
 }
 
-auto some_table(date::year_month_day date = date::year{2018}/8/15) {
+// 2018-08-15 is chosen by default because we have both ordinary ekādaśīs
+// and atirikā-{ekā,dvā}daśīs there which is an interesting case to test for.
+auto some_table(date::year_month_day date = 2018_y/8/15) {
     return vp::Table_Calendar_Generator::generate(some_vratas(date));
 }
 
@@ -194,3 +196,5 @@ TEST_CASE("Generated table contains Vasanta-pañcamī and other dates from that 
     REQUIRE(table.at(1, 8).text == "Madhva-navamī (cāndra)");
     REQUIRE(table.at(1, 13).text == "Pūrṇimā, End of Māgha-snāna-vrata");
 }
+
+// TODO: check that table for Vrata with multiple nameworthy dates on the same day lists all nameworthy dates in the same cell, separated by full stop.
