@@ -110,8 +110,13 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
             table.add_unmergeable_cell(paran_with_href, classes).set_title(paran_title(vrata->paran));
         } else if (auto found_it = custom_dates.find(date); found_it != custom_dates.end()) {
             table.add_cell(found_it->second, "custom");
-        } else if (auto found_it = vrata->dates_for_this_paksha.find(date::local_days{date}); found_it != vrata->dates_for_this_paksha.end()) {
-            table.add_cell(found_it->second.name, "custom");
+        } else if (auto [begin, end] = vrata->dates_for_this_paksha.equal_range(date); std::distance(begin, end) != 0) {
+            // since std::distance(begin, end) != 0, we can safely use *begin and do ++begin before the loop
+            std::string text = begin->second.name;
+            for (++begin; begin != end; ++begin) {
+                text += ". " + begin->second.name;
+            }
+            table.add_cell(text, "custom");
         } else {
             table.add_unmergeable_cell("", classes);
         }

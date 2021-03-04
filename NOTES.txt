@@ -1,4 +1,3 @@
-[ ] Vrata: allow multiple nameworthy events per day
 [ ] Vrata: store ekādaśī/atiriktā-{ekā,dvā}daśī/Śravaṇa-dvādaśī/pāraṇam in nameworthy events
 [ ] table: only show nameworthy events (no manual ekādaśī/pāraṇam cells)
 [ ] table: show next-day Śravaṇa-dvādaśī and atirikta-dvādaśī in separate cell
@@ -315,3 +314,4 @@ done:
 [+] fix atirikta pāraṇam: it's never "start after end" [2021-02-26]
 [+] introduce "Standard Pāraṇ with viśeṣa (absolute limit)" for Pāraṇs after two-day events [2021-02-27]
 [+] table: show e.g. "* (>9:45)" for std pāraṇams with viśeṣa (paran_limit set), incl. "title" text [2021-02-28]
+[+] Vrata: allow multiple nameworthy events per day

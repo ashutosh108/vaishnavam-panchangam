@@ -197,4 +197,14 @@ TEST_CASE("Generated table contains Vasanta-pañcamī and other dates from that 
     REQUIRE(table.at(1, 13).text == "Pūrṇimā, End of Māgha-snāna-vrata");
 }
 
-// TODO: check that table for Vrata with multiple nameworthy dates on the same day lists all nameworthy dates in the same cell, separated by full stop.
+TEST_CASE("table for Vrata with multiple nameworthy dates on the same day lists all nameworthy dates in the same cell, separated by full stop.") {
+    vp::VratasForDate vratas;
+    {
+        auto vrata = vp::Vrata::SampleVrata(); // 2000_y/1/1
+        vrata.dates_for_this_paksha.emplace(date::local_days{2000_y/1/3}, vp::NamedDate{"event1"});
+        vrata.dates_for_this_paksha.emplace(date::local_days{2000_y/1/3}, vp::NamedDate{"event2"}); // two events on same day
+        vratas.push_back(std::move(vrata));
+    }
+    const auto table = vp::Table_Calendar_Generator::generate(vratas);
+    REQUIRE_THAT(table.at(1, 5).text, Contains("event1. event2"));
+}
