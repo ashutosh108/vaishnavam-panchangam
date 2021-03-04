@@ -7,6 +7,8 @@
 #include "catch-formatters.h"
 #include <regex>
 
+using Catch::Matchers::Contains;
+
 TEST_CASE("get_exe_dir() exists and returns something") {
     auto exe_dir = vp::text_ui::detail::determine_exe_dir("imaginary/path/to/exe/file");
 
@@ -260,7 +262,7 @@ TEST_CASE("Vasanta-pañcamī etc are present in 2021") {
     REQUIRE(!vratas.empty());
     auto & vrata = *vratas.begin();
     REQUIRE(vrata.has_value());
-    REQUIRE(vrata->dates_for_this_paksha.size() == 5);
+    REQUIRE(vrata->dates_for_this_paksha.size() == 2+5); // 2 for Ekādaśī and pāraṇam, 5 for Vasanta-pañcamī etc
     const auto any_date_for = [&](date::year_month_day date) {
         const auto iter = vrata->dates_for_this_paksha.find(date::local_days{date});
         if (iter == vrata->dates_for_this_paksha.end()) {
@@ -268,9 +270,15 @@ TEST_CASE("Vasanta-pañcamī etc are present in 2021") {
         }
         return iter->second;
     };
-    REQUIRE(any_date_for(2021_y/February/16).name == "Vasanta-pañcamī");
-    REQUIRE(any_date_for(2021_y/February/18).name == "Ratha-saptamī");
-    REQUIRE(any_date_for(2021_y/February/20).name == "Bhīṣmāṣtamī");
-    REQUIRE(any_date_for(2021_y/February/21).name == "Madhva-navamī (cāndra)");
-    REQUIRE(any_date_for(2021_y/February/27).name == "Pūrṇimā, End of Māgha-snāna-vrata");
+    SECTION("Vasanta-pañcamī etc") {
+        REQUIRE(any_date_for(2021_y/February/16).name == "Vasanta-pañcamī");
+        REQUIRE(any_date_for(2021_y/February/18).name == "Ratha-saptamī");
+        REQUIRE(any_date_for(2021_y/February/20).name == "Bhīṣmāṣtamī");
+        REQUIRE(any_date_for(2021_y/February/21).name == "Madhva-navamī (cāndra)");
+        REQUIRE(any_date_for(2021_y/February/27).name == "Pūrṇimā, End of Māgha-snāna-vrata");
+    }
+    SECTION("Ekādaśī and pāraṇam") {
+        REQUIRE(any_date_for(2021_y/February/23).name == "Jayā Ekādaśī");
+        REQUIRE_THAT(any_date_for(2021_y/February/24).name, Contains(">*<"));
+    }
 }

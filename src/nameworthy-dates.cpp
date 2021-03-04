@@ -1,16 +1,28 @@
 #include "nameworthy-dates.h"
 
 #include "calc.h"
+#include "html-util.h"
 #include "masa.h"
 #include "tithi.h"
 
 #include <array>
 #include <string>
 
+void insert_ekadashi_paran_etc(vp::NamedDates & dates, const vp::Vrata & vrata) {
+    dates.emplace(vrata.date, vp::NamedDate{fmt::format(FMT_STRING("{} {}"), vrata.ekadashi_name(), vrata.type)});
+    if (vp::is_atirikta(vrata.type)) {
+        dates.emplace(vrata.date + date::days{1}, vp::NamedDate{fmt::format(FMT_STRING("{} {}"), vrata.ekadashi_name(), vrata.type)});
+    }
+    const auto paran = fmt::format(FMT_STRING("{:c}"), vrata.paran);
+    const auto paran_with_href = fmt::format(FMT_STRING(R"(<a href="#{}">{}</a>)"), html::escape_attribute(vrata.location_name()), html::escape_attribute(paran));
+    dates.emplace(vrata.local_paran_date(), vp::NamedDate{paran_with_href});
+    // TODO: specify "vrata" class for NamedDate?
+}
+
 vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata, CalcFlags flags)
 {
-    // TODO: complete this function.
     vp::NamedDates dates;
+    insert_ekadashi_paran_etc(dates, vrata);
     if (vrata.masa == vp::Chandra_Masa::Magha && vrata.paksha == vp::Paksha::Shukla) {
         auto base_time = vrata.sunrise1 - double_days{10};
         auto calc = vp::Calc{Swe{vrata.location, flags}};
