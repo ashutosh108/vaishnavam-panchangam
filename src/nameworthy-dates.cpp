@@ -28,15 +28,14 @@ std::string paran_title(const vp::Paran & paran) {
 }
 
 void insert_ekadashi_paran_etc(vp::NamedDates & dates, const vp::Vrata & vrata) {
-    dates.emplace(vrata.date, vp::NamedDate{fmt::format(FMT_STRING("{} {}"), vrata.ekadashi_name(), vrata.type)});
+    dates.emplace(vrata.date, vp::NamedDate{fmt::format(FMT_STRING("{} {}"), vrata.ekadashi_name(), vrata.type), "", "vrata"});
     if (vp::is_atirikta(vrata.type)) {
-        dates.emplace(vrata.date + date::days{1}, vp::NamedDate{fmt::format(FMT_STRING("{} {}"), vrata.ekadashi_name(), vrata.type)});
+        dates.emplace(vrata.date + date::days{1}, vp::NamedDate{fmt::format(FMT_STRING("{} {}"), vrata.ekadashi_name(), vrata.type), "", "vrata"});
     }
     // 'c' means compact formatting ("*" for standard pAraNam, otherwise something like ">06:45", "<07:45" or "06:45-07.45")
     const auto paran = fmt::format(FMT_STRING("{:c}"), vrata.paran);
     const auto paran_with_href = fmt::format(FMT_STRING(R"(<a href="#{}">{}</a>)"), html::escape_attribute(vrata.location_name()), html::escape_attribute(paran));
-    dates.emplace(vrata.local_paran_date(), vp::NamedDate{paran_with_href, paran_title(vrata.paran)});
-    // TODO: specify "vrata" class for NamedDate?
+    dates.emplace(vrata.local_paran_date(), vp::NamedDate{paran_with_href, paran_title(vrata.paran), ""});
 }
 
 vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata, CalcFlags flags)
@@ -62,7 +61,7 @@ vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata, Calc
         for (const auto & tithi_with_name : tithis_with_name) {
             const auto date = calc.find_exact_tithi_date(base_time, tithi_with_name.tithi, vrata.location.time_zone());
             if (date) {
-                dates.emplace(*date, NamedDate{tithi_with_name.name});
+                dates.emplace(*date, NamedDate{tithi_with_name.name, "", "custom"});
             }
         }
     }

@@ -151,6 +151,12 @@ TEST_CASE("default table") {
 //        REQUIRE_THAT(table.at(row, 4).text, Contains("Atiriktā Dvādaśī"));
 //        REQUIRE_THAT(table.at(row, 4).text, !Contains("Pavitrā Ekādaśī"));
 //    }
+
+    SECTION("css classes are properly set in table") {
+        std::size_t row = find_row("Aktau");
+        REQUIRE_THAT(table.at(row, 4).classes, Contains("mainpart"));
+        REQUIRE_THAT(table.at(row, 4).classes, Contains("vrata"));
+    }
 }
 
 TEST_CASE("Table_Calendar_Generator returns reasonable table adds ' (DST)' for 'summer' times") {

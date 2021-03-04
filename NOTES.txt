@@ -1,4 +1,3 @@
-[ ] table: test classes as well (mainpart, vrata, custom, etc)
 [ ] table: show next-day Śravaṇa-dvādaśī and atirikta-dvādaśī in separate cell
 [ ] table: show atiriktā dvādaśī in separate cell
 [ ] table: show separator column for non-sequential dates
@@ -317,3 +316,4 @@ done:
 [+] Vrata: store ekādaśī/atiriktā-{ekā,dvā}daśī/Śravaṇa-dvādaśī/pāraṇam in nameworthy events
 [+] table: only show nameworthy events (no manual ekādaśī/pāraṇam cells)
 [+] table: set title for paranam from nameworthy dates as well
+[+] table: use proper css classes (mainpart, vrata, custom, etc)

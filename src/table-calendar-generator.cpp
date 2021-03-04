@@ -91,13 +91,15 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
             table.add_cell(found_it->second, "custom");
         } else if (auto [begin, end] = vrata->dates_for_this_paksha.equal_range(date); std::distance(begin, end) != 0) {
             // since std::distance(begin, end) != 0, we can safely use *begin and do ++begin before the loop
-            std::string text = begin->second.name;
-            std::string title = begin->second.title;
-            for (++begin; begin != end; ++begin) {
+            std::string text;
+            std::string title;
+            std::string css_classes;
+            for (; begin != end; ++begin) {
                 text += (text.empty() ? "" : ". ") + begin->second.name;
                 title += (title.empty() ? "" : ". ") + begin->second.title;
+                css_classes += (css_classes.empty() ? "" : " ") + begin->second.css_classes;
             }
-            table.add_cell(text, "mainpart custom").set_title(title);
+            table.add_cell(text, "mainpart " + css_classes).set_title(title);
         } else {
             table.add_unmergeable_cell("", "mainpart");
         }
