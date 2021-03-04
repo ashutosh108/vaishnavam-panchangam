@@ -1,5 +1,3 @@
-[ ] table: show next-day Śravaṇa-dvādaśī and atirikta-dvādaśī in separate cell
-[ ] table: show atiriktā dvādaśī in separate cell
 [ ] table: show separator column for non-sequential dates
 [ ] calculate Madhva-navamī (saura): Makara, ś9
 [ ] day-by-day: calculate saura masa end day (verify by panchangas)
@@ -317,3 +315,4 @@ done:
 [+] table: only show nameworthy events (no manual ekādaśī/pāraṇam cells)
 [+] table: set title for paranam from nameworthy dates as well
 [+] table: use proper css classes (mainpart, vrata, custom, etc)
+[+] table: show next-day Śravaṇa-dvādaśī and atirikta-{ekā,dvā}daśī in separate cell

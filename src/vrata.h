@@ -134,6 +134,10 @@ struct Vrata {
     date::local_days local_paran_date() const;
     std::string location_name() const;
     std::string ekadashi_name() const;
+    // empty string for ordinary Ekādaśī. Can also be "Śravaṇa-dvādaśī", if it falls on the same day as Ekādaśī
+    std::string day1_additional_event_name() const;
+    // usually empty string. Otherwise, "Atiriktā Ekādaśī" etc.
+    std::string day2_additional_event_name() const;
 
     static Vrata SampleVrata();
 };

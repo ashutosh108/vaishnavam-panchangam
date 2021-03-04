@@ -28,9 +28,14 @@ std::string paran_title(const vp::Paran & paran) {
 }
 
 void insert_ekadashi_paran_etc(vp::NamedDates & dates, const vp::Vrata & vrata) {
-    dates.emplace(vrata.date, vp::NamedDate{fmt::format(FMT_STRING("{} {}"), vrata.ekadashi_name(), vrata.type), "", "vrata"});
-    if (vp::is_atirikta(vrata.type)) {
-        dates.emplace(vrata.date + date::days{1}, vp::NamedDate{fmt::format(FMT_STRING("{} {}"), vrata.ekadashi_name(), vrata.type), "", "vrata"});
+    dates.emplace(vrata.date, vp::NamedDate{fmt::format(FMT_STRING("{} Ekādaśī"), vrata.ekadashi_name()), "", "vrata"});
+    const auto day1_additional_event_name = vrata.day1_additional_event_name();
+    if (!day1_additional_event_name.empty()) {
+        dates.emplace(vrata.date, vp::NamedDate{day1_additional_event_name, "", "vrata"});
+    }
+    const auto day2_additional_event_name = vrata.day2_additional_event_name();
+    if (!day2_additional_event_name.empty()) {
+        dates.emplace(vrata.date + date::days{1}, vp::NamedDate{day2_additional_event_name, "", "vrata"});
     }
     // 'c' means compact formatting ("*" for standard pAraNam, otherwise something like ">06:45", "<07:45" or "06:45-07.45")
     const auto paran = fmt::format(FMT_STRING("{:c}"), vrata.paran);

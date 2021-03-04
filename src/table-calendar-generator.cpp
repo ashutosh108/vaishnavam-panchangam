@@ -81,15 +81,9 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
         return;
     }
     for (auto date : vrata_dates) {
-/*        if (date >= date::local_days{vrata->date} && date < vrata->local_paran_date()) {
-            table.add_cell(fmt::format(FMT_STRING("{} {}"), vrata->ekadashi_name(), vrata->type), classes + " vrata");
-        } else if (date == vrata->local_paran_date()) {
-            const auto paran = fmt::format(FMT_STRING("{:c}"), vrata->paran);
-            const auto paran_with_href = fmt::format(FMT_STRING(R"(<a href="#{}">{}</a>)"), html::escape_attribute(vrata->location_name()), html::escape_attribute(paran));
-            table.add_unmergeable_cell(paran_with_href, classes).set_title(paran_title(vrata->paran));
-        } else */if (auto found_it = custom_dates.find(date); found_it != custom_dates.end()) {
+        if (auto found_it = custom_dates.find(date); found_it != custom_dates.end()) {
             table.add_cell(found_it->second, "custom");
-        } else if (auto [begin, end] = vrata->dates_for_this_paksha.equal_range(date); std::distance(begin, end) != 0) {
+        } else if (auto [begin, end] = vrata->dates_for_this_paksha.equal_range(date); begin != end) {
             // since std::distance(begin, end) != 0, we can safely use *begin and do ++begin before the loop
             std::string text;
             std::string title;

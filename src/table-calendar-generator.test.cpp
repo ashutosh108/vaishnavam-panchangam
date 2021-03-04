@@ -143,14 +143,13 @@ TEST_CASE("default table") {
         REQUIRE_THAT(table.at(row, 5).title, Contains("absolute limit is 09:45:38 (dvādaśī end)"));
     }
 
-//    SECTION("atirikā-dvādaśī is in separate cell from previous ekādaśī") {
-//        // TODO: implement after refactoring Vrata, nameworthy_dates and table
-//        std::size_t row = find_row("Simferopol");
-//        REQUIRE_THAT(table.at(row, 3).text, Contains("Pavitrā Ekādaśī"));
-//        REQUIRE_THAT(table.at(row, 3).text, !Contains("Atiriktā Dvādaśī"));
-//        REQUIRE_THAT(table.at(row, 4).text, Contains("Atiriktā Dvādaśī"));
-//        REQUIRE_THAT(table.at(row, 4).text, !Contains("Pavitrā Ekādaśī"));
-//    }
+    SECTION("atirikā-dvādaśī is in separate cell from previous ekādaśī") {
+        std::size_t row = find_row("Simferopol");
+        REQUIRE_THAT(table.at(row, 3).text, Contains("Pavitrā Ekādaśī"));
+        REQUIRE_THAT(table.at(row, 3).text, !Contains("Atiriktā Dvādaśī"));
+        REQUIRE_THAT(table.at(row, 4).text, Contains("Atiriktā Dvādaśī"));
+        REQUIRE_THAT(table.at(row, 4).text, !Contains("Pavitrā Ekādaśī"));
+    }
 
     SECTION("css classes are properly set in table") {
         std::size_t row = find_row("Aktau");

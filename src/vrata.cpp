@@ -130,6 +130,34 @@ std::string Vrata::ekadashi_name() const
     return "Unknown";
 }
 
+std::string Vrata::day1_additional_event_name() const
+{
+    switch (type) {
+    case vp::Vrata_Type::Ekadashi:
+    case vp::Vrata_Type::With_Atirikta_Dvadashi:
+    case vp::Vrata_Type::With_Atirikta_Ekadashi:
+    case vp::Vrata_Type::With_Shravana_Dvadashi_Next_Day:
+        return "";
+    case vp::Vrata_Type::With_Shravana_Dvadashi_Same_Day:
+        return "Śravaṇā Dvādaśī";
+    }
+}
+
+std::string Vrata::day2_additional_event_name() const
+{
+    switch (type) {
+    case vp::Vrata_Type::Ekadashi:
+    case vp::Vrata_Type::With_Shravana_Dvadashi_Same_Day:
+        return "";
+    case vp::Vrata_Type::With_Atirikta_Dvadashi:
+        return "Atiriktā Dvādaśī";
+    case vp::Vrata_Type::With_Atirikta_Ekadashi:
+        return "Atiriktā Ekādaśī";
+    case vp::Vrata_Type::With_Shravana_Dvadashi_Next_Day:
+        return "Śravaṇā Dvādaśī";
+    }
+}
+
 Vrata Vrata::SampleVrata()
 {
     using namespace date;

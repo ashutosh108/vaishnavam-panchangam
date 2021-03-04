@@ -392,7 +392,6 @@ void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const
         }
         info.events.push_back(NamedTimePoint{fmt::format(FMT_STRING("{} starts"), DiscreteNakshatra{n}), nakshatra_start});
     }
-    // TODO: implement
 }
 
 
