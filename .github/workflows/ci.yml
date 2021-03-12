@@ -1,0 +1,12 @@
+name: ci
+on: [push]
+jobs:
+  compile-release-version:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - run: mkdir build
+      - run: cmake -Bbuild -H. -DCMAKE_BUILD_TYPE=Release
+      - run: cmake --build build --config Release
+      - run: build/Release/test-main.exe "*"
+      - run: cmake --build build --config Release --target zip

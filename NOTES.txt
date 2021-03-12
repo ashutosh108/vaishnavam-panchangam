@@ -1,3 +1,8 @@
+[ ] github actions
+    [ ] compile
+    [ ] run tests
+    [ ] release to github
+    [ ] permanent "latest" link?
 [ ] table: show separator column for non-sequential dates
 [ ] calculate Madhva-navamī (saura): Makara, ś9
 [ ] day-by-day: calculate saura masa end day (verify by panchangas)
@@ -44,6 +49,7 @@
 [ ] encapsulate swe's ephemeris database (so we can run with higher precision while having no data files at hand)
 [ ] check all tests for 2019-March-1,2
 [ ] nameworthy dates:
+    [ ] Śivaratri: k14 after Vijayā ekādaśī, vedha-kālaḥ: arddha-rātram (arddharātra-dvaya-vyāpinī ćet parā grāhyā (pradoṣa-vyāpinī darśa-viddhā))
     [ ] Cāturmāsya 1st month vrata begins, Тапта-мудрā-дӿāран̣ам: Щайанӣ экāдащӣ
     [ ] Гуру-пӯрн̣имā: after Щайанӣ экāдащӣ?
     [ ] Нāга-пањчамӣ: before Путрадā экāдащӣ? (Pavitrā?)
