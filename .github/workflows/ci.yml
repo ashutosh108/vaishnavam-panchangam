@@ -1,9 +1,11 @@
 name: ci
+defaults:
+  run:
+    shell: bash
 on: [push]
 jobs:
   compile-release-version:
     runs-on: windows-2019
-    shell: bash
     steps:
       - uses: actions/checkout@v2
       - run: /c/msys64/usr/bin/wget wget https://github.com/ashutosh108/qt-static-msvc/releases/download/build-2020-10-05/qt5.15-static-msvc2017-minimal.zip
