@@ -5,6 +5,9 @@ jobs:
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
+      - shell: bash
+      - run: /c/msys64/usr/bin/wget wget https://github.com/ashutosh108/qt-static-msvc/releases/download/build-2020-10-05/qt5.15-static-msvc2017-minimal.zip
+      - run: mkdir -p C:/Qt && 7z x qt5.15-static-msvc2017-minimal.zip -oC:/Qt/
       - run: mkdir build
       - run: cmake -Bbuild -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build --config Release
