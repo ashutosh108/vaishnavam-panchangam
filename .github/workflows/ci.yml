@@ -10,5 +10,5 @@ jobs:
       - run: mkdir -p C:/Qt && 7z x qt5.15-static-msvc2017-minimal.zip -oC:/Qt/
       - run: cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DQt5_DIR=C:\Qt\5.15-static-msvc\lib\cmake\Qt5 -A Win32
       - run: cmake --build build --config Release
-      - run: build/Release/test-main.exe "*"
+      - run: cd build && Release/test-main.exe "*" && cd ..
       - run: cmake --build build --config Release --target zip
