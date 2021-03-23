@@ -253,7 +253,8 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location cancun_coord{                  21'09'38_N,  86'50'51_W, "Cancun", "America/Cancun", "Mexico"}; // en Wikipedia
 [[maybe_unused]] constexpr Location nicosia_coord{                 35'10'21_N,  33'21'54_E, "Nicosia", "Asia/Nicosia", "Cyprus"}; // en Wikipedia
 [[maybe_unused]] constexpr Location arhangelsk_coord{              64'33'00_N,  40'32'00_E, "Arkhangelsk", "Europe/Moscow", "Russia"};
-
+[[maybe_unused]] constexpr Location newyork_coord{                 40'42'45_N,  74'00'22_W, "New York City", "America/New_York", "USA"}; // en Wikipedia
+[[maybe_unused]] constexpr Location krasnoyarsk_coord{             56'00'43_N,  92'52'17_E, "Krasnoyarsk", "Asia/Krasnoyarsk", "Russia"}; // ru Wikipedia
 
 [[maybe_unused]] constexpr Location dummy_coord{0_N, 0_E, "Dummy location"};
 [[maybe_unused]] constexpr Location sample_location{0_N, 0_E, "Sample location"};
