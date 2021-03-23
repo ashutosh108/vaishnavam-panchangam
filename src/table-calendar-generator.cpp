@@ -82,7 +82,7 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
     }
     for (auto date : vrata_dates) {
         if (auto found_it = custom_dates.find(date); found_it != custom_dates.end()) {
-            table.add_cell(found_it->second, "custom");
+            table.add_cell(found_it->second, "mainpart custom");
         } else if (auto [begin, end] = vrata->dates_for_this_paksha.equal_range(date); begin != end) {
             // since std::distance(begin, end) != 0, we can safely use *begin and do ++begin before the loop
             std::string text;

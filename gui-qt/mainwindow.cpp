@@ -357,6 +357,7 @@ tr.separator {
 }
 td.custom {
     background-color: yellow;
+    font-weight: bold;
 }
 td.custom.merge-to-bottom {
     border-bottom: 1px solid yellow;
