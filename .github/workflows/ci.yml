@@ -5,6 +5,7 @@ jobs:
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
+      - run: export DATE=$(date +'%Y-%m-%d')
       - run: git submodule update --init
       - run: C:\msys64\usr\bin\wget https://github.com/ashutosh108/qt-static-msvc/releases/download/build-2020-10-05/qt5.15-static-msvc2017-minimal.zip
       - run: mkdir -p C:/Qt && 7z x qt5.15-static-msvc2017-minimal.zip -oC:/Qt/
@@ -12,3 +13,13 @@ jobs:
       - run: cmake --build build --config Release
       - run: cd build && Release/test-main.exe "*" && cd ..
       - run: cmake --build build --config Release --target zip
+      - run: mv vaishnavam-panchangam.zip vaishnavam-panchangam-${DATE}.zip
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+            prerelease: true
+            name: preview-${DATE}
+            files: vaishnavam-panchangam-${DATE}.zip
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
