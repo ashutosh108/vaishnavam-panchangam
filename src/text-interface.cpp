@@ -103,6 +103,8 @@ const std::vector<Location> &LocationDb::locations() {
         { tallin_coord },
         { vilnyus_coord },
         { varshava_coord },
+        { dillingen_an_der_donau_coord },
+        { eppingen_coord },
         { vena_coord },
         { marsel_coord },
         { barcelona_coord },
