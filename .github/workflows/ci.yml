@@ -13,13 +13,13 @@ jobs:
       - run: cmake --build build --config Release
       - run: cd build && Release/test-main.exe "*" && cd ..
       - run: cmake --build build --config Release --target zip
-      - run: cp build/vaishnavam-panchangam.zip build/vaishnavam-panchangam-${DATE}.zip
+      - run: cp build/vaishnavam-panchangam.zip build/vaishnavam-panchangam-${{ env.DATE }}.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
             prerelease: true
-            tag_name: preview-${DATE}
-            files: build/vaishnavam-panchangam-${DATE}.zip
+            tag_name: preview-${{ env.DATE }}
+            files: build/vaishnavam-panchangam-${{ env.DATE }}.zip
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
