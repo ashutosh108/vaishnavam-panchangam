@@ -1,3 +1,4 @@
+[ ] CI: arrange for permanent "latest" download link (overwrite existing release?)
 [ ] table: show separator column for non-sequential dates
 [ ] calculate Madhva-navamī (saura): Makara, ś9
 [ ] day-by-day: calculate saura masa end day (verify by 2020..2022 panchangas)

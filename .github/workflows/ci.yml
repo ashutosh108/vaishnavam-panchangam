@@ -5,7 +5,7 @@ jobs:
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
-      - run: $d=Get-Date;$s=$d.ToString("yyyy-MM-dd");echo "DATE=$s" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+      - run: $d=Get-Date;$ymdhm=$d.ToString("yyyy-MM-dd_HHmm");echo "TIMESTAMP=$ymdhm" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
       - run: git submodule update --init
       - run: C:\msys64\usr\bin\wget https://github.com/ashutosh108/qt-static-msvc/releases/download/build-2020-10-05/qt5.15-static-msvc2017-minimal.zip
       - run: mkdir -p C:/Qt && 7z x qt5.15-static-msvc2017-minimal.zip -oC:/Qt/
@@ -13,13 +13,13 @@ jobs:
       - run: cmake --build build --config Release
       - run: cd build && Release/test-main.exe "*" && cd ..
       - run: cmake --build build --config Release --target zip
-      - run: cp build/vaishnavam-panchangam.zip build/vaishnavam-panchangam-${{ env.DATE }}.zip
+      - run: cp build/vaishnavam-panchangam.zip build/vaishnavam-panchangam-${{ env.TIMESTAMP }}.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
             prerelease: true
-            tag_name: preview-${{ env.DATE }}
-            files: build/vaishnavam-panchangam-${{ env.DATE }}.zip
+            tag_name: preview-${{ env.TIMESTAMP }}
+            files: build/vaishnavam-panchangam-${{ env.TIMESTAMP }}.zip
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
