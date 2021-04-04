@@ -1,11 +1,6 @@
-[ ] github actions
-    [ ] compile
-    [ ] run tests
-    [ ] release to github
-    [ ] permanent "latest" link?
 [ ] table: show separator column for non-sequential dates
 [ ] calculate Madhva-navamī (saura): Makara, ś9
-[ ] day-by-day: calculate saura masa end day (verify by panchangas)
+[ ] day-by-day: calculate saura masa end day (verify by 2020..2022 panchangas)
     Meśa: 2020-04-14..
     Vṛṣabha: 2020-05-15..
     Mithuna: 2020-06-15..
@@ -322,3 +317,4 @@ done:
 [+] table: set title for paranam from nameworthy dates as well
 [+] table: use proper css classes (mainpart, vrata, custom, etc)
 [+] table: show next-day Śravaṇa-dvādaśī and atirikta-{ekā,dvā}daśī in separate cell
+[+] switch from travis-ci to github actions [2021-04-04]
