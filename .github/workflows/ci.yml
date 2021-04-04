@@ -19,7 +19,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
             prerelease: true
-            name: preview-${DATE}
+            tag_name: preview-${DATE}
             files: build/vaishnavam-panchangam-${DATE}.zip
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
