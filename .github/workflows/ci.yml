@@ -5,7 +5,7 @@ jobs:
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
-      - run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - run: $d=Get-Date;$s=$d.ToString("yyyy-MM-dd");echo "DATE=$s" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
       - run: git submodule update --init
       - run: C:\msys64\usr\bin\wget https://github.com/ashutosh108/qt-static-msvc/releases/download/build-2020-10-05/qt5.15-static-msvc2017-minimal.zip
       - run: mkdir -p C:/Qt && 7z x qt5.15-static-msvc2017-minimal.zip -oC:/Qt/
