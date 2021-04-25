@@ -192,9 +192,9 @@ struct fmt::formatter<vp::Nakshatra> {
     }
     template<class FormatContext>
     auto format(const vp::Nakshatra n, FormatContext & ctx) {
-        long raw_nakshatra_by_thousand = std::lround(n.nakshatra * 1000) % 27000;
-        long nakshatra_num = raw_nakshatra_by_thousand / 1000; // 0...26
-        long nakshatra_fract = raw_nakshatra_by_thousand % 1000;
+        int raw_nakshatra_by_thousand = static_cast<int>(std::lround(n.nakshatra * 1000) % 27000);
+        int nakshatra_num = raw_nakshatra_by_thousand / 1000; // 0...26
+        int nakshatra_fract = raw_nakshatra_by_thousand % 1000;
         return fmt::format_to(ctx.out(), FMT_STRING("{}(.{:03})"), nakshatra_name(nakshatra_num), nakshatra_fract);
     }
 };
