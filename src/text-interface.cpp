@@ -370,6 +370,11 @@ void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp:
             description += fmt::format(FMT_STRING(", {} māsa starts"), calc.chandra_masa_amanta(tithi_start + double_days{1.0}));
         }
         info.events.push_back(NamedTimePoint{description, tithi_start});
+        if (tithi.is_ekadashi()) {
+            const auto ekadashi_end = calc.find_exact_tithi_start(tithi_start, tithi+1.0);
+            const auto ekadashi_last_quarter_start = calc.proportional_time(tithi_start, ekadashi_end, 0.75);
+            info.events.push_back(NamedTimePoint{fmt::format("Last quarter of {:d} starts", tithi), ekadashi_last_quarter_start});
+        }
         if (tithi.is_dvadashi()) {
             const auto dvadashi_end = calc.find_exact_tithi_start(tithi_start, tithi+1.0);
             const auto dvadashi_quarter_end = calc.proportional_time(tithi_start, dvadashi_end, 0.25);

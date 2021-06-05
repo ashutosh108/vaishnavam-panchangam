@@ -319,3 +319,4 @@ done:
 [+] table: use proper css classes (mainpart, vrata, custom, etc)
 [+] table: show next-day Śravaṇa-dvādaśī and atirikta-{ekā,dvā}daśī in separate cell
 [+] switch from travis-ci to github actions [2021-04-04]
+[+] add Ekadashi's last quarter start to the detailed and day-by-day views [2021-06-05]

@@ -44,6 +44,7 @@ Vrata_Detail_Printer::Vrata_Detail_Printer(const Vrata & _vrata):vrata(_vrata) {
                           dvadashi_delta.count()),
                       vrata.times.dvadashi_start});
 
+    events.push_back({"Ekādaśī's last quarter starts", Calc::proportional_time(vrata.times.ekadashi_start, vrata.times.dvadashi_start, 0.75)});
     events.push_back({"Dvādaśī's first quarter ends", Calc::proportional_time(vrata.times.dvadashi_start, vrata.times.trayodashi_start, 0.25)});
 
     events.push_back({"Dvādaśī end", vrata.times.trayodashi_start});
