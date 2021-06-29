@@ -74,7 +74,7 @@ TEST_CASE("print_detail_one for Udupi 2020-11-14 does NOT raise exception and in
     using namespace date::literals;
     using Catch::Matchers::Contains;
     const date::year_month_day date{2020_y/11/14};
-    REQUIRE_NOTHROW(vp::text_ui::daybyday_print_one(date, "Udupi", buf, vp::CalcFlags::Default));
+    REQUIRE_NOTHROW(vp::text_ui::daybyday_print_one(date, "Udupi", fmt::appender{buf}, vp::CalcFlags::Default));
 
     REQUIRE_THAT(fmt::to_string(buf), Contains("Amavasya"));
 }
@@ -86,7 +86,7 @@ TEST_CASE("daybyday_print_one() includes sauramasa info") {
 
     SECTION("'sankranti' event is present for saura masa-crossing day-by-day report (2020-12-15)") {
         fmt::memory_buffer buf;
-        vp::text_ui::daybyday_print_one(2020_y/12/15, "Udupi", buf, vp::CalcFlags::Default);
+        vp::text_ui::daybyday_print_one(2020_y/12/15, "Udupi", fmt::appender{buf}, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
         REQUIRE_THAT(s, Contains("Saura māsa: Vṛścika"));
@@ -95,7 +95,7 @@ TEST_CASE("daybyday_print_one() includes sauramasa info") {
 
     SECTION("'sankranti' event must NOT be present for non-masa-crossing day-by-day report (2020-12-17)") {
         fmt::memory_buffer buf;
-        vp::text_ui::daybyday_print_one(2020_y/12/17, "Udupi", buf, vp::CalcFlags::Default);
+        vp::text_ui::daybyday_print_one(2020_y/12/17, "Udupi", fmt::appender{buf}, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
         REQUIRE_THAT(s, Contains("Saura māsa: Dhanu"));
@@ -110,7 +110,7 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
 
     SECTION("Chandra-masa info when not crossing any Purnima/Amavasya events (2020-11-23)") {
         fmt::memory_buffer buf;
-        vp::text_ui::daybyday_print_one(2020_y/11/23, "Udupi", buf, vp::CalcFlags::Default);
+        vp::text_ui::daybyday_print_one(2020_y/11/23, "Udupi", fmt::appender{buf}, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
         SECTION("'Chāndra māsa: such-and-such is present") {
@@ -123,7 +123,7 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
 
     SECTION("Chandra-masa info when we DO cross Purnima (2020-11-30)") {
         fmt::memory_buffer buf;
-        vp::text_ui::daybyday_print_one(2020_y/11/30, "Udupi", buf, vp::CalcFlags::Default);
+        vp::text_ui::daybyday_print_one(2020_y/11/30, "Udupi", fmt::appender{buf}, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
         REQUIRE_THAT(s, Contains("Chāndra māsa: Kārtikā"));
@@ -132,7 +132,7 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
 
     SECTION("Chandra-masa info when we DO cross Amavasya (2020-11-14)") {
         fmt::memory_buffer buf;
-        vp::text_ui::daybyday_print_one(2020_y/11/14, "Udupi", buf, vp::CalcFlags::Default);
+        vp::text_ui::daybyday_print_one(2020_y/11/14, "Udupi", fmt::appender{buf}, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
         REQUIRE_THAT(s, Contains("Chāndra māsa: Aśvin"));
@@ -157,13 +157,13 @@ TEST_CASE("ekādaśī details and day-by-day give the same time for dvādaśī's
 
     const auto daybyday_dvadashi_quarter_time = [&]() {
         fmt::memory_buffer buf;
-        vp::text_ui::daybyday_print_one(date, location_name, buf, vp::CalcFlags::Default);
+        vp::text_ui::daybyday_print_one(date, location_name, fmt::appender{buf}, vp::CalcFlags::Default);
         return get_time_str_for_description(fmt::to_string(buf), "First quarter of Shukla Dvadashi ends");
     }();
 
     const auto details_dvadashi_quarter_time = [&]() {
         fmt::memory_buffer buf;
-        vp::text_ui::find_calc_and_report_one(date, location_name, buf);
+        vp::text_ui::find_calc_and_report_one(date, location_name, fmt::appender{buf});
         return get_time_str_for_description(fmt::to_string(buf), "Dvādaśī's first quarter ends");
     }();
 
@@ -225,7 +225,7 @@ TEST_CASE("daybyday_print_one()") {
     using namespace date::literals;
     using namespace Catch::Matchers;
     fmt::memory_buffer buf;
-    vp::text_ui::daybyday_print_one(2020_y/12/14, "Kiev", buf, vp::CalcFlags::Default);
+    vp::text_ui::daybyday_print_one(2020_y/12/14, "Kiev", fmt::appender{buf}, vp::CalcFlags::Default);
     auto s = fmt::to_string(buf);
     SECTION("add '-----' separators before both sunrises") {
         std::regex r{R"(----\n[^\n]*sunrise)"};

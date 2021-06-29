@@ -161,18 +161,19 @@ std::string se_flag_to_string(uint_fast32_t flag) {
         {SEFLG_JPLHOR_APPROX, "SEFLG_JPLHOR_APPROX", "approximate JPL Horizons 1962 - today"}, //(512*1024)
     }};
     fmt::memory_buffer buf;
-    fmt::format_to(buf, "{}\n", flag);
+    fmt::appender out{buf};
+    fmt::format_to(out, "{}\n", flag);
     bool first = true;
     for (const auto & cur_flag : known_flags) {
         if (cur_flag.flag & flag) {
             flag &= ~(cur_flag.flag);
-            if (!first) fmt::format_to(buf, "\n| ");
+            if (!first) fmt::format_to(out, "\n| ");
             first = false;
-            fmt::format_to(buf, "{:x} {} ({})", cur_flag.flag, cur_flag.name, cur_flag.description);
+            fmt::format_to(out, "{:x} {} ({})", cur_flag.flag, cur_flag.name, cur_flag.description);
         }
     }
     if (flag != 0) {
-        fmt::format_to(buf, "\n| {:x}", flag);
+        fmt::format_to(out, "\n| {:x}", flag);
 
     }
     return fmt::to_string(buf);

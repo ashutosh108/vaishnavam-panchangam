@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) try
         auto base_date = vp::text_ui::parse_ymd(argv[2]);
         const char * const location_name = argv[3];
         fmt::memory_buffer buf;
-        vp::text_ui::daybyday_print_one(base_date, location_name, buf, vp::CalcFlags::Default);
+        vp::text_ui::daybyday_print_one(base_date, location_name, fmt::appender{buf}, vp::CalcFlags::Default);
         fmt::print("{}", std::string_view{buf.data(), buf.size()});
     } else {
         if (argc-1 != 1 && argc-1 != 2 && argc-1 != 3) {
@@ -49,13 +49,13 @@ int main(int argc, char *argv[]) try
         } else if (argc-1 == 2) {
             const char * const location_name = argv[2];
             fmt::memory_buffer buf;
-            vp::text_ui::find_calc_and_report_one(base_date, location_name, buf);
+            vp::text_ui::find_calc_and_report_one(base_date, location_name, fmt::appender{buf});
             fmt::print("{}", std::string_view{buf.data(), buf.size()});
         } else {
             double latitude = std::stod(argv[2]);
             double longitude = std::stod(argv[3]);
             fmt::memory_buffer buf;
-            vp::text_ui::calc_and_report_one(base_date, vp::Location{vp::Latitude{latitude}, vp::Longitude{longitude}}, buf);
+            vp::text_ui::calc_and_report_one(base_date, vp::Location{vp::Latitude{latitude}, vp::Longitude{longitude}}, fmt::appender{buf});
             fmt::print("{}", std::string_view{buf.data(), buf.size()});
         }
     }

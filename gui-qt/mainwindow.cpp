@@ -399,28 +399,29 @@ void MainWindow::refreshTable()
 namespace {
 QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
     fmt::memory_buffer buf;
-    fmt::format_to(buf,
+    fmt::appender out{buf};
+    fmt::format_to(out,
                    "<h1>{} on {}</h1>\n",
                    info.location.name, info.date);
     auto tz = info.location.time_zone();
     if (info.saura_masa_until) {
         const auto saura_masa_until = date::make_zoned(tz, info.saura_masa_until->round_to_second());
-        fmt::format_to(buf, FMT_STRING("Saura māsa: <big><b>{}</b></big> <small style=\"color:gray\">(until {})</small><br>\n"), info.saura_masa, date::format("%Y-%m-%d %H:%M:%S %Z", saura_masa_until));
+        fmt::format_to(out, FMT_STRING("Saura māsa: <big><b>{}</b></big> <small style=\"color:gray\">(until {})</small><br>\n"), info.saura_masa, date::format("%Y-%m-%d %H:%M:%S %Z", saura_masa_until));
     } else {
-        fmt::format_to(buf, FMT_STRING("Saura māsa: <big><b>{}</b></big><br>\n"), info.saura_masa);
+        fmt::format_to(out, FMT_STRING("Saura māsa: <big><b>{}</b></big><br>\n"), info.saura_masa);
     }
-    fmt::format_to(buf, FMT_STRING("Chāndra māsa: <big><b>{}</b></big>"), info.chandra_masa);
+    fmt::format_to(out, FMT_STRING("Chāndra māsa: <big><b>{}</b></big>"), info.chandra_masa);
     if (info.chandra_masa_until) {
         const auto chandra_masa_until = date::make_zoned(tz, info.chandra_masa_until->round_to_second());
-        fmt::format_to(buf, FMT_STRING(" <small style=\"color:gray\">(until {})</small>"), date::format("%Y-%m-%d %H:%M:%S %Z", chandra_masa_until));
+        fmt::format_to(out, FMT_STRING(" <small style=\"color:gray\">(until {})</small>"), date::format("%Y-%m-%d %H:%M:%S %Z", chandra_masa_until));
     }
-    fmt::format_to(buf, FMT_STRING("<br>\n"));
+    fmt::format_to(out, FMT_STRING("<br>\n"));
     if (info.sunrise1) {
         auto sunrise_date = date::floor<date::days>(date::make_zoned(tz, info.sunrise1->as_sys_time()).get_local_time());
         if (info.tithi_until) {
             const auto tithi_until = date::make_zoned(tz, info.tithi_until->round_to_minute());
             auto tithi_until_date{date::floor<date::days>(tithi_until.get_local_time())};
-            fmt::format_to(buf,
+            fmt::format_to(out,
                            FMT_STRING("<big><b>{}</b></big> until <big><b>{}{}</b></big><br>\n"),
                            info.tithi,
                            date::format("%H:%M", tithi_until),
@@ -429,7 +430,7 @@ QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
         if (info.tithi2_until) {
             const auto tithi2_until = date::make_zoned(tz, info.tithi2_until->round_to_minute());
             auto tithi2_until_date{date::floor<date::days>(tithi2_until.get_local_time())};
-            fmt::format_to(buf,
+            fmt::format_to(out,
                            FMT_STRING("<big><b>{}</b></big> until <big><b>{}{}</b></big><br>\n"),
                            info.tithi2,
                            date::format("%H:%M", tithi2_until),
@@ -438,7 +439,7 @@ QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
         if (info.nakshatra_until) {
             const auto until = date::make_zoned(tz, info.nakshatra_until->round_to_minute());
             const auto date = date::floor<date::days>(until.get_local_time());
-            fmt::format_to(buf,
+            fmt::format_to(out,
                            FMT_STRING("<big><b>{}</b></big> until <big><b>{}{}</b></big><br>\n"),
                            info.nakshatra,
                            date::format("%H:%M", until),
@@ -447,7 +448,7 @@ QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
         if (info.nakshatra2_until) {
             const auto until = date::make_zoned(tz, info.nakshatra2_until->round_to_minute());
             const auto date = date::floor<date::days>(until.get_local_time());
-            fmt::format_to(buf,
+            fmt::format_to(out,
                            FMT_STRING("<big><b>{}</b></big> until <big><b>{}{}</b></big><br>\n"),
                            info.nakshatra2,
                            date::format("%H:%M", until),
@@ -460,8 +461,8 @@ QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
         if (e.time_point == info.sunrise1) { got_first_sunrise = true; }
         if (e.time_point == info.sunrise2) { got_second_sunrise = true; }
         std::string color = (!got_first_sunrise || got_second_sunrise) ? "gray" : "";
-        fmt::format_to(buf, FMT_STRING("<font color=\"{}\">"), color);
-        fmt::format_to(buf, FMT_STRING("{} {}</font><br>\n"), vp::JulDays_Zoned{tz, e.time_point}, e.name);
+        fmt::format_to(out, FMT_STRING("<font color=\"{}\">"), color);
+        fmt::format_to(out, FMT_STRING("{} {}</font><br>\n"), vp::JulDays_Zoned{tz, e.time_point}, e.name);
     }
     return QString::fromStdString(fmt::to_string(buf));
 }

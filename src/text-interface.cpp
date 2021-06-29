@@ -254,9 +254,9 @@ vp::VratasForDate calc(date::year_month_day base_date, std::string location_name
 }
 
 namespace {
-void report_details(const vp::MaybeVrata & vrata, fmt::memory_buffer & buf) {
+void report_details(const vp::MaybeVrata & vrata, const fmt::appender & out) {
     if (!vrata.has_value()) {
-        fmt::format_to(buf,
+        fmt::format_to(out,
                        "# {}*\n"
                        "Can't find next Ekadashi, sorry.\n"
                        "* Error: {}\n",
@@ -264,51 +264,51 @@ void report_details(const vp::MaybeVrata & vrata, fmt::memory_buffer & buf) {
                        vrata.error());
     } else {
         Vrata_Detail_Printer vd{*vrata};
-        fmt::format_to(buf, "{}\n\n", vd);
+        fmt::format_to(out, "{}\n\n", vd);
     }
 
 }
 }
 
 // Find next ekAdashI vrata for the named location, report details to the output buffer.
-tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, const Location & location, fmt::memory_buffer & buf) {
+tl::expected<vp::Vrata, vp::CalcError> calc_and_report_one(date::year_month_day base_date, const Location & location, const fmt::appender & out) {
     auto vrata = calc_one(date::local_days{base_date}, location);
-    report_details(vrata, buf);
+    report_details(vrata, out);
     return vrata;
 }
 
-tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf) {
+tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month_day base_date, const char * location_name, const fmt::appender & out) {
     std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
-        fmt::format_to(buf, "Location not found: '{}'\n", location_name);
+        fmt::format_to(out, "Location not found: '{}'\n", location_name);
         return tl::make_unexpected(CantFindLocation{location_name});
     }
-    return calc_and_report_one(base_date, *coord, buf);
+    return calc_and_report_one(base_date, *coord, out);
 }
 
 namespace {
-void daybyday_print_header(date::year_month_day base_date, const Location & coord, const DayByDayInfo & info, fmt::memory_buffer & buf)
+void daybyday_print_header(date::year_month_day base_date, const Location & coord, const DayByDayInfo & info, const fmt::appender & out)
 {
-    fmt::format_to(buf,
+    fmt::format_to(out,
                    "{} {}\n",
                    coord.name, base_date);
-    fmt::format_to(buf, FMT_STRING("Saura māsa: {}"), info.saura_masa);
+    fmt::format_to(out, FMT_STRING("Saura māsa: {}"), info.saura_masa);
     if (info.saura_masa_until) {
-        fmt::format_to(buf, FMT_STRING(" (until {})"), *info.saura_masa_until);
+        fmt::format_to(out, FMT_STRING(" (until {})"), *info.saura_masa_until);
     }
-    fmt::format_to(buf, FMT_STRING("\n"));
-    fmt::format_to(buf, FMT_STRING("Chāndra māsa: {}"), info.chandra_masa);
+    fmt::format_to(out, FMT_STRING("\n"));
+    fmt::format_to(out, FMT_STRING("Chāndra māsa: {}"), info.chandra_masa);
     if (info.chandra_masa_until) {
-        fmt::format_to(buf, FMT_STRING(" (until {})"), *info.chandra_masa_until);
+        fmt::format_to(out, FMT_STRING(" (until {})"), *info.chandra_masa_until);
     }
-    fmt::format_to(buf, FMT_STRING("\n"));
+    fmt::format_to(out, FMT_STRING("\n"));
     auto tz = info.location.time_zone();
     if (info.sunrise1) {
         auto sunrise_date = date::floor<date::days>(date::make_zoned(tz, info.sunrise1->as_sys_time()).get_local_time());
         if (info.tithi_until) {
             const auto tithi_until = date::make_zoned(tz, info.tithi_until->round_to_minute());
             auto tithi_until_date{date::floor<date::days>(tithi_until.get_local_time())};
-            fmt::format_to(buf,
+            fmt::format_to(out,
                            FMT_STRING("{} until {}{}\n"),
                            info.tithi,
                            date::format("%H:%M", tithi_until),
@@ -317,7 +317,7 @@ void daybyday_print_header(date::year_month_day base_date, const Location & coor
         if (info.tithi2_until) {
             const auto tithi2_until = date::make_zoned(tz, info.tithi2_until->round_to_minute());
             auto tithi2_until_date{date::floor<date::days>(tithi2_until.get_local_time())};
-            fmt::format_to(buf,
+            fmt::format_to(out,
                            FMT_STRING("{} until {}{}\n"),
                            info.tithi2,
                            date::format("%H:%M", tithi2_until),
@@ -327,7 +327,7 @@ void daybyday_print_header(date::year_month_day base_date, const Location & coor
         if (info.nakshatra_until) {
             const auto until = date::make_zoned(tz, info.nakshatra_until->round_to_minute());
             const auto date = date::floor<date::days>(until.get_local_time());
-            fmt::format_to(buf,
+            fmt::format_to(out,
                            FMT_STRING("{} until {}{}\n"),
                            info.nakshatra,
                            date::format("%H:%M", until),
@@ -336,7 +336,7 @@ void daybyday_print_header(date::year_month_day base_date, const Location & coor
         if (info.nakshatra2_until) {
             const auto until = date::make_zoned(tz, info.nakshatra2_until->round_to_minute());
             const auto date = date::floor<date::days>(until.get_local_time());
-            fmt::format_to(buf,
+            fmt::format_to(out,
                            FMT_STRING("{} until {}{}\n"),
                            info.nakshatra2,
                            date::format("%H:%M", until),
@@ -502,34 +502,34 @@ DayByDayInfo daybyday_calc_one(date::year_month_day base_date, const Location & 
 
 namespace {
 /* print day-by-day report (-d mode) for a single date and single location */
-void daybyday_print_one(date::year_month_day base_date, const Location & coord, fmt::memory_buffer & buf, vp::CalcFlags flags) {
+void daybyday_print_one(date::year_month_day base_date, const Location & coord, const fmt::appender & out, vp::CalcFlags flags) {
     auto info = daybyday_calc_one(base_date, coord, flags);
 
-    daybyday_print_header(base_date, coord, info, buf);
+    daybyday_print_header(base_date, coord, info, out);
 
     for (const auto & e : info.events) {
         // add separator before sunrises to mark current day better
         if ((info.sunrise1 && e.time_point == *info.sunrise1) || (info.sunrise2 && e.time_point == *info.sunrise2)) {
-            fmt::format_to(buf, FMT_STRING("-----\n"));
+            fmt::format_to(out, FMT_STRING("-----\n"));
         }
-        fmt::format_to(buf, "{} {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, e.name);
+        fmt::format_to(out, "{} {}\n", vp::JulDays_Zoned{coord.time_zone(), e.time_point}, e.name);
     }
 }
 }
 
-void daybyday_print_one(date::year_month_day base_date, const char * location_name, fmt::memory_buffer & buf, vp::CalcFlags flags) {
+void daybyday_print_one(date::year_month_day base_date, const char * location_name, const fmt::appender & out, vp::CalcFlags flags) {
     const std::optional<Location> coord = LocationDb::find_coord(location_name);
     if (!coord) {
-        fmt::format_to(buf, "Location not found: '{}'\n", location_name);
+        fmt::format_to(out, "Location not found: '{}'\n", location_name);
         return;
     }
-    daybyday_print_one(base_date, *coord, buf, flags);
+    daybyday_print_one(base_date, *coord, out, flags);
 }
 
 void calc_and_report_all(date::year_month_day d) {
     for (auto &l : LocationDb()) {
         fmt::memory_buffer buf;
-        calc_and_report_one(d, l, buf);
+        calc_and_report_one(d, l, fmt::appender{buf});
         fmt::print("{}", std::string_view{buf.data(), buf.size()});
     }
 }
