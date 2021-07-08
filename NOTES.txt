@@ -1,3 +1,8 @@
+[ ] add hari-vasara time support (last quarter of ekAdashI-tithi)
+	[ ] add hari-vasara to the Vrata
+	[ ] print in summary (main page)
+	[ ] check that it's printed in details
+	[ ] print in table (on pre-ekAdashI day)
 [ ] CI: arrange for permanent "latest" download link (overwrite existing release?)
 [ ] table: show separator column for non-sequential dates
 [ ] calculate Madhva-navamī (saura): Makara, ś9
@@ -320,3 +325,4 @@ done:
 [+] table: show next-day Śravaṇa-dvādaśī and atirikta-{ekā,dvā}daśī in separate cell
 [+] switch from travis-ci to github actions [2021-04-04]
 [+] add Ekadashi's last quarter start to the detailed and day-by-day views [2021-06-05]
+[+] add Orenburg [2021-07-09]
