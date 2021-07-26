@@ -64,6 +64,11 @@ JulDays_UT operator -(const JulDays_UT &, double_days);
 // returns number of days between two Swe_Time-s (like as_julian_days())
 double_days operator -(const JulDays_UT &, const JulDays_UT &);
 
+JulDays_UT inline proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion) {
+    double_days distance = t2 - t1;
+    return t1 + distance * proportion;
+}
+
 } // namespace vp
 
 template<>

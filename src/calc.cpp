@@ -195,7 +195,7 @@ bool got_shravana_for_sunrise_sunset(JulDays_UT sunrise, JulDays_UT sunset, JulD
     static_assert (ratio_for_14gh == 7.0/15, "14 ghatikas must be 7/15th of daytime (30 ghatikas)");
     const bool require_14gh = ((swe.calc_flags & CalcFlags::ShravanaDvadashiMask) == CalcFlags::ShravanaDvadashi14ghPlus);
     const auto madhyahna_limit_ratio_from_daytime = require_14gh ? ratio_for_14gh : ratio_for_12gh;
-    const auto madhyahna_limit = Calc::proportional_time(sunrise, sunset, madhyahna_limit_ratio_from_daytime);
+    const auto madhyahna_limit = proportional_time(sunrise, sunset, madhyahna_limit_ratio_from_daytime);
     DiscreteNakshatra nakshantra_at_limit = swe.get_nakshatra(madhyahna_limit);
     if (nakshantra_at_limit != DiscreteNakshatra::Shravana()) { return false; }
     Tithi tithi_at_limit = swe.get_tithi(madhyahna_limit);
@@ -245,11 +245,6 @@ bool Calc::got_atirikta_dvadashi(const Vrata & vrata) const
     Tithi tithi_on_second_sunrise = swe.get_tithi(vrata.sunrise2);
     Tithi tithi_on_third_sunrise = swe.get_tithi(vrata.sunrise3);
     return tithi_on_second_sunrise.is_dvadashi() && tithi_on_third_sunrise.is_dvadashi();
-}
-
-JulDays_UT Calc::proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion) {
-    double_days distance = t2 - t1;
-    return t1 + distance * proportion;
 }
 
 Paran Calc::get_paran(const JulDays_UT sunrise2, const JulDays_UT sunset2, const JulDays_UT dvadashi_start, const JulDays_UT dvadashi_end) const

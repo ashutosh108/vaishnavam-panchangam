@@ -154,6 +154,13 @@ std::string Vrata::day2_additional_event_name() const
     }
 }
 
+std::optional<JulDays_UT> Vrata::harivasara()
+{
+    const auto hv = proportional_time(times.ekadashi_start, times.dvadashi_start, 0.75);
+    if (hv < sunrise1) return hv;
+    return std::nullopt;
+}
+
 Vrata Vrata::SampleVrata()
 {
     using namespace date;

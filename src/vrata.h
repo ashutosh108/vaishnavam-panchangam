@@ -138,6 +138,7 @@ struct Vrata {
     std::string day1_additional_event_name() const;
     // usually empty string. Otherwise, "Atiriktā Ekādaśī" etc.
     std::string day2_additional_event_name() const;
+    std::optional<JulDays_UT> harivasara(); // start of Ekadashi's last quarter. Only set when < sunrise1.
 
     static Vrata SampleVrata();
 };

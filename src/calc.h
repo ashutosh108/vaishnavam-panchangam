@@ -59,7 +59,6 @@ public:
     Chandra_Masa chandra_masa_amanta(JulDays_UT time, std::optional<JulDays_UT> * end_time = nullptr) const;
     JulDays_UT find_sankranti(JulDays_UT after, Saura_Masa masa) const;
 
-    static JulDays_UT proportional_time(JulDays_UT const t1, JulDays_UT const t2, double const proportion);
     JulDays_UT calc_astronomical_midnight(date::local_days date) const;
 
     vp::Swe swe;

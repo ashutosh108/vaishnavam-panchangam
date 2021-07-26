@@ -373,12 +373,12 @@ void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp:
         info.events.push_back(NamedTimePoint{description, tithi_start});
         if (tithi.is_ekadashi()) {
             const auto ekadashi_end = calc.find_exact_tithi_start(tithi_start, tithi+1.0);
-            const auto ekadashi_last_quarter_start = calc.proportional_time(tithi_start, ekadashi_end, 0.75);
+            const auto ekadashi_last_quarter_start = proportional_time(tithi_start, ekadashi_end, 0.75);
             info.events.push_back(NamedTimePoint{fmt::format("Last quarter of {:d} starts", tithi), ekadashi_last_quarter_start});
         }
         if (tithi.is_dvadashi()) {
             const auto dvadashi_end = calc.find_exact_tithi_start(tithi_start, tithi+1.0);
-            const auto dvadashi_quarter_end = calc.proportional_time(tithi_start, dvadashi_end, 0.25);
+            const auto dvadashi_quarter_end = proportional_time(tithi_start, dvadashi_end, 0.25);
             //            auto dvadashi_quarter_end = calc.find_exact_tithi_start(start, tithi+0.25);
             info.events.push_back(NamedTimePoint{fmt::format("First quarter of {:d} ends", tithi), dvadashi_quarter_end});
         }
@@ -421,18 +421,18 @@ DayByDayInfo daybyday_events(date::year_month_day base_date, const vp::Calc & ca
         if (sunset) {
             info.sunset1 = *sunset;
             info.events.push_back(NamedTimePoint{"sunset", *sunset});
-            info.events.push_back(NamedTimePoint{"1/5 of daytime (saṅgava-kāla begins)", calc.proportional_time(*sunrise, *sunset, 0.2)});
-            info.events.push_back(NamedTimePoint{"2/5 of daytime (madhyāhna-kāla begins)", calc.proportional_time(*sunrise, *sunset, 0.4)});
+            info.events.push_back(NamedTimePoint{"1/5 of daytime (saṅgava-kāla begins)", proportional_time(*sunrise, *sunset, 0.2)});
+            info.events.push_back(NamedTimePoint{"2/5 of daytime (madhyāhna-kāla begins)", proportional_time(*sunrise, *sunset, 0.4)});
             if ((calc.swe.calc_flags & CalcFlags::ShravanaDvadashiMask) == CalcFlags::ShravanaDvadashi14ghPlus) {
-                info.events.push_back(NamedTimePoint{"14/30 of daytime (15th ghaṭika begins)", calc.proportional_time(*sunrise, *sunset, 14.0/30)});
+                info.events.push_back(NamedTimePoint{"14/30 of daytime (15th ghaṭika begins)", proportional_time(*sunrise, *sunset, 14.0/30)});
             }
-            info.events.push_back(NamedTimePoint{"3/5 of daytime (aparāhna-kāla begins)", calc.proportional_time(*sunrise, *sunset, 0.6)});
-            info.events.push_back(NamedTimePoint{"4/5 of daytime (sāyāhna-kāla begins)", calc.proportional_time(*sunrise, *sunset, 0.8)});
-            info.events.push_back(NamedTimePoint{"middle of the day", calc.proportional_time(*sunrise, *sunset, 0.5)});
+            info.events.push_back(NamedTimePoint{"3/5 of daytime (aparāhna-kāla begins)", proportional_time(*sunrise, *sunset, 0.6)});
+            info.events.push_back(NamedTimePoint{"4/5 of daytime (sāyāhna-kāla begins)", proportional_time(*sunrise, *sunset, 0.8)});
+            info.events.push_back(NamedTimePoint{"middle of the day", proportional_time(*sunrise, *sunset, 0.5)});
             const auto sunrise2 = calc.swe.find_sunrise(*sunset);
             if (sunrise2) {
                 info.sunrise2 = *sunrise2;
-                const auto middle_of_night = calc.proportional_time(*sunset, *sunrise2, 0.5);
+                const auto middle_of_night = proportional_time(*sunset, *sunrise2, 0.5);
                 info.events.push_back(NamedTimePoint{"middle of the night", middle_of_night});
                 info.events.push_back(NamedTimePoint{"next sunrise", *sunrise2});
                 const auto earliest_timepoint = arunodaya ? * arunodaya : *sunrise;

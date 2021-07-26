@@ -23,6 +23,7 @@ TEST_CASE("summary contains vrata type, date and paran (including optional paran
     REQUIRE_THAT(actual, Contains("07:00"));
     REQUIRE_THAT(actual, Contains("08:00"));
     REQUIRE_THAT(actual, Contains("&lt;09:00"));
+    REQUIRE_THAT(actual, !Contains("Harivāsara"));
 }
 
 TEST_CASE("summary for Atiriktā contains both dates") {

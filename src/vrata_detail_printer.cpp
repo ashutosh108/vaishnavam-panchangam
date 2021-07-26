@@ -16,12 +16,12 @@ Vrata_Detail_Printer::Vrata_Detail_Printer(const Vrata & _vrata):vrata(_vrata) {
 
     events.push_back({"sunrise2", vrata.sunrise2});
     events.push_back({"sunset2", vrata.sunset2});
-    auto fifth_of_day2 = Calc::proportional_time(vrata.sunrise2, vrata.sunset2, 0.2);
+    auto fifth_of_day2 = proportional_time(vrata.sunrise2, vrata.sunset2, 0.2);
     events.push_back({"1/5 of day2", fifth_of_day2});
     if (is_atirikta(vrata.type)) {
         events.push_back({"sunrise3", vrata.sunrise3});
         events.push_back({"sunset3", vrata.sunset3});
-        auto fifth_of_day3 = Calc::proportional_time(vrata.sunrise3, vrata.sunset3, 0.2);
+        auto fifth_of_day3 = proportional_time(vrata.sunrise3, vrata.sunset3, 0.2);
         events.push_back({"1/5 of day3", fifth_of_day3});
     }
 
@@ -44,8 +44,8 @@ Vrata_Detail_Printer::Vrata_Detail_Printer(const Vrata & _vrata):vrata(_vrata) {
                           dvadashi_delta.count()),
                       vrata.times.dvadashi_start});
 
-    events.push_back({"Ekādaśī's last quarter starts", Calc::proportional_time(vrata.times.ekadashi_start, vrata.times.dvadashi_start, 0.75)});
-    events.push_back({"Dvādaśī's first quarter ends", Calc::proportional_time(vrata.times.dvadashi_start, vrata.times.trayodashi_start, 0.25)});
+    events.push_back({"Ekādaśī's last quarter starts", proportional_time(vrata.times.ekadashi_start, vrata.times.dvadashi_start, 0.75)});
+    events.push_back({"Dvādaśī's first quarter ends", proportional_time(vrata.times.dvadashi_start, vrata.times.trayodashi_start, 0.25)});
 
     events.push_back({"Dvādaśī end", vrata.times.trayodashi_start});
 

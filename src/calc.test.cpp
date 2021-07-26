@@ -95,10 +95,20 @@ TEST_CASE("Vijaya Ekadashi Kiev 2019") {
     date::local_days base_date{2019_y/February/28};
     Location kiev{50.45_N, 30.523333_E};
     auto vrata = Calc{kiev}.find_next_vrata(base_date);
-    REQUIRE(vrata.has_value());
-    REQUIRE(vp::Swe{kiev}.get_tithi(JulDays_UT{vrata->date}).get_paksha() == Paksha::Krishna);
-    REQUIRE(vrata->type == Vrata_Type::Ekadashi);
-    REQUIRE(date::year_month_day{vrata->date} == 2019_y/March/2);
+
+    SECTION("basic") {
+        REQUIRE(vrata.has_value());
+        REQUIRE(vp::Swe{kiev}.get_tithi(JulDays_UT{vrata->date}).get_paksha() == Paksha::Krishna);
+        REQUIRE(vrata->type == Vrata_Type::Ekadashi);
+        REQUIRE(date::year_month_day{vrata->date} == 2019_y/March/2);
+    }
+
+    SECTION("has expected Hari-vAsara") {
+        const auto expected = date::sys_days(2019_y/March/1) + 22h + 58min;
+        const auto harivasara = vrata->harivasara();
+        REQUIRE(harivasara.has_value());
+        REQUIRE(harivasara->round_to_minute() == expected);
+    }
 }
 
 TEST_CASE("arunodaya_for_sunrise") {
@@ -239,7 +249,7 @@ void check_atirikta_at_location(const char * name, const Location & location, co
 
     // 4. Paran_end must be either == dvadashi_end
     // 5. or == 1/5 of daytime (and then paran_limit must be set to dvadashi_end)
-    const auto fifth_of_daytime = Calc::proportional_time(actual_vrata.sunrise3, actual_vrata.sunset3, 0.2);
+    const auto fifth_of_daytime = proportional_time(actual_vrata.sunrise3, actual_vrata.sunset3, 0.2);
     CHECK((actual_vrata.paran.paran_end == actual_vrata.times.trayodashi_start ||
            (actual_vrata.paran.paran_end == fifth_of_daytime && actual_vrata.paran.paran_limit == actual_vrata.times.trayodashi_start)));
 

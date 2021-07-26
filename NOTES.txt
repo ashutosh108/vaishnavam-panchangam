@@ -1,7 +1,7 @@
 [ ] add hari-vasara time support (last quarter of ekAdashI-tithi)
-	[ ] add hari-vasara to the Vrata
+        [+] add hari-vasara to the Vrata [2021-07-27]
 	[ ] print in summary (main page)
-	[ ] check that it's printed in details
+        [ ] check that it's printed in details and day-by-day
 	[ ] print in table (on pre-ekAdashI day)
 [ ] CI: arrange for permanent "latest" download link (overwrite existing release?)
 [ ] table: show separator column for non-sequential dates
