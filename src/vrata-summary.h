@@ -32,6 +32,10 @@ struct fmt::formatter<vp::Vrata_Summary> : fmt::formatter<std::string_view> {
         } else {
             fmt::format_to(ctx.out(), FMT_STRING("<p>{} {} on <span class=\"date paran\">{}</span></p>\n"), vs.vrata->ekadashi_name(), vs.vrata->type, date);
         }
+        if (const auto harivasara=vs.vrata->harivasara(); harivasara) {
+            const auto harivasara_str = date::format("%H:%M on <small>%Y-%m-%d</small>", date::floor<std::chrono::minutes>(harivasara->as_zoned_time(vs.vrata->paran.time_zone).get_local_time()));
+            fmt::format_to(ctx.out(), FMT_STRING("<p>Harivāsara starts at {}</p>\n"), harivasara_str);
+        }
         const auto paran_date = date::year_month_day{vs.vrata->local_paran_date()}; // year_month_day to ensure proper formatting, wihout hours, minutes and seconds
         fmt::format_to(ctx.out(), FMT_STRING(R"(<p class="paran">Pāraṇam: {} <span class="paran-range">{}–{})"), paran_date, vs.vrata->paran.start_str(), vs.vrata->paran.end_str());
         if (vs.vrata->paran.paran_limit) {

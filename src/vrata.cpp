@@ -154,7 +154,7 @@ std::string Vrata::day2_additional_event_name() const
     }
 }
 
-std::optional<JulDays_UT> Vrata::harivasara()
+std::optional<JulDays_UT> Vrata::harivasara() const
 {
     const auto hv = proportional_time(times.ekadashi_start, times.dvadashi_start, 0.75);
     if (hv < sunrise1) return hv;
@@ -184,6 +184,21 @@ Vrata Vrata::SampleVrata()
     vrata.sunset2 = vp::JulDays_UT{date::sys_days{2000_y/1/2} + 21h};
     vrata.sunrise3 = vp::JulDays_UT{date::sys_days{2000_y/1/3} + 6h};
     vrata.sunset3 = vp::JulDays_UT{date::sys_days{2000_y/1/3} + 21h};
+
+    return vrata;
+}
+
+Vrata Vrata::SampleVrataWithHarivasara()
+{
+    auto vrata = SampleVrata();
+
+    using namespace std::chrono_literals;
+    vrata.sunset0 += 21h;
+    vrata.sunrise1 += 21h;
+    vrata.sunrise2 += 21h;
+    vrata.sunset2 += 21h;
+    vrata.sunrise3 += 21h;
+    vrata.sunset3 += 21h;
 
     return vrata;
 }

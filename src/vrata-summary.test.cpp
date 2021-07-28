@@ -45,3 +45,11 @@ TEST_CASE("summary contains ekādaśī name, māsa name and pakṣa") {
     REQUIRE_THAT(actual, Contains("kṛṣṇa pakṣa"));
     REQUIRE_THAT(actual, Contains("Saphalā"));
 }
+
+TEST_CASE("summary represents harivAsara time, when it is present") {
+    auto vrata = vp::Vrata::SampleVrataWithHarivasara();
+    auto actual = fmt::format("{}", vp::Vrata_Summary{&vrata});
+    using Catch::Matchers::Contains;
+    REQUIRE_THAT(actual, Contains("Harivāsara"));
+    REQUIRE_THAT(actual, Contains("21:00"));
+}
