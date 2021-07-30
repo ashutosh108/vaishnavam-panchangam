@@ -12,29 +12,43 @@ using namespace date;
 using namespace vp;
 using Catch::Matchers::Contains;
 
-TEST_CASE("Print result is not empty") {
+TEST_CASE("Kiev 2020-06-14") {
     fmt::memory_buffer buf;
-    const auto vrata = vp::text_ui::calc_and_report_one(2020_y/June/14, Location{50.0_N, 50.0_E}, fmt::appender{buf});
-    REQUIRE(fmt::to_string(buf) != "");
+    const auto vrata = vp::text_ui::calc_and_report_one(2020_y/June/14, kiev_coord, fmt::appender{buf});
+    const auto str = fmt::to_string(buf);
+
+    SECTION("Print result is not empty") {
+        REQUIRE(str != "");
+    }
+
+    SECTION("aruNodaya is given in the Vrata_Detail_Printer in generic case") {
+        REQUIRE_THAT(str, Contains("aruṇodaya"));
+    }
+
+    SECTION("both dates are given for two-days fasts") {
+        REQUIRE_THAT(str, Contains("on 2020-06-16 & 2020-06-17"));
+    }
+
+    SECTION("harivAsara is not mentioned") {
+        REQUIRE_THAT(str, !Contains("Harivāsara"));
+    }
 }
 
-TEST_CASE("aruNodaya is given in the Vrata_Detail_Printer in generic case") {
+TEST_CASE("Kiev 2020-08-29") {
     fmt::memory_buffer buf;
-    const auto vrata = vp::text_ui::calc_and_report_one(2020_y/June/14, Location{50.0_N, 50.0_E}, fmt::appender{buf});
-    REQUIRE_THAT(fmt::to_string(buf), Contains("aruṇodaya"));
+    const auto vrata = vp::text_ui::calc_and_report_one(2020_y/August/29, kiev_coord, fmt::appender{buf});
+    const auto str = fmt::to_string(buf);
+
+    SECTION("Print result is not empty") {
+        REQUIRE_THAT(str, Contains("Harivāsara"));
+        REQUIRE_THAT(str, Contains("23:53"));
+    }
 }
 
 TEST_CASE("aruNodaya is given in the Vrata_Detail_Printer in extreme north case (summer)") {
     fmt::memory_buffer buf;
     const auto vrata = vp::text_ui::calc_and_report_one(2020_y/June/14, Location{70.0_N, 50.0_E}, fmt::appender{buf});
     REQUIRE_THAT(fmt::to_string(buf), Contains("aruṇodaya"));
-}
-
-TEST_CASE("both dates are given for two-days fasts") {
-    fmt::memory_buffer buf;
-    const auto vrata = vp::text_ui::calc_and_report_one(2020_y/June/14, kiev_coord, fmt::appender{buf});
-    const auto str = fmt::to_string(buf);
-    REQUIRE_THAT(str, Contains("on 2020-06-16 & 2020-06-17"));
 }
 
 TEST_CASE("':c' for Vrata_Detail_Printer means compact formatting: no header") {
