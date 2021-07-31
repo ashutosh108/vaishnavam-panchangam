@@ -41,6 +41,19 @@ void insert_ekadashi_paran_etc(vp::NamedDates & dates, const vp::Vrata & vrata) 
     const auto paran = fmt::format(FMT_STRING("{:c}"), vrata.paran);
     const auto paran_with_href = fmt::format(FMT_STRING(R"(<a href="#{}">{}</a>)"), html::escape_attribute(vrata.location_name()), html::escape_attribute(paran));
     dates.emplace(vrata.local_paran_date(), vp::NamedDate{paran_with_href, paran_title(vrata.paran), ""});
+
+    if (const auto harivasara = vrata.harivasara()) {
+        const auto harivasara_local = harivasara->as_zoned_time(vrata.location.time_zone()).get_local_time();
+        const auto harivasara_date = date::floor<date::days>(harivasara_local);
+        const auto h_m = date::format("%H:%H", harivasara_local);
+        std::string str;
+        if (harivasara_date != vrata.date) {
+            str = fmt::format(FMT_STRING("HV > {}"), h_m);
+        } else {
+            str = fmt::format(FMT_STRING("HV > {} <small>{}</small>"), h_m, date::format("%d.%m", harivasara_date));
+        }
+        dates.emplace(vrata.date - date::days{1}, vp::NamedDate{str});
+    }
 }
 
 vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata, CalcFlags flags)

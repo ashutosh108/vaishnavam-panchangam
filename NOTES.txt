@@ -1,12 +1,6 @@
-[ ] CLI: give error when date is "qwe" of otherwise non-valid
-[ ] CLI: allow giving just location name and give the closest Ekadashi
+[ ] CLI: give error when date is "qwe" or otherwise non-valid
+[ ] CLI: allow giving just location name: print next Ekadashi
 [ ] CLI: allow storing default location in ~/.config
-[ ] add hari-vasara time support (last quarter of ekAdashI-tithi)
-        [+] add hari-vasara to the Vrata [2021-07-27]
-        [+] print in summary (main tab) [2021-07-28]
-        [+] check that it's printed in details and day-by-day [2021-07-31]
-                [+] CLI (detail?): print Harivasara label when it's < sunrise1 [2021-07-31]
-	[ ] print in table (on pre-ekAdashI day)
 [ ] CI: arrange for permanent "latest" download link (overwrite existing release?)
 [ ] table: show separator column for non-sequential dates
 [ ] calculate Madhva-navamī (saura): Makara, ś9
@@ -330,3 +324,4 @@ done:
 [+] switch from travis-ci to github actions [2021-04-04]
 [+] add Ekadashi's last quarter start to the detailed and day-by-day views [2021-06-05]
 [+] add Orenburg [2021-07-09]
+[+] add hari-vAsara time support (last quarter of ekAdashI-tithi) [2021-07-31]

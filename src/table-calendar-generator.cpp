@@ -11,11 +11,14 @@ std::set<date::local_days> get_vrata_dates(const vp::VratasForDate & vratas, con
     std::set<date::local_days> dates;
     for (const auto & vrata : vratas) {
         if (vrata) {
-            dates.insert(date::local_days{vrata->date});
+            dates.insert(vrata->date);
             dates.insert(vrata->local_paran_date());
             // insert "date + 1 day" in atirikta case, since paran is "date + 2 days"
             if (vp::is_atirikta(vrata->type)) {
                 dates.insert(date::local_days{vrata->date} + date::days{1});
+            }
+            if (const auto harivasara = vrata->harivasara()) {
+                dates.insert(vrata->date - date::days{1});
             }
             for (const auto & [date, name] : vrata->dates_for_this_paksha) {
                 dates.insert(date);
