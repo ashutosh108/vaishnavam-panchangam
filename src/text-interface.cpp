@@ -55,6 +55,7 @@ const std::vector<Location> &LocationDb::locations() {
         { ustkamenogorsk_coord },
         { omsk_coord },
         { krasnoyarsk_coord },
+        { novokuznetsk_coord },
         { novosibirsk_coord },
         { barnaul_coord },
         { tomsk_coord },
