@@ -45,7 +45,7 @@ void insert_ekadashi_paran_etc(vp::NamedDates & dates, const vp::Vrata & vrata) 
     if (const auto harivasara = vrata.harivasara()) {
         const auto harivasara_local = harivasara->as_zoned_time(vrata.location.time_zone()).get_local_time();
         const auto harivasara_date = date::floor<date::days>(harivasara_local);
-        const auto h_m = date::format("%H:%H", harivasara_local);
+        const auto h_m = date::format("%H:%M", harivasara_local);
         std::string str;
         if (harivasara_date != vrata.date) {
             str = fmt::format(FMT_STRING("HV > {}"), h_m);
