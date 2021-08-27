@@ -61,6 +61,9 @@ public:
 
     JulDays_UT calc_astronomical_midnight(date::local_days date) const;
 
+    // find next astronomical midnight (mid-point in time between sunset and sunrise)
+    tl::expected<JulDays_UT, CalcError> first_midnight_after(vp::JulDays_UT after);
+
     vp::Swe swe;
 
 private:

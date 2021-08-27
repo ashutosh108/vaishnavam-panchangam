@@ -99,7 +99,7 @@ find_krishna_jayanti(const vp::Vrata & vrata, vp::Calc & calc) {
      *      в котором это сочетаніе приходится на Сӯрйодай.
      */
 
-    const auto midnight1 = calc.swe.first_midnight_after(intersection_start);
+    const auto midnight1 = calc.first_midnight_after(intersection_start);
     if (!midnight1) {
         return tl::make_unexpected(vp::CalcError{vp::NoRohiniAshtamiIntersectionForJayanti{}});
     }

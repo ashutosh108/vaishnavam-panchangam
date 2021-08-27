@@ -93,6 +93,26 @@ JulDays_UT Calc::calc_astronomical_midnight(date::local_days date) const {
     return JulDays_UT{date} - adjustment;
 }
 
+tl::expected<JulDays_UT, CalcError> Calc::first_midnight_after(JulDays_UT after)
+{
+    const auto next_sunset = swe.find_sunset(after);
+    if (!next_sunset) { return tl::make_unexpected(next_sunset.error()); }
+    const auto next_sunset_sunrise = swe.find_sunrise(*next_sunset);
+    if (!next_sunset_sunrise) { return tl::make_unexpected(next_sunset_sunrise.error()); }
+
+    const auto prev_sunset = swe.find_sunset(*next_sunset - Swe::max_interval_between_sunrises);
+    if (!prev_sunset) { return tl::make_unexpected(prev_sunset.error()); }
+    const auto prev_sunset_sunrise = swe.find_sunrise(*prev_sunset);
+    if (!prev_sunset_sunrise) { return tl::make_unexpected(prev_sunset_sunrise.error()); }
+
+    const auto midnight1 = proportional_time(*prev_sunset, *prev_sunset_sunrise, 0.5);
+    if (midnight1 >= after) { return midnight1; }
+
+    const auto midnight2 = proportional_time(*next_sunset, *next_sunset_sunrise, 0.5);
+    assert(midnight2 >= after);
+    return midnight2;
+}
+
 /* Find sunrise during next ekadashi tithi or right after it.
  */
 tl::expected<JulDays_UT, CalcError> Calc::find_ekadashi_sunrise(JulDays_UT after) const

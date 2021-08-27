@@ -39,8 +39,8 @@ public:
     Nirayana_Longitude get_moon_longitude_sidereal(JulDays_UT time) const;
     Nakshatra get_nakshatra(JulDays_UT time) const;
     Nirayana_Longitude surya_nirayana_longitude(JulDays_UT time) const;
-    // find next astronomical midnight (mid-point in time between sunset and sunrise)
-    tl::expected<JulDays_UT, CalcError> first_midnight_after(vp::JulDays_UT after);
+
+    static constexpr double_hours max_interval_between_sunrises{27.0};
 private:
     // remember to update move-contructor and and move-assigment when adding/changing fields
     bool need_to_close = true;
