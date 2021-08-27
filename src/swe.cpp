@@ -247,4 +247,23 @@ Nirayana_Longitude Swe::surya_nirayana_longitude(JulDays_UT time) const
     return Nirayana_Longitude{res[0]};
 }
 
+tl::expected<JulDays_UT, CalcError> Swe::first_midnight_after(JulDays_UT after)
+{
+    const auto next_sunset = find_sunset(after);
+    if (!next_sunset) { return tl::make_unexpected(next_sunset.error()); }
+    const auto next_sunset_sunrise = find_sunrise(*next_sunset);
+    if (!next_sunset_sunrise) { return tl::make_unexpected(next_sunset_sunrise.error()); }
+
+    const auto prev_sunset = find_sunset(*next_sunset - double_hours{27.0});
+    if (!prev_sunset) { return tl::make_unexpected(prev_sunset.error()); }
+    const auto prev_sunset_sunrise = find_sunrise(*prev_sunset);
+    if (!prev_sunset_sunrise) { return tl::make_unexpected(prev_sunset_sunrise.error()); }
+
+    const auto midnight1 = proportional_time(*prev_sunset, *prev_sunset_sunrise, 0.5);
+    const auto midnight2 = proportional_time(*next_sunset, *next_sunset_sunrise, 0.5);
+    if (midnight1 >= after) { return midnight1; }
+    assert(midnight2 >= after);
+    return midnight2;
+}
+
 } // namespace vp

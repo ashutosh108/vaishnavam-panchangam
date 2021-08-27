@@ -158,3 +158,14 @@ TEST_CASE("Swe keeps both default and non-default flags after move") {
         REQUIRE(swe2_nondefault.calc_flags == CalcFlags::ShravanaDvadashi14ghPlus);
     }
 }
+
+TEST_CASE("first_midnight_after works for known case") {
+    Location c{50.45_N, 30.523333_E};
+    // March 10th 00:00 in Kiev (UTC+2) is March 9th 22:00 UTC.
+    // Astronomical midnight is around 00:07 local time.
+    auto midnight = Swe{c}.first_midnight_after(JulDays_UT{2019_y/March/10} - double_hours{2.0});
+    REQUIRE(midnight.has_value());
+    REQUIRE(midnight->year_month_day() == 2019_y/March/9);
+    // 2019-03-10 00:07:54.332115 EET middle of the night
+    REQUIRE(midnight->hours().count() == Approx(24-2 + 0 + 7.0/60.0 + 54.0/3600.0).margin(1./86400)); // 1 second margin
+}
