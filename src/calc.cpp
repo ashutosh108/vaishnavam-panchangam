@@ -73,9 +73,9 @@ repeat_with_fixed_start_time:
 
     vrata.location = swe.location;
 
-    VP_TRY(vrata.sunset2, swe.find_sunset(vrata.sunrise2))
+    VP_TRY(vrata.sunset2, swe.next_sunset(vrata.sunrise2))
     VP_TRY(vrata.sunrise3, next_sunrise(vrata.sunrise2))
-    VP_TRY(vrata.sunset3, swe.find_sunset(vrata.sunrise3))
+    VP_TRY(vrata.sunset3, swe.next_sunset(vrata.sunrise3))
 
     vrata.type = calc_vrata_type(vrata);
     vrata.paran = is_atirikta(vrata.type) ?
@@ -95,14 +95,14 @@ JulDays_UT Calc::calc_astronomical_midnight(date::local_days date) const {
 
 tl::expected<JulDays_UT, CalcError> Calc::first_midnight_after(JulDays_UT after)
 {
-    const auto next_sunset = swe.find_sunset(after);
+    const auto next_sunset = swe.next_sunset(after);
     if (!next_sunset) { return tl::make_unexpected(next_sunset.error()); }
-    const auto next_sunset_sunrise = swe.find_sunrise(*next_sunset);
+    const auto next_sunset_sunrise = swe.next_sunrise(*next_sunset);
     if (!next_sunset_sunrise) { return tl::make_unexpected(next_sunset_sunrise.error()); }
 
-    const auto prev_sunset = swe.find_sunset(*next_sunset - Swe::max_interval_between_sunrises);
+    const auto prev_sunset = swe.next_sunset(*next_sunset - Swe::max_interval_between_sunrises);
     if (!prev_sunset) { return tl::make_unexpected(prev_sunset.error()); }
-    const auto prev_sunset_sunrise = swe.find_sunrise(*prev_sunset);
+    const auto prev_sunset_sunrise = swe.next_sunrise(*prev_sunset);
     if (!prev_sunset_sunrise) { return tl::make_unexpected(prev_sunset_sunrise.error()); }
 
     const auto midnight1 = proportional_time(*prev_sunset, *prev_sunset_sunrise, 0.5);
@@ -119,12 +119,12 @@ tl::expected<JulDays_UT, CalcError> Calc::find_ekadashi_sunrise(JulDays_UT after
 {
     const auto ekadashi = find_either_tithi_start(after, Tithi::Ekadashi());
 
-    return swe.find_sunrise(ekadashi);
+    return swe.next_sunrise(ekadashi);
 }
 
 tl::expected<JulDays_UT, CalcError> Calc::next_sunrise(JulDays_UT sunrise) const {
     constexpr auto small_enough_delta = double_days{0.001};
-    return swe.find_sunrise(sunrise + small_enough_delta);
+    return swe.next_sunrise(sunrise + small_enough_delta);
 }
 
 JulDays_UT Calc::next_sunrise_v(JulDays_UT sunrise) const {
@@ -138,7 +138,7 @@ JulDays_UT Calc::next_sunrise_v(JulDays_UT sunrise) const {
 
 tl::expected<JulDays_UT, CalcError> Calc::sunset_before_sunrise(JulDays_UT const sunrise) const {
     JulDays_UT back_24hrs{sunrise - double_days{1.0}};
-    return swe.find_sunset(back_24hrs);
+    return swe.next_sunset(back_24hrs);
 }
 
 Vrata_Time_Points Calc::calc_key_times_from_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const
@@ -240,7 +240,7 @@ bool Calc::got_shravana_nakshatra_next_day(const Vrata &vrata) const
 
 bool Calc::got_shravana_nakshatra_same_day(const Vrata &vrata) const
 {
-    auto sunset1 = swe.find_sunset(vrata.sunrise1);
+    auto sunset1 = swe.next_sunset(vrata.sunrise1);
     if (!sunset1) return false;
     return got_shravana_for_sunrise_sunset(vrata.sunrise1, *sunset1, vrata.sunrise2, swe);
 }
@@ -376,7 +376,7 @@ JulDays_UT Calc::find_exact_tithi_start(JulDays_UT from, Tithi tithi) const {
 tl::expected<date::local_days, CalcError> Calc::find_exact_tithi_date(const JulDays_UT from, const DiscreteTithi tithi, const date::time_zone * tz) const
 {
     const auto tithi_start = find_exact_tithi_start(from, Tithi{tithi});
-    const auto sunrise = swe.find_sunrise(tithi_start);
+    const auto sunrise = swe.next_sunrise(tithi_start);
     if (!sunrise) {
         return tl::make_unexpected(sunrise.error());
     }

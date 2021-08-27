@@ -59,7 +59,7 @@ void insert_ekadashi_paran_etc(vp::NamedDates & dates, const vp::Vrata & vrata) 
 #ifdef KRISHNA_JAYANTI
 static tl::expected<date::local_days, vp::CalcError>
 local_sun_date_covering_given_time(vp::Swe & swe, const date::time_zone * time_zone, vp::JulDays_UT time) {
-    const auto sunset = swe.find_sunset(time);
+    const auto sunset = swe.next_sunset(time);
     if (!sunset) { return tl::make_unexpected(sunset.error()); }
 
     const auto sunset_local = sunset->as_zoned_time(time_zone).get_local_time();
@@ -111,7 +111,7 @@ find_krishna_jayanti(const vp::Vrata & vrata, vp::Calc & calc) {
         return local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), *midnight1);
     }
 
-    const auto sunset1 = calc.swe.find_sunset(intersection_start - vp::double_days{1});
+    const auto sunset1 = calc.swe.next_sunset(intersection_start - vp::double_days{1});
 
     const auto intersection_start_local = intersection_start.as_zoned_time(vrata.location.time_zone()).get_local_time();
     const auto intersection_end_local = intersection_end.as_zoned_time(vrata.location.time_zone()).get_local_time();

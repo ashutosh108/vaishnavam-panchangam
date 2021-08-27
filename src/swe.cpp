@@ -102,28 +102,28 @@ Swe::Swe(Swe && other) noexcept
     std::swap(ephemeris_flags, other.ephemeris_flags);
 }
 
-tl::expected<JulDays_UT, CalcError> Swe::find_sunrise(JulDays_UT after) const
+tl::expected<JulDays_UT, CalcError> Swe::next_sunrise(JulDays_UT after) const
 {
     return do_rise_trans(SE_CALC_RISE, after);
 }
 
-JulDays_UT Swe::find_sunrise_v(JulDays_UT after) const
+JulDays_UT Swe::next_sunrise_v(JulDays_UT after) const
 {
-    auto sunrise_or_error = find_sunrise(after);
+    auto sunrise_or_error = next_sunrise(after);
     if (!sunrise_or_error) {
         throw std::runtime_error(fmt::format("can't find next sunrise after {}", after));
     }
     return *sunrise_or_error;
 }
 
-tl::expected<JulDays_UT, CalcError> Swe::find_sunset(JulDays_UT after) const
+tl::expected<JulDays_UT, CalcError> Swe::next_sunset(JulDays_UT after) const
 {
     return do_rise_trans(SE_CALC_SET, after);
 }
 
-JulDays_UT Swe::find_sunset_v(JulDays_UT after) const
+JulDays_UT Swe::next_sunset_v(JulDays_UT after) const
 {
-    auto sunset_or_error = find_sunset(after);
+    auto sunset_or_error = next_sunset(after);
     if (!sunset_or_error) {
         throw std::runtime_error(fmt::format("can't find sunset after ", after));
     }

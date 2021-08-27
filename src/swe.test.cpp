@@ -15,42 +15,42 @@ TEST_CASE("Swe default constructor") {
     REQUIRE(true);
 }
 
-TEST_CASE("find_sunrise()") {
+TEST_CASE("next_sunrise()") {
     Location c{50.45_N, 30.523333_E};
-    auto sunrise = Swe{c}.find_sunrise(JulDays_UT{2019_y/March/10});
+    auto sunrise = Swe{c}.next_sunrise(JulDays_UT{2019_y/March/10});
     REQUIRE(sunrise.has_value());
     REQUIRE(sunrise->year_month_day() == 2019_y/March/10);
     REQUIRE(sunrise->hours().count() == Approx(4.4816697389).margin(60./86400)); // 1 minute margin
 }
 
-TEST_CASE("find_sunrise_v() is callable") {
+TEST_CASE("next_sunrise_v() is callable") {
     Location c{50.45_N, 30.523333_E};
-    auto sunrise = Swe{c}.find_sunrise_v(JulDays_UT{2019_y/March/10});
+    auto sunrise = Swe{c}.next_sunrise_v(JulDays_UT{2019_y/March/10});
     REQUIRE(sunrise.year_month_day() == 2019_y/March/10);
     REQUIRE(sunrise.hours().count() == Approx(4.4816697389).margin(60./86400)); // 1 minute margin
 }
 
-TEST_CASE("find_sunrise_v() throws when no (imminent) sunrise found") {
+TEST_CASE("next_sunrise_v() throws when no (imminent) sunrise found") {
     Location c{68'58'00_N, 33'05'00_E, "Murmansk"}; // fixed here to avoid test changes when we update coords
-    REQUIRE_THROWS(Swe{c}.find_sunrise_v(JulDays_UT{2019_y/December/1}));
+    REQUIRE_THROWS(Swe{c}.next_sunrise_v(JulDays_UT{2019_y/December/1}));
 }
 
-TEST_CASE("find_sunset") {
+TEST_CASE("next_sunset") {
     Location c{50.45_N, 30.523333_E};
-    auto sunset = Swe{c}.find_sunset(JulDays_UT{2019_y/March/10});
+    auto sunset = Swe{c}.next_sunset(JulDays_UT{2019_y/March/10});
     REQUIRE(sunset.has_value());
     REQUIRE(sunset->round_to_minute_down() == date::sys_days(2019_y/March/10) + 15h + 48min /*+ 33.812600s*/);
 }
 
-TEST_CASE("find_sunset_v") {
+TEST_CASE("next_sunset_v") {
     Location c{50.45_N, 30.523333_E};
-    auto sunset = Swe{c}.find_sunset_v(JulDays_UT{2019_y/March/10});
+    auto sunset = Swe{c}.next_sunset_v(JulDays_UT{2019_y/March/10});
     REQUIRE(sunset.round_to_minute_down() == date::sys_days(2019_y/March/10) + 15h + 48min /*+ 33.812600s*/);
 }
 
-TEST_CASE("find_sunset_v throws when no (imminent) sunset found") {
+TEST_CASE("next_sunset_v throws when no (imminent) sunset found") {
     Location c{68'58'00_N, 33'05'00_E, "Murmansk"}; // fixed here to avoid test changes when we update coords
-    REQUIRE_THROWS(Swe{c}.find_sunset_v(JulDays_UT{2019_y/December/1}));
+    REQUIRE_THROWS(Swe{c}.next_sunset_v(JulDays_UT{2019_y/December/1}));
 }
 
 
@@ -82,10 +82,10 @@ TEST_CASE("swe gives different sunrises for edge and center of sun disc") {
     JulDays_UT after{2019_y/March/10};
     Location loc{23.0_N, 45.0_E};
     auto sunrise_center = [&]() {
-        return vp::Swe{loc}.find_sunrise_v(after);
+        return vp::Swe{loc}.next_sunrise_v(after);
     }();
     auto sunrise_edge = [&]() {
-        return vp::Swe{loc, vp::CalcFlags::SunriseByDiscEdge}.find_sunrise_v(after);
+        return vp::Swe{loc, vp::CalcFlags::SunriseByDiscEdge}.next_sunrise_v(after);
     }();
     REQUIRE(sunrise_edge < sunrise_center);
     auto diff = date::floor<std::chrono::seconds>(sunrise_center - sunrise_edge);
@@ -96,10 +96,10 @@ TEST_CASE("swe gives different sunrises for edge and center of sun disc") {
 TEST_CASE("sunrise with refraction off comes 3-5 minutes before actual observed sunrise with refraction on") {
     const JulDays_UT after{2020_y/January/1};
     const auto sunrise_with_refraction_off = [&]() {
-        return vp::Swe{arbitrary_coord, vp::CalcFlags::RefractionOff}.find_sunrise_v(after);
+        return vp::Swe{arbitrary_coord, vp::CalcFlags::RefractionOff}.next_sunrise_v(after);
     }();
     const auto sunrise_with_refraction_on = [&]() {
-        return vp::Swe{arbitrary_coord, vp::CalcFlags::RefractionOn}.find_sunrise_v(after);
+        return vp::Swe{arbitrary_coord, vp::CalcFlags::RefractionOn}.next_sunrise_v(after);
     }();
     auto diff = sunrise_with_refraction_off - sunrise_with_refraction_on;
     REQUIRE(diff >= 3min);

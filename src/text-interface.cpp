@@ -409,7 +409,7 @@ void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const
 DayByDayInfo daybyday_events(date::year_month_day base_date, const vp::Calc & calc) {
     DayByDayInfo info;
     const auto local_astronomical_midnight = calc.calc_astronomical_midnight(date::local_days{base_date});
-    const auto sunrise = calc.swe.find_sunrise(local_astronomical_midnight);
+    const auto sunrise = calc.swe.next_sunrise(local_astronomical_midnight);
     if (sunrise) {
         info.sunrise1 = *sunrise;
         info.events.push_back(NamedTimePoint{"sunrise (prātaḥ-kāla begins)", *sunrise});
@@ -418,7 +418,7 @@ DayByDayInfo daybyday_events(date::year_month_day base_date, const vp::Calc & ca
             info.events.push_back(NamedTimePoint{"arunodaya", *arunodaya});
         }
 
-        const auto sunset = calc.swe.find_sunset(*sunrise);
+        const auto sunset = calc.swe.next_sunset(*sunrise);
         if (sunset) {
             info.sunset1 = *sunset;
             info.events.push_back(NamedTimePoint{"sunset", *sunset});
@@ -430,7 +430,7 @@ DayByDayInfo daybyday_events(date::year_month_day base_date, const vp::Calc & ca
             info.events.push_back(NamedTimePoint{"3/5 of daytime (aparāhna-kāla begins)", proportional_time(*sunrise, *sunset, 0.6)});
             info.events.push_back(NamedTimePoint{"4/5 of daytime (sāyāhna-kāla begins)", proportional_time(*sunrise, *sunset, 0.8)});
             info.events.push_back(NamedTimePoint{"middle of the day", proportional_time(*sunrise, *sunset, 0.5)});
-            const auto sunrise2 = calc.swe.find_sunrise(*sunset);
+            const auto sunrise2 = calc.swe.next_sunrise(*sunset);
             if (sunrise2) {
                 info.sunrise2 = *sunrise2;
                 const auto middle_of_night = proportional_time(*sunset, *sunrise2, 0.5);

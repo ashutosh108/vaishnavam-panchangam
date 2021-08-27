@@ -28,10 +28,10 @@ public:
     Swe(Swe &&) noexcept;
     // We shouldn't need move-assignment for this class (can't see any well-defined use case).
     // Swe& operator=(Swe &&) noexcept;
-    tl::expected<JulDays_UT, CalcError> find_sunrise(JulDays_UT after) const;
-    JulDays_UT find_sunrise_v(JulDays_UT after) const;
-    tl::expected<JulDays_UT, CalcError> find_sunset(JulDays_UT after) const;
-    JulDays_UT find_sunset_v(JulDays_UT after) const;
+    tl::expected<JulDays_UT, CalcError> next_sunrise(JulDays_UT after) const;
+    JulDays_UT next_sunrise_v(JulDays_UT after) const;
+    tl::expected<JulDays_UT, CalcError> next_sunset(JulDays_UT after) const;
+    JulDays_UT next_sunset_v(JulDays_UT after) const;
     double get_sun_longitude(JulDays_UT time) const;
     double get_moon_longitude(JulDays_UT time) const;
     /** Get tithi as double [0..30) */
