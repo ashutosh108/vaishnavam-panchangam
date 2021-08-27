@@ -70,19 +70,27 @@ TEST_CASE("is_shukla_pratipat()") {
 }
 
 TEST_CASE("can construct and compare Tithi using symbolic names") {
+    REQUIRE(Tithi::Shukla_Pratipat() == Tithi{0.0});
     REQUIRE(Tithi::Dashami() == Tithi{9});
     REQUIRE(Tithi::Dashami() != Tithi{9.1});
     REQUIRE(Tithi::Ekadashi() == Tithi{10});
     REQUIRE(Tithi::Dvadashi() == Tithi{11});
     REQUIRE(Tithi::Trayodashi() == Tithi{12});
-
-    REQUIRE(Tithi::Shukla_Pratipat() == Tithi{0.0});
+    REQUIRE(Tithi::Chaturdashi() == Tithi{13});
+    REQUIRE(Tithi::Purnima() == Tithi{14});
     REQUIRE(Tithi::Krishna_Pratipat() == Tithi{15.0});
+    REQUIRE(Tithi::Krishna_Saptami() == Tithi{15.0 + 6.0});
+    REQUIRE(Tithi::Krishna_Ashtami() == Tithi{15.0 + 7.0});
+    REQUIRE(Tithi::Krishna_Navami() == Tithi{15.0 + 8.0});
 
     REQUIRE(Tithi::Dashami_End() == Tithi::Ekadashi());
     REQUIRE(Tithi::Ekadashi_End() == Tithi::Dvadashi());
     REQUIRE(Tithi::Dvadashi_End() == Tithi::Trayodashi());
+    REQUIRE(Tithi::Trayodashi_End() == Tithi::Chaturdashi());
+    REQUIRE(Tithi::Chaturdashi_End() == Tithi::Purnima());
     REQUIRE(Tithi::Purnima_End() == Tithi::Krishna_Pratipat());
+    REQUIRE(Tithi::Krishna_Saptami_End() == Tithi::Krishna_Ashtami());
+    REQUIRE(Tithi::Krishna_Ashtami_End() == Tithi::Krishna_Navami());
 
     REQUIRE(Tithi::Amavasya_End() == Tithi::Shukla_Pratipat());
 }

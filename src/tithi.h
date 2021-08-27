@@ -35,15 +35,23 @@ struct Tithi {
     static constexpr Tithi Shukla_Pratipat() { return Tithi{0.0}; }
     static constexpr Tithi Amavasya_End() { return Tithi::Shukla_Pratipat(); }
     static constexpr Tithi Dashami() { return Tithi{9.0}; }
-    static constexpr Tithi Ekadashi() { return Tithi{10.0}; }
     static constexpr Tithi Dashami_End() { return Ekadashi(); }
-    static constexpr Tithi Dvadashi() { return Tithi{11.0}; }
+    static constexpr Tithi Ekadashi() { return Tithi{10.0}; }
     static constexpr Tithi Ekadashi_End() { return Dvadashi(); }
-    static constexpr Tithi Trayodashi() { return Tithi{12.0}; }
+    static constexpr Tithi Dvadashi() { return Tithi{11.0}; }
     static constexpr Tithi Dvadashi_End() { return Trayodashi(); }
-    static constexpr Tithi Krishna_Pratipat() { return Tithi{15.0}; }
+    static constexpr Tithi Trayodashi() { return Tithi{12.0}; }
+    static constexpr Tithi Trayodashi_End() { return Tithi::Chaturdashi(); }
+    static constexpr Tithi Chaturdashi() { return Tithi{13.0}; }
+    static constexpr Tithi Chaturdashi_End() { return Tithi::Purnima(); }
+    static constexpr Tithi Purnima() { return Tithi{14.0}; }
     static constexpr Tithi Purnima_End() { return Tithi::Krishna_Pratipat(); }
+    static constexpr Tithi Krishna_Pratipat() { return Tithi{15.0}; }
     static constexpr Tithi Krishna_Saptami() { return Tithi{15.0 + 6.0}; }
+    static constexpr Tithi Krishna_Saptami_End() { return Tithi::Krishna_Ashtami(); }
+    static constexpr Tithi Krishna_Ashtami() { return Tithi{15.0 + 7.0}; }
+    static constexpr Tithi Krishna_Ashtami_End() { return Tithi::Krishna_Navami(); }
+    static constexpr Tithi Krishna_Navami() { return Tithi{15.0 + 8.0}; }
 
     static constexpr std::chrono::duration<double, std::ratio<3600>> AverageLength() {
         using namespace std::literals::chrono_literals;
