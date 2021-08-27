@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
 project(vaishnavam-panchangam VERSION 0.1 LANGUAGES C CXX)
 option(VP_BUILD_STATIC_EXECUTABLE "build static executable (no .dll or .so dependencies like MSVCRT or libc++)" ON)
 option(VP_BUILD_QT_GUI "build Qt GUI" ON)
+option(KRISHNA_JAYANTI "Enable display of Krishna jayanti day (work in progress, so disabled by default)" OFF)
 
 include(cmake/common.cmake)
 
@@ -72,6 +73,9 @@ add_library(swe STATIC
 )
 target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)
 target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected fmt::fmt)
+if (KRISHNA_JAYANTI)
+    target_compile_definitions(swe PRIVATE KRISHNA_JAYANTI)
+endif()
 
 add_library(sweph STATIC
     vendor/sweph/src/swecl.c
