@@ -348,8 +348,8 @@ void daybyday_print_header(date::year_month_day base_date, const Location & coor
 }
 
 void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, DayByDayInfo & info) {
-    const auto min_tithi = calc.swe.get_tithi(from).floor();
-    const auto max_tithi = calc.swe.get_tithi(to).ceil() + 1.0;
+    const auto min_tithi = calc.swe.tithi(from).floor();
+    const auto max_tithi = calc.swe.tithi(to).ceil() + 1.0;
     auto start = from - std::chrono::hours{36};
     // need "!=" to handle cross-amavasya cases correctly, when max_tithi is less than min_tithi
     for (vp::Tithi tithi = min_tithi; tithi != max_tithi; tithi += 1.0) {
@@ -387,8 +387,8 @@ void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp:
 }
 
 void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, DayByDayInfo & info) {
-    const auto min_nakshatra = calc.swe.get_nakshatra(from).floor();
-    const auto max_nakshatra = calc.swe.get_nakshatra(to).ceil() + 1.0;
+    const auto min_nakshatra = calc.swe.nakshatra(from).floor();
+    const auto max_nakshatra = calc.swe.nakshatra(to).ceil() + 1.0;
     auto start = from - std::chrono::hours{36}; // to ensure we get beginning of first nakshatra
     for (vp::Nakshatra n = min_nakshatra; n != max_nakshatra; ++n) {
         auto nakshatra_start = calc.find_nakshatra_start(start, n);

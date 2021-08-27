@@ -54,7 +54,7 @@ repeat_with_fixed_start_time:
     VP_TRY(vrata.sunrise2, next_sunrise(vrata.sunrise1))
 
     vrata.times = calc_key_times_from_sunset_and_sunrise(vrata.sunset0, vrata.sunrise1);
-    auto tithi_that_must_not_be_dashamI = swe.get_tithi(vrata.times.ativrddhaditvam_timepoint());
+    auto tithi_that_must_not_be_dashamI = swe.tithi(vrata.times.ativrddhaditvam_timepoint());
     if (tithi_that_must_not_be_dashamI.is_dashami()) {
         vrata.sunrise0 = vrata.sunrise1;
         vrata.sunrise1 = vrata.sunrise2;
@@ -201,9 +201,9 @@ bool got_shravana_for_sunrise_sunset(JulDays_UT sunrise, JulDays_UT sunset, JulD
     using ghatikas = std::chrono::duration<double, std::ratio_multiply<std::chrono::minutes::period, std::ratio<24>>>;
     using namespace std::chrono_literals;
 
-    DiscreteNakshatra nakshatra_on_sunrise = swe.get_nakshatra(sunrise);
+    DiscreteNakshatra nakshatra_on_sunrise = swe.nakshatra(sunrise);
     if (nakshatra_on_sunrise != DiscreteNakshatra::Shravana()) { return false; }
-    Tithi tithi_on_sunrise = swe.get_tithi(sunrise);
+    Tithi tithi_on_sunrise = swe.tithi(sunrise);
     if (!tithi_on_sunrise.is_dvadashi()) { return false; }
 
     // limit until which both Dvādaśī and Śravaṇa must hold. 12 or 14 ghaṭikas
@@ -216,16 +216,16 @@ bool got_shravana_for_sunrise_sunset(JulDays_UT sunrise, JulDays_UT sunset, JulD
     const bool require_14gh = ((swe.calc_flags & CalcFlags::ShravanaDvadashiMask) == CalcFlags::ShravanaDvadashi14ghPlus);
     const auto madhyahna_limit_ratio_from_daytime = require_14gh ? ratio_for_14gh : ratio_for_12gh;
     const auto madhyahna_limit = proportional_time(sunrise, sunset, madhyahna_limit_ratio_from_daytime);
-    DiscreteNakshatra nakshantra_at_limit = swe.get_nakshatra(madhyahna_limit);
+    DiscreteNakshatra nakshantra_at_limit = swe.nakshatra(madhyahna_limit);
     if (nakshantra_at_limit != DiscreteNakshatra::Shravana()) { return false; }
-    Tithi tithi_at_limit = swe.get_tithi(madhyahna_limit);
+    Tithi tithi_at_limit = swe.tithi(madhyahna_limit);
     if (!tithi_at_limit.is_dvadashi()) { return false; }
 
     // If Śravaṇa nakṣatra extends till another sunrise, then Śravaṇa dvādaśī condition is not fulfilled.
     // Since nakshatras cannot reach 72 ghatikas (60 for full ekādaśī day + 12 to reach madhyahnam on dvādaśī),
     // we don't have to check the previous sunrise (aka "sunrise1") for Śravaṇa.
     // So we only need to check for next sunrise.
-    const DiscreteNakshatra nakshatra_at_next_sunrise = swe.get_nakshatra(next_sunrise);
+    const DiscreteNakshatra nakshatra_at_next_sunrise = swe.nakshatra(next_sunrise);
     if (nakshatra_at_next_sunrise == DiscreteNakshatra::Shravana()) {
         return false;
     }
@@ -251,8 +251,8 @@ bool Calc::got_shravana_nakshatra_same_day(const Vrata &vrata) const
  */
 bool Calc::got_atirikta_ekadashi(const Vrata & vrata) const
 {
-    Tithi tithi_on_first_sunrise = swe.get_tithi(vrata.sunrise1);
-    Tithi tithi_on_second_sunrise = swe.get_tithi(vrata.sunrise2);
+    Tithi tithi_on_first_sunrise = swe.tithi(vrata.sunrise1);
+    Tithi tithi_on_second_sunrise = swe.tithi(vrata.sunrise2);
     return tithi_on_first_sunrise.is_ekadashi() && tithi_on_second_sunrise.is_ekadashi();
 }
 
@@ -262,8 +262,8 @@ bool Calc::got_atirikta_ekadashi(const Vrata & vrata) const
  */
 bool Calc::got_atirikta_dvadashi(const Vrata & vrata) const
 {
-    Tithi tithi_on_second_sunrise = swe.get_tithi(vrata.sunrise2);
-    Tithi tithi_on_third_sunrise = swe.get_tithi(vrata.sunrise3);
+    Tithi tithi_on_second_sunrise = swe.tithi(vrata.sunrise2);
+    Tithi tithi_on_third_sunrise = swe.tithi(vrata.sunrise3);
     return tithi_on_second_sunrise.is_dvadashi() && tithi_on_third_sunrise.is_dvadashi();
 }
 
@@ -366,7 +366,7 @@ JulDays_UT Calc::find_exact_tithi_start(JulDays_UT from, Tithi tithi) const {
         from,
         tithi,
         Tithi::AverageLength(),
-        [this](JulDays_UT time) { return swe.get_tithi(time); },
+        [this](JulDays_UT time) { return swe.tithi(time); },
         [](Tithi t1, Tithi t2) { return t1.positive_delta_until_tithi(t2); },
         [](Tithi t1, Tithi t2) { return t1.delta_to_nearest_tithi(t2); },
         [](Tithi target, JulDays_UT from) { throw CantFindTithiAfter{target, from}; },
@@ -390,7 +390,7 @@ JulDays_UT Calc::find_either_tithi_start(JulDays_UT from, Tithi tithi) const
         from,
         tithi,
         Tithi::AverageLength(),
-        [this](JulDays_UT time) { return swe.get_tithi(time); },
+        [this](JulDays_UT time) { return swe.tithi(time); },
         [](Tithi t1, Tithi t2) { return t1.positive_delta_until_tithi(t2); },
         [](Tithi t1, Tithi t2) { return t1.delta_to_nearest_tithi(t2); },
         [](Tithi target, JulDays_UT from) { throw CantFindTithiAfter{target, from}; },
@@ -409,7 +409,7 @@ JulDays_UT Calc::find_nakshatra_start(const JulDays_UT from, const Nakshatra tar
         from,
         target_nakshatra,
         Nakshatra::AverageLength(),
-        [this](JulDays_UT time) { return swe.get_nakshatra(time); },
+        [this](JulDays_UT time) { return swe.nakshatra(time); },
         positive_delta_between_nakshatras,
         minimal_delta_between_nakshatras,
         [](Nakshatra target, JulDays_UT from) { throw CantFindNakshatraAfter{target, from}; },

@@ -55,18 +55,18 @@ TEST_CASE("next_sunset_v throws when no (imminent) sunset found") {
 
 
 TEST_CASE("get sun longitude") {
-    double sun_longitude = Swe{arbitrary_coord}.get_sun_longitude(JulDays_UT{2019_y/March/10});
+    double sun_longitude = Swe{arbitrary_coord}.sun_longitude(JulDays_UT{2019_y/March/10});
     REQUIRE(sun_longitude == Approx(349.1222311334));
 }
 
 TEST_CASE("get moon longitude") {
-    double moon_longitude = Swe{arbitrary_coord}.get_moon_longitude(JulDays_UT{2019_y/March/10});
+    double moon_longitude = Swe{arbitrary_coord}.moon_longitude(JulDays_UT{2019_y/March/10});
     REQUIRE(moon_longitude == Approx(26.2874840949));
 }
 
 TEST_CASE("get tithi") {
     JulDays_UT t2{2019_y/March/21, double_hours{1.716666}}; // around 1:43am (UTC time), peak of purnima
-    auto tithi = Swe{arbitrary_coord}.get_tithi(t2);
+    auto tithi = Swe{arbitrary_coord}.tithi(t2);
     REQUIRE(tithi.tithi == Approx(15.0001492371));
 }
 
@@ -115,8 +115,8 @@ TEST_CASE("get_moon_longitude_sidereal works for known case (Rohini end on 2020-
     // 2020-11-03
     // Sunrise: ~06:26
     // Rohini (4-of-27) until 50-08 26-30
-    const auto actual1 = vp::Swe{udupi}.get_moon_longitude_sidereal(t1);
-    const auto actual2 = vp::Swe{udupi}.get_moon_longitude_sidereal(t2);
+    const auto actual1 = vp::Swe{udupi}.moon_longitude_sidereal(t1);
+    const auto actual2 = vp::Swe{udupi}.moon_longitude_sidereal(t2);
 
     const vp::Nirayana_Longitude expected{4.0 * (360.0 / 27.0)};
 

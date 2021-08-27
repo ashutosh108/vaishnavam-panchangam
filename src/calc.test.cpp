@@ -98,7 +98,7 @@ TEST_CASE("Vijaya Ekadashi Kiev 2019") {
 
     SECTION("basic") {
         REQUIRE(vrata.has_value());
-        REQUIRE(vp::Swe{kiev}.get_tithi(JulDays_UT{vrata->date}).get_paksha() == Paksha::Krishna);
+        REQUIRE(vp::Swe{kiev}.tithi(JulDays_UT{vrata->date}).get_paksha() == Paksha::Krishna);
         REQUIRE(vrata->type == Vrata_Type::Ekadashi);
         REQUIRE(date::year_month_day{vrata->date} == 2019_y/March/2);
     }
@@ -410,7 +410,7 @@ TEST_CASE("find_tithi_start gives what we expect (close to the target tithi)") {
 
     auto actual_time = calc.find_either_tithi_start(from, expected_tithi);
 
-    Tithi actual_tithi = calc.swe.get_tithi(actual_time);
+    Tithi actual_tithi = calc.swe.tithi(actual_time);
     REQUIRE(expected_tithi == actual_tithi);
 }
 
@@ -432,7 +432,7 @@ TEST_CASE("get_next_tithi() returns Shukla Ekadashi after Shukla something tithi
     Calc const calc{london_coord};
     JulDays_UT const from{2019_y/May/12};
     auto actual_time = get_next_tithi_wrapper(calc, from, Tithi::Ekadashi());
-    auto actual_tithi = calc.swe.get_tithi(actual_time);
+    auto actual_tithi = calc.swe.tithi(actual_time);
     REQUIRE(actual_tithi.tithi == Approx{Tithi::Ekadashi().tithi});
     REQUIRE((actual_time - from) <= double_days{14});
 }
@@ -441,7 +441,7 @@ TEST_CASE("get_next_tithi() returns Krishna Ekadashi after Krishna something tit
     Calc const calc{london_coord};
     JulDays_UT const from{2019_y/April/25};
     auto actual_time = get_next_tithi_wrapper(calc, from, Tithi::Ekadashi());
-    auto actual_tithi = calc.swe.get_tithi(actual_time);
+    auto actual_tithi = calc.swe.tithi(actual_time);
     REQUIRE(actual_tithi.tithi-15.0 == Approx(Tithi::Ekadashi().tithi));
     REQUIRE((actual_time - from) <= double_days{14});
 }
@@ -450,7 +450,7 @@ TEST_CASE("get_next_tithi() gives closest Ekadashi tithi for petropavlovsk after
     Calc const calc{petropavlovskkamchatskiy_coord};
     JulDays_UT const from{2019_y/March/15};
     auto actual_time = get_next_tithi_wrapper(calc, from, Tithi::Ekadashi());
-    auto actual_tithi = calc.swe.get_tithi(actual_time);
+    auto actual_tithi = calc.swe.tithi(actual_time);
     REQUIRE(actual_tithi.tithi == Approx(Tithi::Ekadashi().tithi));
     REQUIRE((actual_time - from) <= double_days{14});
 }
@@ -713,7 +713,7 @@ TEST_CASE("find_exact_tithi_start() works for second paksha (tithis >= 15)") {
 
     // shukla saptami is very close (within 2 days) of start time. So ensure we found next saptami
     REQUIRE(time - start_time >= double_days{10});
-    REQUIRE(calc.swe.get_tithi(time).tithi == Approx(Tithi::Krishna_Saptami().tithi));
+    REQUIRE(calc.swe.tithi(time).tithi == Approx(Tithi::Krishna_Saptami().tithi));
 }
 
 TEST_CASE("saura_masa() works for simple cases") {

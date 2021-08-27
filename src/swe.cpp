@@ -203,14 +203,14 @@ void Swe::do_calc_ut(double jd, int planet, int flags, double *res) const {
     throw_on_wrong_flags(res_flags, flags, serr);
 }
 
-double Swe::get_sun_longitude(JulDays_UT time) const
+double Swe::sun_longitude(JulDays_UT time) const
 {
     double res[6];
     do_calc_ut(time.raw_julian_days_ut().count(), SE_SUN, ephemeris_flags, res);
     return res[0];
 }
 
-double Swe::get_moon_longitude(JulDays_UT time) const
+double Swe::moon_longitude(JulDays_UT time) const
 {
     double res[6];
     do_calc_ut(time.raw_julian_days_ut().count(), SE_MOON, ephemeris_flags, res);
@@ -218,26 +218,25 @@ double Swe::get_moon_longitude(JulDays_UT time) const
 }
 
 /** Get tithi as double [0..30) */
-Tithi Swe::get_tithi(JulDays_UT time) const
+Tithi Swe::tithi(JulDays_UT time) const
 {
-    double sun = get_sun_longitude(time);
-    double moon = get_moon_longitude(time);
+    double sun = sun_longitude(time);
+    double moon = moon_longitude(time);
     double diff = moon - sun;
     if (diff < 0) diff += 360.0;
     return Tithi{diff / (360.0/30)};
 }
 
-Nirayana_Longitude Swe::get_moon_longitude_sidereal(JulDays_UT time) const
+Nirayana_Longitude Swe::moon_longitude_sidereal(JulDays_UT time) const
 {
     double res[6];
     do_calc_ut(time.raw_julian_days_ut().count(), SE_MOON, ephemeris_flags | SEFLG_SIDEREAL, res);
     return Nirayana_Longitude{res[0]};
 }
 
-Nakshatra Swe::get_nakshatra(JulDays_UT time) const
+Nakshatra Swe::nakshatra(JulDays_UT time) const
 {
-    const auto moon_longitude_sidereal = get_moon_longitude_sidereal(time);
-    return Nakshatra{moon_longitude_sidereal.longitude * (27.0/360.0)};
+    return Nakshatra{moon_longitude_sidereal(time).longitude * (27.0/360.0)};
 }
 
 Nirayana_Longitude Swe::surya_nirayana_longitude(JulDays_UT time) const

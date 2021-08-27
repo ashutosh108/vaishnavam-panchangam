@@ -32,12 +32,12 @@ public:
     JulDays_UT next_sunrise_v(JulDays_UT after) const;
     tl::expected<JulDays_UT, CalcError> next_sunset(JulDays_UT after) const;
     JulDays_UT next_sunset_v(JulDays_UT after) const;
-    double get_sun_longitude(JulDays_UT time) const;
-    double get_moon_longitude(JulDays_UT time) const;
+    double sun_longitude(JulDays_UT time) const;
+    double moon_longitude(JulDays_UT time) const;
     /** Get tithi as double [0..30) */
-    Tithi get_tithi(JulDays_UT time) const;
-    Nirayana_Longitude get_moon_longitude_sidereal(JulDays_UT time) const;
-    Nakshatra get_nakshatra(JulDays_UT time) const;
+    Tithi tithi(JulDays_UT time) const;
+    Nirayana_Longitude moon_longitude_sidereal(JulDays_UT time) const;
+    Nakshatra nakshatra(JulDays_UT time) const;
     Nirayana_Longitude surya_nirayana_longitude(JulDays_UT time) const;
 
     static constexpr double_hours max_interval_between_sunrises{27.0};
