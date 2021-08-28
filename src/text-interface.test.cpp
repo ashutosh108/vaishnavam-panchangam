@@ -286,9 +286,16 @@ TEST_CASE("Vasanta-pañcamī etc are present in 2021") {
 TEST_CASE("Krishna Jayanti 2021") {
     using namespace date;
     SECTION("Udupi") {
-        auto vratas = vp::text_ui::calc(2021_y/8/30, "Udupi", vp::CalcFlags::RefractionOn);
+        auto vratas = vp::text_ui::calc(2021_y/8/30, "Udupi");
         REQUIRE(vratas.size() == 1);
-        vp::NamedDates expected{{date::local_days{2021_y/August/30}, vp::NamedDate{"Śrī-Kṛṣṇa-jayantī"}}};
+        auto & vrata = vratas.begin()->value();
+        CAPTURE(vrata.dates_for_this_paksha);
+        REQUIRE(any_date_for(vrata, 2021_y/August/30).name == "Śrī-Kṛṣṇa-jayantī");
+        REQUIRE(any_date_for(vrata, 2021_y/August/31).name == "Śrī-Kṛṣṇa-līlotsava");
+    }
+    SECTION("Aktau") {
+        auto vratas = vp::text_ui::calc(2021_y/8/30, "Aktau");
+        REQUIRE(vratas.size() == 1);
         auto & vrata = vratas.begin()->value();
         CAPTURE(vrata.dates_for_this_paksha);
         REQUIRE(any_date_for(vrata, 2021_y/August/30).name == "Śrī-Kṛṣṇa-jayantī");

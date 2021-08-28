@@ -100,7 +100,7 @@ find_krishna_jayanti(const vp::Vrata & vrata, vp::Calc & calc) {
 
     const auto midnight1 = calc.first_midnight_after(intersection_start);
     if (!midnight1) {
-        return tl::make_unexpected(vp::CalcError{vp::NoRohiniAshtamiIntersectionForJayanti{}});
+        return tl::make_unexpected(midnight1.error());
     }
     if (*midnight1 < intersection_end) {
         /**
@@ -110,17 +110,30 @@ find_krishna_jayanti(const vp::Vrata & vrata, vp::Calc & calc) {
         return local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), *midnight1);
     }
 
-    const auto sunset1 = calc.swe.next_sunset(intersection_start - vp::double_days{1});
-
-    const auto intersection_start_local = intersection_start.as_zoned_time(vrata.location.time_zone()).get_local_time();
-    const auto intersection_end_local = intersection_end.as_zoned_time(vrata.location.time_zone()).get_local_time();
-
-    const auto intersection_start_date = date::floor<date::days>(intersection_start_local);
-    const auto intersection_end_date = date::floor<date::days>(intersection_end_local);
-
-    if (intersection_start_date < intersection_end_date) {
-        return intersection_start_date;
+    const auto midnight2 = calc.first_midnight_after(rohini_start);
+    if (!midnight2) {
+        return tl::make_unexpected(midnight2.error());
     }
+    if (*midnight2 < rohini_end) {
+        /**
+          * 2-е калпо: в полночь есть Рохин̣ӣ, которая пересѣкается с ашт̣амью
+          * в другое время.
+          */
+        return local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), *midnight2);
+    }
+
+//    const auto midnight3 = calc.first_midnight_after(ashtami_start);
+//    if (!midnight3) {
+//        return tl::make_unexpected(midnight3.error());
+//    }
+//    if (*midnight3 < ashtami_end) {
+//        /**
+//         * 3-е калпо: в полночь есть ашт̣амӣ, которая пересѣкается с Рохин̣ью
+//         * в другое время.
+//         */
+//        return local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), *midnight3);
+//    }
+
     return tl::make_unexpected(vp::CalcError{vp::NoRohiniAshtamiIntersectionForJayanti{}});
 }
 
