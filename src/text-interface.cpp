@@ -581,11 +581,7 @@ std::string version()
 
 std::string program_name_and_version()
 {
-    return "Vaiṣṇavaṁ Pañcāṅgam " + version()
-#ifdef KRISHNA_JAYANTI
-            + " with Krishna-jayanti support (experimental)"
-#endif
-            ;
+    return "Vaiṣṇavaṁ Pañcāṅgam " + version();
 }
 
 } // namespace vp::text_ui

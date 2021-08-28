@@ -256,29 +256,42 @@ TEST_CASE("DayByDay for 2021-02-17 Udupi gives tithi (which does not change from
     REQUIRE(info.tithi == vp::DiscreteTithi::Shukla_Shashthi());
 }
 
+static vp::NamedDate any_date_for(vp::Vrata & vrata, date::year_month_day date) {
+    const auto iter = vrata.dates_for_this_paksha.find(date::local_days{date});
+    if (iter == vrata.dates_for_this_paksha.end()) {
+        throw std::runtime_error(fmt::format(FMT_STRING("can't find nameworthy date for {}"), date));
+    }
+    return iter->second;
+}
+
 TEST_CASE("Vasanta-pañcamī etc are present in 2021") {
     using namespace date;
     auto vratas = vp::text_ui::calc(2021_y/February/10, std::string("Saint Petersburg"), vp::CalcFlags::RefractionOn);
     REQUIRE(!vratas.empty());
-    auto & vrata = *vratas.begin();
-    REQUIRE(vrata.has_value());
-    REQUIRE(vrata->dates_for_this_paksha.size() == 2+5); // 2 for Ekādaśī and pāraṇam, 5 for Vasanta-pañcamī etc
-    const auto any_date_for = [&](date::year_month_day date) {
-        const auto iter = vrata->dates_for_this_paksha.find(date::local_days{date});
-        if (iter == vrata->dates_for_this_paksha.end()) {
-            throw std::runtime_error(fmt::format(FMT_STRING("can't find nameworthy date for {}"), date));
-        }
-        return iter->second;
-    };
+    auto & vrata = vratas.begin()->value();
+    REQUIRE(vrata.dates_for_this_paksha.size() == 2+5); // 2 for Ekādaśī and pāraṇam, 5 for Vasanta-pañcamī etc
     SECTION("Vasanta-pañcamī etc") {
-        REQUIRE(any_date_for(2021_y/February/16).name == "Vasanta-pañcamī");
-        REQUIRE(any_date_for(2021_y/February/18).name == "Ratha-saptamī");
-        REQUIRE(any_date_for(2021_y/February/20).name == "Bhīṣmāṣtamī");
-        REQUIRE(any_date_for(2021_y/February/21).name == "Madhva-navamī (cāndra)");
-        REQUIRE(any_date_for(2021_y/February/27).name == "Pūrṇimā, End of Māgha-snāna-vrata");
+        REQUIRE(any_date_for(vrata, 2021_y/February/16).name == "Vasanta-pañcamī");
+        REQUIRE(any_date_for(vrata, 2021_y/February/18).name == "Ratha-saptamī");
+        REQUIRE(any_date_for(vrata, 2021_y/February/20).name == "Bhīṣmāṣtamī");
+        REQUIRE(any_date_for(vrata, 2021_y/February/21).name == "Madhva-navamī (cāndra)");
+        REQUIRE(any_date_for(vrata, 2021_y/February/27).name == "Pūrṇimā, End of Māgha-snāna-vrata");
     }
     SECTION("Ekādaśī and pāraṇam") {
-        REQUIRE(any_date_for(2021_y/February/23).name == "Jayā Ekādaśī");
-        REQUIRE_THAT(any_date_for(2021_y/February/24).name, Contains(">*<"));
+        REQUIRE(any_date_for(vrata, 2021_y/February/23).name == "Jayā Ekādaśī");
+        REQUIRE_THAT(any_date_for(vrata, 2021_y/February/24).name, Contains(">*<"));
+    }
+}
+
+TEST_CASE("Krishna Jayanti 2021") {
+    using namespace date;
+    SECTION("Udupi") {
+        auto vratas = vp::text_ui::calc(2021_y/8/30, "Udupi", vp::CalcFlags::RefractionOn);
+        REQUIRE(vratas.size() == 1);
+        vp::NamedDates expected{{date::local_days{2021_y/August/30}, vp::NamedDate{"Śrī-Kṛṣṇa-jayantī"}}};
+        auto & vrata = vratas.begin()->value();
+        CAPTURE(vrata.dates_for_this_paksha);
+        REQUIRE(any_date_for(vrata, 2021_y/August/30).name == "Śrī-Kṛṣṇa-jayantī");
+        REQUIRE(any_date_for(vrata, 2021_y/August/31).name == "Śrī-Kṛṣṇa-līlotsava");
     }
 }

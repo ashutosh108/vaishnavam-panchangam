@@ -56,7 +56,6 @@ void insert_ekadashi_paran_etc(vp::NamedDates & dates, const vp::Vrata & vrata) 
     }
 }
 
-#ifdef KRISHNA_JAYANTI
 static tl::expected<date::local_days, vp::CalcError>
 local_sun_date_covering_given_time(vp::Swe & swe, const date::time_zone * time_zone, vp::JulDays_UT time) {
     const auto sunset = swe.next_sunset(time);
@@ -124,7 +123,6 @@ find_krishna_jayanti(const vp::Vrata & vrata, vp::Calc & calc) {
     }
     return tl::make_unexpected(vp::CalcError{vp::NoRohiniAshtamiIntersectionForJayanti{}});
 }
-#endif
 
 vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata, CalcFlags flags)
 {
@@ -154,13 +152,12 @@ vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata, Calc
             }
         }
     }
-#   ifdef KRISHNA_JAYANTI
     else if ((vrata.masa == vp::Chandra_Masa::Shravana || vrata.masa == vp::Chandra_Masa::Bhadrapada) && vrata.paksha == vp::Paksha::Krishna) {
         // potential Krishna Jayanti. Find out.
         if (const auto date = find_krishna_jayanti(vrata, calc); date) {
-            dates.emplace(*date, NamedDate{"Krishna Jayanti", "", "custom"});
+            dates.emplace(*date, NamedDate{"Śrī-Kṛṣṇa-jayantī", "", "custom"});
+            dates.emplace(*date+date::days{1}, NamedDate{"Śrī-Kṛṣṇa-līlotsava", "", "custom"});
         }
     }
-#   endif
     return dates;
 }
