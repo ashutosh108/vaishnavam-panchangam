@@ -59,6 +59,31 @@ struct StringMaker<vp::DiscreteNakshatra> {
         return fmt::format(FMT_STRING("{}"), n);
     }
 };
+
+template<>
+struct StringMaker<date::local_days> {
+    static std::string convert(const date::local_days d) {
+        const auto ymd = date::format("%Y-%m-%d", d);
+        return fmt::format(FMT_STRING("{}"), ymd);
+    }
+};
+
+template<>
+struct StringMaker<vp::NamedDate> {
+    static std::string convert(const vp::NamedDate d) {
+        fmt::memory_buffer buf;
+        fmt::appender out{buf};
+        fmt::format_to(out, FMT_STRING("NamedDate{}{}"), '{', d.name);
+        if (!d.title.empty()) {
+            fmt::format_to(out, FMT_STRING(", {}"), d.title);
+        }
+        if (!d.css_classes.empty()) {
+            fmt::format_to(out, FMT_STRING(", {}"), d.css_classes);
+        }
+        fmt::format_to(out, FMT_STRING("{}"), '}');
+        return fmt::to_string(buf);
+    }
+};
 }
 
 #endif // CATCHFORMATTERS_H

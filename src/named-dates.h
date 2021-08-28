@@ -12,6 +12,7 @@ struct NamedDate {
     std::string css_classes;
     NamedDate(std::string name_, std::string title_="", std::string css_classes_="") :
           name(name_), title(title_), css_classes(css_classes_) {}
+    friend bool operator ==(const NamedDate &d1, const NamedDate &d2);
 };
 
 using NamedDates = std::multimap<date::local_days, NamedDate>;
