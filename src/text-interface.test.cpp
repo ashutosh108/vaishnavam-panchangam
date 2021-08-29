@@ -283,22 +283,39 @@ TEST_CASE("Vasanta-pañcamī etc are present in 2021") {
     }
 }
 
-TEST_CASE("Krishna Jayanti 2021") {
+TEST_CASE("Krishna Jayanti") {
     using namespace date;
-    SECTION("Udupi") {
-        auto vratas = vp::text_ui::calc(2021_y/8/30, "Udupi");
+    auto jayanti_is = [](const char * location, date::year_month_day date) {
+        auto vratas = vp::text_ui::calc(date, location);
         REQUIRE(vratas.size() == 1);
         auto & vrata = vratas.begin()->value();
+        CAPTURE(date);
         CAPTURE(vrata.dates_for_this_paksha);
-        REQUIRE(any_date_for(vrata, 2021_y/August/30).name == "Śrī-Kṛṣṇa-jayantī");
-        REQUIRE(any_date_for(vrata, 2021_y/August/31).name == "Śrī-Kṛṣṇa-līlotsava");
+        REQUIRE(any_date_for(vrata, date).name == "Śrī-Kṛṣṇa-jayantī");
+        REQUIRE(any_date_for(vrata, date::year_month_day{date::sys_days{date} + date::days{1}}).name == "Śrī-Kṛṣṇa-līlotsava");
+    };
+    SECTION("Udupi 2021") {
+        jayanti_is("Udupi", 2021_y/8/30);
     }
-    SECTION("Aktau") {
-        auto vratas = vp::text_ui::calc(2021_y/8/30, "Aktau");
-        REQUIRE(vratas.size() == 1);
-        auto & vrata = vratas.begin()->value();
-        CAPTURE(vrata.dates_for_this_paksha);
-        REQUIRE(any_date_for(vrata, 2021_y/August/30).name == "Śrī-Kṛṣṇa-jayantī");
-        REQUIRE(any_date_for(vrata, 2021_y/August/31).name == "Śrī-Kṛṣṇa-līlotsava");
+    SECTION("Aktau 2021") {
+        jayanti_is("Aktau", 2021_y/8/30);
     }
+//    SECTION("Miami 2016") {
+//        jayanti_is("Miami", 2016_y/8/25);
+//    }
+//    SECTION("Cancun 2016") {
+//        jayanti_is("Cancun", 2016_y/8/25);
+//    }
+//    SECTION("New Delhi 2015") {
+//        jayanti_is("New Delhi", 2015_y/9/5);
+//    }
+//    SECTION("Manali 2015") {
+//        jayanti_is("Manali", 2015_y/9/5);
+//    }
+//    SECTION("Almaty 2015") {
+//        jayanti_is("Almaty", 2015_y/9/5);
+//    }
+//    SECTION("Tekeli 2015") {
+//        jayanti_is("Tekeli", 2015_y/9/5);
+//    }
 }

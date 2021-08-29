@@ -1,3 +1,7 @@
+[ ] Krishna-jayanti
+    - 3rd kalpa: Miami & Cancun 2016-08-25; New Delhi, Manali, Almaty, Tekeli 2015-09-05
+    - 4th kalpa: Habarovsk & Vladivostok 2018-09-03?
+    - 5th kalpa: 1957?
 [ ] CLI: give error when date is "qwe" or otherwise non-valid
 [ ] CLI: allow giving just location name: print next Ekadashi
 [ ] CLI: allow storing default location in ~/.config
