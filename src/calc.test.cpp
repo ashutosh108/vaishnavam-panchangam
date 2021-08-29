@@ -853,3 +853,140 @@ TEST_CASE("first_midnight_after works for known case") {
     // 2019-03-10 00:07:54.332115 EET middle of the night
     REQUIRE(midnight->hours().count() == Approx(24-2 + 0 + 7.0/60.0 + 54.0/3600.0).margin(1./86400)); // 1 second margin
 }
+
+struct Interval {
+    JulDays_UT start{JulDays_UT{double_days{std::numeric_limits<double>::infinity()}}};
+    JulDays_UT end{JulDays_UT{double_days{-std::numeric_limits<double>::infinity()}}};
+    Interval(JulDays_UT start_, JulDays_UT end_) : start{start_}, end{end_} {}
+    Interval()=default;
+    bool is_empty() const {
+        return start > end;
+    }
+};
+
+static Interval intersect(const Interval & interval1, const Interval & interval2) {
+    if (interval1.is_empty()) return interval1;
+    if (interval2.is_empty()) return interval2;
+    const auto start = std::max(interval1.start, interval2.start);
+    const auto end = std::min(interval1.end, interval2.end);
+    return Interval(start, end);
+}
+
+static auto distance(const Interval & interval1, const Interval & interval2) {
+    if (interval1.is_empty() || interval2.is_empty()) return double_days{std::numeric_limits<double>::infinity()};
+    if (interval1.start > interval2.end) {
+        return interval1.start - interval2.end;
+    }
+    if (interval2.start > interval1.end) {
+        return interval2.start - interval1.end;
+    }
+    return double_days{0};
+}
+
+TEST_CASE("RohInI and kALASTamI intersect every Simha mAsa, but never else") {
+    Location udupi{13'20'27_N,  74'45'06_E};
+    Calc c{udupi};
+    std::optional<date::year> last_year_with_intersection;
+    double_days min_distance{std::numeric_limits<double>::infinity()};
+    double_days max_distance{-std::numeric_limits<double>::infinity()};
+    Interval min_kalashtami, min_rohini;
+    Interval max_kalashtami, max_rohini;
+
+    auto ensure_rohini_and_ashtami_almost_intersect_in_simha_masa = [&](Calc & c, date::year year) {
+        const auto simha_start = c.find_sankranti(JulDays_UT{year/1/1}, Saura_Masa::Simha);
+        const auto simha_end = c.find_sankranti(JulDays_UT{year/1/1}, Saura_Masa::Kanya);
+        const auto simha = Interval(simha_start, simha_end);
+
+        const auto rohini1_end = c.find_nakshatra_start(simha_start, Nakshatra::ROHINI_END());
+        const auto rohini1_start = c.find_nakshatra_start(rohini1_end - date::days{2}, Nakshatra::ROHINI_START());
+        const auto rohini1 = intersect(Interval(rohini1_start, rohini1_end), simha);
+
+        const auto kalashtami1_end = c.find_exact_tithi_start(simha_start, Tithi::Krishna_Ashtami_End());
+        const auto kalashtami1_start = c.find_exact_tithi_start(kalashtami1_end - date::days{2}, Tithi::Krishna_Ashtami());
+        const auto kalashtami1 = intersect(Interval(kalashtami1_start, kalashtami1_end), simha);
+        REQUIRE(kalashtami1.end - kalashtami1.start < double_days{2});
+
+        const auto dst1 = distance(rohini1, kalashtami1);
+        REQUIRE(dst1 > double_hours{0.0});
+
+        const auto rohini2_start = c.find_nakshatra_start(rohini1_end, Nakshatra::ROHINI_START());
+        const auto rohini2_end = c.find_nakshatra_start(rohini2_start, Nakshatra::ROHINI_END());
+        const auto rohini2 = intersect(Interval(rohini2_start, rohini2_end), simha);
+
+        const auto kalashtami2_start = c.find_exact_tithi_start(kalashtami1_end, Tithi::Krishna_Ashtami());
+        const auto kalashtami2_end = c.find_exact_tithi_start(kalashtami2_start, Tithi::Krishna_Ashtami_End());
+        const auto kalashtami2 = intersect(Interval(kalashtami2_start, kalashtami2_end), simha);
+        REQUIRE(kalashtami2_end - kalashtami2_start < double_days{2});
+        REQUIRE(kalashtami2.end - kalashtami2.start < double_days{2});
+
+        const auto dst2 = distance(rohini2, kalashtami2);
+        REQUIRE(dst2 > double_hours{0.0});
+
+        const auto dst = std::min(dst1, dst2);
+
+        CAPTURE(rohini1.start, rohini1.end);
+        CAPTURE(kalashtami1.start, kalashtami1.end);
+        REQUIRE(dst < double_hours{3});
+        if (dst1 < min_distance) {
+            min_distance = dst1;
+            min_kalashtami = kalashtami1;
+            min_rohini = rohini1;
+        } else if (dst2 < min_distance) {
+            min_distance = dst2;
+            min_kalashtami = kalashtami2;
+            min_rohini = rohini2;
+        }
+        if (dst1 > max_distance && dst1 != double_days{std::numeric_limits<double>::infinity()}) {
+            max_distance = dst1;
+            max_kalashtami = kalashtami1;
+            max_rohini = rohini1;
+        } else if (dst2 > max_distance && dst2 != double_days{std::numeric_limits<double>::infinity()}) {
+            max_distance = dst2;
+            max_kalashtami = kalashtami2;
+            max_rohini = rohini2;
+        }
+    };
+    for (JulDays_UT timepoint=JulDays_UT{1900_y/1/1}; timepoint < JulDays_UT{2100_y/1/1}; timepoint += double_days{1}) {
+        timepoint = c.find_nakshatra_start(timepoint, Nakshatra::ROHINI_START());
+        const auto tithi = c.swe.tithi(timepoint);
+        if (!tithi.is_krishna_ashtami()) {
+            // beginning of Rohini is not kALASTamI. Check if it starts before the end of Rohini
+            const auto kalashtami_start = c.find_exact_tithi_start(timepoint, Tithi::Krishna_Ashtami());
+            const auto rohini_end = c.find_nakshatra_start(timepoint, Nakshatra::ROHINI_END());
+            if (rohini_end < kalashtami_start) { continue; }
+        }
+
+        // now we have intersction of Rohini and kALASTamI. It has to be Simha mAsa.
+        REQUIRE(c.saura_masa(timepoint) == Saura_Masa::Simha);
+
+        // Make sure we find this intersction only once a year, never more, never less.
+        const date::year year = timepoint.year_month_day().year();
+        const date::year expected_year = last_year_with_intersection ? (*last_year_with_intersection+date::years{1}) : date::year{1900};
+        // There is never more than one year skipped in a row.
+        if (year == expected_year + date::years{1}) {
+            // Special case: we didn't find any intersections between Rohini
+            // and Kalashtami. Then check that during Simha-masa Rohini
+            // and Kalashtami at least "almost intersect" (i.e. come within
+            // 3 hours from each other).
+            ensure_rohini_and_ashtami_almost_intersect_in_simha_masa(c, expected_year);
+        } else {
+            CHECK(year == expected_year);
+        }
+        last_year_with_intersection = year;
+    }
+    // debug only.
+    // min_kalashtami.start := 1984-08-19 06:58:28.420157 UTC
+    // min_kalashtami.end := 1984-08-20 08:12:05.264879 UTC
+    // min_rohini.start := 1984-08-20 08:30:24.467446 UTC
+    // min_rohini.end := 1984-08-21 09:36:42.545728 UTC
+    // min_distance := 0.0127223 [86400/1]s
+    // max_kalashtami.start := 1976-08-17 11:00:26.276515 UTC
+    // max_kalashtami.end := 1976-08-18 13:18:56.368999 UTC
+    // max_rohini.start := 1976-08-18 16:58:02.938126 UTC
+    // max_rohini.end := 1976-08-19 19:17:27.113840 UTC
+    // max_distance := 0.152159 [86400/1]s
+//    CAPTURE(min_kalashtami.start, min_kalashtami.end, min_rohini.start, min_rohini.end);
+//    CAPTURE(max_kalashtami.start, max_kalashtami.end, max_rohini.start, max_rohini.end);
+//    CAPTURE(max_distance);
+//    REQUIRE(min_distance < double_days{0.0});
+}
