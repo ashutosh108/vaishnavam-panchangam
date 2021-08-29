@@ -38,6 +38,11 @@ bool Tithi::is_krishna_pratipat() const
     return (tithi >= 15.0 && tithi < 16.0);
 }
 
+bool Tithi::is_krishna_ashtami() const noexcept
+{
+    return *this >= Tithi::Krishna_Ashtami() && *this < Tithi::Krishna_Ashtami_End();
+}
+
 Tithi &Tithi::operator +=(const double delta)
 {
     tithi = normalize(tithi + delta);

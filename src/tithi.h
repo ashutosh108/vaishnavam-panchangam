@@ -31,6 +31,7 @@ struct Tithi {
     bool is_dashami();
     bool is_shukla_pratipat() const noexcept;
     bool is_krishna_pratipat() const;
+    bool is_krishna_ashtami() const noexcept;
     // Pratipat is 0.00...0.99, Dvitiya is 1.00..1.99, etc
     static constexpr Tithi Shukla_Pratipat() { return Tithi{0.0}; }
     static constexpr Tithi Amavasya_End() { return Tithi::Shukla_Pratipat(); }
