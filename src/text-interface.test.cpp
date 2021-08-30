@@ -294,24 +294,24 @@ TEST_CASE("Krishna Jayanti") {
         REQUIRE(any_date_for(vrata, date).name == "Śrī-Kṛṣṇa-jayantī");
         REQUIRE(any_date_for(vrata, date::year_month_day{date::sys_days{date} + date::days{1}}).name == "Śrī-Kṛṣṇa-līlotsava");
     };
-    SECTION("Udupi 2021") {
+    SECTION("Udupi 2021 (1st kalpa)") {
         jayanti_is("Udupi", 2021_y/8/30);
     }
-    SECTION("Aktau 2021") {
+    SECTION("Aktau 2021 (2nd kalpa)") {
         jayanti_is("Aktau", 2021_y/8/30);
     }
-//    SECTION("New Delhi 2015") {
-//        jayanti_is("New Delhi", 2015_y/9/5);
-//    }
-//    SECTION("Manali 2015") {
-//        jayanti_is("Manali", 2015_y/9/5);
-//    }
-//    SECTION("Almaty 2015") {
-//        jayanti_is("Almaty", 2015_y/9/5);
-//    }
-//    SECTION("Tekeli 2015") {
-//        jayanti_is("Tekeli", 2015_y/9/5);
-//    }
+    SECTION("New Delhi 2015 (3rd kalpa)") {
+        jayanti_is("New Delhi", 2015_y/9/5);
+    }
+    SECTION("Manali 2015 (3rd kalpa)") {
+        jayanti_is("Manali", 2015_y/9/5);
+    }
+    SECTION("Almaty 2015 (3rd kalpa)") {
+        jayanti_is("Almaty", 2015_y/9/5);
+    }
+    SECTION("Tekeli 2015 (3rd kalpa)") {
+        jayanti_is("Tekeli", 2015_y/9/5);
+    }
 //    SECTION("Miami 2016") {
 //        jayanti_is("Miami", 2016_y/8/25);
 //    }

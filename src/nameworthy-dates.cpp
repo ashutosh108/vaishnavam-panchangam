@@ -122,17 +122,17 @@ find_krishna_jayanti(const vp::Vrata & vrata, vp::Calc & calc) {
         return local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), *midnight2);
     }
 
-//    const auto midnight3 = calc.first_midnight_after(ashtami_start);
-//    if (!midnight3) {
-//        return tl::make_unexpected(midnight3.error());
-//    }
-//    if (*midnight3 < ashtami_end) {
-//        /**
-//         * 3-е калпо: в полночь есть ашт̣амӣ, которая пересѣкается с Рохин̣ью
-//         * в другое время.
-//         */
-//        return local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), *midnight3);
-//    }
+    const auto midnight3 = calc.first_midnight_after(ashtami_start);
+    if (!midnight3) {
+        return tl::make_unexpected(midnight3.error());
+    }
+    if (*midnight3 < ashtami_end) {
+        /**
+         * 3-е калпо: в полночь есть ашт̣амӣ, которая пересѣкается с Рохин̣ью
+         * в другое время.
+         */
+        return local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), *midnight3);
+    }
 
     return tl::make_unexpected(vp::CalcError{vp::NoRohiniAshtamiIntersectionForJayanti{}});
 }
