@@ -1,7 +1,6 @@
-[ ] day-by-day: mark Rohini & kAlAStamI intersection during simha mAsa.
 [ ] Krishna-jayanti
-    - 3rd kalpa: Miami & Cancun 2016-08-25; New Delhi, Manali, Almaty, Tekeli 2015-09-05
-    - 4th kalpa: Habarovsk & Vladivostok 2018-09-03?
+    - 3rd kalpa: New Delhi, Manali, Almaty, Tekeli 2015-09-05
+    - 4th kalpa: Miami & Cancun 2016-08-25; Habarovsk & Vladivostok 2018-09-03?
     - 5th kalpa: 1957?
     - Madrid 1909-09-06: 4th kalpa?
 [ ] CLI: give error when date is "qwe" or otherwise non-valid
@@ -331,3 +330,4 @@ done:
 [+] add Ekadashi's last quarter start to the detailed and day-by-day views [2021-06-05]
 [+] add Orenburg [2021-07-09]
 [+] add hari-vAsara time support (last quarter of ekAdashI-tithi) [2021-07-31]
+[+] day-by-day: mark Rohini & kAlAStamI intersection during simha mAsa. [2021-08-30]

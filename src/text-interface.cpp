@@ -371,6 +371,23 @@ void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp:
         if (tithi.is_shukla_pratipat()) {
             description += fmt::format(FMT_STRING(", {} māsa starts"), calc.chandra_masa_amanta(tithi_start + double_days{1.0}));
         }
+        if (tithi.is_krishna_ashtami()) {
+            const auto saura_masa = calc.saura_masa(tithi_start);
+            if (saura_masa == Saura_Masa::Simha) {
+                const auto nakshatra = calc.swe.nakshatra(tithi_start);
+                if (nakshatra.is_rohini()) {
+                    description += " (**start of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)";
+                }
+            }
+        } else if (tithi.is_krishna_navami()) {
+            const auto saura_masa = calc.saura_masa(tithi_start);
+            if (saura_masa == Saura_Masa::Simha) {
+                const auto nakshatra = calc.swe.nakshatra(tithi_start);
+                if (nakshatra.is_rohini()) {
+                    description += " (**end of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)";
+                }
+            }
+        }
         info.events.push_back(NamedTimePoint{description, tithi_start});
         if (tithi.is_ekadashi()) {
             const auto ekadashi_end = calc.find_exact_tithi_start(tithi_start, tithi+1.0);
@@ -401,7 +418,25 @@ void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const
                 info.nakshatra2_until = nakshatra_start;
             }
         }
-        info.events.push_back(NamedTimePoint{fmt::format(FMT_STRING("{} starts"), DiscreteNakshatra{n}), nakshatra_start});
+        std::string description = fmt::format(FMT_STRING("{} starts"), DiscreteNakshatra{n});
+        if (n.is_rohini()) {
+            const auto saura_masa = calc.saura_masa(nakshatra_start);
+            if (saura_masa == Saura_Masa::Simha) {
+                const auto tithi = calc.swe.tithi(nakshatra_start);
+                if (tithi.is_krishna_ashtami()) {
+                    description += " (**start of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)";
+                }
+            }
+        } else if (n.is_mrgashira()) {
+            const auto saura_masa = calc.saura_masa(nakshatra_start);
+            if (saura_masa == Saura_Masa::Simha) {
+                const auto tithi = calc.swe.tithi(nakshatra_start);
+                if (tithi.is_krishna_ashtami()) {
+                    description += " (**end of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)";
+                }
+            }
+        }
+        info.events.push_back(NamedTimePoint{description, nakshatra_start});
     }
 }
 
@@ -434,7 +469,25 @@ DayByDayInfo daybyday_events(date::year_month_day base_date, const vp::Calc & ca
             if (sunrise2) {
                 info.sunrise2 = *sunrise2;
                 const auto middle_of_night = proportional_time(*sunset, *sunrise2, 0.5);
-                info.events.push_back(NamedTimePoint{"middle of the night", middle_of_night});
+
+                auto midnight_description = [](const Calc & calc, JulDays_UT time) {
+                    fmt::memory_buffer buf;
+                    fmt::appender app{buf};
+                    fmt::format_to(app, "middle of the night");
+                    if (calc.saura_masa(time) == Saura_Masa::Simha) {
+                        bool is_rohini = calc.swe.nakshatra(time).is_rohini();
+                        bool is_kalashtami = calc.swe.tithi(time).is_krishna_ashtami();
+                        if (is_rohini || is_kalashtami) {
+                            fmt::format_to(
+                                        app,
+                                        FMT_STRING(" (**Siṁha māsa, {}, {}**)"),
+                                        is_rohini ? "Rohiṇī" : "no Rohiṇī",
+                                        is_kalashtami ? "Kāḷāṣṭamī" : "no Kāḷāṣṭamī");
+                        }
+                    }
+                    return fmt::to_string(buf);
+                };
+                info.events.push_back(NamedTimePoint{midnight_description(calc, middle_of_night), middle_of_night});
                 info.events.push_back(NamedTimePoint{"next sunrise", *sunrise2});
                 const auto earliest_timepoint = arunodaya ? * arunodaya : *sunrise;
                 const auto latest_timepoint = *sunrise2;

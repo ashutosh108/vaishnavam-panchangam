@@ -32,6 +32,7 @@ struct Tithi {
     bool is_shukla_pratipat() const noexcept;
     bool is_krishna_pratipat() const;
     bool is_krishna_ashtami() const noexcept;
+    bool is_krishna_navami() const noexcept;
     // Pratipat is 0.00...0.99, Dvitiya is 1.00..1.99, etc
     static constexpr Tithi Shukla_Pratipat() { return Tithi{0.0}; }
     static constexpr Tithi Amavasya_End() { return Tithi::Shukla_Pratipat(); }
@@ -53,6 +54,8 @@ struct Tithi {
     static constexpr Tithi Krishna_Ashtami() { return Tithi{15.0 + 7.0}; }
     static constexpr Tithi Krishna_Ashtami_End() { return Tithi::Krishna_Navami(); }
     static constexpr Tithi Krishna_Navami() { return Tithi{15.0 + 8.0}; }
+    static constexpr Tithi Krishna_Navami_End() { return Tithi::Krishna_Dashami(); }
+    static constexpr Tithi Krishna_Dashami() { return Tithi{15.0 + 9.0}; }
 
     static constexpr std::chrono::duration<double, std::ratio<3600>> AverageLength() {
         using namespace std::literals::chrono_literals;

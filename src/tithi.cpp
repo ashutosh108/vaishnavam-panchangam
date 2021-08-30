@@ -43,6 +43,11 @@ bool Tithi::is_krishna_ashtami() const noexcept
     return *this >= Tithi::Krishna_Ashtami() && *this < Tithi::Krishna_Ashtami_End();
 }
 
+bool Tithi::is_krishna_navami() const noexcept
+{
+    return *this >= Tithi::Krishna_Navami() && *this < Tithi::Krishna_Navami_End();
+}
+
 Tithi &Tithi::operator +=(const double delta)
 {
     tithi = normalize(tithi + delta);

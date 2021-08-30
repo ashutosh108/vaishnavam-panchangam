@@ -300,12 +300,6 @@ TEST_CASE("Krishna Jayanti") {
     SECTION("Aktau 2021") {
         jayanti_is("Aktau", 2021_y/8/30);
     }
-//    SECTION("Miami 2016") {
-//        jayanti_is("Miami", 2016_y/8/25);
-//    }
-//    SECTION("Cancun 2016") {
-//        jayanti_is("Cancun", 2016_y/8/25);
-//    }
 //    SECTION("New Delhi 2015") {
 //        jayanti_is("New Delhi", 2015_y/9/5);
 //    }
@@ -318,4 +312,85 @@ TEST_CASE("Krishna Jayanti") {
 //    SECTION("Tekeli 2015") {
 //        jayanti_is("Tekeli", 2015_y/9/5);
 //    }
+//    SECTION("Miami 2016") {
+//        jayanti_is("Miami", 2016_y/8/25);
+//    }
+//    SECTION("Cancun 2016") {
+//        jayanti_is("Cancun", 2016_y/8/25);
+//    }
+}
+
+TEST_CASE("daybyday_print_one marks special Krishna Jayanti-related events") {
+    using namespace date::literals;
+    using namespace Catch::Matchers;
+    auto daybyday = [](date::year_month_day date, const char * location) {
+        fmt::memory_buffer buf;
+        vp::text_ui::daybyday_print_one(date, location, fmt::appender{buf}, vp::CalcFlags::Default);
+        return fmt::to_string(buf);
+    };
+
+    SECTION("Udupi 2021 (Kalashtami, then Rohini; both cover midnight)") {
+        const auto s = daybyday(2021_y/8/30, "Udupi");
+        SECTION("Rohini (intersection with Kalashtami)") {
+            REQUIRE_THAT(s, Contains("Rohiṇī starts (**start of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)"));
+        }
+        SECTION("Midnight with Rohini and Kalashtami") {
+            REQUIRE_THAT(s, Contains("middle of the night (**Siṁha māsa, Rohiṇī, Kāḷāṣṭamī**)"));
+        }
+        SECTION("end of intersection") {
+            REQUIRE_THAT(s, Contains("Krishna Navami starts (**end of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)"));
+        }
+    }
+
+    SECTION("Udupi 2023 (Kalashtami, then Rohini; both cover midnight)") {
+        const auto s = daybyday(2023_y/9/6, "Udupi");
+        SECTION("Rohini (intersection with kAlAStamI)") {
+            REQUIRE_THAT(s, Contains("Krishna Ashtami starts (**start of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)"));
+        }
+        SECTION("Midnight with Rohini and Kalashtami") {
+            REQUIRE_THAT(s, Contains("middle of the night (**Siṁha māsa, Rohiṇī, Kāḷāṣṭamī**)"));
+        }
+        SECTION("end of intersection") {
+            REQUIRE_THAT(s, Contains("Mrgaśirā starts (**end of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)"));
+        }
+    }
+
+    SECTION("Aktau 2021 (midnight with Rohini, but not Kalashtami") {
+        const auto s = daybyday(2021_y/8/30, "Aktau");
+        SECTION("Rohini (intersection with kAlAStamI)") {
+            REQUIRE_THAT(s, Contains("Rohiṇī starts (**start of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)"));
+        }
+        SECTION("Midnight with Rohini, but not Kalashtami") {
+            REQUIRE_THAT(s, Contains("middle of the night (**Siṁha māsa, Rohiṇī, no Kāḷāṣṭamī**)"));
+        }
+        SECTION("Rohini end (intersection with kAlAStamI)") {
+            REQUIRE_THAT(s, Contains("Krishna Navami starts (**end of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)"));
+        }
+    }
+
+    SECTION("New Delhi 2015 (midnight with Kalashtami, but not Rohini)") {
+        const auto s = daybyday(2015_y/9/5, "New Delhi");
+        SECTION("Rohini (intersection with kAlAStamI)") {
+            REQUIRE_THAT(s, Contains("Krishna Ashtami starts (**start of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)"));
+        }
+        SECTION("Midnight with Kalashtami, but not Rohini") {
+            REQUIRE_THAT(s, Contains("middle of the night (**Siṁha māsa, no Rohiṇī, Kāḷāṣṭamī**)"));
+        }
+        SECTION("Rohini end (intersection with kAlAStamI)") {
+            REQUIRE_THAT(s, Contains("Mrgaśirā starts (**end of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)"));
+        }
+    }
+
+    SECTION("Miami 2016 (Rohini, then Kalashtami; neither covers midnight)") {
+        const auto s = daybyday(2016_y/8/25, "Miami");
+        SECTION("Rohini (intersection with kAlAStamI)") {
+            REQUIRE_THAT(s, Contains("Rohiṇī starts (**start of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)"));
+        }
+        SECTION("Midnight with neither Rohini nor Kalashtami") {
+            REQUIRE_THAT(s, Contains("middle of the night\n"));
+        }
+        SECTION("Rohini end (intersection with kAlAStamI)") {
+            REQUIRE_THAT(s, Contains("Krishna Navami starts (**end of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)"));
+        }
+    }
 }

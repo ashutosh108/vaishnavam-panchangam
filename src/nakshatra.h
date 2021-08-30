@@ -34,8 +34,8 @@ public:
     static constexpr Nakshatra KRITIKA_END() { return Nakshatra{3.0}; }
     static constexpr Nakshatra ROHINI_START() { return Nakshatra{3.0}; }
     static constexpr Nakshatra ROHINI_END() { return Nakshatra{4.0}; }
-    static constexpr Nakshatra MRGASHIRSHA_START() { return Nakshatra{4.0}; }
-    static constexpr Nakshatra MRGASHIRSHA_END() { return Nakshatra{5.0}; }
+    static constexpr Nakshatra MRGASHIRA_START() { return Nakshatra{4.0}; }
+    static constexpr Nakshatra MRGASHIRA_END() { return Nakshatra{5.0}; }
     static constexpr Nakshatra ARDRA_START() { return Nakshatra{5.0}; }
     static constexpr Nakshatra ARDRA_END() { return Nakshatra{6.0}; }
     static constexpr Nakshatra PUNARVASU_START() { return Nakshatra{6.0}; }
@@ -85,6 +85,9 @@ public:
         using namespace std::literals::chrono_literals;
         return 24h + 17min + 9.36s; // from "Basics of Panchangam" by S.Narasimha Rao, p.21
     }
+
+    bool is_rohini() const;
+    bool is_mrgashira() const;
 };
 
 class DiscreteNakshatra {

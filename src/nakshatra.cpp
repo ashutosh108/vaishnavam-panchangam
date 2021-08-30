@@ -23,6 +23,16 @@ double vp::Nakshatra::normalize(double raw_nakshatra)
     return mod_res;
 }
 
+bool vp::Nakshatra::is_rohini() const
+{
+    return nakshatra >= ROHINI_START().nakshatra && nakshatra < ROHINI_END().nakshatra;
+}
+
+bool vp::Nakshatra::is_mrgashira() const
+{
+    return nakshatra >= MRGASHIRA_START().nakshatra && nakshatra < MRGASHIRA_END().nakshatra;
+}
+
 double vp::positive_delta_between_nakshatras(vp::Nakshatra n1, vp::Nakshatra n2)
 {
     double delta = n2.nakshatra - n1.nakshatra;

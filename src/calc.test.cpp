@@ -695,7 +695,7 @@ TEST_CASE("find_nakshatra_start() works for simple cases from 2020-11 Palimaru p
         test_data{2020_y/11/1, 20h+57min, vp::Nakshatra::BHARANI_END()},
         test_data{2020_y/11/2, 23h+50min, vp::Nakshatra::KRITIKA_END()},
         test_data{2020_y/11/4, 2h+30min, vp::Nakshatra::ROHINI_END()},
-        test_data{2020_y/11/5, 4h+51min, vp::Nakshatra::MRGASHIRSHA_END()},
+        test_data{2020_y/11/5, 4h+51min, vp::Nakshatra::MRGASHIRA_END()},
         test_data{2020_y/11/6, 6h+45min, vp::Nakshatra::ARDRA_END()},
         test_data{2020_y/11/7, 8h+5min, vp::Nakshatra::PUNARVASU_END()},
         test_data{2020_y/11/8, 8h+45min, vp::Nakshatra::PUSHYA_END()}
