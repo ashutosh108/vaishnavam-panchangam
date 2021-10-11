@@ -312,6 +312,9 @@ TEST_CASE("Krishna Jayanti") {
     SECTION("Tekeli 2015 (3rd kalpa)") {
         jayanti_is("Tekeli", 2015_y/9/5);
     }
+    SECTION("Madrid 1909(3rd kalpa)") {
+        jayanti_is("Madrid", 1909_y/9/6);
+    }
 //    SECTION("Miami 2016") {
 //        jayanti_is("Miami", 2016_y/8/25);
 //    }

@@ -956,7 +956,7 @@ TEST_CASE("RohInI and kALASTamI intersect every Simha mAsa, but never else") {
             if (rohini_end < kalashtami_start) { continue; }
         }
 
-        // now we have intersction of Rohini and kALASTamI. It has to be Simha mAsa.
+        // now we have intersection of Rohini and kALASTamI. It has to be Simha mAsa.
         REQUIRE(c.saura_masa(timepoint) == Saura_Masa::Simha);
 
         // Make sure we find this intersction only once a year, never more, never less.
