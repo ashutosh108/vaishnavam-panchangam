@@ -259,6 +259,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location eppingen_coord{                49'08'00_N,   8'55'00_E, "Eppingen", "Europe/Berlin", "Germany"}; // en Wikipedia
 [[maybe_unused]] constexpr Location orenburg_coord{                51'46'00_N,  55'06'00_E, "Orenburg", "Asia/Yekaterinburg", "Russia"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location novokuznetsk_coord{            53'44'00_N,  87'05'00_E, "Novokuznetsk", "Asia/Krasnoyarsk", "Russia"}; // ru Wikipedia
+[[maybe_unused]] constexpr Location kropyvnytskyi_coord{           48'30'00_N,  32'16'00_E, "Kropyvnytskyi (Kirovograd)", "Europe/Kiev", "Ukraine"}; // en Wikipedia
 
 [[maybe_unused]] constexpr Location dummy_coord{0_N, 0_E, "Dummy location"};
 [[maybe_unused]] constexpr Location sample_location{0_N, 0_E, "Sample location"};

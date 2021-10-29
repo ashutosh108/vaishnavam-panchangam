@@ -95,6 +95,7 @@ const std::vector<Location> &LocationDb::locations() {
         { kremenchug_coord },
         { krivoyrog_coord },
         { kiev_coord },
+        { kropyvnytskyi_coord },
         { nikolaev_coord },
         { odessa_coord },
         { kolomyya_coord },
