@@ -85,7 +85,7 @@ struct fmt::formatter<vp::Chandra_Masa> : fmt::formatter<std::string_view> {
         case vp::Chandra_Masa::Shravana: name = "Śṛāvaṇa"; break; // (श्रावण)
         case vp::Chandra_Masa::Bhadrapada: name = "Bhādrapada"; break; // (भाद्रपद)
         case vp::Chandra_Masa::Ashvin: name = "Aśvin"; break; // (अश्विन्)
-        case vp::Chandra_Masa::Kartika: name = "Kārtikā"; break; // (कार्तिक)
+        case vp::Chandra_Masa::Kartika: name = "Kārtika"; break; // (कार्तिक)
         case vp::Chandra_Masa::Margashirsha: name = "Mārgaśīrṣa"; break; // (मार्गशीर्ष)
         case vp::Chandra_Masa::Pausha: name = "Pauṣa"; break; // (पौष)
         case vp::Chandra_Masa::Magha: name = "Māgha"; break; // (माघ)

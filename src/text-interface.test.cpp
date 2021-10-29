@@ -114,7 +114,7 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
 
         auto s = fmt::to_string(buf);
         SECTION("'Chāndra māsa: such-and-such is present") {
-            REQUIRE_THAT(s, Contains("Chāndra māsa: Kārtikā"));
+            REQUIRE_THAT(s, Contains("Chāndra māsa: Kārtika"));
         }
         SECTION("'such-and-such masa starts' is NOT present") {
             REQUIRE_THAT(s, !Contains("Mārgaśīrṣa"));
@@ -126,7 +126,7 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
         vp::text_ui::daybyday_print_one(2020_y/11/30, "Udupi", fmt::appender{buf}, vp::CalcFlags::Default);
 
         auto s = fmt::to_string(buf);
-        REQUIRE_THAT(s, Contains("Chāndra māsa: Kārtikā"));
+        REQUIRE_THAT(s, Contains("Chāndra māsa: Kārtika"));
         REQUIRE_THAT(s, !Contains("Mārgaśīrṣa"));
     }
 
@@ -136,7 +136,7 @@ TEST_CASE("daybyday_print_one() includes chandramasa info") {
 
         auto s = fmt::to_string(buf);
         REQUIRE_THAT(s, Contains("Chāndra māsa: Aśvin"));
-        REQUIRE_THAT(s, Contains("Kārtikā"));
+        REQUIRE_THAT(s, Contains("Kārtika"));
     }
 }
 
@@ -239,7 +239,7 @@ TEST_CASE("daybyday_print_one()") {
     }
 
     SECTION("chandra māsa 'until' is present") {
-        REQUIRE_THAT(s, Contains("Kārtikā (until 2020-12-14"));
+        REQUIRE_THAT(s, Contains("Kārtika (until 2020-12-14"));
     }
     SECTION("Tithi/until is present") {
         REQUIRE_THAT(s, Contains("Amāvāsyā until 18:17"));
