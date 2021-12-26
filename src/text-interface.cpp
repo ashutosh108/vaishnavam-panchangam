@@ -99,6 +99,7 @@ const std::vector<Location> &LocationDb::locations() {
         { nikolaev_coord },
         { odessa_coord },
         { kolomyya_coord },
+        { ashkelon_coord },
         { kishinev_coord },
         { nicosia_coord },
         { riga_coord },
