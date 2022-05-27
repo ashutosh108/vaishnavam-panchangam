@@ -207,6 +207,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location staryyoskol_coord{             51'17'00_N,  37'50'00_E, "Stary Oskol", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location donetsk_coord{                 48'00'00_N,  37'48'00_E, "Donetsk", "Europe/Moscow", "DNR"};
 [[maybe_unused]] constexpr Location moskva_coord{                  55'45'00_N,  37'35'00_E, "Moscow", "Europe/Moscow", "Russia"};
+[[maybe_unused]] constexpr Location dubna_coord{                   56'44'00_N,  37'10'00_E, "Dubna", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location harkov_coord{                  50'00'00_N,  36'15'00_E, "Kharkov", "Europe/Kiev", "Ukraine"};
 [[maybe_unused]] constexpr Location telaviv_coord{                 32'04'00_N,  34'47'00_E, "Tel Aviv", "Asia/Jerusalem", "Israel"};
 [[maybe_unused]] constexpr Location poltava_coord{                 49'34'00_N,  34'34'00_E, "Poltava", "Europe/Kiev", "Ukraine"};
