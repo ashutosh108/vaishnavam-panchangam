@@ -198,9 +198,9 @@ TEST_CASE("Generated table contains Vasanta-pañcamī and other dates from that 
     REQUIRE(table.width() == 14);
     REQUIRE(table.at(1, 3).text == "Vasanta-pañcamī");
     REQUIRE(table.at(1, 6).text == "Ratha-saptamī");
-    REQUIRE(table.at(1, 7).text == "Bhīṣmāṣtamī");
+    REQUIRE(table.at(1, 7).text == "Bhīṣmāṣṭamī");
     REQUIRE(table.at(1, 8).text == "Madhva-navamī (cāndra)");
-    REQUIRE(table.at(1, 13).text == "Pūrṇimā, End of Māgha-snāna-vrata");
+    REQUIRE(table.at(1, 13).text == "Pūrṇimā, Māgha-snāna-vrata ends");
 }
 
 TEST_CASE("table for Vrata with multiple nameworthy dates on the same day lists all nameworthy dates in the same cell, separated by full stop.") {

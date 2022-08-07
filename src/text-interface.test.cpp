@@ -273,9 +273,9 @@ TEST_CASE("Vasanta-pañcamī etc are present in 2021") {
     SECTION("Vasanta-pañcamī etc") {
         REQUIRE(any_date_for(vrata, 2021_y/February/16).name == "Vasanta-pañcamī");
         REQUIRE(any_date_for(vrata, 2021_y/February/18).name == "Ratha-saptamī");
-        REQUIRE(any_date_for(vrata, 2021_y/February/20).name == "Bhīṣmāṣtamī");
+        REQUIRE(any_date_for(vrata, 2021_y/February/20).name == "Bhīṣmāṣṭamī");
         REQUIRE(any_date_for(vrata, 2021_y/February/21).name == "Madhva-navamī (cāndra)");
-        REQUIRE(any_date_for(vrata, 2021_y/February/27).name == "Pūrṇimā, End of Māgha-snāna-vrata");
+        REQUIRE(any_date_for(vrata, 2021_y/February/27).name == "Pūrṇimā, Māgha-snāna-vrata ends");
     }
     SECTION("Ekādaśī and pāraṇam") {
         REQUIRE(any_date_for(vrata, 2021_y/February/23).name == "Jayā Ekādaśī");
