@@ -151,11 +151,11 @@ vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata, Calc
             const char * name;
         };
         static TithiWithName tithis_with_name[] = {
-            { vp::DiscreteTithi::Shukla_Panchami(), "Vasanta-pañcamī" },
-            { vp::DiscreteTithi::Shukla_Saptami(), "Ratha-saptamī" },
-            { vp::DiscreteTithi::Shukla_Ashtami(), "Bhīṣmāṣtamī" },
-            { vp::DiscreteTithi::Shukla_Navami(), "Madhva-navamī (cāndra)" },
-            { vp::DiscreteTithi::Purnima(), "Pūrṇimā, End of Māgha-snāna-vrata" },
+            { vp::DiscreteTithi::Shukla_Panchami(), "Vasanta-pañcamī" },    // Vasanta-pa~ncamii
+            { vp::DiscreteTithi::Shukla_Saptami(), "Ratha-saptamī" },       // Ratha-saptamii
+            { vp::DiscreteTithi::Shukla_Ashtami(), "Bhīṣmāṣṭamī" },         // Bhi.smaa.s.tamii
+            { vp::DiscreteTithi::Shukla_Navami(), "Madhva-navamī (cāndra)" }, // Madhva-navamii (caandra)
+            { vp::DiscreteTithi::Purnima(), "Pūrṇimā, Māgha-snāna-vrata ends" }, // Puur.nimaa, Maagha-snaana-vrata ends
         };
 
         for (const auto & tithi_with_name : tithis_with_name) {
