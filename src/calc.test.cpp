@@ -886,7 +886,6 @@ static auto distance(const Interval & interval1, const Interval & interval2) {
 TEST_CASE("RohInI and kALASTamI intersect every Simha mAsa, but never else") {
     Location udupi{13'20'27_N,  74'45'06_E};
     Calc c{udupi};
-    std::optional<date::year> last_year_with_intersection;
     double_days min_distance{std::numeric_limits<double>::infinity()};
     double_days max_distance{-std::numeric_limits<double>::infinity()};
     Interval min_kalashtami, min_rohini;
@@ -946,6 +945,8 @@ TEST_CASE("RohInI and kALASTamI intersect every Simha mAsa, but never else") {
             max_rohini = rohini2;
         }
     };
+
+    std::optional<date::year> last_year_with_intersection;
     for (JulDays_UT timepoint=JulDays_UT{1900_y/1/1}; timepoint < JulDays_UT{2100_y/1/1}; timepoint += double_days{1}) {
         timepoint = c.find_nakshatra_start(timepoint, Nakshatra::ROHINI_START());
         const auto tithi = c.swe.tithi(timepoint);

@@ -65,6 +65,12 @@ local_sun_date_covering_given_time(vp::Swe & swe, const date::time_zone * time_z
     return date::floor<date::days>(sunset_local) - date::days{1};
 }
 
+/**
+ * @brief find_krishna_jayanti: find Krishna Jayanti day, IF it is found in this half of Chaandra-maasa
+ * @param vrata Ekadashi vrata for this half of Chaandra-maasa
+ * @param calc  Calculator to be used.
+ * @return
+ */
 static tl::expected<date::local_days, vp::CalcError>
 find_krishna_jayanti(const vp::Vrata & vrata, vp::Calc & calc) {
     auto base_time = vrata.sunrise1 - vp::double_days{10};
@@ -85,17 +91,34 @@ find_krishna_jayanti(const vp::Vrata & vrata, vp::Calc & calc) {
     const auto max_time = std::max(ashtami_end, rohini_end);
 
     /**
-     * 1-е калпо (первый разсматриваемый варіант соблюденія условій):
-     *      на полночь приходятся и крьшн̣āшт̣амӣ, и Рохин̣ӣ.
-     * 2-е калпо: в полночь есть Рохин̣ӣ, которая пересѣкается с ашт̣амью
-     *      в другое время.
-     * 3-е калпо: в полночь есть ашт̣амӣ, которая пересѣкается с Рохин̣ью
-     *      в другое время.
-     * 4-е калпо: в полночь нѣт ни ашт̣амӣ, ни Рохин̣ӣ, но в этот день есть
-     *      ашт̣амӣ и Рохин̣ӣ, и онѣ пересѣкаются. В этом случаѣ предпочтеніе
-     *      отдается тому дню, в который происходит пересѣченіе ашт̣амӣ
-     *      и Рохин̣ӣ, если таких дня два, то предпочтеніе тому дню,
-     *      в котором это сочетаніе приходится на Сӯрйодай.
+     * ‘Rohiṇī-bahulāṣṭamī-yoga’ is defined as a combination of Rohiṇī-nakṣatra
+     * and Bahulāṣṭamī in the period of time from a sunrise to a next sunrise
+     * (a definition of a ‘day’). In the majority of cases this combination
+     * is in the form of an overlap, but in some rare years nakṣatra and tithi
+     * start or end during the same day without overlapping.
+     *
+     * Current 2022 CE is one of such years, while the previous one was 2003 CE.
+     *
+     *
+     * 1st Kalpa
+     *      Rohiṇī-bahulāṣṭamī-yoga, at the time of ardharātra both Rohiṇī
+     *      and Bahulāṣṭamī are present. These are the ideal astronomical
+     *      circumstances, coinsiding with those at the actual Appearance
+     *      of Bhagavān Śrī-Kṛṣṇa, ‘sampūrṇo jayantī-kalpaḥ’.
+     * 2nd Kalpa
+     *      Rohiṇī-bahulāṣṭamī-yoga, at the time of ardharātra only Rohiṇī
+     *      is present.
+     * 3rd Kalpa
+     *      Rohiṇī-bahulāṣṭamī-yoga, at the time of ardharātra only Bahulāṣṭamī
+     *      is present.
+     * 4th Kalpa
+     *      Rohiṇī-bahulāṣṭamī-yoga, neither Rohiṇī, nor Bahulāṣṭamī is present
+     *      at the time of ardharātra. This day is Jayantī nevertheless,
+     *      provided Kalpas 1-3 are not to be found.
+     *
+     * FIXME:
+     *      Please note that currently the code does not quite match
+     *      the description above. The code needs to be updated to match.
      */
 
     const auto midnight1 = calc.first_midnight_after(intersection_start);
