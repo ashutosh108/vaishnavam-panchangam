@@ -15,6 +15,10 @@ struct CantFindSunriseAfter {
     JulDays_UT after;
 };
 
+struct CantFindSunriseBefore {
+    JulDays_UT before;
+};
+
 struct CantFindSunsetAfter {
     JulDays_UT after;
 };
@@ -26,7 +30,7 @@ struct CantFindLocation {
 struct NoRohiniAshtamiIntersectionForJayanti {
 };
 
-using CalcError = std::variant<CantFindSunriseAfter, CantFindSunsetAfter, CantFindLocation, NoRohiniAshtamiIntersectionForJayanti>;
+using CalcError = std::variant<CantFindSunriseAfter, CantFindSunriseBefore, CantFindSunsetAfter, CantFindLocation, NoRohiniAshtamiIntersectionForJayanti>;
 
 } // namespace vp
 
@@ -36,6 +40,8 @@ struct fmt::formatter<vp::CalcError> : fmt::formatter<std::string_view> {
     auto format(const vp::CalcError & err, FormatCtx & ctx) {
         if (std::holds_alternative<vp::CantFindSunriseAfter>(err)) {
             return fmt::format_to(ctx.out(), "Can't find sunrise after {}", std::get<vp::CantFindSunriseAfter>(err).after);
+        } else if (std::holds_alternative<vp::CantFindSunriseBefore>(err)) {
+            return fmt::format_to(ctx.out(), "Can't find sunrise after {}", std::get<vp::CantFindSunriseBefore>(err).before);
         } else if (std::holds_alternative<vp::CantFindSunsetAfter>(err)) {
             return fmt::format_to(ctx.out(), "Can't find sunset after {}", std::get<vp::CantFindSunsetAfter>(err).after);
         } else if (std::holds_alternative<vp::CantFindLocation>(err)) {
