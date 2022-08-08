@@ -7,6 +7,7 @@
 #include "vrata.h"
 
 #define CATCH_CONFIG_ENABLE_ALL_STRINGMAKERS
+#define CATCH_CONFIG_CONSOLE_WIDTH 160
 #include "catch2/catch.hpp"
 #include <optional>
 
