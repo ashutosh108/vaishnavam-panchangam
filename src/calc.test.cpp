@@ -411,7 +411,7 @@ TEST_CASE("find_tithi_start gives what we expect (close to the target tithi)") {
     auto actual_time = calc.find_either_tithi_start(from, expected_tithi);
 
     Tithi actual_tithi = calc.swe.tithi(actual_time);
-    REQUIRE(expected_tithi == actual_tithi);
+    REQUIRE(expected_tithi.tithi == Approx{actual_tithi.tithi});
 }
 
 auto get_next_tithi_wrapper(Calc const & calc, JulDays_UT from, Tithi tithi) {
