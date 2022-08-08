@@ -29,6 +29,9 @@
 
 namespace vp {
 
+static constexpr auto small_enough_delta = double_days{0.001};
+
+
 Calc::Calc(Swe swe_):swe(std::move(swe_)) {}
 
 /* Main calculation: return next vrata on a given date or after.
@@ -123,7 +126,6 @@ tl::expected<JulDays_UT, CalcError> Calc::find_ekadashi_sunrise(JulDays_UT after
 }
 
 tl::expected<JulDays_UT, CalcError> Calc::next_sunrise(JulDays_UT sunrise) const {
-    constexpr auto small_enough_delta = double_days{0.001};
     return swe.next_sunrise(sunrise + small_enough_delta);
 }
 
