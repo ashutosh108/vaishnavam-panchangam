@@ -41,10 +41,39 @@ enum class Saura_Masa {
     Mina = 12
 };
 
+constexpr auto Saura_Masa_Avg_Length = 365.25 / 12;
+
+/**
+ * Saura_Masa_Point: like Saura_Masa, but keeps fractional part.
+ * So can be used to see if given point in time close to the end of some
+ * particuar masa.
+ */
+struct Saura_Masa_Point {
+    double val; // 0..11.9999999
+    Saura_Masa_Point(double val_) : val(val_) {}
+    Saura_Masa floor() const;
+};
+
 std::underlying_type_t<vp::Saura_Masa> operator-(vp::Saura_Masa m1, vp::Saura_Masa m2);
 Saura_Masa operator+(Saura_Masa m, int delta);
-
+Saura_Masa_Point operator+(Saura_Masa m, double delta);
+inline Saura_Masa_Point operator-(Saura_Masa m, double delta) {
+    return m + -delta;
 }
+inline bool operator<(Saura_Masa_Point a, Saura_Masa_Point b) {
+    return a.val < b.val;
+}
+inline bool operator<=(Saura_Masa_Point a, Saura_Masa_Point b) {
+    return a.val <= b.val;
+}
+inline bool operator>(Saura_Masa_Point a, Saura_Masa_Point b) {
+    return a.val > b.val;
+}
+inline bool operator>=(Saura_Masa_Point a, Saura_Masa_Point b) {
+    return a.val >= b.val;
+}
+
+} // namespace vp
 
 template<>
 struct fmt::formatter<vp::Saura_Masa> : fmt::formatter<std::string_view> {
