@@ -5,15 +5,61 @@
 
 namespace vp {
 
-enum SimhaMasaStatus:bool {
-    NoSimhaMasaOnMidnight = false,
-    SimhaMasaOnMidnight = true
+// Four kalpas for Rohini-bahulashtami-yoga (AKA Rohini-krishnashtami-yoga).
+// Ordered by ascending priority: Kalpa1 is the best etc.
+enum class RoK8YogaKalpa {
+    None,
+    Kalpa4_1,
+    Kalpa4_2,
+    Kalpa3,
+    Kalpa2,
+    Kalpa1,
 };
 
+struct Interval {
+    JulDays_UT start{JulDays_UT{double_days{std::numeric_limits<double>::infinity()}}};
+    JulDays_UT end{JulDays_UT{double_days{-std::numeric_limits<double>::infinity()}}};
+    Interval(JulDays_UT start_, JulDays_UT end_) : start{start_}, end{end_} {}
+    Interval()=default;
+    bool is_empty() const {
+        return start > end;
+    }
+    bool contains(JulDays_UT t) const;
+};
+
+Interval intersect(const Interval & interval1, const Interval & interval2);
+
+auto distance(const Interval & interval1, const Interval & interval2);
+
 struct RohiniBahulashtamiYoga {
-    JulDays_UT sunrise;
+    Interval sunrises;
     JulDays_UT midnight;
-    bool simha_masa_on_midnight;
+    bool simha_masa_at_midnight;
+    bool rohini_at_midnight;
+    bool bahulashtami_at_midnight;
+    bool rohini_at_suryodaya;
+    bool bahulashtami_at_suryodaya;
+    bool real_intersection; // true if Ro & k8 actually intersect, covering non-empty time period on this solar day
+
+    RohiniBahulashtamiYoga(
+        Interval sunrises_,
+        JulDays_UT midnight_,
+        Saura_Masa saura_masa_on_midnight,
+        Interval rohini,
+        Interval k8)
+        :
+        sunrises(sunrises_),
+        midnight(midnight_),
+        simha_masa_at_midnight(saura_masa_on_midnight == Saura_Masa::Simha),
+        rohini_at_midnight(rohini.contains(midnight_)),
+        bahulashtami_at_midnight(k8.contains(midnight_)),
+        rohini_at_suryodaya(rohini.contains(sunrises_.start)),
+        bahulashtami_at_suryodaya(k8.contains(sunrises_.start))
+    {
+        real_intersection = !intersect(intersect(sunrises, rohini), k8).is_empty();
+    }
+
+    RoK8YogaKalpa kalpa() const;
 };
 
 tl::expected<std::vector<RohiniBahulashtamiYoga>, CalcError> rohini_bahulashtami_yogas_in_year(Calc &c, date::year year);

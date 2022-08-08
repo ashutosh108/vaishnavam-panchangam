@@ -64,10 +64,10 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
         REQUIRE(yogas->size() > 0);
         REQUIRE(yogas->size() <= 4);
 
-        const auto count_with_simha_masa_on_midnight = std::count_if(yogas->cbegin(), yogas->cend(), [](auto & iter) -> bool {
-                return iter.simha_masa_on_midnight;
+        const auto count_with_simha_masa_at_midnight = std::count_if(yogas->cbegin(), yogas->cend(), [](auto & iter) -> bool {
+                return iter.simha_masa_at_midnight;
         });
-        CAPTURE(count_with_simha_masa_on_midnight);
+        CAPTURE(count_with_simha_masa_at_midnight);
 
         /**
          * We know that in 1800..2399 there is only one year, 1862, where
@@ -75,7 +75,7 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
          * on midnight".
          */
         //   [1862-09-15 00:53:17.339125 UTC, false]
-        REQUIRE((count_with_simha_masa_on_midnight > 0 || year == 1862_y));
+        REQUIRE((count_with_simha_masa_at_midnight > 0 || year == 1862_y));
 
         /**
          * There are only few years with 3 or 4 candidates. And only two (1923 and 2074) with 3 candidate days in a row.
@@ -87,12 +87,12 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
         //   [2128-08-18 00:52:28.211329 UTC, true],[2128-09-15 00:53:31.569987 UTC, true],[2128-09-16 00:53:31.881191 UTC, true]
         //   [2288-08-20 00:52:58.818887 UTC, true],[2288-09-17 00:53:42.759184 UTC, true],[2288-09-18 00:53:42.818568 UTC, true]
         //   [2383-08-22 00:53:15.048210 UTC, true],[2383-09-20 00:53:49.591012 UTC, true],[2383-09-21 00:53:49.605094 UTC, true]
-        REQUIRE((count_with_simha_masa_on_midnight <= 2 || (year == 1884_y || year == 1922_y || year == 1923_y || year == 2074_y || year == 2128_y || year == 2288_y || year == 2383_y)));
+        REQUIRE((count_with_simha_masa_at_midnight <= 2 || (year == 1884_y || year == 1922_y || year == 1923_y || year == 2074_y || year == 2128_y || year == 2288_y || year == 2383_y)));
 
         for (auto yoga : *yogas) {
             CAPTURE(yoga.midnight);
-            CAPTURE(yoga.simha_masa_on_midnight);
-            REQUIRE(yoga.sunrise.year_month_day().year() == year);
+            CAPTURE(yoga.simha_masa_at_midnight);
+            REQUIRE(yoga.sunrises.start.year_month_day().year() == year);
 
             /**
              * Yoga should be at least close to Simha masa, in the [-0.27 masas before..+0.61 masas after] range
@@ -102,7 +102,7 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
             // Kanyā+0.5164679170465192: 1885-09-30
             // Kanyā+0.6022727516301067: 2343-10-10
 
-            if (!yoga.simha_masa_on_midnight) {
+            if (!yoga.simha_masa_at_midnight) {
                 const auto saura_masa = c.saura_masa_at(yoga.midnight);
                 REQUIRE(saura_masa > (Saura_Masa::Simha - 0.27));
                 REQUIRE(saura_masa <= (Saura_Masa::Kanya + 0.61));
@@ -160,4 +160,21 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
 #endif
         }
     }
+}
+
+TEST_CASE("rohini_bahulashtami_yogas_in_year gives expected four kala cases for known dates", "[jayanti]") {
+    Location udupi{13'20'27_N,  74'45'06_E};
+    Calc c{udupi};
+
+    auto check = [&](date::year year, date::year_month_day expected_ymd, RoK8YogaKalpa expected_kalpa) {
+        const auto yogas = rohini_bahulashtami_yogas_in_year(c, year);
+        REQUIRE(yogas);
+        CAPTURE(*yogas);
+        REQUIRE(yogas->at(0).midnight.year_month_day() == expected_ymd);
+        REQUIRE(yogas->at(0).kalpa() == expected_kalpa);
+    };
+
+    check(2022_y, 2022_y/8/19, RoK8YogaKalpa::Kalpa4_1);
+    check(2021_y, 2021_y/8/30, RoK8YogaKalpa::Kalpa1);
+    check(2020_y, 2020_y/9/9, RoK8YogaKalpa::Kalpa2);
 }
