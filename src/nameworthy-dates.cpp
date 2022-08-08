@@ -1,7 +1,9 @@
 #include "nameworthy-dates.h"
 
 #include "calc.h"
+#include "calc-error.h"
 #include "html-util.h"
+#include "jayanti.h"
 #include "masa.h"
 #include "tithi.h"
 
@@ -65,99 +67,17 @@ local_sun_date_covering_given_time(vp::Swe & swe, const date::time_zone * time_z
     return date::floor<date::days>(sunset_local) - date::days{1};
 }
 
-/**
- * @brief find_krishna_jayanti: find Krishna Jayanti day, IF it is found in this half of Chaandra-maasa
- * @param vrata Ekadashi vrata for this half of Chaandra-maasa
- * @param calc  Calculator to be used.
- * @return
- */
-static tl::expected<date::local_days, vp::CalcError>
+static tl::expected<std::pair<date::local_days, vp::RoK8YogaKalpa>, vp::CalcError>
 find_krishna_jayanti(const vp::Vrata & vrata, vp::Calc & calc) {
-    auto base_time = vrata.sunrise1 - vp::double_days{10};
-    const auto ashtami_start = calc.find_exact_tithi_start(base_time, vp::Tithi::Krishna_Ashtami());
-    const auto ashtami_end = calc.find_exact_tithi_start(ashtami_start, vp::Tithi::Krishna_Ashtami_End());
-    const auto rohini_start = calc.find_nakshatra_start(base_time, vp::Nakshatra::ROHINI_START());
-    const auto rohini_end = calc.find_nakshatra_start(rohini_start, vp::Nakshatra::ROHINI_END());
-
-    const auto intersection_start = std::max(ashtami_start, rohini_start);
-    const auto intersection_end = std::min(ashtami_end, rohini_end);
-
-    // Krishna Jayanti requires Krishna-ashtami and Rohini to overlap
-    if (intersection_start > intersection_end) {
-        return tl::make_unexpected(vp::CalcError{vp::NoRohiniAshtamiIntersectionForJayanti{}});
+    const auto yogas = rohini_bahulashtami_yogas_in_year(calc, date::year_month_day{vrata.date}.year());
+    if (!yogas) return tl::make_unexpected(yogas.error());
+    if (yogas->empty()) {
+        return tl::make_unexpected(vp::NoRohiniAshtamiIntersectionForJayanti{});
     }
-
-    const auto min_time = std::min(ashtami_start, rohini_start);
-    const auto max_time = std::max(ashtami_end, rohini_end);
-
-    /**
-     * ‘Rohiṇī-bahulāṣṭamī-yoga’ is defined as a combination of Rohiṇī-nakṣatra
-     * and Bahulāṣṭamī in the period of time from a sunrise to a next sunrise
-     * (a definition of a ‘day’). In the majority of cases this combination
-     * is in the form of an overlap, but in some rare years nakṣatra and tithi
-     * start or end during the same day without overlapping.
-     *
-     * Current 2022 CE is one of such years, while the previous one was 2003 CE.
-     *
-     *
-     * 1st Kalpa
-     *      Rohiṇī-bahulāṣṭamī-yoga, at the time of ardharātra both Rohiṇī
-     *      and Bahulāṣṭamī are present. These are the ideal astronomical
-     *      circumstances, coinsiding with those at the actual Appearance
-     *      of Bhagavān Śrī-Kṛṣṇa, ‘sampūrṇo jayantī-kalpaḥ’.
-     * 2nd Kalpa
-     *      Rohiṇī-bahulāṣṭamī-yoga, at the time of ardharātra only Rohiṇī
-     *      is present.
-     * 3rd Kalpa
-     *      Rohiṇī-bahulāṣṭamī-yoga, at the time of ardharātra only Bahulāṣṭamī
-     *      is present.
-     * 4th Kalpa
-     *      Rohiṇī-bahulāṣṭamī-yoga, neither Rohiṇī, nor Bahulāṣṭamī is present
-     *      at the time of ardharātra. This day is Jayantī nevertheless,
-     *      provided Kalpas 1-3 are not to be found.
-     *
-     * FIXME:
-     *      Please note that currently the code does not quite match
-     *      the description above. The code needs to be updated to match.
-     */
-
-    const auto midnight1 = calc.first_midnight_after(intersection_start);
-    if (!midnight1) {
-        return tl::make_unexpected(midnight1.error());
-    }
-    if (*midnight1 < intersection_end) {
-        /**
-         * 1-е калпо (первый разсматриваемый варіант соблюденія условій):
-         * на полночь приходятся и крьшн̣āшт̣амӣ, и Рохин̣ӣ.
-         */
-        return local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), *midnight1);
-    }
-
-    const auto midnight2 = calc.first_midnight_after(rohini_start);
-    if (!midnight2) {
-        return tl::make_unexpected(midnight2.error());
-    }
-    if (*midnight2 < rohini_end) {
-        /**
-          * 2-е калпо: в полночь есть Рохин̣ӣ, которая пересѣкается с ашт̣амью
-          * в другое время.
-          */
-        return local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), *midnight2);
-    }
-
-    const auto midnight3 = calc.first_midnight_after(ashtami_start);
-    if (!midnight3) {
-        return tl::make_unexpected(midnight3.error());
-    }
-    if (*midnight3 < ashtami_end) {
-        /**
-         * 3-е калпо: в полночь есть ашт̣амӣ, которая пересѣкается с Рохин̣ью
-         * в другое время.
-         */
-        return local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), *midnight3);
-    }
-
-    return tl::make_unexpected(vp::CalcError{vp::NoRohiniAshtamiIntersectionForJayanti{}});
+    const auto date = local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), yogas->at(0).midnight);
+    if (!date) return tl::make_unexpected(date.error());
+    const auto kalpa = yogas->at(0).kalpa();
+    return std::make_pair(*date, kalpa);
 }
 
 vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata, CalcFlags flags)
@@ -190,9 +110,11 @@ vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata, Calc
     }
     else if ((vrata.masa == vp::Chandra_Masa::Shravana || vrata.masa == vp::Chandra_Masa::Bhadrapada) && vrata.paksha == vp::Paksha::Krishna) {
         // potential Krishna Jayanti. Find out.
-        if (const auto date = find_krishna_jayanti(vrata, calc); date) {
-            dates.emplace(*date, NamedDate{"Śrī-Kṛṣṇa-jayantī", "", "custom"});
-            dates.emplace(*date+date::days{1}, NamedDate{"Śrī-Kṛṣṇa-līlotsava", "", "custom"});
+        if (const auto pair = find_krishna_jayanti(vrata, calc); pair) {
+            const auto [date, kalpa] = *pair;
+            std::string name = fmt::format(FMT_STRING("Śrī-Kṛṣṇa-jayantī ({})"), kalpa);
+            dates.emplace(date, NamedDate{name, "", "custom"});
+            dates.emplace(date + date::days{1}, NamedDate{"Śrī-Kṛṣṇa-līlotsava", "", "custom"});
         }
     }
     return dates;
