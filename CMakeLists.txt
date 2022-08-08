@@ -69,6 +69,7 @@ add_library(swe STATIC
     src/masa.cpp src/masa.h
     src/named-dates.cpp src/named-dates.h
     src/nameworthy-dates.cpp src/nameworthy-dates.h
+    src/jayanti.cpp src/jayanti.h
 )
 target_include_directories(swe PRIVATE vendor/sweph/src PUBLIC src)
 target_link_libraries(swe PRIVATE sweph PUBLIC date::tz tl-expected fmt::fmt)
@@ -113,6 +114,7 @@ add_executable(test-main
     src/vrata-summary.test.cpp
     src/nakshatra.test.cpp
 #    tests/test-existing-panchangas.cpp
+    src/jayanti-test.cpp
 )
 target_include_directories(test-main PRIVATE ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/tests)
 target_include_directories(test-main PRIVATE vendor/tinyfsm/include)
