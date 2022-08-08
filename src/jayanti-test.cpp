@@ -31,6 +31,12 @@ struct StringMaker<Saura_Masa_Point> {
 
 } // namespace Catch
 
+void check_that_there_is_only_one_viable_candidate(const std::vector<RohiniBahulashtamiYoga> & yogas) {
+    if (yogas.size() >= 2) {
+        CHECK((yogas[0].kalpa() != yogas[1].kalpa() || yogas[0].simha_masa_at_midnight > yogas[1].simha_masa_at_midnight));
+    }
+}
+
 /**
  * ‘Rohiṇī-bahulāṣṭamī-yoga’ is defined as a combination of Rohiṇī-nakṣatra
  * and Bahulāṣṭamī in the period of time from a sunrise to a next sunrise
@@ -68,6 +74,15 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
                 return iter.simha_masa_at_midnight;
         });
         CAPTURE(count_with_simha_masa_at_midnight);
+
+        const std::vector<date::year> years_with_two_good_candidates = {
+            1922_y, 2082_y, 2083_y, 2109_y, 2128_y, 2136_y, 2220_y, 2288_y,
+            2315_y, 2338_y, 2361_y, 2372_y, 2391_y
+        };
+
+        if (!contains(years_with_two_good_candidates, year)) {
+            check_that_there_is_only_one_viable_candidate(*yogas);
+        }
 
         /**
          * We know that in 1800..2399 there is only one year, 1862, where
