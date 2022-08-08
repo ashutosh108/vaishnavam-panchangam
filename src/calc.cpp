@@ -451,7 +451,7 @@ Chandra_Masa Calc::chandra_masa_amanta(JulDays_UT time, std::optional<JulDays_UT
     auto saura_masa2 = saura_masa(amavasya2);
     int delta = saura_masa2 - saura_masa1;
     if (delta == 1) {
-        return Chandra_Masa{saura_masa2};
+        return Chandra_Masa{static_cast<std::underlying_type_t<vp::Saura_Masa>>(saura_masa2)};
     }
     if (delta == 0) {
         return Chandra_Masa::Adhika;
