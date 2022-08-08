@@ -462,7 +462,7 @@ QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
         if (e.time_point == info.sunrise2) { got_second_sunrise = true; }
         std::string color = (!got_first_sunrise || got_second_sunrise) ? "gray" : "";
         fmt::format_to(out, FMT_STRING("<font color=\"{}\">"), color);
-        fmt::format_to(out, FMT_STRING("{} {}</font><br>\n"), vp::JulDays_Zoned{tz, e.time_point}, e.name);
+        fmt::format_to(out, FMT_STRING("{} {}{}</font><br>\n"), vp::JulDays_Zoned{tz, e.time_point}, e.trackIntervalString(), e.name);
     }
     return QString::fromStdString(fmt::to_string(buf));
 }

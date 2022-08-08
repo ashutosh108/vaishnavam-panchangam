@@ -15,9 +15,28 @@
 
 namespace vp::text_ui {
 
+enum class TrackIntervalChange {
+    None,
+    Tithi,
+    Nakshatra
+};
+
 struct NamedTimePoint {
     std::string name;
     JulDays_UT time_point;
+    TrackIntervalChange trackIntervalChange = TrackIntervalChange::None;
+
+    const char * trackIntervalString() const {
+        switch (trackIntervalChange) {
+        case TrackIntervalChange::None:
+            return "║│";
+        case TrackIntervalChange::Tithi:
+            return "╠╪";
+        case TrackIntervalChange::Nakshatra:
+            return "║├";
+        }
+        return "??"; // Possible only on coding error
+    }
 };
 using NamedTimePoints = std::vector<NamedTimePoint>;
 

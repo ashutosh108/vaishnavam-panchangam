@@ -391,7 +391,7 @@ void daybyday_add_tithi_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp:
                 }
             }
         }
-        info.events.push_back(NamedTimePoint{description, tithi_start});
+        info.events.push_back(NamedTimePoint{description, tithi_start, TrackIntervalChange::Tithi});
         if (tithi.is_ekadashi()) {
             const auto ekadashi_end = calc.find_exact_tithi_start(tithi_start, tithi+1.0);
             const auto ekadashi_last_quarter_start = proportional_time(tithi_start, ekadashi_end, 0.75);
@@ -439,7 +439,7 @@ void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const
                 }
             }
         }
-        info.events.push_back(NamedTimePoint{description, nakshatra_start});
+        info.events.push_back(NamedTimePoint{description, nakshatra_start, TrackIntervalChange::Nakshatra});
     }
 }
 
