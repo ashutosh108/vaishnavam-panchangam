@@ -15,13 +15,7 @@ namespace Catch {
 template<>
 struct StringMaker<std::vector<RohiniBahulashtamiYoga>> {
     static std::string convert(const std::vector<RohiniBahulashtamiYoga> & yogas) {
-        fmt::memory_buffer buf;
-        fmt::appender out{buf};
-        fmt::format_to(out, FMT_STRING("RohiniBahulashtamiYogas{{"));
-        for (const auto & yoga : yogas) {
-            fmt::format_to(out, FMT_STRING("[{}, {}],"), yoga.sunrise, yoga.simha_masa_on_midnight);
-        }
-        return fmt::to_string(buf);
+        return fmt::to_string(yogas);
     }
 };
 
