@@ -535,13 +535,14 @@ TEST_CASE("after atiriktA when 1/5 of day fits before end of dvAdashI, pAraNam m
 }
 
 double_days operator ""_hms(const char *s, const std::size_t size) {
-    if (size != (2 + 1 + 2 + 1 + 2 + 1 + 6)) {
-        throw std::length_error("expected format: hh:mm:ss.ssssss");
+    if (size == strlen("hh:mm:ss.ssssss") || size == strlen("hh:mm:ss")) {
+        std::istringstream stream{s};
+        std::chrono::microseconds h_m_s;
+        stream >> date::parse("%H:%M:%S", h_m_s);
+        return h_m_s;
+    } else {
+        throw std::length_error("expected format: hh:mm:ss[.ssssss]");
     }
-    std::istringstream stream{s};
-    std::chrono::microseconds h_m_s;
-    stream >> date::parse("%H:%M:%S", h_m_s);
-    return h_m_s;
 }
 
 TEST_CASE("ativRddhAdi gives correct sunset, sunris and four time points") {
