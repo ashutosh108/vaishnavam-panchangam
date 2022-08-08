@@ -84,4 +84,17 @@ private:
 
 } // namespace vp
 
+template<>
+struct fmt::formatter<tl::expected<vp::JulDays_UT, vp::CalcError>> : fmt::formatter<std::string_view> {
+    template<typename FormatCtx>
+    auto format(const tl::expected<vp::JulDays_UT, vp::CalcError> & r, FormatCtx & ctx) {
+        if (r.has_value()) {
+            return fmt::format_to(ctx.out(), "{}", *r);
+        } else {
+            return fmt::format_to(ctx.out(), "{}", r.error());
+        }
+        throw std::runtime_error("Internal error: unknown variant in CalcError");
+    }
+};
+
 #endif // CALC_H
