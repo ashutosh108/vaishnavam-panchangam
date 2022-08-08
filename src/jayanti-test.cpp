@@ -84,13 +84,20 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
             check_that_there_is_only_one_viable_candidate(*yogas);
         }
 
-        /**
-         * We know that in 1800..2399 there is only one year, 1862, where
-         * there are no candidates after filtering for "Simha-masa
-         * on midnight".
-         */
-        //   [1862-09-15 00:53:17.339125 UTC, false]
-        REQUIRE((count_with_simha_masa_at_midnight > 0 || year == 1862_y));
+        if (year != 1862_y) {
+            /**
+             * We know that in 1800..2399 there is only one year, 1862, where
+             * there are no candidates after filtering for "Simha-masa
+             * on midnight".
+             */
+            //   [1862-09-15 00:53:17.339125 UTC, false]
+            REQUIRE((count_with_simha_masa_at_midnight > 0 || year == 1862_y));
+
+            /**
+             * Make sure we never get "no kalpa" candidates, except 1862
+             */
+            REQUIRE(yogas->at(0).kalpa() != RoK8YogaKalpa::None);
+        }
 
         /**
          * There are only few years with 3 or 4 candidates. And only two (1923 and 2074) with 3 candidate days in a row.
