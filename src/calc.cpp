@@ -138,6 +138,27 @@ JulDays_UT Calc::next_sunrise_v(JulDays_UT sunrise) const {
     return *sunrise_or_nullopt;
 }
 
+tl::expected<JulDays_UT, CalcError> Calc::prev_sunrise(JulDays_UT before) const
+{
+    const auto longest_sunrise_to_sunrise = double_hours{25}; // or longer
+    const auto shortest_sunrise_to_sunrise = double_hours{23}; // or shorter
+    const auto sunrise = swe.next_sunrise(before - longest_sunrise_to_sunrise);
+//    fmt::print("1:swe.next_sunrise({}) = {}\n", before - double_hours{25}, sunrise);
+    if (!sunrise) return tl::make_unexpected(CantFindSunriseBefore{before});
+    if (*sunrise < before) {
+        // we might have given sunrise one day too early, check next one.
+        if (*sunrise < before - shortest_sunrise_to_sunrise) {
+            const auto next = swe.next_sunrise(*sunrise + small_enough_delta);
+//            fmt::print("2:swe.next_sunrise({}) = {}\n", *sunrise, next);
+            if (next && *next < before) {
+                return next;
+            }
+        }
+        return sunrise;
+    }
+    return tl::make_unexpected(CantFindSunriseBefore{before});
+}
+
 tl::expected<JulDays_UT, CalcError> Calc::sunset_before_sunrise(JulDays_UT const sunrise) const {
     JulDays_UT back_24hrs{sunrise - double_days{1.0}};
     return swe.next_sunset(back_24hrs);
@@ -439,6 +460,12 @@ Saura_Masa Calc::saura_masa(JulDays_UT time) const
 {
     auto lng = swe.surya_nirayana_longitude(time);
     return Saura_Masa{1 + static_cast<int>(lng.longitude * (12.0/360.0))};
+}
+
+Saura_Masa_Point Calc::saura_masa_at(JulDays_UT time) const
+{
+    auto lng = swe.surya_nirayana_longitude(time);
+    return Saura_Masa_Point{lng.longitude * (12.0/360.0)};
 }
 
 Chandra_Masa Calc::chandra_masa_amanta(JulDays_UT time, std::optional<JulDays_UT> *end_time) const

@@ -56,6 +56,7 @@ public:
     tl::expected<date::local_days, CalcError> find_exact_tithi_date(const JulDays_UT, const DiscreteTithi, const date::time_zone *) const;
     JulDays_UT find_nakshatra_start(const JulDays_UT, const Nakshatra) const;
     Saura_Masa saura_masa(JulDays_UT time) const;
+    Saura_Masa_Point saura_masa_at(JulDays_UT time) const;
     Chandra_Masa chandra_masa_amanta(JulDays_UT time, std::optional<JulDays_UT> * end_time = nullptr) const;
     JulDays_UT find_sankranti(JulDays_UT after, Saura_Masa masa) const;
 
@@ -63,6 +64,9 @@ public:
 
     // find next astronomical midnight (mid-point in time between sunset and sunrise)
     tl::expected<JulDays_UT, CalcError> first_midnight_after(vp::JulDays_UT after);
+
+    // find nearest past sunrise before given timepoint
+    tl::expected<JulDays_UT, CalcError> prev_sunrise(JulDays_UT before) const;
 
     vp::Swe swe;
 
