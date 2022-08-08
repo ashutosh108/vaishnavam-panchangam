@@ -50,6 +50,9 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
     const auto END_YEAR = 2399_y;
 
     Calc c{udupi};
+    auto contains = [](const auto & container, const auto & item) -> bool{
+        return std::find(container.cbegin(), container.cend(), item) != container.end();
+    };
 
     for (auto year = START_YEAR; year < END_YEAR; year++) {
         const auto yogas = rohini_bahulashtami_yogas_in_year(c, year);
@@ -113,10 +116,6 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
 
             const auto chandra_masa = c.chandra_masa_amanta(yoga.midnight);
             CAPTURE(chandra_masa);
-
-            auto contains = [](const auto & container, const auto & item) -> bool{
-                return std::find(container.cbegin(), container.cend(), item) != container.end();
-            };
 
             std::vector<date::year> adhikas_before_shravana{
                 1806_y, 1928_y, 1966_y, 2061_y, 2069_y, 2145_y, 2183_y,
