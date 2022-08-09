@@ -49,6 +49,23 @@ tl::expected<std::vector<RohiniBahulashtamiYoga>, CalcError> rohini_bahulashtami
     return yogas;
 }
 
+/**
+ * 1st Kalpa
+ *      Rohiṇī-bahulāṣṭamī-yoga, at the time of ardharātra both Rohiṇī
+ *      and Bahulāṣṭamī are present. These are the ideal astronomical
+ *      circumstances, coinsiding with those at the actual Appearance
+ *      of Bhagavān Śrī-Kṛṣṇa, ‘sampūrṇo jayantī-kalpaḥ’.
+ * 2nd Kalpa
+ *      Rohiṇī-bahulāṣṭamī-yoga, at the time of ardharātra only Rohiṇī
+ *      is present.
+ * 3rd Kalpa
+ *      Rohiṇī-bahulāṣṭamī-yoga, at the time of ardharātra only Bahulāṣṭamī
+ *      is present.
+ * 4th Kalpa
+ *      Rohiṇī-bahulāṣṭamī-yoga, neither Rohiṇī, nor Bahulāṣṭamī is present
+ *      at the time of ardharātra. This day is Jayantī nevertheless,
+ *      provided Kalpas 1-3 are not to be found.
+ */
 RoK8YogaKalpa RohiniBahulashtamiYoga::kalpa() const
 {
 //    if (!simha_masa_on_midnight)

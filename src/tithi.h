@@ -64,7 +64,7 @@ struct Tithi {
     static constexpr std::chrono::duration<double, std::ratio<3600>> MaxLength() {
         using namespace std::literals::chrono_literals;
         // "Basics of Panchangam" by S.Narasimha Rao, p.12 states 26h 6min 24s, but I've found cases of somewhat longer tithis
-        // (at least 26h 26m 15.36s long for 2020-05-17 ekadadshi), so 27h it is, to be safe.
+        // (at least 26h 26m 15.36s long for 2020-05-17 ekadashi), so 27h it is, to be safe.
         return 27h;
     }
 

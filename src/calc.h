@@ -58,6 +58,7 @@ public:
     Saura_Masa saura_masa(JulDays_UT time) const;
     Saura_Masa_Point saura_masa_at(JulDays_UT time) const;
     Chandra_Masa chandra_masa_amanta(JulDays_UT time, std::optional<JulDays_UT> * end_time = nullptr) const;
+    // In other words, find_saura_masa_start
     JulDays_UT find_sankranti(JulDays_UT after, Saura_Masa masa) const;
 
     JulDays_UT calc_astronomical_midnight(date::local_days date) const;

@@ -40,22 +40,7 @@ auto distance(const Interval & interval1, const Interval & interval2);
  *
  * Current 2022 CE is one of such years, while the previous one was 2003 CE.
  *
- *
- * 1st Kalpa
- *      Rohiṇī-bahulāṣṭamī-yoga, at the time of ardharātra both Rohiṇī
- *      and Bahulāṣṭamī are present. These are the ideal astronomical
- *      circumstances, coinsiding with those at the actual Appearance
- *      of Bhagavān Śrī-Kṛṣṇa, ‘sampūrṇo jayantī-kalpaḥ’.
- * 2nd Kalpa
- *      Rohiṇī-bahulāṣṭamī-yoga, at the time of ardharātra only Rohiṇī
- *      is present.
- * 3rd Kalpa
- *      Rohiṇī-bahulāṣṭamī-yoga, at the time of ardharātra only Bahulāṣṭamī
- *      is present.
- * 4th Kalpa
- *      Rohiṇī-bahulāṣṭamī-yoga, neither Rohiṇī, nor Bahulāṣṭamī is present
- *      at the time of ardharātra. This day is Jayantī nevertheless,
- *      provided Kalpas 1-3 are not to be found.
+ * For Kalpa definitions see kalpa() method.
  */
 struct RohiniBahulashtamiYoga {
     Interval sunrises;
