@@ -46,7 +46,6 @@ private:
     bool need_to_close = true;
     int32_t rise_flags;
     int32_t ephemeris_flags;
-    [[noreturn]] void throw_on_wrong_flags(int out_flags, int in_flags, char *serr) const;
     void do_calc_ut(double jd, int planet, int flags, double *res) const;
     tl::expected<JulDays_UT, CalcError> do_rise_trans(int rise_or_set, JulDays_UT after) const;
     int32_t get_rise_flags(CalcFlags flags) const noexcept;

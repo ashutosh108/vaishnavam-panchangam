@@ -15,6 +15,17 @@ constexpr double atmospheric_pressure = 1013.25;
 constexpr double atmospheric_temperature = 15;
 }
 
+static std::string se_flag_to_string(uint_fast32_t flag);
+
+[[noreturn]] static void throw_on_wrong_flags(int out_flags, int in_flags, const char *serr, const char *operation, double juldays) {
+    if (out_flags == ERR) {
+        throw std::runtime_error(serr);
+    } else {
+        throw std::runtime_error(fmt::format(
+            "{}({}=={}): input flags != return flags ({}!={})\nin: {}\nout: {}", operation, juldays, JulDays_UT{double_days{juldays}}, in_flags, out_flags, se_flag_to_string(in_flags), se_flag_to_string(out_flags)));
+    }
+}
+
 tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int rise_or_set, JulDays_UT after) const {
     int32 rsmi = rise_or_set | rise_flags;
     std::array<double, 3> geopos{location.longitude.longitude, location.latitude.latitude, 0.0};
@@ -30,7 +41,7 @@ tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int rise_or_set, JulDays_
                                   detail::atmospheric_temperature,
                                   &trise, serr.data());
     if (res_flag == -1) {
-        throw_on_wrong_flags(-1, ephemeris_flags, serr.data());
+        throw_on_wrong_flags(-1, ephemeris_flags, serr.data(), "do_rise_trans", after.raw_julian_days_ut().count());
     }
 
     if (res_flag == -2) {
@@ -130,8 +141,7 @@ JulDays_UT Swe::next_sunset_v(JulDays_UT after) const
     return *sunset_or_error;
 }
 
-namespace {
-std::string se_flag_to_string(uint_fast32_t flag) {
+static std::string se_flag_to_string(uint_fast32_t flag) {
     struct known_flag {
         uint_fast32_t flag;
         std::string name;
@@ -178,16 +188,6 @@ std::string se_flag_to_string(uint_fast32_t flag) {
     }
     return fmt::to_string(buf);
 }
-}
-
-[[noreturn]] void Swe::throw_on_wrong_flags(int out_flags, int in_flags, char *serr) const {
-    if (out_flags == ERR) {
-        throw std::runtime_error(serr);
-    } else {
-        throw std::runtime_error(fmt::format(
-            "input flags != return flags ({}!={})\nin: {}\nout: {}", in_flags, out_flags, se_flag_to_string(in_flags), se_flag_to_string(out_flags)));
-    }
-}
 
 void Swe::do_calc_ut(double jd, int planet, int flags, double *res) const {
     char serr[AS_MAXCH];
@@ -200,7 +200,7 @@ void Swe::do_calc_ut(double jd, int planet, int flags, double *res) const {
         return;
     }
 
-    throw_on_wrong_flags(res_flags, flags, serr);
+    throw_on_wrong_flags(res_flags, flags, serr, "do_calt_ut", jd);
 }
 
 double Swe::sun_longitude(JulDays_UT time) const
