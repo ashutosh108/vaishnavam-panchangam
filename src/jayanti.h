@@ -3,6 +3,11 @@
 
 #include "calc.h"
 
+// When CLIP_YOGA_BY_SIMHA is defined, consider Ro-k8-yoga only within
+// Simha-masa limits. In other words, clip the time range for yoga search
+// from sunrise_range=[sunrise..next_sunrise) to intersect(simha, sunrise_range);
+#define CLIP_YOGA_BY_SIMHA
+
 namespace vp {
 
 // Four kalpas for Rohini-bahulashtami-yoga (AKA Rohini-krishnashtami-yoga).

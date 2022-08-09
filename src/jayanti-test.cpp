@@ -67,7 +67,9 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
         CAPTURE(year);
         CAPTURE(*yogas);
 
-        REQUIRE(yogas->size() > 0);
+#ifndef CLIP_YOGA_BY_SIMHA
+            REQUIRE(yogas->size() > 0);
+#endif
         REQUIRE(yogas->size() <= 4);
 
         const auto count_with_simha_masa_at_midnight = std::count_if(yogas->cbegin(), yogas->cend(), [](auto & iter) -> bool {
@@ -76,8 +78,12 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
         CAPTURE(count_with_simha_masa_at_midnight);
 
         const std::vector<date::year> years_with_two_good_candidates = {
+#ifdef CLIP_YOGA_BY_SIMHA
+            2083_y, 2109_y, 2128_y, 2136_y, 2315_y, 2338_y, 2372_y, 2391_y,
+#else
             1922_y, 2082_y, 2083_y, 2109_y, 2128_y, 2136_y, 2220_y, 2288_y,
             2315_y, 2338_y, 2361_y, 2372_y, 2391_y
+#endif
         };
 
         if (!contains(years_with_two_good_candidates, year)) {
@@ -90,7 +96,12 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
              * there are no candidates after filtering for "Simha-masa
              * on midnight".
              */
-            //   [1862-09-15 00:53:17.339125 UTC, false]
+            // [kalpa 3: 1862-09-15 00:53:17.339125 UTC, no Simha, no Rohini, K8, Rohini@SU, no K8@SU, -],
+
+#ifdef CLIP_YOGA_BY_SIMHA
+            REQUIRE(yogas->size() > 0);
+#endif
+
             REQUIRE((count_with_simha_masa_at_midnight > 0 || year == 1862_y));
 
             /**

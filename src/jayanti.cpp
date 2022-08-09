@@ -18,23 +18,33 @@ tl::expected<std::vector<RohiniBahulashtamiYoga>, CalcError> rohini_bahulashtami
         if (!first_sunrise_after_rohini) return tl::make_unexpected(first_sunrise_after_rohini.error());
 
         for (auto sunrise = last_sunrise_before_rohini; sunrise && *sunrise < *first_sunrise_after_rohini; ) {
-            const auto min_tithi = c.swe.tithi(*sunrise);
             const auto next_sunrise = c.swe.next_sunrise(*sunrise + double_days{0.001});
             if (!next_sunrise) return tl::make_unexpected(next_sunrise.error());
-            const auto max_tithi = c.swe.tithi(*next_sunrise);
-            if (min_tithi < Tithi::Krishna_Ashtami_End() && max_tithi >= Tithi::Krishna_Ashtami()) {
-                const auto sunset = c.swe.next_sunset(*sunrise);
-                if (!sunset) return tl::make_unexpected(sunset.error());
-                const auto midnight = proportional_time(*sunset, *next_sunrise, 0.5);
 
-                const auto k8_end = c.find_exact_tithi_start(*sunrise, Tithi::Krishna_Ashtami_End());
-                const auto k8_start = c.find_exact_tithi_start(k8_end - Tithi::MaxLengthOrMore(), Tithi::Krishna_Ashtami());
-                const auto saura_masa_at_midnight = c.saura_masa(midnight);
+#ifdef CLIP_YOGA_BY_SIMHA
+            const auto min_time = std::max(simha_start, *sunrise);
+            const auto max_time = std::min(simha_end, *next_sunrise);
+#else
+            const auto min_time = *sunrise;
+            const auto max_time = *next_sunrise;
+#endif
+            if (min_time < max_time) {
+                const auto min_tithi = c.swe.tithi(min_time);
+                const auto max_tithi = c.swe.tithi(max_time);
+                if (min_tithi < Tithi::Krishna_Ashtami_End() && max_tithi >= Tithi::Krishna_Ashtami()) {
+                    const auto sunset = c.swe.next_sunset(*sunrise);
+                    if (!sunset) return tl::make_unexpected(sunset.error());
+                    const auto midnight = proportional_time(*sunset, *next_sunrise, 0.5);
 
-                yogas.push_back({Interval{*sunrise, *next_sunrise},
-                                 midnight, saura_masa_at_midnight,
-                                 Interval{rohini_start, rohini_end},
-                                 Interval{k8_start, k8_end}});
+                    const auto k8_end = c.find_exact_tithi_start(*sunrise, Tithi::Krishna_Ashtami_End());
+                    const auto k8_start = c.find_exact_tithi_start(k8_end - Tithi::MaxLengthOrMore(), Tithi::Krishna_Ashtami());
+                    const auto saura_masa_at_midnight = c.saura_masa(midnight);
+
+                    yogas.push_back({Interval{*sunrise, *next_sunrise},
+                                     midnight, saura_masa_at_midnight,
+                                     Interval{rohini_start, rohini_end},
+                                     Interval{k8_start, k8_end}});
+                }
             }
             sunrise = next_sunrise;
         }
