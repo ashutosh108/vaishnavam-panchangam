@@ -189,7 +189,7 @@ static std::string se_flag_to_string(uint_fast32_t flag) {
     return fmt::to_string(buf);
 }
 
-void Swe::do_calc_ut(double jd, int planet, int flags, double *res) const {
+static void do_calc_ut(double jd, int planet, int flags, double *res) {
     char serr[AS_MAXCH];
     int32 res_flags = swe_calc_ut(jd, planet, flags, res, serr);
     if (res_flags == flags) {
