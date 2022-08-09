@@ -4,7 +4,12 @@ namespace vp {
 
 tl::expected<std::vector<RohiniBahulashtamiYoga>, CalcError> rohini_bahulashtami_yogas_in_year(Calc &c, date::year year) {
     std::vector<RohiniBahulashtamiYoga> yogas;
-    for (auto timepoint = JulDays_UT{year/1/1}; timepoint.year_month_day().year() == year;) {
+    // We start from January 2nd, not 1st to avoid sweph error:
+    // it switches to Moshier ephemeris when calculating on
+    // JD 2378496.5==1800-01-01 00:00:00.000000 UTC.
+    const auto simha_start = c.find_sankranti(JulDays_UT{year/date::January/2}, Saura_Masa::Simha);
+    const auto simha_end = c.find_sankranti(simha_start, Saura_Masa::Kanya); // start of Kanya == end of Simha
+    for (auto timepoint = simha_start - Nakshatra::MaxLengthOrMore(); timepoint < simha_end;) {
         const auto rohini_start = c.find_nakshatra_start(timepoint, Nakshatra::ROHINI_START());
         const auto rohini_end = c.find_nakshatra_start(rohini_start, Nakshatra::ROHINI_END());
         const auto last_sunrise_before_rohini = c.prev_sunrise(rohini_start);
