@@ -285,13 +285,14 @@ TEST_CASE("Vasanta-pañcamī etc are present in 2021") {
 
 TEST_CASE("Krishna Jayanti") {
     using namespace date;
+    using Catch::Matchers::Contains;
     auto jayanti_is = [](const char * location, date::year_month_day date) {
         auto vratas = vp::text_ui::calc(date, location);
         REQUIRE(vratas.size() == 1);
         auto & vrata = vratas.begin()->value();
         CAPTURE(date);
         CAPTURE(vrata.dates_for_this_paksha);
-        REQUIRE(any_date_for(vrata, date).name == "Śrī-Kṛṣṇa-jayantī");
+        REQUIRE_THAT(any_date_for(vrata, date).name, Contains("Śrī-Kṛṣṇa-jayantī"));
         REQUIRE(any_date_for(vrata, date::year_month_day{date::sys_days{date} + date::days{1}}).name == "Śrī-Kṛṣṇa-līlotsava");
     };
     SECTION("Udupi 2021 (1st kalpa)") {
