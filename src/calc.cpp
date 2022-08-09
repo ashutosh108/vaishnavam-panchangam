@@ -166,8 +166,8 @@ tl::expected<JulDays_UT, CalcError> Calc::sunset_before_sunrise(JulDays_UT const
 
 Vrata_Time_Points Calc::calc_key_times_from_sunset_and_sunrise(JulDays_UT sunset0, JulDays_UT sunrise1) const
 {
-    const auto ekadashi_start = find_either_tithi_start(sunrise1 - Tithi::MaxLength(), Tithi::Ekadashi());
-    const auto dashami_start = find_either_tithi_start(ekadashi_start - Tithi::MaxLength(), Tithi::Dashami());
+    const auto ekadashi_start = find_either_tithi_start(sunrise1 - Tithi::MaxLengthOrMore(), Tithi::Ekadashi());
+    const auto dashami_start = find_either_tithi_start(ekadashi_start - Tithi::MaxLengthOrMore(), Tithi::Dashami());
     const auto dvadashi_start = find_either_tithi_start(ekadashi_start + double_hours{1.0}, Tithi::Dvadashi());
     const auto trayodashi_start = find_either_tithi_start(dvadashi_start + double_hours{1.0}, Tithi::Trayodashi());
 

@@ -57,14 +57,23 @@ struct Tithi {
     static constexpr Tithi Krishna_Navami_End() { return Tithi::Krishna_Dashami(); }
     static constexpr Tithi Krishna_Dashami() { return Tithi{15.0 + 9.0}; }
 
+    static constexpr std::chrono::duration<double, std::ratio<3600>> MinLengthOrLess() {
+        using namespace std::literals::chrono_literals;
+        // "Basics of Panchangam" by S.Narasimha Rao, p.12 states 21h 34m 24s.
+        // Since this needs to be less, round it down to 21h to be sure.
+        return 21h;
+    }
     static constexpr std::chrono::duration<double, std::ratio<3600>> AverageLength() {
         using namespace std::literals::chrono_literals;
         return 23h + 37min + 28.092s; // from "Basics of Panchangam" by S.Narasimha Rao, p.12
     };
-    static constexpr std::chrono::duration<double, std::ratio<3600>> MaxLength() {
+
+    static constexpr std::chrono::duration<double, std::ratio<3600>> MaxLengthOrMore() {
         using namespace std::literals::chrono_literals;
-        // "Basics of Panchangam" by S.Narasimha Rao, p.12 states 26h 6min 24s, but I've found cases of somewhat longer tithis
-        // (at least 26h 26m 15.36s long for 2020-05-17 ekadashi), so 27h it is, to be safe.
+        // "Basics of Panchangam" by S.Narasimha Rao, p.12 states 26h 6min 24s,
+        // but I've found cases of somewhat longer tithis
+        // (at least 26h 26m 15.36s long for 2020-05-17 ekadashi),
+        // so round it up to 27h to be sure.
         return 27h;
     }
 

@@ -23,7 +23,7 @@ tl::expected<std::vector<RohiniBahulashtamiYoga>, CalcError> rohini_bahulashtami
                 const auto midnight = proportional_time(*sunset, *next_sunrise, 0.5);
 
                 const auto k8_end = c.find_exact_tithi_start(*sunrise, Tithi::Krishna_Ashtami_End());
-                const auto k8_start = c.find_exact_tithi_start(k8_end - Tithi::MaxLength(), Tithi::Krishna_Ashtami());
+                const auto k8_start = c.find_exact_tithi_start(k8_end - Tithi::MaxLengthOrMore(), Tithi::Krishna_Ashtami());
                 const auto saura_masa_at_midnight = c.saura_masa(midnight);
 
                 yogas.push_back({Interval{*sunrise, *next_sunrise},
@@ -68,8 +68,6 @@ tl::expected<std::vector<RohiniBahulashtamiYoga>, CalcError> rohini_bahulashtami
  */
 RoK8YogaKalpa RohiniBahulashtamiYoga::kalpa() const
 {
-//    if (!simha_masa_on_midnight)
-//        return RoK8YogaKalpa::None;
     if (rohini_at_midnight && bahulashtami_at_midnight)
         return RoK8YogaKalpa::Kalpa1;
     else if (rohini_at_midnight)

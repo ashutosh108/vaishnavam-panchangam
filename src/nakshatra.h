@@ -86,6 +86,20 @@ public:
         return 24h + 17min + 9.36s; // from "Basics of Panchangam" by S.Narasimha Rao, p.21
     }
 
+    static constexpr std::chrono::duration<double, std::ratio<3600>> MaxLengthOrMore() {
+        using namespace std::literals::chrono_literals;
+        // 26h 32m 24s according to "Basics of Panchangam" by S.Narasimha Rao, p.21
+        // Since this number has to be greater than max, round up to 27 hours
+        return  27h;
+    }
+
+    static constexpr std::chrono::duration<double, std::ratio<3600>> MinLengthOrLess() {
+        using namespace std::literals::chrono_literals;
+        //  22h 22m 24s according to "Basics of Panchangam" by S.Narasimha Rao, p.21
+        // Since this number has to be less than min, round down to 22 hours
+        return  22h;
+    }
+
     bool is_rohini() const;
     bool is_mrgashira() const;
 };
