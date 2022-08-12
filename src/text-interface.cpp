@@ -74,6 +74,7 @@ const std::vector<Location> &LocationDb::locations() {
         { stavropol_coord },
         { semikarakorsk_coord },
         { krasnodar_coord },
+        { kerch_coord },
         { simferopol_coord },
         { donetsk_coord },
         { staryyoskol_coord },

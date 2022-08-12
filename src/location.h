@@ -212,6 +212,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location telaviv_coord{                 32'04'00_N,  34'47'00_E, "Tel Aviv", "Asia/Jerusalem", "Israel"};
 [[maybe_unused]] constexpr Location poltava_coord{                 49'34'00_N,  34'34'00_E, "Poltava", "Europe/Kiev", "Ukraine"};
 [[maybe_unused]] constexpr Location ashkelon_coord{                31'39'57_N,  34'33'59_E, "Ashkelon", "Asia/Jerusalem", "Israel"}; // ru Wikipedia
+[[maybe_unused]] constexpr Location kerch_coord{                   45'20'19_N,  36'28'05_E, "Kerch", "Europe/Simferopol", "Russia"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location simferopol_coord{              44'56'00_N,  34'06'00_E, "Simferopol", "Europe/Simferopol", "Russia"};
 [[maybe_unused]] constexpr Location nicosia_coord{                 35'10'21_N,  33'21'54_E, "Nicosia", "Asia/Nicosia", "Cyprus"}; // en Wikipedia
 [[maybe_unused]] constexpr Location murmansk_coord{                68'58'00_N,  33'05'00_E, "Murmansk", "Europe/Moscow", "Russia"};
