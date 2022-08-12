@@ -58,28 +58,6 @@ void insert_ekadashi_paran_etc(vp::NamedDates & dates, const vp::Vrata & vrata) 
     }
 }
 
-static tl::expected<date::local_days, vp::CalcError>
-local_sun_date_covering_given_time(vp::Swe & swe, const date::time_zone * time_zone, vp::JulDays_UT time) {
-    const auto sunset = swe.next_sunset(time);
-    if (!sunset) { return tl::make_unexpected(sunset.error()); }
-
-    const auto sunset_local = sunset->as_zoned_time(time_zone).get_local_time();
-    return date::floor<date::days>(sunset_local) - date::days{1};
-}
-
-static tl::expected<std::pair<date::local_days, vp::RoK8YogaKalpa>, vp::CalcError>
-find_krishna_jayanti(const vp::Vrata & vrata, vp::Calc & calc) {
-    const auto yogas = rohini_bahulashtami_yogas_in_year(calc, date::year_month_day{vrata.date}.year());
-    if (!yogas) return tl::make_unexpected(yogas.error());
-    if (yogas->empty()) {
-        return tl::make_unexpected(vp::NoRohiniAshtamiIntersectionForJayanti{});
-    }
-    const auto date = local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), yogas->at(0).midnight);
-    if (!date) return tl::make_unexpected(date.error());
-    const auto kalpa = yogas->at(0).kalpa();
-    return std::make_pair(*date, kalpa);
-}
-
 vp::NamedDates vp::nameworthy_dates_for_this_paksha(const vp::Vrata &vrata, CalcFlags flags)
 {
     vp::NamedDates dates;

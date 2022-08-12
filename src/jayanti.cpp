@@ -2,6 +2,9 @@
 
 namespace vp {
 
+static tl::expected<date::local_days, vp::CalcError>
+local_sun_date_covering_given_time(vp::Swe & swe, const date::time_zone * time_zone, vp::JulDays_UT time);
+
 tl::expected<std::vector<RohiniBahulashtamiYoga>, CalcError> rohini_bahulashtami_yogas_in_year(Calc &c, date::year year) {
     std::vector<RohiniBahulashtamiYoga> yogas;
     // We start from January 2nd, not 1st to avoid sweph error:
@@ -118,6 +121,37 @@ auto distance(const Interval &interval1, const Interval &interval2) {
 bool Interval::contains(JulDays_UT t) const
 {
     return t >= start && t < end;
+}
+
+static tl::expected<date::local_days, vp::CalcError>
+local_sun_date_covering_given_time(vp::Swe & swe, const date::time_zone * time_zone, vp::JulDays_UT time) {
+    const auto sunset = swe.next_sunset(time);
+    if (!sunset) { return tl::make_unexpected(sunset.error()); }
+
+    const auto sunset_local = sunset->as_zoned_time(time_zone).get_local_time();
+    return date::floor<date::days>(sunset_local) - date::days{1};
+}
+
+/**
+ * find_krishna_jayanti: find Krishna Jayanti vrata date, but only when it's
+ * on the same half-masa as a given Ekadashi vrata.
+ */
+tl::expected<std::pair<date::local_days, vp::RoK8YogaKalpa>, vp::CalcError>
+find_krishna_jayanti(const vp::Vrata & vrata, vp::Calc & calc) {
+    const auto yogas = rohini_bahulashtami_yogas_in_year(calc, date::year_month_day{vrata.date}.year());
+    if (!yogas) return tl::make_unexpected(yogas.error());
+    if (yogas->empty()) {
+        return tl::make_unexpected(vp::NoRohiniAshtamiIntersectionForJayanti{});
+    }
+    const auto midnight_chandra_masa = calc.chandra_masa_amanta((*yogas)[0].midnight);
+    const auto midnight_paksha = calc.swe.tithi((*yogas)[0].midnight).get_paksha();
+    if (midnight_chandra_masa != vrata.masa || midnight_paksha != vrata.paksha) {
+        return tl::make_unexpected(vp::NoJayantiOnThisHalfMasa{});
+    }
+    const auto date = local_sun_date_covering_given_time(calc.swe, vrata.location.time_zone(), yogas->at(0).midnight);
+    if (!date) return tl::make_unexpected(date.error());
+    const auto kalpa = yogas->at(0).kalpa();
+    return std::make_pair(*date, kalpa);
 }
 
 } // namespace vp

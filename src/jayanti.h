@@ -80,6 +80,9 @@ struct RohiniBahulashtamiYoga {
 
 tl::expected<std::vector<RohiniBahulashtamiYoga>, CalcError> rohini_bahulashtami_yogas_in_year(Calc &c, date::year year);
 
+tl::expected<std::pair<date::local_days, vp::RoK8YogaKalpa>, vp::CalcError>
+find_krishna_jayanti(const vp::Vrata & vrata, vp::Calc & calc);
+
 } // namespace vp
 
 template<>

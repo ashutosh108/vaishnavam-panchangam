@@ -30,7 +30,10 @@ struct CantFindLocation {
 struct NoRohiniAshtamiIntersectionForJayanti {
 };
 
-using CalcError = std::variant<CantFindSunriseAfter, CantFindSunriseBefore, CantFindSunsetAfter, CantFindLocation, NoRohiniAshtamiIntersectionForJayanti>;
+struct NoJayantiOnThisHalfMasa {
+};
+
+using CalcError = std::variant<CantFindSunriseAfter, CantFindSunriseBefore, CantFindSunsetAfter, CantFindLocation, NoRohiniAshtamiIntersectionForJayanti, NoJayantiOnThisHalfMasa>;
 
 } // namespace vp
 

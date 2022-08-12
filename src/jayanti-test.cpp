@@ -211,3 +211,16 @@ TEST_CASE("rohini_bahulashtami_yogas_in_year gives expected four kala cases for 
     check(2021_y, 2021_y/8/30, RoK8YogaKalpa::Kalpa1);
     check(2020_y, 2020_y/9/9, RoK8YogaKalpa::Kalpa2);
 }
+
+TEST_CASE("find_krishna_jayanti does not repeat past (August 19's) Jayanti before September's Indirā Ekādaśī", "[jayanti]") {
+    Location udupi{13'20'27_N,  74'45'06_E};
+    Calc c{udupi};
+
+    const auto indira_ekadashi = c.find_next_vrata(date::local_days{2022_y/September/1});
+
+    REQUIRE(indira_ekadashi);
+
+    const auto jayanti = find_krishna_jayanti(*indira_ekadashi, c);
+    REQUIRE(!jayanti.has_value());
+    REQUIRE(std::holds_alternative<NoJayantiOnThisHalfMasa>(jayanti.error()));
+}
