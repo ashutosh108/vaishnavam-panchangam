@@ -27,6 +27,7 @@ public:
               text(_text), type(_type), classes(_classes), row{_row}, col{_col}, mergeable{_mergeable} {}
         void add_classes(std::string new_classes);
         Cell & set_title(std::string new_title);
+        bool has_class(const char *class_to_look_for) const;
     };
     struct Row {
         std::vector<Cell> data;

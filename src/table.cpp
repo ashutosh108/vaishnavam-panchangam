@@ -241,6 +241,11 @@ vp::Table::Cell &vp::Table::Cell::set_title(std::string new_title)
     return *this;
 }
 
+bool vp::Table::Cell::has_class(const char *class_to_look_for) const
+{
+    return classes.find(class_to_look_for) != std::string::npos;
+}
+
 bool vp::Table::Row::has_class(std::string some_class) const {
     return classes.find(some_class) != std::string::npos;
 }
