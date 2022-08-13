@@ -195,12 +195,12 @@ TEST_CASE("Generated table contains additional custom dates with given descripti
 
 TEST_CASE("Generated table contains Vasanta-pañcamī and other dates from that pakṣa", "[wip]") {
     auto table = vp::Table_Calendar_Generator::generate(some_vratas(2021_y/2/10));
-    REQUIRE(table.width() == 14);
+    REQUIRE(table.width() == 15); // 2 + 12 + one column for skipped date
     REQUIRE(table.at(1, 3).text == "Vasanta-pañcamī");
     REQUIRE(table.at(1, 6).text == "Ratha-saptamī");
     REQUIRE(table.at(1, 7).text == "Bhīṣmāṣṭamī");
     REQUIRE(table.at(1, 8).text == "Madhva-navamī (cāndra)");
-    REQUIRE(table.at(1, 13).text == "Pūrṇimā, Māgha-snāna-vrata ends");
+    REQUIRE(table.at(1, 14).text == "Pūrṇimā, Māgha-snāna-vrata ends");
 }
 
 TEST_CASE("table for Vrata with multiple nameworthy dates on the same day lists all nameworthy dates in the same cell, separated by full stop.") {
@@ -213,4 +213,18 @@ TEST_CASE("table for Vrata with multiple nameworthy dates on the same day lists 
     }
     const auto table = vp::Table_Calendar_Generator::generate(vratas);
     REQUIRE_THAT(table.at(1, 5).text, Contains("event1. event2"));
+}
+
+TEST_CASE("table includes empty ('...') columns for skipped dates", "[wip]") {
+    vp::VratasForDate vratas;
+    {
+        // Vrata on Jan 1st, Paran on Jan 2nd. Nothing on Jan 3rd, so it
+        // should become "skipped column", and a separate event on Jan 4th.
+        auto vrata = vp::Vrata::SampleVrata(); // 2000_y/1/1
+        vrata.dates_for_this_paksha.emplace(date::local_days{2000_y/1/4}, vp::NamedDate{"separate event"});
+        vratas.push_back(std::move(vrata));
+    }
+    const auto table = vp::Table_Calendar_Generator::generate(vratas);
+    REQUIRE_THAT(table.at(0, 5).text, Contains("..."));
+    REQUIRE_THAT(table.at(1, 6).text, Contains("separate event"));
 }

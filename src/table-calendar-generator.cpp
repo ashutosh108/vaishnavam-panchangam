@@ -37,7 +37,14 @@ void add_header(vp::Table & table, const std::set<date::local_days> & vrata_date
     table.add_header_cell(text);
     table.add_header_cell(text);
 
+    if (vrata_dates.empty()) return;
+    date::local_days expected_next_date = *vrata_dates.begin();
+
     for (auto date : vrata_dates) {
+        if (date != expected_next_date) {
+            table.add_header_cell("...", "mainpart skipped");
+        }
+        expected_next_date = date + date::days{1};
         const auto ymd = date::year_month_day{date};
         if (default_year != date::year::min() && ymd.year() != default_year) {
             table.add_header_cell(fmt::format(FMT_STRING("{:lhy}"), ymd), "mainpart");
@@ -83,7 +90,14 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
         }
         return;
     }
+    if (vrata_dates.empty()) return;
+
+    date::local_days expected_next_date = *vrata_dates.begin();
     for (auto date : vrata_dates) {
+        if (date != expected_next_date) {
+            table.add_cell("", "mainpart skipped");
+        }
+        expected_next_date = date + date::days{1};
         if (auto found_it = custom_dates.find(date); found_it != custom_dates.end()) {
             table.add_cell(found_it->second, "mainpart custom");
         } else if (auto [begin, end] = vrata->dates_for_this_paksha.equal_range(date); begin != end) {
@@ -106,15 +120,23 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
 std::vector<double> calc_column_widths(const vp::Table & table) {
     size_t width = table.width();
 
-    constexpr double timezone_col_width = 8.0;
+    constexpr double timezone_col_width = 8.0; // percent
     constexpr double country_col_width = 16.0;
     constexpr double city_col_width = 16.0;
+    constexpr double skipped_col_width = 2.0;
     std::vector<double> col_widths{timezone_col_width, country_col_width, city_col_width};
     col_widths.resize(width);
-    const size_t mainpart_col_count = width - 3;
-    const double mainpart_col_width = (100.0 - timezone_col_width - country_col_width - city_col_width) / mainpart_col_count;
+    const auto skipped_col_count = std::count_if(table.row(0).data.begin(), table.row(0).data.end(), [](const vp::Table::Cell & cell) {
+        return cell.has_class("skipped");
+    });
+    const size_t mainpart_col_count = width - 3 - skipped_col_count;
+    const double mainpart_col_width = (100.0 - timezone_col_width - country_col_width - city_col_width - skipped_col_width * skipped_col_count) / mainpart_col_count;
     for (size_t col=3; col < width; ++col) {
-        col_widths[col] = mainpart_col_width;
+        if (table.at(0, col).has_class("skipped")) {
+            col_widths[col] = skipped_col_width;
+        } else {
+            col_widths[col] = mainpart_col_width;
+        }
     }
     return col_widths;
 }
