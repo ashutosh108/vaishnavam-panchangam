@@ -344,6 +344,12 @@ TEST_CASE("daybyday_print_one marks special Krishna Jayanti-related events") {
         SECTION("end of intersection") {
             REQUIRE_THAT(s, Contains("Krishna Navami starts (**end of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)"));
         }
+        SECTION("Includes moonrise") {
+            REQUIRE_THAT(s, Contains("moonrise"));
+        }
+        SECTION("Includes moonset") {
+            REQUIRE_THAT(s, Contains("moonset"));
+        }
     }
 
     SECTION("Udupi 2023 (Kalashtami, then Rohini; both cover midnight)") {

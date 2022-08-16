@@ -61,14 +61,14 @@ void MainWindow::setupToolbar()
 
     ui->toolBar->addSeparator();
 
-    sunrise_by_disc_center = ui->toolBar->addAction("Sunrise: by disc CENTER (click to toggle)", [this](bool checked) {
-        const auto text = QString{"Sunrise: by disc %1 (click to toggle)"}.arg(checked ? "CENTER" : "EDGE");
+    sunrise_by_disc_center = ui->toolBar->addAction("Rise: by disc CENTER (click to toggle)", [this](bool checked) {
+        const auto text = QString{"Rise: by disc %1 (click to toggle)"}.arg(checked ? "CENTER" : "EDGE");
         sunrise_by_disc_center->setText(text);
         refreshAllTabs();
     });
     sunrise_by_disc_center->setCheckable(true);
     sunrise_by_disc_center->setChecked(true);
-    sunrise_by_disc_center->setToolTip("detect sunrise/sunset when sun disc's CENTER or EDGE crosses the horizon");
+    sunrise_by_disc_center->setToolTip("detect rise/set of sun or moon when their disc's CENTER or EDGE crosses the horizon");
 
     ui->toolBar->addSeparator();
 

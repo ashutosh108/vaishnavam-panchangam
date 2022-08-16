@@ -26,13 +26,13 @@ static std::string se_flag_to_string(uint_fast32_t flag);
     }
 }
 
-tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int rise_or_set, JulDays_UT after) const {
+tl::expected<JulDays_UT, CalcError> Swe::do_rise_trans(int planet, int rise_or_set, JulDays_UT after) const {
     int32 rsmi = rise_or_set | rise_flags;
     std::array<double, 3> geopos{location.longitude.longitude, location.latitude.latitude, 0.0};
     double trise;
     std::array<char, AS_MAXCH> serr;
     int res_flag = swe_rise_trans(after.raw_julian_days_ut().count(),
-                                  SE_SUN,
+                                  planet,
                                   nullptr,
                                   ephemeris_flags,
                                   rsmi,
@@ -115,7 +115,7 @@ Swe::Swe(Swe && other) noexcept
 
 tl::expected<JulDays_UT, CalcError> Swe::next_sunrise(JulDays_UT after) const
 {
-    return do_rise_trans(SE_CALC_RISE, after);
+    return do_rise_trans(SE_SUN, SE_CALC_RISE, after);
 }
 
 JulDays_UT Swe::next_sunrise_v(JulDays_UT after) const
@@ -129,7 +129,7 @@ JulDays_UT Swe::next_sunrise_v(JulDays_UT after) const
 
 tl::expected<JulDays_UT, CalcError> Swe::next_sunset(JulDays_UT after) const
 {
-    return do_rise_trans(SE_CALC_SET, after);
+    return do_rise_trans(SE_SUN, SE_CALC_SET, after);
 }
 
 JulDays_UT Swe::next_sunset_v(JulDays_UT after) const
@@ -139,6 +139,16 @@ JulDays_UT Swe::next_sunset_v(JulDays_UT after) const
         throw std::runtime_error(fmt::format("can't find sunset after ", after));
     }
     return *sunset_or_error;
+}
+
+tl::expected<JulDays_UT, CalcError> Swe::next_moonrise(JulDays_UT after) const
+{
+    return do_rise_trans(SE_MOON, SE_CALC_RISE, after);
+}
+
+tl::expected<JulDays_UT, CalcError> Swe::next_moonset(JulDays_UT after) const
+{
+    return do_rise_trans(SE_MOON, SE_CALC_SET, after);
 }
 
 static std::string se_flag_to_string(uint_fast32_t flag) {

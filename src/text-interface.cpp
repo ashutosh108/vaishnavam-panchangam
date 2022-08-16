@@ -444,6 +444,30 @@ void daybyday_add_nakshatra_events(vp::JulDays_UT from, vp::JulDays_UT to, const
     }
 }
 
+static void
+daybyday_add_moonrise_moonset_events(vp::JulDays_UT from, vp::JulDays_UT to, const vp::Calc & calc, DayByDayInfo & info) {
+    for (auto time = from; time < to; time += double_days{0.001}) {
+        const auto moonrise = calc.swe.next_moonrise(time);
+        if (moonrise) {
+            if (*moonrise < to) {
+                info.events.push_back(NamedTimePoint{"moonrise", *moonrise});
+            }
+        }
+        const auto moonset = calc.swe.next_moonset(time);
+        if (moonset) {
+            if (*moonset < to) {
+                info.events.push_back(NamedTimePoint{"moonset", *moonset});
+            }
+        }
+        if (moonrise) {
+            time = *moonrise;
+        }
+        if (moonset) {
+            time = std::max(time, *moonset);;
+        }
+    }
+}
+
 
 DayByDayInfo daybyday_events(date::year_month_day base_date, const vp::Calc & calc) {
     DayByDayInfo info;
@@ -497,6 +521,7 @@ DayByDayInfo daybyday_events(date::year_month_day base_date, const vp::Calc & ca
                 const auto latest_timepoint = *sunrise2;
                 daybyday_add_tithi_events(earliest_timepoint, latest_timepoint, calc, info);
                 daybyday_add_nakshatra_events(earliest_timepoint, latest_timepoint, calc, info);
+                daybyday_add_moonrise_moonset_events(earliest_timepoint, latest_timepoint, calc, info);
             }
         }
     }

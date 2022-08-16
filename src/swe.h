@@ -32,6 +32,8 @@ public:
     JulDays_UT next_sunrise_v(JulDays_UT after) const;
     tl::expected<JulDays_UT, CalcError> next_sunset(JulDays_UT after) const;
     JulDays_UT next_sunset_v(JulDays_UT after) const;
+    tl::expected<JulDays_UT, CalcError> next_moonrise(JulDays_UT after) const;
+    tl::expected<JulDays_UT, CalcError> next_moonset(JulDays_UT after) const;
     double sun_longitude(JulDays_UT time) const;
     double moon_longitude(JulDays_UT time) const;
     /** Get tithi as double [0..30) */
@@ -46,7 +48,7 @@ private:
     bool need_to_close = true;
     int32_t rise_flags;
     int32_t ephemeris_flags;
-    tl::expected<JulDays_UT, CalcError> do_rise_trans(int rise_or_set, JulDays_UT after) const;
+    tl::expected<JulDays_UT, CalcError> do_rise_trans(int planet, int rise_or_set, JulDays_UT after) const;
     int32_t get_rise_flags(CalcFlags flags) const noexcept;
     int32_t calc_ephemeris_flags(CalcFlags flags) const noexcept;
 };

@@ -1,12 +1,7 @@
-[ ] add moonrise/moonset to day-by-day tab.
-[ ] Krishna-jayanti
-    - 4th kalpa: Miami & Cancun 2016-08-25; Habarovsk & Vladivostok 2018-09-03?
-    - 5th kalpa: 1957?
 [ ] CLI: give error when date is "qwe" or otherwise non-valid
 [ ] CLI: allow giving just location name: print next Ekadashi
 [ ] CLI: allow storing default location in ~/.config
 [ ] CI: arrange for permanent "latest" download link (overwrite existing release?)
-[ ] table: show separator column for non-sequential dates
 [ ] calculate Madhva-navamī (saura): Makara, ś9
 [ ] day-by-day: calculate saura masa end day (verify by 2020..2022 panchangas)
     Meśa: 2020-04-14..
@@ -330,3 +325,6 @@ done:
 [+] add Orenburg [2021-07-09]
 [+] add hari-vAsara time support (last quarter of ekAdashI-tithi) [2021-07-31]
 [+] day-by-day: mark Rohini & kAlAStamI intersection during simha mAsa. [2021-08-30]
+[+] Krishna-jayanti [2022-08-13]
+[+] table: show separator column for non-sequential dates [2022-08-13]
+[+] add moonrise/moonset to day-by-day tab (useful for Jayanti celebration) [2022-08-16]
