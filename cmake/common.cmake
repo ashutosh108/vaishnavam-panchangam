@@ -11,10 +11,18 @@ macro(common_init)
         CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_C_FLAGS_MINSIZEREL
         CMAKE_CXX_FLAGS_RELWITHDEBINFO CMAKE_C_FLAGS_RELWITHDEBINFO)
 
-    # Explicitly set build type to "Debug" by default.
+    # Explicitly set build type to "Debug" by default on single-configuration
+	# backends (like make or ninja). Multi-configuration backends (like MSVC)
+	# will have CMAKE_CONFIGURATION_TYPES set, so check if that is set.
     # In this way linux builds (having empty type by default) will be consistent
     # with windows builds (having "Debug" by default).
-    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type")
+	if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+		# Have to use FORCE here, doesn't work otherwise.
+		set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+		set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+		    "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+		message(STATUS "CMAKE_BUILD_TYPE: '${CMAKE_BUILD_TYPE}'")
+	endif()
 
     if(MSVC)
         set(WARN_FLAGS_NO_WX ${WARN_FLAGS} /permissive-
