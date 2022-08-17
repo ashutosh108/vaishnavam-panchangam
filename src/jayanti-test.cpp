@@ -84,6 +84,63 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
             1922_y, 2082_y, 2083_y, 2109_y, 2128_y, 2136_y, 2220_y, 2288_y,
             2315_y, 2338_y, 2361_y, 2372_y, 2391_y
 #endif
+            // 1922
+            // [kalpa 2: 1922-08-16 00:51:44.282780 UTC, Simha, Rohini, no K8, no Rohini@SU, K8@SU, -],
+            // [kalpa 2: 1922-09-13 00:53:17.470486 UTC, Simha, Rohini, no K8, Rohini@SU, no K8@SU, X],
+            // [kalpa 3: 1922-09-14 00:53:18.276637 UTC, Simha, no Rohini, K8, Rohini@SU, K8@SU, X]
+            //
+            // 2082
+            // [kalpa 2: 2082-08-17 00:52:19.444609 UTC, Simha, Rohini, no K8, no Rohini@SU, K8@SU, -],
+            // [kalpa 2: 2082-09-14 00:53:29.703733 UTC, Simha, Rohini, no K8, Rohini@SU, no K8@SU, X]
+            //
+            // 2083
+            // [kalpa 1: 2083-09-03 00:53:20.114809 UTC, Simha, Rohini, K8, no Rohini@SU, no K8@SU, X],
+            // [kalpa 1: 2083-09-04 00:53:21.548316 UTC, Simha, Rohini, K8, Rohini@SU, K8@SU, X]
+            //
+            // 2109
+            // [kalpa 2: 2109-08-19 00:52:29.841213 UTC, Simha, Rohini, no K8, no Rohini@SU, K8@SU, -],
+            // [kalpa 2: 2109-09-16 00:53:31.390708 UTC, Simha, Rohini, no K8, Rohini@SU, no K8@SU, X]
+            //
+            // 2128
+            // [kalpa 2: 2128-08-18 00:52:28.211329 UTC, Simha, Rohini, no K8, no Rohini@SU, K8@SU, -],
+            // [kalpa 2: 2128-09-15 00:53:31.569987 UTC, Simha, Rohini, no K8, no Rohini@SU, no K8@SU, X],
+            // [kalpa 3: 2128-09-16 00:53:31.881191 UTC, Simha, no Rohini, K8, Rohini@SU, K8@SU, X]
+            //
+            // 2136
+            // [kalpa 2: 2136-08-20 00:52:40.084368 UTC, Simha, Rohini, no K8, no Rohini@SU, K8@SU, -],
+            // [kalpa 2: 2136-09-17 00:53:32.565717 UTC, Simha, Rohini, no K8, Rohini@SU, no K8@SU, -],
+            // [kalpa 3: 2136-09-18 00:53:32.929103 UTC, no Simha, no Rohini, K8, no Rohini@SU, K8@SU, -]
+            //
+            // 2220
+            // [kalpa 2: 2220-08-22 00:52:58.008230 UTC, Simha, Rohini, no K8, no Rohini@SU, K8@SU, -],
+            // [kalpa 2: 2220-09-19 00:53:38.631425 UTC, Simha, Rohini, no K8, Rohini@SU, no K8@SU, -],
+            // [kalpa 4.1: 2220-09-20 00:53:38.910402 UTC, no Simha, no Rohini, no K8, no Rohini@SU, K8@SU, -]
+            //
+            // 2288
+            // [kalpa 2: 2288-08-20 00:52:58.818887 UTC, Simha, Rohini, no K8, no Rohini@SU, K8@SU, -],
+            // [kalpa 2: 2288-09-17 00:53:42.759184 UTC, Simha, Rohini, no K8, Rohini@SU, no K8@SU, X],
+            // [kalpa 3: 2288-09-18 00:53:42.818568 UTC, Simha, no Rohini, K8, no Rohini@SU, K8@SU, -]
+            //
+            // 2315
+            // [kalpa 2: 2315-08-23 00:53:07.528758 UTC, Simha, Rohini, no K8, no Rohini@SU, K8@SU, -],
+            // [kalpa 2: 2315-09-20 00:53:43.042144 UTC, Simha, Rohini, no K8, Rohini@SU, no K8@SU, X]
+            //
+            // 2338
+            // [kalpa 1: 2338-09-07 00:53:44.560100 UTC, Simha, Rohini, K8, no Rohini@SU, no K8@SU, X],
+            // [kalpa 1: 2338-09-08 00:53:45.032638 UTC, Simha, Rohini, K8, Rohini@SU, K8@SU, X]
+            //
+            // 2361
+            // [kalpa 2: 2361-08-24 00:53:21.540631 UTC, Simha, Rohini, no K8, no Rohini@SU, K8@SU, -],
+            // [kalpa 2: 2361-09-21 00:53:47.398387 UTC, Simha, Rohini, no K8, Rohini@SU, no K8@SU, -],
+            // [kalpa 3: 2361-09-22 00:53:47.531920 UTC, no Simha, no Rohini, K8, no Rohini@SU, K8@SU, -]
+            //
+            // 2372
+            // [kalpa 2: 2372-08-23 00:53:20.584370 UTC, Simha, Rohini, no K8, no Rohini@SU, K8@SU, -],
+            // [kalpa 2: 2372-09-20 00:53:48.789005 UTC, Simha, Rohini, no K8, Rohini@SU, no K8@SU, X]
+            //
+            // 2391
+            // [kalpa 2: 2391-08-24 00:53:24.059386 UTC, Simha, Rohini, no K8, no Rohini@SU, K8@SU, -],
+            // [kalpa 2: 2391-09-21 00:53:49.626900 UTC, Simha, Rohini, no K8, Rohini@SU, no K8@SU, X],
         };
 
         if (!contains(years_with_two_good_candidates, year)) {
