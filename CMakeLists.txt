@@ -179,14 +179,14 @@ endif()
 
 # address sanitizer with GCC only works in linux and MacOS (not windows)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND UNIX)
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address,undefined")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined")
-    set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fsanitize=address,undefined")
+    string(APPEND CMAKE_C_FLAGS_DEBUG " -fsanitize=address,undefined")
+    string(APPEND CMAKE_CXX_FLAGS_DEBUG " -fsanitize=address,undefined")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " -fsanitize=address,undefined")
 endif()
 
 # gcc 7: define VP_USE_EXPERIMENTAL_FILESYSTEM
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0))
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVP_USE_EXPERIMENTAL_FILESYSTEM")
+    string(APPEND CMAKE_CXX_FLAGS " -DVP_USE_EXPERIMENTAL_FILESYSTEM")
 endif()
 
 
