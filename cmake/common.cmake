@@ -90,8 +90,10 @@ macro(common_init)
             # to avoid bugs with wrong rounding due to using internal 10-byte results.
             # This is not required on x86 64-bit platforms because 387 10-bytes registers are not used there.
             # see https://stackoverflow.com/q/65150649/19905 for details
-            string(APPEND CMAKE_C_FLAGS " -mfpmath=sse -msse2")
-            string(APPEND CMAKE_CXX_FLAGS " -mfpmath=sse -msse2")
+            if (NOT EMSCRIPTEN)
+            	string(APPEND CMAKE_C_FLAGS " -mfpmath=sse -msse2")
+            	string(APPEND CMAKE_CXX_FLAGS " -mfpmath=sse -msse2")
+            endif()
         endif()
         SET(WARN_FLAGS_NO_WX ${WARN_FLAGS})
     endif()
