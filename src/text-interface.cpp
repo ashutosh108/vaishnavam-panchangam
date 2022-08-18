@@ -81,6 +81,7 @@ const std::vector<Location> &LocationDb::locations() {
         { voronezh_coord },
         { tambov_coord },
         { kazan_coord },
+        { cheboksary_coord },
         { kirov_coord },
         { ryazan_coord },
         { moskva_coord },

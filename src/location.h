@@ -189,6 +189,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location kirov_coord{                   58'36'00_N,  49'39'00_E, "Kirov", "Europe/Kirov", "Russia"};
 [[maybe_unused]] constexpr Location ulyanovsk_coord{               54'19'00_N,  48'22'00_E, "Ulyanovsk", "Europe/Ulyanovsk", "Russia"};
 [[maybe_unused]] constexpr Location kazan_coord{                   55'47'00_N,  49'06'00_E, "Kazan", "Europe/Moscow", "Russia"};
+[[maybe_unused]] constexpr Location cheboksary_coord{              56'07'00_N,  47'14'00_E, "Cheboksary", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location tbilisi_coord{                 41'43'00_N,  44'47'00_E, "Tbilisi", "Asia/Tbilisi", "Georgia"};
 [[maybe_unused]] constexpr Location erevan_coord{                  40'11'00_N,  44'31'00_E, "Yerevan", "Asia/Yerevan", "Armenia"};
 [[maybe_unused]] constexpr Location volgograd_coord{               48'41'57_N,  44'28'24_E, "Volgograd", "Europe/Volgograd", "Russia"}; // ru Wikipedia
