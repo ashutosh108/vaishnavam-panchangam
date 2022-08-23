@@ -163,6 +163,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location ustkamenogorsk_coord{          49'59'00_N,  82'37'00_E, "Ust-Kamenogorsk (Oskemen)", "Asia/Almaty", "Kazakhstan"}; // en Wikipedia
 [[maybe_unused]] constexpr Location kolombo_coord{                  6'55'00_N,  79'50'00_E, "Colombo", "Asia/Colombo", "SriLanka"};
 [[maybe_unused]] constexpr Location tekeli_coord{                  44'51'47_N,  78'45'51_E, "Tekeli", "Asia/Almaty", "Kazakhstan"}; // ru Wikipedia
+[[maybe_unused]] constexpr Location bengaluru_coord{               12'58'00_N,  77'34'00_E, "Bengaluru", "Asia/Kolkata", "India"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location newdelhi_coord{                28'39'00_N,  77'13'00_E, "New Delhi", "Asia/Kolkata", "India"};
 [[maybe_unused]] constexpr Location vrindavan_coord{               28'36'00_N,  77'12'00_E, "Vrindavan", "Asia/Kolkata", "India"};
 [[maybe_unused]] constexpr Location manali_coord{                  32'16'00_N,  77'10'00_E, "Manali", "Asia/Kolkata", "India"};

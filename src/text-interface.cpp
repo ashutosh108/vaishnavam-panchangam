@@ -36,6 +36,7 @@ date::year_month_day parse_ymd(const std::string_view s) {
 const std::vector<Location> &LocationDb::locations() {
     static std::vector<Location> locations_ {
         { udupi_coord },                    // 13'20'27_N,  74'45'06_E, UTC+05:30 India (Asia/Kolkata)
+        { bengaluru_coord },                // 12'58'00_N,  77'34'00_E, UTC+05:30 India (Asia/Kolkata)
         { gokarna_coord },                  // 14'33'00_N,  74'19'00_E, UTC+05:30 India (Asia/Kolkata)
         { newdelhi_coord },                 // 28'39'00_N,  77'13'00_E, UTC+05:30 India (Asia/Kolkata)
         { manali_coord },                   // 32'16'00_N,  77'10'00_E, UTC+05:30 India (Asia/Kolkata)
