@@ -35,94 +35,125 @@ date::year_month_day parse_ymd(const std::string_view s) {
 
 const std::vector<Location> &LocationDb::locations() {
     static std::vector<Location> locations_ {
-        { udupi_coord },
-        { gokarna_coord },
-        { newdelhi_coord },
-        { manali_coord },
-        { kalkuta_coord },
-        { dushanbe_coord },
-        { aktau_coord },
-        { aktobe_coord },
-        { perm_coord },
-        { ufa_coord },
-        { orenburg_coord },
-        { ekaterinburg_coord },
-        { surgut_coord },
-        { chelyabinsk_coord },
-        { bishkek_coord },
-        { almaata_coord },
-        { tekeli_coord },
-        { ustkamenogorsk_coord },
-        { omsk_coord },
-        { krasnoyarsk_coord },
-        { novokuznetsk_coord },
-        { novosibirsk_coord },
-        { barnaul_coord },
-        { tomsk_coord },
-        { kophangan_coord },
-        { denpasar_coord },
-        { mirnyy_coord },
-        { habarovsk_coord },
-        { vladivostok_coord },
-        { petropavlovskkamchatskiy_coord },
-        { erevan_coord },
-        { tbilisi_coord },
-        { samara_coord },
-        { volgograd_coord },
-        { ulyanovsk_coord },
-        { pyatigorsk_coord },
-        { stavropol_coord },
-        { semikarakorsk_coord },
-        { krasnodar_coord },
-        { kerch_coord },
-        { simferopol_coord },
-        { donetsk_coord },
-        { staryyoskol_coord },
-        { voronezh_coord },
-        { tambov_coord },
-        { kazan_coord },
-        { cheboksary_coord },
-        { kirov_coord },
-        { ryazan_coord },
-        { moskva_coord },
-        { dubna_coord },
-        { spb_coord },
-        { murmansk_coord },
-        { kostomuksha_coord },
-        { arhangelsk_coord },
-        { smolensk_coord },
-        { gomel_coord },
-        { minsk_coord },
-        { harkov_coord },
-        { poltava_coord },
-        { kremenchug_coord },
-        { krivoyrog_coord },
-        { kiev_coord },
-        { kropyvnytskyi_coord },
-        { nikolaev_coord },
-        { odessa_coord },
-        { kolomyya_coord },
-        { ashkelon_coord },
-        { kishinev_coord },
-        { nicosia_coord },
-        { riga_coord },
-        { jurmala_coord },
-        { tallin_coord },
-        { vilnyus_coord },
-        { varshava_coord },
-        { dillingen_an_der_donau_coord },
-        { eppingen_coord },
-        { vena_coord },
-        { marsel_coord },
-        { barcelona_coord },
-        { madrid_coord },
-        { london_coord },
-        { fredericton_coord },
-        { toronto_coord },
-        { newyork_coord },
-        { miami_coord },
-        { cancun_coord },
-        { meadowlake_coord },
+        { udupi_coord },                    // 13'20'27_N,  74'45'06_E, UTC+05:30 (Asia/Kolkata)
+        { gokarna_coord },                  // 14'33'00_N,  74'19'00_E, UTC+05:30 (Asia/Kolkata)
+        { newdelhi_coord },                 // 28'39'00_N,  77'13'00_E, UTC+05:30 (Asia/Kolkata)
+        { manali_coord },                   // 32'16'00_N,  77'10'00_E, UTC+05:30 (Asia/Kolkata)
+        { kalkuta_coord },                  // 22'32'00_N,  88'22'00_E, UTC+05:30 (Asia/Kolkata)
+        { dushanbe_coord },                 // 38'32'12_N,  68'46'48_E, UTC+0?:00 (Asia/Dushanbe)
+        { aktau_coord },                    // 43'39'00_N,  51'09'00_E, UTC+0?:00 (Asia/Aqtau)
+        { aktobe_coord },                   // 50'18'00_N,  57'10'00_E, UTC+0?:00 (Asia/Aqtobe)
+        { perm_coord },                     // 58'00'00_N,  56'14'00_E, UTC+0?:00 (Asia/Yekaterinburg)
+        { ufa_coord },                      // 54'44'00_N,  55'58'00_E, UTC+0?:00 (Asia/Yekaterinburg)
+        { orenburg_coord },                 // 51'46'00_N,  55'06'00_E, UTC+0?:00 (Asia/Yekaterinburg)
+        { ekaterinburg_coord },             // 56'50'00_N,  60'35'00_E, UTC+0?:00 (Asia/Yekaterinburg)
+        { surgut_coord },                   // 61'15'00_N,  73'26'00_E, UTC+0?:00 (Asia/Yekaterinburg)
+        { chelyabinsk_coord },              // 55'09'44_N,  61'24'11_E, UTC+0?:00 (Asia/Yekaterinburg)
+        { bishkek_coord },                  // 42'52'00_N,  74'34'00_E, UTC+0?:00 (Asia/Bishkek)
+        { almaata_coord },                  // 43'15'00_N,  76'54'00_E, UTC+0?:00 (Asia/Almaty)
+        { tekeli_coord },                   // 44'51'47_N,  78'45'51_E, UTC+0?:00 (Asia/Almaty)
+        { ustkamenogorsk_coord },           // 49'59'00_N,  82'37'00_E, UTC+0?:00 (Asia/Almaty)
+        { omsk_coord },                     // 54'58'00_N,  73'23'00_E, UTC+0?:00 (Asia/Omsk)
+        { krasnoyarsk_coord },              // 56'00'43_N,  92'52'17_E, UTC+07:00 (Asia/Krasnoyarsk)
+        { novokuznetsk_coord },             // 53'44'00_N,  87'05'00_E, UTC+0?:00 (Asia/Krasnoyarsk)
+        { novosibirsk_coord },              // 55'01'00_N,  82'55'00_E, UTC+0?:00 (Asia/Novosibirsk)
+        { barnaul_coord },                  // 53'21'00_N,  83'46'00_E, UTC+0?:00 (Asia/Barnaul)
+        { tomsk_coord },                    // 56'29'00_N,  84'57'00_E, UTC+0?:00 (Asia/Tomsk)
+        { kophangan_coord },                //  9'43'00_N, 100'00'00_E, UTC+0?:00 (Asia/Bangkok)
+        { denpasar_coord },                 //  8'39'00_S, 115'13'00_E, UTC+0?:00 (Asia/Makassar)
+        { mirnyy_coord },                   // 62'32'00_N, 113'57'00_E, UTC+0?:00 (Asia/Yakutsk)
+        { habarovsk_coord },                // 48'29'00_N, 135'05'00_E, UTC+10:00 (Asia/Vladivostok)
+        { vladivostok_coord },              // 43'07'00_N, 131'54'00_E, UTC+10:00 (Asia/Vladivostok)
+        { petropavlovskkamchatskiy_coord }, // 53'01'00_N, 158'39'00_E, UTC+12:00 (Asia/Kamchatka)
+        { erevan_coord },                   // 40'11'00_N,  44'31'00_E, UTC+0?:00 (Asia/Yerevan)
+        { tbilisi_coord },                  // 41'43'00_N,  44'47'00_E, UTC+0?:00 (Asia/Tbilisi)
+        { samara_coord },                   // 53'11'00_N,  50'07'00_E, UTC+0?:00 (Europe/Samara)
+        { volgograd_coord },                // 48'41'57_N,  44'28'24_E, UTC+0?:00 (Europe/Volgograd)
+        { ulyanovsk_coord },                // 54'19'00_N,  48'22'00_E, UTC+0?:00 (Europe/Ulyanovsk)
+        { pyatigorsk_coord },               // 44'02'00_N,  43'03'00_E, UTC+0?:00 (Europe/Moscow)
+        { stavropol_coord },                // 45'02'00_N,  41'58'00_E, UTC+0?:00 (Europe/Moscow)
+        { semikarakorsk_coord },            // 47'31'00_N,  40'48'00_E, UTC+0?:00 (Europe/Moscow)
+        { krasnodar_coord },                // 45'02'00_N,  38'59'00_E, UTC+0?:00 (Europe/Moscow)
+        { kerch_coord },                    // 45'20'19_N,  36'28'05_E, UTC+0?:00 (Europe/Simferopol)
+        { simferopol_coord },               // 44'56'00_N,  34'06'00_E, UTC+0?:00 (Europe/Simferopol)
+        { donetsk_coord },                  // 48'00'00_N,  37'48'00_E, UTC+0?:00 (Europe/Moscow)
+        { staryyoskol_coord },              // 51'17'00_N,  37'50'00_E, UTC+0?:00 (Europe/Moscow)
+        { voronezh_coord },                 // 51'40'00_N,  39'12'00_E, UTC+0?:00 (Europe/Moscow)
+        { tambov_coord },                   // 52'43'00_N,  41'26'00_E, UTC+0?:00 (Europe/Moscow)
+        { kazan_coord },                    // 55'47'00_N,  49'06'00_E, UTC+0?:00 (Europe/Moscow)
+        { cheboksary_coord },               // 56'07'00_N,  47'14'00_E, UTC+0?:00 (Europe/Moscow)
+        { kirov_coord },                    // 58'36'00_N,  49'39'00_E, UTC+0?:00 (Europe/Kirov)
+        { ryazan_coord },                   // 54'37'00_N,  39'43'00_E, UTC+0?:00 (Europe/Moscow)
+        { moskva_coord },                   // 55'45'00_N,  37'35'00_E, UTC+0?:00 (Europe/Moscow)
+        { dubna_coord },                    // 56'44'00_N,  37'10'00_E, UTC+0?:00 (Europe/Moscow)
+        { spb_coord },                      // 59'55'00_N,  30'15'00_E, UTC+0?:00 (Europe/Moscow)
+        { murmansk_coord },                 // 68'58'00_N,  33'05'00_E, UTC+0?:00 (Europe/Moscow)
+        { kostomuksha_coord },              // 64'35'00_N,  30'36'00_E, UTC+0?:00 (Europe/Moscow)
+        { arhangelsk_coord },               // 64'33'00_N,  40'32'00_E, UTC+0?:00 (Europe/Moscow)
+        { smolensk_coord },                 // 54'46'00_N,  32'02'00_E, UTC+0?:00 (Europe/Moscow)
+        { gomel_coord },                    // 52'26'00_N,  30'59'00_E, UTC+0?:00 (Europe/Minsk)
+        { minsk_coord },                    // 53'55'00_N,  27'35'00_E, UTC+0?:00 (Europe/Minsk)
+        { harkov_coord },                   // 50'00'00_N,  36'15'00_E, UTC+0?:00 (Europe/Kiev)
+        { poltava_coord },                  // 49'34'00_N,  34'34'00_E, UTC+0?:00 (Europe/Kiev)
+        { kremenchug_coord },               // 49'04'00_N,  33'25'00_E, UTC+0?:00 (Europe/Kiev)
+        { krivoyrog_coord },                // 47'57'00_N,  33'25'00_E, UTC+0?:00 (Europe/Kiev)
+        { kiev_coord },                     // 50'27'00_N,  30'31'24_E, UTC+0?:00 (Europe/Kiev)
+        { kropyvnytskyi_coord },            // 48'30'00_N,  32'16'00_E, UTC+0?:00 (Europe/Kiev)
+        { nikolaev_coord },                 // 46'58'00_N,  32'00'00_E, UTC+0?:00 (Europe/Kiev)
+        { odessa_coord },                   // 46'28'00_N,  30'44'00_E, UTC+0?:00 (Europe/Kiev)
+        { kolomyya_coord },                 // 48'31'00_N,  25'02'00_E, UTC+0?:00 (Europe/Kiev)
+        { ashkelon_coord },                 // 31'39'57_N,  34'33'59_E, UTC+0?:00 (Asia/Jerusalem)
+        { kishinev_coord },                 // 47'00'00_N,  28'51'00_E, UTC+0?:00 (Europe/Chisinau)
+        { nicosia_coord },                  // 35'10'21_N,  33'21'54_E, UTC+0?:00 (Asia/Nicosia)
+        { riga_coord },                     // 56'56'00_N,  24'06'00_E, UTC+0?:00 (Europe/Riga)
+        { jurmala_coord },                  // 56'58'00_N,  23'47'00_E, UTC+0?:00 (Europe/Riga)
+        { tallin_coord },                   // 59'26'00_N,  24'45'00_E, UTC+0?:00 (Europe/Tallinn)
+        { vilnyus_coord },                  // 54'41'00_N,  25'17'00_E, UTC+0?:00 (Europe/Vilnius)
+        { varshava_coord },                 // 52'13'00_N,  21'02'00_E, UTC+0?:00 (Europe/Warsaw)
+        { dillingen_an_der_donau_coord },   // 48'34'00_N,  10'28'00_E, UTC+0?:00 (Europe/Berlin)
+        { eppingen_coord },                 // 49'08'00_N,   8'55'00_E, UTC+0?:00 (Europe/Berlin)
+        { vena_coord },                     // 48'12'00_N,  16'22'00_E, UTC+0?:00 (Europe/Vienna)
+        { marsel_coord },                   // 43'17'47_N,   5'22'12_E, UTC+0?:00 (Europe/Paris)
+        { barcelona_coord },                // 41'23'00_N,   2'11'00_E, UTC+0?:00 (Europe/Madrid)
+        { madrid_coord },                   // 40'24'00_N,   3'41'00_W, UTC+0?:00 (Europe/Madrid)
+        { london_coord },                   // 51'30'00_N,      7'00_W, UTC+0?:00 (Europe/London)
+        { fredericton_coord },              // 45'57'00_N,  66'38'00_W, UTC+0?:00 (America/Moncton)
+        { toronto_coord },                  // 42'43'00_N,  79'24'00_W, UTC+0?:00 (America/New_York)
+        { newyork_coord },                  // 40'42'45_N,  74'00'22_W, UTC+0?:00 (America/New_York)
+        { miami_coord },                    // 25'47'00_N,  80'13'00_W, UTC+0?:00 (America/New_York)
+        { cancun_coord },                   // 21'09'38_N,  86'50'51_W, UTC+0?:00 (America/Cancun)
+        { meadowlake_coord },               // 54'07'00_N, 108'26'00_W, UTC+0?:00 (America/Regina)
+//        { tagbilaran_coord },               //  9'39'00_N, 123'51'00_E, UTC+0?:00 (Asia/Manila)
+//        { chita_coord },                    // 52'02'00_N, 113'30'00_E, UTC+0?:00 (Asia/Chita)
+//        { pokhara_coord },                  // 28'15'00_N,  83'58'00_E, UTC+0?:00 (Asia/Kathmandu)
+//        { kolombo_coord },                  //  6'55'00_N,  79'50'00_E, UTC+0?:00 (Asia/Colombo)
+//        { vrindavan_coord },                // 28'36'00_N,  77'12'00_E, UTC+0?:00 (Asia/Kolkata)
+//        { pune_coord },                     // 18'32'00_N,  73'52'00_E, UTC+0?:00 (Asia/Kolkata)
+//        { pernem_coord },                   // 15'43'00_N,  73'47'49_E, UTC+0?:00 (Asia/Kolkata)
+//        { bombey_coord },                   // 18'58'00_N,  72'50'00_E, UTC+0?:00 (Asia/Kolkata)
+//        { panaji_coord },                   // 15'29'00_N,  72'50'00_E, UTC+0?:00 (Asia/Kolkata)
+//        { tashkent_coord },                 // 41'18'00_N,  68'16'00_E, UTC+0?:00 (Asia/Almaty)
+//        { suhum_coord },                    // 43'00'00_N,  41'00'00_E, UTC+0?:00 (Europe/Moscow)
+//        { sochi_coord },                    // 43'36'00_N,  39'44'00_E, UTC+0?:00 (Europe/Moscow)
+//        { lugansk_coord },                  // 48'34'00_N,  39'20'00_E, UTC+0?:00 (Europe/Moscow)
+//        { ramenskoe_m_obl_coord },          // 55'34'00_N,  38'13'00_E, UTC+0?:00 (Europe/Moscow)
+//        { telaviv_coord },                  // 32'04'00_N,  34'47'00_E, UTC+0?:00 (Asia/Jerusalem)
+//        { novgorod_coord },                 // 58'33'00_N,  31'16'00_E, UTC+0?:00 (Europe/Moscow)
+//        { tiraspol_coord },                 // 46'51'00_N,  29'36'00_E, UTC+0?:00 (Europe/Chisinau)
+//        { vinnitsa_coord },                 // 49'14'00_N,  28'27'00_E, UTC+0?:00 (Europe/Kiev)
+//        { hmelnitskiy_coord },              // 49'25'00_N,  26'59'00_E, UTC+0?:00 (Europe/Kiev)
+//        { afiny_coord },                    // 37'58'00_N,  23'43'00_E, UTC+0?:00 (Europe/Athens)
+//        { kiel_coord },                     // 54'19'00_N,  10'08'00_E, UTC+0?:00 (Europe/Berlin)
+//        { freiburg_coord },                 // 48'00'00_N,   7'52'00_E, UTC+0?:00 (Europe/Paris)
+//        { koeln_kkd_coord },                // 50'56'11_N,   6'57'10_E, UTC+0?:00 (Europe/Berlin)
+//        { dusseldorf_coord },               // 51'13'00_N,   6'47'00_E, UTC+0?:00 (Europe/Berlin)
+//        { manchester_coord },               // 53'30'00_N,   2'13'00_W, UTC+0?:00 (Europe/London)
+//        { puno_coord },                     // 15'50'00_S,  70'01'00_W, UTC+0?:00 (America/Lima)
+//        { washington_coord },               // 38'53'00_N,  77'02'00_W, UTC+0?:00 (America/New_York)
+//        { mundelein_coord },                // 42'16'00_N,  88'00'00_W, UTC+0?:00 (America/Chicago)
+//        { edmonton_coord },                 // 53'32'00_N, 113'30'00_W, UTC+0?:00 (America/Edmonton)
+//        { losanjeles_coord },               // 34'03'00_N, 118'14'00_W, UTC+0?:00 (America/Los_Angeles)
+//        { sanfrantsisko_coord },            // 37'46'00_N, 122'24'00_W, UTC+0?:00 (America/Los_Angeles)
     };
     return locations_;
 }
