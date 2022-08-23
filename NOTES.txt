@@ -1,3 +1,6 @@
+[ ] JAYANTI: Если в какой-то мѣстности Џайантӣ на мѣсяц позже, чѣм в части городов, добавлять без выдѣленія цвѣтом: ‘Śrī-Kṛṣṇa-jayantī on xx.xx.xxxx’
+[ ] JAYANTI: if there are two "equal" candidates, show them both with a warning (rare case, see years_with_two_good_candidates in jayanti-test.cpp)
+[ ] JAYANTI: maybe print warning on "filtered out" candidate days when we have no good candidates (e.g. Petropavlovsk-Kamchatsky and Khabarovsk in 2022)
 [ ] CLI: give error when date is "qwe" or otherwise non-valid
 [ ] CLI: allow giving just location name: print next Ekadashi
 [ ] CLI: allow storing default location in ~/.config
@@ -89,11 +92,10 @@
 About 2MB total (counting only .dll-s).
 
 How to run tests in node/webassembly:
-$ mkdir build
-$ cd build
-$ emcmake cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-s ASSERTIONS=1 -s DEMANGLE_SUPPORT=1 -D HAS_THREADS=0 -s DISABLE_EXCEPTION_CATCHING=0" ..
-$ cmake --build .
-$ node test-main.js
+$ mkdir build-wasm && cd build-wasm
+$ rm -fr ../build-wasm/* && emcmake cmake .. -DCMAKE_BUILD_TYPE=Release -DVP_BUILD_QT_GUI=No -DCMAKE_CXX_FLAGS="-s DISABLE_EXCEPTION_CATCHING=0" && make -j8 && node ./test-main.js
+
+// $ emcmake cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-s ASSERTIONS=1 -s DEMANGLE_SUPPORT=1 -D HAS_THREADS=0 -s DISABLE_EXCEPTION_CATCHING=0" ..
 
 done:
 [+] ensure that sweph repo actually corresponds to 2.07.01 (bar Perl archives)

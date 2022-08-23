@@ -131,3 +131,48 @@ function(make_project_static project_name)
         target_link_options(${project_name} PRIVATE -static-libgcc -static-libstdc++)
     endif()
 endfunction()
+
+# Hide these settings from ccmake text-ui interface by default
+mark_as_advanced(
+	CATCH_BUILD_EXAMPLES
+	CATCH_BUILD_EXTRA_TESTS
+	CATCH_BUILD_STATIC_LIBRARY
+	CATCH_BUILD_TESTING
+	CATCH_ENABLE_COVERAGE
+	CATCH_ENABLE_WERROR
+	CATCH_INSTALL_DOCS
+	CATCH_INSTALL_HELPERS
+	CATCH_USE_VALGRIND
+	FMT_CUDA_TEST
+	FMT_DEBUG_POSTFIX
+	FMT_DOC
+	FMT_FUZZ
+	FMT_INC_DIR
+	FMT_INSTALL
+	FMT_MODULE
+	FMT_OS
+	FMT_PEDANTIC
+	FMT_SYSTEM_HEADERS
+	FMT_TEST
+	FMT_WERROR
+	Qt5Core_DIR
+	Qt5DeviceDiscoverySupport_DIR
+	Qt5EdidSupport_DIR
+	Qt5EventDispatcherSupport_DIR
+	Qt5FbSupport_DIR
+	Qt5FontDatabaseSupport_DIR
+	Qt5Gui_DIR
+	Qt5InputSupport_DIR
+	Qt5KmsSupport_DIR
+	Qt5ServiceSupport_DIR
+	Qt5ThemeSupport_DIR
+	Qt5VulkanSupport_DIR
+	Qt5Widgets_DIR
+	Qt5XcbQpa_DIR
+	Qt5XkbCommonSupport_DIR
+)
+# But show these ones
+mark_as_advanced(CLEAR
+	CMAKE_C_COMPILER
+	CMAKE_CXX_COMPILER
+)
