@@ -36,14 +36,14 @@ date::year_month_day parse_ymd(const std::string_view s) {
 const std::vector<Location> &LocationDb::locations() {
     static std::vector<Location> locations_ {
         { udupi_coord },                    // 13'20'27_N,  74'45'06_E, UTC+05:30 India (Asia/Kolkata)
+        { kalkuta_coord },                  // 22'32'00_N,  88'22'00_E, UTC+05:30 India (Asia/Kolkata)
+        { manali_coord },                   // 32'16'00_N,  77'10'00_E, UTC+05:30 India (Asia/Kolkata)
+        { newdelhi_coord },                 // 28'39'00_N,  77'13'00_E, UTC+05:30 India (Asia/Kolkata)
         { bengaluru_coord },                // 12'58'00_N,  77'34'00_E, UTC+05:30 India (Asia/Kolkata)
         { gokarna_coord },                  // 14'33'00_N,  74'19'00_E, UTC+05:30 India (Asia/Kolkata)
-        { newdelhi_coord },                 // 28'39'00_N,  77'13'00_E, UTC+05:30 India (Asia/Kolkata)
-        { manali_coord },                   // 32'16'00_N,  77'10'00_E, UTC+05:30 India (Asia/Kolkata)
-        { kalkuta_coord },                  // 22'32'00_N,  88'22'00_E, UTC+05:30 India (Asia/Kolkata)
         { dushanbe_coord },                 // 38'32'12_N,  68'46'48_E, UTC+05:00 Tajikistan (Asia/Dushanbe)
-        { aktau_coord },                    // 43'39'00_N,  51'09'00_E, UTC+05:00 Kazakhstan (Asia/Aqtau)
         { aktobe_coord },                   // 50'18'00_N,  57'10'00_E, UTC+05:00 Kazakhstan (Asia/Aqtobe)
+        { aktau_coord },                    // 43'39'00_N,  51'09'00_E, UTC+05:00 Kazakhstan (Asia/Aqtau)
         { perm_coord },                     // 58'00'00_N,  56'14'00_E, UTC+05:00 Russia (Asia/Yekaterinburg)
         { ufa_coord },                      // 54'44'00_N,  55'58'00_E, UTC+05:00 Russia (Asia/Yekaterinburg)
         { orenburg_coord },                 // 51'46'00_N,  55'06'00_E, UTC+05:00 Russia (Asia/Yekaterinburg)
