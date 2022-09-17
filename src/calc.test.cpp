@@ -888,3 +888,19 @@ TEST_CASE("saura_masa_at works") {
     };
     check(JulDays_UT{2022_y/August/8} + "07:00:00"_hms, Saura_Masa_Point{Saura_Masa::Karkataka + 0.719});
 }
+
+// TODO: fix code for this test to pass
+// TEST_CASE("find_next_vrata called on atirikta dvadashi returns corresponding two-days vrata for ekadashi and atirika dvadashi") {
+//     // 2022-08-22 and 2022-08-23 are shuddha ekadashi and atirikta dvadashi in Bangalore.
+//     auto calc = Calc{bengaluru_coord};
+//     const auto vrata = calc.find_next_vrata(date::local_days{2022_y/August/23});
+//     REQUIRE(vrata->date == date::local_days{2022_y/August/22});
+// }
+
+TEST_CASE("find_next_vrata called on next day after atirikta dvadashi returns next vrata (about two weeks later)") {
+    // 2022-08-22 and 2022-08-23 are shuddha ekadashi and atirikta dvadashi in Bangalore.
+    // So if we start looking from 2022-08-24, we should find next vrata, not abovementioned one.
+    auto calc = Calc{bengaluru_coord};
+    const auto vrata = calc.find_next_vrata(date::local_days{2022_y/August/24});
+    REQUIRE(vrata->date == date::local_days{2022_y/September/7});
+}
