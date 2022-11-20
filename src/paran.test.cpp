@@ -83,7 +83,7 @@ TEST_CASE("compact paran format: wide range (rounding to minute)") {
     auto timezone = date::locate_zone("Europe/Moscow");
     Paran p{Paran::Type::Puccha_Dvadashi, time1, time2, timezone};
 
-    REQUIRE("08:04–09:03" == fmt::format("{:c}", p));
+    REQUIRE(u8"08:04–\u200B09:03" == fmt::format("{:c}", p));
 }
 
 TEST_CASE("compact paran format: narrow range (rounding to seconds)") {
@@ -92,7 +92,7 @@ TEST_CASE("compact paran format: narrow range (rounding to seconds)") {
     auto timezone = date::locate_zone("Europe/Moscow");
     Paran p{Paran::Type::From_Quarter_Dvadashi, time1, time2, timezone};
 
-    REQUIRE("08:03:05–08:08:05" == fmt::format("{:c}", p));
+    REQUIRE(u8"08:03:05–\u200B08:08:05" == fmt::format("{:c}", p));
 }
 
 TEST_CASE("paran_start/end_str rounds to minutes for large (>=48 min) interval") {
