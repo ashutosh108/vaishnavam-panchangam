@@ -128,7 +128,7 @@ struct fmt::formatter<vp::Paran> : fmt::formatter<std::string_view> {
         } else if (!p.paran_start && p.paran_end) {
             return fmt::format_to(ctx.out(), "<{}", p.end_str());
         } else if (p.paran_start && p.paran_end) {
-            return fmt::format_to(ctx.out(), u8"{}–\u200B{}", p.start_str(), p.end_str());
+            return fmt::format_to(ctx.out(), "{}–{}", p.start_str(), p.end_str());
         } else {
             return format_default(p, ctx);
         }
