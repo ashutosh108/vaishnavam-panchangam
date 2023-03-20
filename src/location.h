@@ -202,12 +202,12 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location arhangelsk_coord{              64'33'00_N,  40'32'00_E, "Arkhangelsk", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location sochi_coord{                   43'36'00_N,  39'44'00_E, "Sochi", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location ryazan_coord{                  54'37'00_N,  39'43'00_E, "Ryazan", "Europe/Moscow", "Russia"};
-[[maybe_unused]] constexpr Location lugansk_coord{                 48'34'00_N,  39'20'00_E, "Lugansk", "Europe/Moscow", "LNR"};
+[[maybe_unused]] constexpr Location lugansk_coord{                 48'34'00_N,  39'20'00_E, "Lugansk", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location voronezh_coord{                51'40'00_N,  39'12'00_E, "Voronezh", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location krasnodar_coord{               45'02'00_N,  38'59'00_E, "Krasnodar", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location ramenskoe_m_obl_coord{         55'34'00_N,  38'13'00_E, "Ramenskoye", "Europe/Moscow", "Russia"}; // en Wikipedia
 [[maybe_unused]] constexpr Location staryyoskol_coord{             51'17'00_N,  37'50'00_E, "Stary Oskol", "Europe/Moscow", "Russia"};
-[[maybe_unused]] constexpr Location donetsk_coord{                 48'00'00_N,  37'48'00_E, "Donetsk", "Europe/Moscow", "DNR"};
+[[maybe_unused]] constexpr Location donetsk_coord{                 48'00'00_N,  37'48'00_E, "Donetsk", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location moskva_coord{                  55'45'00_N,  37'35'00_E, "Moscow", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location dubna_coord{                   56'44'00_N,  37'10'00_E, "Dubna", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location harkov_coord{                  50'00'00_N,  36'15'00_E, "Kharkov", "Europe/Kiev", "Ukraine"};
