@@ -904,3 +904,28 @@ TEST_CASE("find_next_vrata called on next day after atirikta dvadashi returns ne
     const auto vrata = calc.find_next_vrata(date::local_days{2022_y/August/24});
     REQUIRE(vrata->date == date::local_days{2022_y/September/7});
 }
+
+//TEST_CASE("Chandra Rashi calculation works", "[.][chandrarashi]") {
+//    auto calc = Calc{udupi_coord};
+//    const auto timezone_offset = 5h + 30min;
+//    struct test_data {
+//        date::year_month_day date;
+//        std::chrono::seconds time;
+//        Rashi expected_rashi;
+//    };
+//    auto data = GENERATE(
+//        test_data{2023_y/03/13,  2h+16min+44s, vp::Saura_Masa::Vrishchika}
+//        test_data{2023_y/03/15,  7h+31min+44sec, Dhanu
+//        test_data{2023_y/03/17, 10h+16min+44sec, Makara
+//        test_data{2023_y/03/19, 11h+14min+44sec, Kumbha
+//        test_data{2023_y/03/21, 11h+55min+44sec, Mīna
+//        test_data{2023_y/03/23, 14h+05min+44sec, Meṣa
+//        test_data{2023_y/03/25, 19h+22min+44sec, Vṛṣabha
+//        );
+//
+//    auto from_date = vp::JulDays_UT{date::year_month_day{date::sys_days{data.date} - date::days{1}}};
+//    Rashi found_rashi;
+//    auto time = calc.find_next_rashi_start(from_date, &found_rashi);
+//    REQUIRE_THAT(time, EqualsRoundedToMinute(data.date, data.time, timezone_offset));
+//    REQUIRE(data.expected_rashi == found_rashi);
+//}

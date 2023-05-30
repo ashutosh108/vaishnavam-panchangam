@@ -41,6 +41,8 @@ enum class Saura_Masa {
     Mina = 12
 };
 
+using Rashi = Saura_Masa;
+
 constexpr auto Saura_Masa_Avg_Length = 365.25 / 12;
 
 /**

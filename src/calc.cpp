@@ -497,4 +497,23 @@ Nirayana_Longitude starting_longitude(Saura_Masa m)
     return Nirayana_Longitude{(static_cast<T>(m)-1) * (360.0/12.0)};
 }
 
+JulDays_UT Calc::find_next_rashi_start(JulDays_UT after, Rashi *) const
+{
+    const auto lng = swe.moon_longitude_sidereal(after);
+    const auto next_lng = Nirayana_Longitude{std::fmod(ceil(lng.longitude / 30.0) * 30.0, 360.0)};
+
+    using namespace std::chrono_literals;
+
+    return find_time_with_given_value(
+                after,
+                next_lng,
+                2h,
+                [this](JulDays_UT time) { return swe.moon_longitude_sidereal(time); },
+                positive_delta_between_longitudes,
+                minimal_delta_between_longitudes,
+                [](Nirayana_Longitude target, JulDays_UT from) { throw CantFindRashiAfter{target, from}; },
+                [](Nirayana_Longitude & /*target*/, double & /*delta*/) {}
+    );
+}
+
 } // namespace vp

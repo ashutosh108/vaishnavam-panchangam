@@ -1,3 +1,5 @@
+[ ] исправить cp1251/utf8 problem with recent U+200B (zero-width space) insertion.
+[ ] сдѣлать так, чтобы когда задаешь Custom Dates в таблицѣ, но не даешь какому-либо дню заголовка, он форматировался как пустой (с „полосочками“), а не цветными блоками? Удобнѣе будет добавлять какой-то один день на Камчаткѣ или в Америкѣ
 [ ] JAYANTI: Если в какой-то мѣстности Џайантӣ на мѣсяц позже, чѣм в части городов, добавлять без выдѣленія цвѣтом: ‘Śrī-Kṛṣṇa-jayantī on xx.xx.xxxx’
 [ ] JAYANTI: if there are two "equal" candidates, show them both with a warning (rare case, see years_with_two_good_candidates in jayanti-test.cpp)
 [ ] JAYANTI: maybe print warning on "filtered out" candidate days when we have no good candidates (e.g. Petropavlovsk-Kamchatsky and Khabarovsk in 2022)

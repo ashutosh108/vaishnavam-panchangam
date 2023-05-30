@@ -33,6 +33,11 @@ struct CantFindSankrantiAfter {
     JulDays_UT after;
 };
 
+struct CantFindRashiAfter {
+    Nirayana_Longitude target;
+    JulDays_UT after;
+};
+
 class Calc
 {
 public:
@@ -68,6 +73,9 @@ public:
 
     // find nearest past sunrise before given timepoint
     tl::expected<JulDays_UT, CalcError> prev_sunrise(JulDays_UT before) const;
+
+    // find the start of next rashi (Chandra entering next 1/12th part of circle.
+    JulDays_UT find_next_rashi_start(JulDays_UT, Rashi*) const;
 
     vp::Swe swe;
 
