@@ -84,6 +84,7 @@ const std::vector<Location> &LocationDb::locations() {
         { kazan_coord },                    // 55'47'00_N,  49'06'00_E, UTC+03:00 Russia (Europe/Moscow)
         { cheboksary_coord },               // 56'07'00_N,  47'14'00_E, UTC+03:00 Russia (Europe/Moscow)
         { kirov_coord },                    // 58'36'00_N,  49'39'00_E, UTC+03:00 Russia (Europe/Kirov)
+        { rostov_na_donu_coord },           // 47'14'26_N,  39'42'38_E, UTC+03:00 Russia (Europe/Moscow)
         { ryazan_coord },                   // 54'37'00_N,  39'43'00_E, UTC+03:00 Russia (Europe/Moscow)
         { moskva_coord },                   // 55'45'00_N,  37'35'00_E, UTC+03:00 Russia (Europe/Moscow)
         { dubna_coord },                    // 56'44'00_N,  37'10'00_E, UTC+03:00 Russia (Europe/Moscow)

@@ -202,6 +202,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location arhangelsk_coord{              64'33'00_N,  40'32'00_E, "Arkhangelsk", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location sochi_coord{                   43'36'00_N,  39'44'00_E, "Sochi", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location ryazan_coord{                  54'37'00_N,  39'43'00_E, "Ryazan", "Europe/Moscow", "Russia"};
+[[maybe_unused]] constexpr Location rostov_na_donu_coord{          47'14'26_N,  39'42'38_E, "Rostov-on-Don", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location lugansk_coord{                 48'34'00_N,  39'20'00_E, "Lugansk", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location voronezh_coord{                51'40'00_N,  39'12'00_E, "Voronezh", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location krasnodar_coord{               45'02'00_N,  38'59'00_E, "Krasnodar", "Europe/Moscow", "Russia"};
