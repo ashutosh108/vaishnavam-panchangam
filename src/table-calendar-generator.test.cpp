@@ -186,11 +186,30 @@ TEST_CASE("generated table shows year for non-default-year dates when default ye
     }
 }
 
-TEST_CASE("Generated table contains additional custom dates with given descriptions") {
-    auto table = vp::Table_Calendar_Generator::generate(some_vratas(2020_y/1/1), 2020_y, {{date::local_days{2020_y/1/5}, "custom1"}, {date::local_days{2020_y/1/9}, "custom2"}});
-    REQUIRE(table.width() == 8);
-    REQUIRE(table.at(1, 3).text == "custom1");
-    REQUIRE(table.at(1, 7).text == "custom2");
+TEST_CASE("Custom dates work OK") {
+    auto table = vp::Table_Calendar_Generator::generate(
+                some_vratas(2020_y/1/1), 2020_y,
+                {
+                    {date::local_days{2020_y/1/5}, "custom1"},
+                    {date::local_days{2020_y/1/9}, "custom2"},
+                    {date::local_days{2020_y/1/11}, ""},
+                });
+    SECTION("Generated table contains additional custom dates with given descriptions") {
+        REQUIRE(table.width() == 10);
+        REQUIRE(table.at(1, 3).text == "custom1");
+        REQUIRE(table.at(1, 7).text == "custom2");
+        REQUIRE(table.at(1, 9).text == "");
+    }
+    SECTION("Custom date with non-empty desription is marked yellow (mainpart + custom CSS class)") {
+        REQUIRE_THAT(table.at(1, 3).classes, Contains("mainpart"));
+        REQUIRE_THAT(table.at(1, 3).classes, Contains("custom"));
+        REQUIRE_THAT(table.at(1, 7).classes, Contains("mainpart"));
+        REQUIRE_THAT(table.at(1, 7).classes, Contains("custom"));
+    }
+    SECTION("Custom date with empty description is NOT marked yellow ('mainpart', but not 'custom' CSS class)") {
+        REQUIRE_THAT(table.at(1, 9).classes, Contains("mainpart"));
+        REQUIRE_THAT(table.at(1, 9).classes, !Contains("custom"));
+    }
 }
 
 TEST_CASE("Generated table contains Vasanta-pañcamī and other dates from that pakṣa", "[wip]") {

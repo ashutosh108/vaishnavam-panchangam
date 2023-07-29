@@ -99,7 +99,9 @@ void add_vrata(vp::Table & table, const vp::MaybeVrata & vrata, const std::set<d
         }
         expected_next_date = date + date::days{1};
         if (auto found_it = custom_dates.find(date); found_it != custom_dates.end()) {
-            table.add_cell(found_it->second, "mainpart custom");
+            bool description_is_not_empty = !found_it->second.empty();
+            const char * classes = description_is_not_empty ? "mainpart custom" : "mainpart";
+            table.add_cell(found_it->second, classes);
         } else if (auto [begin, end] = vrata->dates_for_this_paksha.equal_range(date); begin != end) {
             // since std::distance(begin, end) != 0, we can safely use *begin and do ++begin before the loop
             std::string text;
