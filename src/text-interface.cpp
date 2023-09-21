@@ -125,6 +125,7 @@ const std::vector<Location> &LocationDb::locations() {
         { miami_coord },                    // 25'47'00_N,  80'13'00_W, UTC-05/04 USA (America/New_York)
         { cancun_coord },                   // 21'09'38_N,  86'50'51_W, UTC-05:00 Mexico (America/Cancun)
         { meadowlake_coord },               // 54'07'00_N, 108'26'00_W, UTC-06:00 Canada (America/Regina)
+        { losanjeles_coord },               // 34'02'00_N, 118'16'00_W, UTC-08/07 USA (America/Los_Angeles)
 //        { tagbilaran_coord },               //  9'39'00_N, 123'51'00_E, UTC+08/09 Philippines (Asia/Manila)
 //        { chita_coord },                    // 52'02'00_N, 113'30'00_E, UTC+09:00 Russia (Asia/Chita)
 //        { pokhara_coord },                  // 28'15'00_N,  83'58'00_E, UTC+05:45 Nepal (Asia/Kathmandu)
@@ -154,7 +155,6 @@ const std::vector<Location> &LocationDb::locations() {
 //        { washington_coord },               // 38'53'00_N,  77'02'00_W, UTC-05/04 USA (America/New_York)
 //        { mundelein_coord },                // 42'16'00_N,  88'00'00_W, UTC-06/05 USA (America/Chicago)
 //        { edmonton_coord },                 // 53'32'00_N, 113'30'00_W, UTC-07/06 Canada (America/Edmonton)
-//        { losanjeles_coord },               // 34'03'00_N, 118'14'00_W, UTC-08/07 USA (America/Los_Angeles)
 //        { sanfrantsisko_coord },            // 37'46'00_N, 122'24'00_W, UTC-08/07 USA (America/Los_Angeles)
     };
     return locations_;
