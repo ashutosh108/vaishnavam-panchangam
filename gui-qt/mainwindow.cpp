@@ -396,13 +396,12 @@ void MainWindow::refreshTable()
     }
 }
 
-namespace {
 QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
     fmt::memory_buffer buf;
     fmt::appender out{buf};
     fmt::format_to(out,
-                   "<h1>{} on {}</h1>\n",
-                   info.location.name, info.date);
+                   "<h1>{} on {} ({:w})</h1>\n",
+                   info.location.name, info.date, info.date);
     auto tz = info.location.time_zone();
     if (info.saura_masa_until) {
         const auto saura_masa_until = date::make_zoned(tz, info.saura_masa_until->round_to_second());
@@ -465,7 +464,6 @@ QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info) {
         fmt::format_to(out, FMT_STRING("{} {}{}</font><br>\n"), vp::JulDays_Zoned{tz, e.time_point}, e.trackIntervalString(), e.name);
     }
     return QString::fromStdString(fmt::to_string(buf));
-}
 }
 
 void MainWindow::refreshDaybyday()

@@ -19,6 +19,7 @@ struct fmt::formatter<date::year_month_day> {
     bool as_local = false;
     bool use_nbsp = false;
     bool print_year = false;
+    bool weekday_only = false;
     template<typename ParseContext>
     constexpr auto parse(ParseContext & ctx) {
         for (auto it = ctx.begin(), end = ctx.end(); it != end; ++it) {
@@ -28,6 +29,8 @@ struct fmt::formatter<date::year_month_day> {
                 use_nbsp = true;
             } else if (*it == 'y') {
                 print_year = true;
+            } else if (*it == 'w') {
+                weekday_only = true;
             } else {
                 return it;
             }
@@ -51,10 +54,24 @@ struct fmt::formatter<date::year_month_day> {
             "November",
             "December",
         };
+        static constexpr const char * weekday_name[] = {
+            "Sun/Ra",
+            "Mon/So",
+            "Tue/Ma",
+            "Wed/Bu",
+            "Thu/Gu",
+            "Fri/Śu",
+            "Sat/Śa"
+        };
         const int year = static_cast<int>(ymd.year());
         const unsigned month = static_cast<unsigned>(ymd.month());
         const unsigned day = static_cast<unsigned>(ymd.day());
-        if (as_local && ymd.ok()) {
+        if (weekday_only) {
+            auto wd = date::weekday{date::local_days{ymd}}.c_encoding();
+
+            assert(wd < 7);
+            return fmt::format_to(ctx.out(), "{}", weekday_name[wd]);
+        } else if (as_local && ymd.ok()) {
             if (print_year) {
                 return fmt::format_to(ctx.out(), "{}{}{}, {}", month_name[month-1], (use_nbsp ? "&nbsp;" : " "), day, year);
             } else {

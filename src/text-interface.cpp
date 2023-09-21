@@ -330,8 +330,8 @@ namespace {
 void daybyday_print_header(date::year_month_day base_date, const Location & coord, const DayByDayInfo & info, const fmt::appender & out)
 {
     fmt::format_to(out,
-                   "{} {}\n",
-                   coord.name, base_date);
+                   "{} {} ({:w})\n",
+                   coord.name, base_date, base_date);
     fmt::format_to(out, FMT_STRING("Saura māsa: {}"), info.saura_masa);
     if (info.saura_masa_until) {
         fmt::format_to(out, FMT_STRING(" (until {})"), *info.saura_masa_until);

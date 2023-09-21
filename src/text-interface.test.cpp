@@ -227,6 +227,9 @@ TEST_CASE("daybyday_print_one()") {
     fmt::memory_buffer buf;
     vp::text_ui::daybyday_print_one(2020_y/12/14, "Kiev", fmt::appender{buf}, vp::CalcFlags::Default);
     auto s = fmt::to_string(buf);
+    SECTION("Weekday (Mon/So) is present") {
+        REQUIRE_THAT(s, Contains("2020-12-14 (Mon/So)"));
+    }
     SECTION("add '-----' separators before both sunrises") {
         std::regex r{R"(----\n[^\n]*sunrise)"};
         auto iter_begin = std::sregex_iterator(s.begin(), s.end(), r);

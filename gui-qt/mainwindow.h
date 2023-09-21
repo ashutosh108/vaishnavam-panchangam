@@ -3,6 +3,7 @@
 
 #include "latlongedit.h"
 #include "table-calendar-generator.h"
+#include "text-interface.h"
 #include "vrata.h"
 
 #include "calc-flags.h"
@@ -80,5 +81,6 @@ private:
 };
 
 QString htmlify_line(const std::string_view & line);
+QString html_for_daybyday(const vp::text_ui::DayByDayInfo & info);
 
 #endif // MAINWINDOW_H

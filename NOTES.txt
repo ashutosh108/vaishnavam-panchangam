@@ -1,4 +1,3 @@
-[ ] add day of the week indication to "day-by-day" header
 [ ] делать колонку с "..." (когда даты не соседние) белой
 [ ] не объединять ячейки с доп.датами с пустым описанием (то есть оставить в них чередование цветов по строкам, как в названиях городов)
 [ ] исправить cp1251/utf8 problem with recent U+200B (zero-width space) insertion.
@@ -335,3 +334,4 @@ done:
 [+] Krishna-jayanti [2022-08-13]
 [+] table: show separator column for non-sequential dates [2022-08-13]
 [+] add moonrise/moonset to day-by-day tab (useful for Jayanti celebration) [2022-08-16]
+[+] add day of the week indication to "day-by-day" header [2023-09-21]
