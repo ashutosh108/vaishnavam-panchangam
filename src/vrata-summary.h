@@ -28,9 +28,15 @@ struct fmt::formatter<vp::Vrata_Summary> : fmt::formatter<std::string_view> {
         const date::year_month_day date{vs.vrata->date}; // year_month_day is better formatted by default than local_days
         if (vp::is_atirikta(vs.vrata->type)) {
             date::year_month_day next_day{vs.vrata->date + date::days{1}};
-            fmt::format_to(ctx.out(), FMT_STRING("<p>{} {} on <span class=\"date-range\"><span class=\"date\">{}</span> and <span class=\"date\">{}</span></span></big></p>\n"), vs.vrata->ekadashi_name(), vs.vrata->type, date, next_day);
+            fmt::format_to(
+                        ctx.out(),
+                        FMT_STRING("<p>{} {} on <span class=\"date-range\"><span class=\"date\">{}</span> <span class=\"weekday\">({:w})</span> and <span class=\"date\">{}</span> <span class=\"weekday\">({:w})</span></span></big></p>\n"),
+                        vs.vrata->ekadashi_name(),
+                        vs.vrata->type,
+                        date, date,
+                        next_day, next_day);
         } else {
-            fmt::format_to(ctx.out(), FMT_STRING("<p>{} {} on <span class=\"date paran\">{}</span></p>\n"), vs.vrata->ekadashi_name(), vs.vrata->type, date);
+            fmt::format_to(ctx.out(), FMT_STRING("<p>{} {} on <span class=\"date paran\">{}</span> <span class=\"weekday\">({:w})</span></p>\n"), vs.vrata->ekadashi_name(), vs.vrata->type, date, date);
         }
         if (const auto harivasara=vs.vrata->harivasara(); harivasara) {
             const auto harivasara_str = date::format("%H:%M on <small>%Y-%m-%d</small>", date::floor<std::chrono::minutes>(harivasara->as_zoned_time(vs.vrata->paran.time_zone).get_local_time()));
