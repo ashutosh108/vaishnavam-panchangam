@@ -178,7 +178,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location bombey_coord{                  18'58'00_N,  72'50'00_E, "Mumbai", "Asia/Kolkata", "India"};
 [[maybe_unused]] constexpr Location panaji_coord{                  15'29'00_N,  72'50'00_E, "Panaji", "Asia/Kolkata", "India"};
 [[maybe_unused]] constexpr Location dushanbe_coord{                38'32'12_N,  68'46'48_E, "Dushanbe", "Asia/Dushanbe", "Tajikistan"};
-[[maybe_unused]] constexpr Location tashkent_coord{                41'18'00_N,  68'16'00_E, "Tashkent", "Asia/Almaty", "Uzbekistan"};
+[[maybe_unused]] constexpr Location tashkent_coord{                41'18'00_N,  68'16'00_E, "Tashkent", "Asia/Tashkent", "Uzbekistan"};
 [[maybe_unused]] constexpr Location chelyabinsk_coord{             55'09'44_N,  61'24'11_E, "Chelyabinsk", "Asia/Yekaterinburg", "Russia"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location ekaterinburg_coord{            56'50'00_N,  60'35'00_E, "Yekaterinburg", "Asia/Yekaterinburg", "Russia"};
 [[maybe_unused]] constexpr Location aktobe_coord{                  50'18'00_N,  57'10'00_E, "Aktobe", "Asia/Aqtobe", "Kazakhstan"}; // ru Wikipedia
