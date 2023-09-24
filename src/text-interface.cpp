@@ -51,6 +51,7 @@ const std::vector<Location> &LocationDb::locations() {
         { surgut_coord },                   // 61'15'00_N,  73'26'00_E, UTC+05:00 Russia (Asia/Yekaterinburg)
         { chelyabinsk_coord },              // 55'09'44_N,  61'24'11_E, UTC+05:00 Russia (Asia/Yekaterinburg)
         { bishkek_coord },                  // 42'52'00_N,  74'34'00_E, UTC+06:00 Kyrgyzstan (Asia/Bishkek)
+        { kokeshtau_coord },                // 53'17'30_N,  69'23'30_E, UTC+06:00 Kazakhstan (Asia/Almaty)
         { almaata_coord },                  // 43'15'00_N,  76'54'00_E, UTC+06:00 Kazakhstan (Asia/Almaty)
         { tekeli_coord },                   // 44'51'47_N,  78'45'51_E, UTC+06:00 Kazakhstan (Asia/Almaty)
         { ustkamenogorsk_coord },           // 49'59'00_N,  82'37'00_E, UTC+06:00 Kazakhstan (Asia/Almaty)
