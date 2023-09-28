@@ -96,6 +96,7 @@ const std::vector<Location> &LocationDb::locations() {
         { smolensk_coord },                 // 54'46'00_N,  32'02'00_E, UTC+03:00 Russia (Europe/Moscow)
         { gomel_coord },                    // 52'26'00_N,  30'59'00_E, UTC+03:00 Belarus (Europe/Minsk)
         { minsk_coord },                    // 53'55'00_N,  27'35'00_E, UTC+03:00 Belarus (Europe/Minsk)
+        { grodno_coord },                   // 53'40'00_N,  23'49'00_E, UTC+03:00 Belarus (Europe/Minsk)
         { harkov_coord },                   // 50'00'00_N,  36'15'00_E, UTC+02/03 Ukraine (Europe/Kiev)
         { poltava_coord },                  // 49'34'00_N,  34'34'00_E, UTC+02/03 Ukraine (Europe/Kiev)
         { kremenchug_coord },               // 49'04'00_N,  33'25'00_E, UTC+02/03 Ukraine (Europe/Kiev)
