@@ -281,33 +281,75 @@ inline auto print_deg_min_sec(const Out & out, double degrees) {
     const int min_remain = (sec_total-sec) / 60;
     const int min = min_remain % 60;
     int deg = (min_remain - min) / 60;
-    return fmt::format_to(out, "{}°{:02}′{:02}″", deg, min, sec);
+    return fmt::format_to(out, FMT_STRING("{}°{:02}′{:02}″"), deg, min, sec);
 }
 }
 
 template<>
 struct fmt::formatter<vp::Latitude> : fmt::formatter<string_view> {
+    bool use_decimal = true;
+    template<typename ParseCtx>
+    constexpr auto parse(ParseCtx & ctx) {
+        auto it = ctx.begin();
+        auto end = ctx.end();
+        if (it != end && *it == 't') { // t for "traditional": not decimal, but degrees-minutes-seconds
+            use_decimal = false;
+            ++it;
+        }
+        return it;
+    }
     template<typename FormatContext>
     auto format(const vp::Latitude & lat, FormatContext & ctx) {
+        if (use_decimal) {
+            return fmt::format_to(ctx.out(), FMT_STRING("{:.4f}"), lat.latitude);
+        }
         print_deg_min_sec(ctx.out(), std::fabs(lat.latitude));
-        return fmt::format_to(ctx.out(), "{}", lat.latitude >= 0 ? 'N' : 'S');
+        return fmt::format_to(ctx.out(), FMT_STRING("{}"), lat.latitude >= 0 ? 'N' : 'S');
     }
 };
 
 template<>
 struct fmt::formatter<vp::Longitude> : fmt::formatter<string_view> {
+    bool use_decimal = true;
+    template<typename ParseCtx>
+    constexpr auto parse(ParseCtx & ctx) {
+        auto it = ctx.begin();
+        auto end = ctx.end();
+        if (it != end && *it == 't') { // t for "traditional": not decimal, but degrees-minutes-seconds
+            use_decimal = false;
+            ++it;
+        }
+        return it;
+    }
     template<typename FormatContext>
     auto format(const vp::Longitude & lng, FormatContext & ctx) {
+        if (use_decimal) {
+            return fmt::format_to(ctx.out(), FMT_STRING("{:.4f}"), lng.longitude);
+        }
         print_deg_min_sec(ctx.out(), std::fabs(lng.longitude));
-        return fmt::format_to(ctx.out(), "{}", lng.longitude >= 0 ? 'E' : 'W');
+        return fmt::format_to(ctx.out(), FMT_STRING("{}"), lng.longitude >= 0 ? 'E' : 'W');
     }
 };
 
 template<>
 struct fmt::formatter<vp::Location> : fmt::formatter<string_view> {
+    bool use_decimal = true;
+    template<typename ParseCtx>
+    constexpr auto parse(ParseCtx & ctx) {
+        auto it = ctx.begin();
+        auto end = ctx.end();
+        if (it != end && *it == 't') { // t for "traditional": not decimal, but degrees-minutes-seconds
+            use_decimal = false;
+            ++it;
+        }
+        return it;
+    }
     template<typename FormatContext>
     auto format(const vp::Location & l, FormatContext & ctx) {
-        return fmt::format_to(ctx.out(), "{}, {}", l.latitude, l.longitude);
+        if (use_decimal) {
+            return fmt::format_to(ctx.out(), FMT_STRING("{}, {}"), l.latitude, l.longitude);
+        }
+        return fmt::format_to(ctx.out(), FMT_STRING("{:t}, {:t}"), l.latitude, l.longitude);
     }
 };
 

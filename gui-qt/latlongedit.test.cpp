@@ -16,16 +16,22 @@ TEST_CASE("LatLongEdit works") {
     char ** argv = nullptr;
     QApplication a{argc, argv};
 
-    SECTION("Can create LatLongEdit with Coord") {
+    SECTION("Can create LatLongEdit") {
     //    BENCHMARK("qwe") {}
-        LatLongEdit e{arbitrary_coord, nullptr};
+        LatLongEdit e{nullptr};
     }
 
     SECTION("LatLongEdit setCoord() works") {
-        LatLongEdit e{arbitrary_coord, nullptr};
+        LatLongEdit e{nullptr};
         vp::Coord c2{arbitrary_coord.latitude + 5.0, arbitrary_coord.longitude + 5.0};
         e.setCoord(c2);
         REQUIRE(e.coord == c2);
         REQUIRE(e.coord != arbitrary_coord);
+    }
+
+    SECTION("LatLongEdit shows expected lat/long format") {
+        LatLongEdit e{nullptr};
+        e.setCoord(arbitrary_coord);
+        REQUIRE(e.text().toStdString() == "30.0000, 60.0000");
     }
 }

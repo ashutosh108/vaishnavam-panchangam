@@ -174,49 +174,23 @@
                     <string>Latitude in decimal degrees (+ means North)</string>
                    </property>
                    <property name="text">
-                    <string>Lat:</string>
+                    <string>Lat/Long:</string>
                    </property>
                    <property name="margin">
                     <number>5</number>
                    </property>
                    <property name="buddy">
-                    <cstring>latitude</cstring>
+                    <cstring>latlong_edit</cstring>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="LatitudeEdit" name="latitude">
+                  <widget class="LatLongEdit" name="latlong_edit">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
                    <property name="toolTip">
                     <string>Latitude in decimal degrees (+ means North)</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="longitudeLabel">
-                   <property name="toolTip">
-                    <string>Longitude in decimal degrees (+ means East)</string>
-                   </property>
-                   <property name="text">
-                    <string>Long:</string>
-                   </property>
-                   <property name="margin">
-                    <number>5</number>
-                   </property>
-                   <property name="buddy">
-                    <cstring>longitude</cstring>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="longitude">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="toolTip">
-                    <string>Longitude in decimal degrees (+ means East)</string>
                    </property>
                   </widget>
                  </item>
@@ -280,8 +254,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>498</width>
-               <height>450</height>
+               <width>503</width>
+               <height>416</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -291,10 +265,10 @@
                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;h1 style=&quot; margin-top:18px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:xx-large; font-weight:600; color:#008000;&quot;&gt;(unknown location)&lt;/span&gt;&lt;/h1&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;(unknown vrata) on YYYY-MM-DD&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Pāraṇam: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;h1 style=&quot; margin-top:18px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:600; color:#008000;&quot;&gt;(unknown location)&lt;/span&gt;&lt;/h1&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;(unknown vrata) on YYYY-MM-DD&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;Pāraṇam: &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -336,7 +310,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPa_c_gam">
@@ -390,9 +364,9 @@ p, li { white-space: pre-wrap; }
    <header>htmlbrowser.h</header>
   </customwidget>
   <customwidget>
-   <class>LatitudeEdit</class>
+   <class>LatLongEdit</class>
    <extends>QLineEdit</extends>
-   <header>latitude-edit.h</header>
+   <header>latlongedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

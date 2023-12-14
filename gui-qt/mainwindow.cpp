@@ -124,7 +124,6 @@ MainWindow::MainWindow(QWidget *parent)
     setupToolbar();
     connectSignals();
     addTableContextMenu();
-    setupLocationInput();
     gui_ready = true;
     refreshAllTabs();
 }
@@ -373,15 +372,6 @@ int MainWindow::getTableVerticalScrollValue() const
     return scroll_bar ? scroll_bar->value() : 0;
 }
 
-void MainWindow::setupLocationInput()
-{
-#ifdef VP_ARBITRARY_LOCATION_SELECTOR
-    auto latlong_index = ui->locationVLayout->indexOf(ui->latLongHLayout);
-    latlong_edit = new LatLongEdit({ui->latitude->getValue(), vp::Longitude{0.0}}, this);
-    ui->locationVLayout->insertWidget(latlong_index+1, latlong_edit);
-#endif
-}
-
 void MainWindow::refreshTable()
 {
     if (!ui->tableTextBrowser->isVisible()) { return; }
@@ -584,8 +574,7 @@ void MainWindow::on_actionE_xit_2_triggered()
 }
 
 void MainWindow::clearLocationData() {
-    ui->latitude->setText("(multiple)");
-    ui->longitude->setText("(multiple)");
+    ui->latlong_edit->setText("(multiple)");
     ui->timezone->setText("(multiple values)");
 }
 
@@ -597,15 +586,8 @@ void MainWindow::on_locationComboBox_currentIndexChanged(const QString &location
         auto location_arr = location_name.toUtf8();
         auto location = vp::text_ui::LocationDb().find_coord(location_arr.data());
         if (location.has_value()) {
-            ui->latitude->setValue(location->latitude.latitude);
-//            ui->latitude->setText(QString::fromStdString(fmt::to_string(location->latitude)));
-            ui->longitude->setText(QString::fromStdString(fmt::to_string(location->longitude)));
+            ui->latlong_edit->setCoord({location->latitude, location->longitude});
             ui->timezone->setText(QString::fromStdString(location->time_zone()->name()));
-#ifdef VP_ARBITRARY_LOCATION_SELECTOR
-            if (latlong_edit) {
-                latlong_edit->setCoord({location->latitude, location->longitude});
-            }
-#endif
         }
     }
     refreshAllTabs();

@@ -17,7 +17,7 @@ TEST_CASE("Location degrees, minutes, seconds constructor") {
 }
 
 void test_location_print(Latitude lat, Longitude lng, std::string_view expected) {
-    REQUIRE(fmt::to_string(Location{lat, lng}) == expected);
+    REQUIRE(fmt::format(FMT_STRING("{:t}"), Location{lat, lng}) == expected);
 }
 
 TEST_CASE("Location prints coordinates nicely, with unicode etc") {

@@ -8,9 +8,10 @@
 class LatLongEdit : public QLineEdit
 {
 public:
-    explicit LatLongEdit(vp::Coord c, QWidget * parent);
+    explicit LatLongEdit(QWidget * parent);
     void setCoord(vp::Coord c);
-    vp::Coord coord;
+    vp::Coord coord{};
+    void updateText();
 };
 
 #endif // LATLONGEDIT_H

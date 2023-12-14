@@ -21,7 +21,7 @@ void LatitudeEdit::setValue(double _value)
 {
     value = _value;
     vp::Latitude latitude {value};
-    setText(QString::fromStdString(fmt::to_string(latitude)));
+    setText(QString::fromStdString(fmt::format(FMT_STRING("{:t}"), latitude)));
 }
 
 vp::Latitude LatitudeEdit::getValue()
