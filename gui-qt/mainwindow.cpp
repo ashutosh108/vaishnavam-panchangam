@@ -124,6 +124,9 @@ MainWindow::MainWindow(QWidget *parent)
     setupToolbar();
     connectSignals();
     addTableContextMenu();
+#ifdef VP_ARBITRARY_LOCATION_SELECTOR
+    ui->latlong_edit->setEnabled(true);
+#endif /* VP_ARBITRARY_LOCATION_SELECTOR */
     gui_ready = true;
     refreshAllTabs();
 }
@@ -198,10 +201,17 @@ static QString get_html_from_detail_view(const std::string_view & s) {
 void MainWindow::setupLocationsComboBox()
 {
     ui->locationComboBox->addItem("all");
+#ifdef VP_ARBITRARY_LOCATION_SELECTOR
+    ui->locationComboBox->addItem("Custom");
+#endif
     for (const auto &l : vp::text_ui::LocationDb()) {
         ui->locationComboBox->addItem(QString::fromUtf8(l.name.data(), l.name.size()));
     }
-    ui->locationComboBox->setCurrentIndex(1); // select Udupi, first location after "all"
+#ifdef VP_ARBITRARY_LOCATION_SELECTOR
+    ui->locationComboBox->setCurrentIndex(2); // select Udupi, located after "all" and "Custom"
+#else
+    ui->locationComboBox->setCurrentIndex(1); // select Udupi, located after "all"
+#endif
 }
 
 void MainWindow::setDateToToday()

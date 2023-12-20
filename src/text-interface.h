@@ -74,6 +74,7 @@ tl::expected<vp::Vrata, vp::CalcError> find_calc_and_report_one(date::year_month
 DayByDayInfo daybyday_calc_one(date::year_month_day base_date, const Location & coord, vp::CalcFlags flags);
 void daybyday_print_one(date::year_month_day base_date, const char * location_name, const fmt::appender & out, vp::CalcFlags flags);
 void calc_and_report_all(date::year_month_day d);
+vp::MaybeVrata calc_one(date::local_days base_date, const Location & location, CalcFlags flags = CalcFlags::Default);
 vp::VratasForDate calc(date::year_month_day base_date, std::string location_name, CalcFlags flags = CalcFlags::Default);
 std::string program_name_and_version();
 

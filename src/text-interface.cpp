@@ -189,23 +189,6 @@ tl::expected<vp::Vrata, vp::CalcError> decrease_latitude_and_find_vrata(date::lo
     }
 }
 
-tl::expected<vp::Vrata, vp::CalcError> calc_one(date::local_days base_date, const Location & location, CalcFlags flags = CalcFlags::Default) {
-    // Use immediately-called lambda to ensure Calc is destroyed before more
-    // will be created in decrease_latitude_and_find_vrata()
-    auto vrata = [&](){
-        return Calc{Swe{location, flags}}.find_next_vrata(base_date);
-    }();
-    if (vrata) return vrata;
-
-    auto e = vrata.error();
-    // if we are in the northern areas and the error is that we can't find sunrise or sunset, then try decreasing latitude until it's OK.
-    if ((std::holds_alternative<CantFindSunriseAfter>(e) || std::holds_alternative<CantFindSunsetAfter>(e)) && location.latitude.latitude > 60.0) {
-        return decrease_latitude_and_find_vrata(base_date, location);
-    }
-    // Otherwise return whatever error we've got.
-    return vrata;
-}
-
 // Try calculating, return true if resulting date range is small enough (suggesting that it's the same ekAdashI for all locations),
 // false otherwise (suggesting that we should repeat calculation with adjusted base_date
 bool try_calc_all(date::local_days base_date, vp::VratasForDate & vratas, CalcFlags flags) {
@@ -276,6 +259,23 @@ void add_nameworthy_dates_for_this_paksha(VratasForDate & vratas, CalcFlags flag
     }
 }
 
+}
+
+vp::MaybeVrata calc_one(date::local_days base_date, const Location & location, CalcFlags flags) {
+    // Use immediately-called lambda to ensure Calc is destroyed before more
+    // will be created in decrease_latitude_and_find_vrata()
+    auto vrata = [&](){
+        return Calc{Swe{location, flags}}.find_next_vrata(base_date);
+    }();
+    if (vrata) return vrata;
+
+    auto e = vrata.error();
+    // if we are in the northern areas and the error is that we can't find sunrise or sunset, then try decreasing latitude until it's OK.
+    if ((std::holds_alternative<CantFindSunriseAfter>(e) || std::holds_alternative<CantFindSunsetAfter>(e)) && location.latitude.latitude > 60.0) {
+        return decrease_latitude_and_find_vrata(base_date, location);
+    }
+    // Otherwise return whatever error we've got.
+    return vrata;
 }
 
 vp::VratasForDate calc(date::year_month_day base_date, std::string location_name, CalcFlags flags)

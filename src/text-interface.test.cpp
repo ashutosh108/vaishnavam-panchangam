@@ -61,7 +61,7 @@ TEST_CASE("calc_all adjusts start date to ensure all locations have the same ekA
     REQUIRE(length <= date::days{1});
 }
 
-TEST_CASE("can call calc_one with string for location name") {
+TEST_CASE("can call calc with string for location name") {
     using namespace date;
     auto vratas = vp::text_ui::calc(2020_y/January/1, std::string("Kiev"));
     REQUIRE(!vratas.empty());
@@ -406,4 +406,13 @@ TEST_CASE("daybyday_print_one marks special Krishna Jayanti-related events") {
             REQUIRE_THAT(s, Contains("Krishna Navami starts (**end of Siṁha+Rohiṇī+Kāḷāṣṭamī intersection**)"));
         }
     }
+}
+
+TEST_CASE("calc_one works") {
+    using namespace date::literals;
+    vp::Location l; // "Custom Location"
+    auto vrata = vp::text_ui::calc_one(date::local_days{2023_y/12/21}, l);
+    REQUIRE(vrata.has_value());
+    REQUIRE(vrata->location == l);
+    REQUIRE(vrata->date == date::local_days{2023_y/12/22});
 }
