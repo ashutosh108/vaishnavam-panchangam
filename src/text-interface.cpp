@@ -80,6 +80,7 @@ const std::vector<Location> &LocationDb::locations() {
         { simferopol_coord },               // 44'56'00_N,  34'06'00_E, UTC+03:00 Russia (Europe/Simferopol)
         { donetsk_coord },                  // 48'00'00_N,  37'48'00_E, UTC+03:00 DNR (Europe/Moscow)
         { staryyoskol_coord },              // 51'17'00_N,  37'50'00_E, UTC+03:00 Russia (Europe/Moscow)
+        { lipetsk_coord },                  // 52'37'00_N,  39'36'00_E, UTC+03:00 Russia (Europe/Moscow)
         { voronezh_coord },                 // 51'40'00_N,  39'12'00_E, UTC+03:00 Russia (Europe/Moscow)
         { tambov_coord },                   // 52'43'00_N,  41'26'00_E, UTC+03:00 Russia (Europe/Moscow)
         { kazan_coord },                    // 55'47'00_N,  49'06'00_E, UTC+03:00 Russia (Europe/Moscow)
