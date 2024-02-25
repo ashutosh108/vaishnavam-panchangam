@@ -118,6 +118,7 @@ const std::vector<Location> &LocationDb::locations() {
         { dillingen_an_der_donau_coord },   // 48'34'00_N,  10'28'00_E, UTC+01/02 Germany (Europe/Berlin)
         { eppingen_coord },                 // 49'08'00_N,   8'55'00_E, UTC+01/02 Germany (Europe/Berlin)
         { vena_coord },                     // 48'12'00_N,  16'22'00_E, UTC+01/02 Austria (Europe/Vienna)
+        { biel_bienne_coord },              // 47'08'14_N,   7'14'50_E, UTC+01/02 Switzerland (Europe/Zurich)
         { marsel_coord },                   // 43'17'47_N,   5'22'12_E, UTC+01/02 France (Europe/Paris)
         { barcelona_coord },                // 41'23'00_N,   2'11'00_E, UTC+01/02 Spain (Europe/Madrid)
         { madrid_coord },                   // 40'24'00_N,   3'41'00_W, UTC+01/02 Spain (Europe/Madrid)

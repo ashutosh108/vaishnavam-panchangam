@@ -250,6 +250,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location kiel_coord{                    54'19'00_N,  10'08'00_E, "Kiel", "Europe/Berlin", "Germany"};
 [[maybe_unused]] constexpr Location eppingen_coord{                49'08'00_N,   8'55'00_E, "Eppingen", "Europe/Berlin", "Germany"}; // en Wikipedia
 [[maybe_unused]] constexpr Location freiburg_coord{                48'00'00_N,   7'52'00_E, "Freiburg im Breisgau", "Europe/Paris", "Germany"};
+[[maybe_unused]] constexpr Location biel_bienne_coord{             47'08'14_N,   7'14'50_E, "Biel/Biennne", "Europe/Zurich", "Switzerland"};
 [[maybe_unused]] constexpr Location koeln_kkd_coord{               50'56'11_N,   6'57'10_E, "Cologne", "Europe/Berlin", "Germany"}; // en Wikipedia
 [[maybe_unused]] constexpr Location dusseldorf_coord{              51'13'00_N,   6'47'00_E, "Dusseldorf", "Europe/Berlin", "Germany"};
 [[maybe_unused]] constexpr Location marsel_coord{                  43'17'47_N,   5'22'12_E, "Marseille", "Europe/Paris", "France"}; // ru Wikipedia
