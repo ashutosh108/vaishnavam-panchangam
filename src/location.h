@@ -170,6 +170,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location almaata_coord{                 43'15'00_N,  76'54'00_E, "Almaty", "Asia/Almaty", "Kazakhstan"};
 [[maybe_unused]] constexpr Location udupi_coord{                   13'20'27_N,  74'45'06_E, "Udupi", "Asia/Kolkata", "India"}; // Ananteshvara temple
 [[maybe_unused]] constexpr Location bishkek_coord{                 42'52'00_N,  74'34'00_E, "Bishkek", "Asia/Bishkek", "Kyrgyzstan"};
+[[maybe_unused]] constexpr Location morjim_coord{                  15'37'46_N,  73'44'09_E, "Morjim", "Asia/Kolkata", "India"}; // en Wikipedia
 [[maybe_unused]] constexpr Location gokarna_coord{                 14'33'00_N,  74'19'00_E, "Gokarna", "Asia/Kolkata", "India"};
 [[maybe_unused]] constexpr Location pune_coord{                    18'32'00_N,  73'52'00_E, "Pune", "Asia/Kolkata", "India"};
 [[maybe_unused]] constexpr Location pernem_coord{                  15'43'00_N,  73'47'49_E, "Pernem", "Asia/Kolkata", "India"}; // en Wikipedia

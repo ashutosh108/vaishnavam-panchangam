@@ -41,6 +41,7 @@ const std::vector<Location> &LocationDb::locations() {
         { newdelhi_coord },                 // 28'39'00_N,  77'13'00_E, UTC+05:30 India (Asia/Kolkata)
         { bengaluru_coord },                // 12'58'00_N,  77'34'00_E, UTC+05:30 India (Asia/Kolkata)
         { gokarna_coord },                  // 14'33'00_N,  74'19'00_E, UTC+05:30 India (Asia/Kolkata)
+        { morjim_coord },                   // 15'37'46_N,  73'44'09_E, UTC+05:30 India (Asia/Kolkata)
         { dushanbe_coord },                 // 38'32'12_N,  68'46'48_E, UTC+05:00 Tajikistan (Asia/Dushanbe)
         { perm_coord },                     // 58'00'00_N,  56'14'00_E, UTC+05:00 Russia (Asia/Yekaterinburg)
         { ufa_coord },                      // 54'44'00_N,  55'58'00_E, UTC+05:00 Russia (Asia/Yekaterinburg)
