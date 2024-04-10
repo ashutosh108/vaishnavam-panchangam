@@ -107,6 +107,7 @@ const std::vector<Location> &LocationDb::locations() {
         { kropyvnytskyi_coord },            // 48'30'00_N,  32'16'00_E, UTC+02/03 Ukraine (Europe/Kiev)
         { nikolaev_coord },                 // 46'58'00_N,  32'00'00_E, UTC+02/03 Ukraine (Europe/Kiev)
         { odessa_coord },                   // 46'28'00_N,  30'44'00_E, UTC+02/03 Ukraine (Europe/Kiev)
+        { rovno_coord },                    // 50'37'11_N,  26'15'05_E, UTC+02/03 Ukraine (Europe/Kiev)
         { kolomyya_coord },                 // 48'31'00_N,  25'02'00_E, UTC+02/03 Ukraine (Europe/Kiev)
         { ashkelon_coord },                 // 31'39'57_N,  34'33'59_E, UTC+02/03 Israel (Asia/Jerusalem)
         { kishinev_coord },                 // 47'00'00_N,  28'51'00_E, UTC+02/03 Moldova (Europe/Chisinau)
