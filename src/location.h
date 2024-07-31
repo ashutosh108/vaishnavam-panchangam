@@ -248,6 +248,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location afiny_coord{                   37'58'00_N,  23'43'00_E, "Athens", "Europe/Athens", "Greece"};
 [[maybe_unused]] constexpr Location varshava_coord{                52'13'00_N,  21'02'00_E, "Warsaw", "Europe/Warsaw", "Poland"};
 [[maybe_unused]] constexpr Location vena_coord{                    48'12'00_N,  16'22'00_E, "Vienna", "Europe/Vienna", "Austria"};
+[[maybe_unused]] constexpr Location hitzacker_coord{               53'08'00_N,  11'03'00_E, "Hitzacker", "Europe/Berlin", "Germany"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location dillingen_an_der_donau_coord{  48'34'00_N,  10'28'00_E, "Dillingen an der Donau", "Europe/Berlin", "Germany"}; // en Wikipedia
 [[maybe_unused]] constexpr Location kiel_coord{                    54'19'00_N,  10'08'00_E, "Kiel", "Europe/Berlin", "Germany"};
 [[maybe_unused]] constexpr Location eppingen_coord{                49'08'00_N,   8'55'00_E, "Eppingen", "Europe/Berlin", "Germany"}; // en Wikipedia

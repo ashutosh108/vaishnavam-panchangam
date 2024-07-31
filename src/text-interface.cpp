@@ -117,6 +117,7 @@ const std::vector<Location> &LocationDb::locations() {
         { tallin_coord },                   // 59'26'00_N,  24'45'00_E, UTC+02/03 Estonia (Europe/Tallinn)
         { vilnyus_coord },                  // 54'41'00_N,  25'17'00_E, UTC+02/03 Lithuania (Europe/Vilnius)
         { varshava_coord },                 // 52'13'00_N,  21'02'00_E, UTC+01/02 Poland (Europe/Warsaw)
+        { hitzacker_coord },                // 53'08'00_N,  11'03'00_E, UTC+01/02 Germany (Europe/Berlin)
         { dillingen_an_der_donau_coord },   // 48'34'00_N,  10'28'00_E, UTC+01/02 Germany (Europe/Berlin)
         { eppingen_coord },                 // 49'08'00_N,   8'55'00_E, UTC+01/02 Germany (Europe/Berlin)
         { vena_coord },                     // 48'12'00_N,  16'22'00_E, UTC+01/02 Austria (Europe/Vienna)
