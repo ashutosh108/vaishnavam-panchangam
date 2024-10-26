@@ -232,6 +232,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location odessa_coord{                  46'28'00_N,  30'44'00_E, "Odessa", "Europe/Kiev", "Ukraine"};
 [[maybe_unused]] constexpr Location kostomuksha_coord{             64'35'00_N,  30'36'00_E, "Kostomuksha", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location kiev_coord{                    50'27'00_N,  30'31'24_E, "Kiev", "Europe/Kiev", "Ukraine"}; // en Wikipedia
+[[maybe_unused]] constexpr Location velikiy_novgorod_coord{        58'31'30_N,  31'16'30_E, "Velikiy Novgorod", "Europe/Moscow", "Russia"}; // ru wikipedia
 [[maybe_unused]] constexpr Location spb_coord{                     59'55'00_N,  30'15'00_E, "Saint Petersburg", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location tiraspol_coord{                46'51'00_N,  29'36'00_E, "Tiraspol", "Europe/Chisinau", "Transnistria"};
 [[maybe_unused]] constexpr Location vinnitsa_coord{                49'14'00_N,  28'27'00_E, "Vinnitsa", "Europe/Kiev", "Ukraine"};
@@ -259,6 +260,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location marsel_coord{                  43'17'47_N,   5'22'12_E, "Marseille", "Europe/Paris", "France"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location manchester_coord{              53'30'00_N,   2'13'00_W, "Manchester", "Europe/London", "UK"};
 [[maybe_unused]] constexpr Location barcelona_coord{               41'23'00_N,   2'11'00_E, "Barcelona", "Europe/Madrid", "Spain"}; // en Wikipedia
+[[maybe_unused]] constexpr Location seuta_coord{                   35'53'12_N,   5'18'00_W, "Seuta", "Europe/Madrid", "Spain"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location london_coord{                  51'30'00_N,      7'00_W, "London", "Europe/London", "UK"};
 [[maybe_unused]] constexpr Location madrid_coord{                  40'24'00_N,   3'41'00_W, "Madrid", "Europe/Madrid", "Spain"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location fredericton_coord{             45'57'00_N,  66'38'00_W, "Fredericton", "America/Moncton", "Canada"};
