@@ -37,7 +37,6 @@ add_library(mainwindow STATIC
     mainwindow.h
     mainwindow.ui
     htmlbrowser.cpp
-    latitude-edit.cpp
     edit-custom-dates.cpp
     latlongedit.cpp
 )
