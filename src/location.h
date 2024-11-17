@@ -44,33 +44,6 @@ bool operator <=(Coord c1, Coord c2);
 bool operator >(Coord c1, Coord c2);
 bool operator >=(Coord c1, Coord c2);
 
-constexpr double int_deg_min_sec_to_double_degrees(const unsigned long long val) {
-    if (val > 180'00'00) { throw std::logic_error("Value for degrees must be in 0..180'00'00 range"); }
-    auto deg = static_cast<int>(val / 10'000);
-    if (deg > 180) { throw std::logic_error("degrees part in dd'mm'ss must be in 0..180 range"); }
-    auto min = static_cast<int>((val / 100) % 100);
-    if (min > 59) { throw std::logic_error("minutes part in dd'mm'ss must be in 0..59 range"); }
-    auto sec = static_cast<int>(val % 100);
-    if (sec > 59) { throw std::logic_error("seconds part in dd'mm'ss must be in 0..59 range"); }
-    return deg + static_cast<double>(min)/60.0 + static_cast<double>(sec)/3600.0;
-}
-
-constexpr Latitude operator ""_N(const unsigned long long lat) {
-    return Latitude{int_deg_min_sec_to_double_degrees(lat)};
-}
-
-constexpr Latitude operator ""_S(const unsigned long long lat) {
-    return Latitude{-int_deg_min_sec_to_double_degrees(lat)};
-}
-
-constexpr Longitude operator ""_E(const unsigned long long lng) {
-    return Longitude{int_deg_min_sec_to_double_degrees(lng)};
-}
-
-constexpr Longitude operator ""_W(const unsigned long long lng) {
-    return Longitude{-int_deg_min_sec_to_double_degrees(lng)};
-}
-
 constexpr Latitude operator ""_N(const long double lat) {
     if (lat < 0.0l || lat > 90.0l) { throw std::logic_error("Latitude must be in 0.0..90.0 range"); }
     return Latitude{static_cast<double>(lat)};
@@ -275,88 +248,32 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location edmonton_coord{                53.5333_N, 113.5000_W, "Edmonton", "America/Edmonton", "Canada"};
 [[maybe_unused]] constexpr Location losanjeles_coord{              34.0333_N, 118.2667_W, "Los Angeles", "America/Los_Angeles", "USA"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location sanfrantsisko_coord{           37.7667_N, 122.4000_W, "San Francisco", "America/Los_Angeles", "USA"};
-[[maybe_unused]] constexpr Location dummy_coord{0_N, 0_E, "Dummy location"};
-[[maybe_unused]] constexpr Location sample_location{0_N, 0_E, "Sample location"};
+[[maybe_unused]] constexpr Location dummy_coord{0.0_N, 0.0_E, "Dummy location"};
+[[maybe_unused]] constexpr Location sample_location{0.0_N, 0.0_E, "Sample location"};
 
 } // namespace vp
 
-namespace {
-template<typename Out>
-inline auto print_deg_min_sec(const Out & out, double degrees) {
-    const int sec_total = static_cast<int>(std::round(degrees * 3600.0));
-    const int sec = sec_total % 60;
-    const int min_remain = (sec_total-sec) / 60;
-    const int min = min_remain % 60;
-    int deg = (min_remain - min) / 60;
-    return fmt::format_to(out, FMT_STRING("{}°{:02}′{:02}″"), deg, min, sec);
-}
-}
-
 template<>
 struct fmt::formatter<vp::Latitude> : fmt::formatter<string_view> {
-    bool use_decimal = true;
-    template<typename ParseCtx>
-    constexpr auto parse(ParseCtx & ctx) {
-        auto it = ctx.begin();
-        auto end = ctx.end();
-        if (it != end && *it == 't') { // t for "traditional": not decimal, but degrees-minutes-seconds
-            use_decimal = false;
-            ++it;
-        }
-        return it;
-    }
     template<typename FormatContext>
     auto format(const vp::Latitude & lat, FormatContext & ctx) {
-        if (use_decimal) {
-            return fmt::format_to(ctx.out(), FMT_STRING("{:.4f}"), lat.latitude);
-        }
-        print_deg_min_sec(ctx.out(), std::fabs(lat.latitude));
-        return fmt::format_to(ctx.out(), FMT_STRING("{}"), lat.latitude >= 0 ? 'N' : 'S');
+        return fmt::format_to(ctx.out(), FMT_STRING("{:.4f}"), lat.latitude);
     }
 };
 
 template<>
 struct fmt::formatter<vp::Longitude> : fmt::formatter<string_view> {
-    bool use_decimal = true;
-    template<typename ParseCtx>
-    constexpr auto parse(ParseCtx & ctx) {
-        auto it = ctx.begin();
-        auto end = ctx.end();
-        if (it != end && *it == 't') { // t for "traditional": not decimal, but degrees-minutes-seconds
-            use_decimal = false;
-            ++it;
-        }
-        return it;
-    }
     template<typename FormatContext>
     auto format(const vp::Longitude & lng, FormatContext & ctx) {
-        if (use_decimal) {
-            return fmt::format_to(ctx.out(), FMT_STRING("{:.4f}"), lng.longitude);
-        }
-        print_deg_min_sec(ctx.out(), std::fabs(lng.longitude));
-        return fmt::format_to(ctx.out(), FMT_STRING("{}"), lng.longitude >= 0 ? 'E' : 'W');
+        return fmt::format_to(ctx.out(), FMT_STRING("{:.4f}"), lng.longitude);
     }
 };
 
 template<>
 struct fmt::formatter<vp::Location> : fmt::formatter<string_view> {
-    bool use_decimal = true;
-    template<typename ParseCtx>
-    constexpr auto parse(ParseCtx & ctx) {
-        auto it = ctx.begin();
-        auto end = ctx.end();
-        if (it != end && *it == 't') { // t for "traditional": not decimal, but degrees-minutes-seconds
-            use_decimal = false;
-            ++it;
-        }
-        return it;
-    }
     template<typename FormatContext>
     auto format(const vp::Location & l, FormatContext & ctx) {
-        if (use_decimal) {
-            return fmt::format_to(ctx.out(), FMT_STRING("{}, {}"), l.latitude, l.longitude);
-        }
-        return fmt::format_to(ctx.out(), FMT_STRING("{:t}, {:t}"), l.latitude, l.longitude);
+        return fmt::format_to(ctx.out(), FMT_STRING("{}, {}"), l.latitude, l.longitude);
     }
 };
 
