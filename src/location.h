@@ -260,7 +260,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location marsel_coord{                  43'17'47_N,   5'22'12_E, "Marseille", "Europe/Paris", "France"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location manchester_coord{              53'30'00_N,   2'13'00_W, "Manchester", "Europe/London", "UK"};
 [[maybe_unused]] constexpr Location barcelona_coord{               41'23'00_N,   2'11'00_E, "Barcelona", "Europe/Madrid", "Spain"}; // en Wikipedia
-[[maybe_unused]] constexpr Location seuta_coord{                   35'53'12_N,   5'18'00_W, "Seuta", "Europe/Madrid", "Spain"}; // ru Wikipedia
+[[maybe_unused]] constexpr Location ceuta_coord{                   35'53'12_N,   5'18'00_W, "Ceuta", "Europe/Madrid", "Spain"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location london_coord{                  51'30'00_N,      7'00_W, "London", "Europe/London", "UK"};
 [[maybe_unused]] constexpr Location madrid_coord{                  40'24'00_N,   3'41'00_W, "Madrid", "Europe/Madrid", "Spain"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location fredericton_coord{             45'57'00_N,  66'38'00_W, "Fredericton", "America/Moncton", "Canada"};

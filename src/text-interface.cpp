@@ -126,7 +126,7 @@ const std::vector<Location> &LocationDb::locations() {
         { marsel_coord },                   // 43'17'47_N,   5'22'12_E, UTC+01/02 France (Europe/Paris)
         { barcelona_coord },                // 41'23'00_N,   2'11'00_E, UTC+01/02 Spain (Europe/Madrid)
         { madrid_coord },                   // 40'24'00_N,   3'41'00_W, UTC+01/02 Spain (Europe/Madrid)
-        { seuta_coord },                    // 35'53'12_N,   5'18'00_W, UTC+01/02 Spain (Europe/Madrid)
+        { ceuta_coord },                    // 35'53'12_N,   5'18'00_W, UTC+01/02 Spain (Europe/Madrid)
         { london_coord },                   // 51'30'00_N,      7'00_W, UTC+00/01 UK (Europe/London)
         { fredericton_coord },              // 45'57'00_N,  66'38'00_W, UTC-04/03 Canada (America/Moncton)
         { toronto_coord },                  // 42'43'00_N,  79'24'00_W, UTC-05/04 Canada (America/New_York)
