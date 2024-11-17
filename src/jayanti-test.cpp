@@ -51,7 +51,10 @@ void check_that_there_is_only_one_viable_candidate(const std::vector<RohiniBahul
  * 3. In most years, only 1 or 2 times (7 exceptions).
  */
 TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]") {
-    Location udupi{13'20'27_N,  74'45'06_E};
+    // NOTE: this test is extremely sensitive to exact coordinates and fails
+    // with e.g. 13.3408_N, 74.7517_E. So, imitate what we had before
+    // switching from deg-min-sec to decimal.
+    Location udupi{13.3408333333_N,  74.7516666667_E};
     const auto START_YEAR = 1800_y;
     const auto END_YEAR = 2399_y;
 
@@ -253,7 +256,7 @@ TEST_CASE("Rohini-bahulashtami-yoga calculations behave properly", "[.][jayanti]
 }
 
 TEST_CASE("rohini_bahulashtami_yogas_in_year gives expected four kala cases for known dates", "[jayanti]") {
-    Location udupi{13'20'27_N,  74'45'06_E};
+    Location udupi{13.3408_N,  74.7517_E};
     Calc c{udupi};
 
     auto check = [&](date::year year, date::year_month_day expected_ymd, RoK8YogaKalpa expected_kalpa) {
@@ -270,7 +273,7 @@ TEST_CASE("rohini_bahulashtami_yogas_in_year gives expected four kala cases for 
 }
 
 TEST_CASE("find_krishna_jayanti does not repeat past (August 19's) Jayanti before September's Indirā Ekādaśī", "[jayanti]") {
-    Location udupi{13'20'27_N,  74'45'06_E};
+    Location udupi{13.3408_N,  74.7517_E};
     Calc c{udupi};
 
     const auto indira_ekadashi = c.find_next_vrata(date::local_days{2022_y/September/1});

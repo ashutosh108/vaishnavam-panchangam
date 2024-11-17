@@ -40,7 +40,7 @@ TEST_CASE("compare sunrises with Palimaru 2020 panchangams") {
     int i_at_min = 0, j_at_min = 0;
     for (int i=0; i<60; ++i) {
         for (int j=0; j<60; ++j) {
-            vp::Location udupi{13'20'27_N + ((i-30)/90.0),  74'45'06_E + (j-30)/90.0};
+            vp::Location udupi{13.3408_N + ((i-30)/90.0), 74.7517_E + (j-30)/90.0};
             vp::Swe swe(udupi, vp::CalcFlags::RefractionOn | vp::CalcFlags::SunriseByDiscCenter | vp::CalcFlags::RiseSetGeocentricOff);
             int num_fails = 0;
             double sum_distance = 0;

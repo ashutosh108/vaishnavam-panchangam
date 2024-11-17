@@ -31,7 +31,7 @@ TEST_CASE("next_sunrise_v() is callable") {
 }
 
 TEST_CASE("next_sunrise_v() throws when no (imminent) sunrise found") {
-    Location c{68'58'00_N, 33'05'00_E, "Murmansk"}; // fixed here to avoid test changes when we update coords
+    Location c{68.9667_N,  33.0833_E, "Murmansk"}; // fixed here to avoid test changes when we update coords
     REQUIRE_THROWS(Swe{c}.next_sunrise_v(JulDays_UT{2019_y/December/1}));
 }
 
@@ -49,7 +49,7 @@ TEST_CASE("next_sunset_v") {
 }
 
 TEST_CASE("next_sunset_v throws when no (imminent) sunset found") {
-    Location c{68'58'00_N, 33'05'00_E, "Murmansk"}; // fixed here to avoid test changes when we update coords
+    Location c{68.9667_N,  33.0833_E, "Murmansk"}; // fixed here to avoid test changes when we update coords
     REQUIRE_THROWS(Swe{c}.next_sunset_v(JulDays_UT{2019_y/December/1}));
 }
 
@@ -107,7 +107,7 @@ TEST_CASE("sunrise with refraction off comes 3-5 minutes before actual observed 
 }
 
 TEST_CASE("get_moon_longitude_sidereal works for known case (Rohini end on 2020-11-03 is 2:30am next day in India)") {
-    Location udupi{28'39'00_N,  77'13'00_E};
+    Location udupi{28.6500_N,  77.2167_E};
     constexpr auto timezone_offset = 5h+30min; // IST
     // bracket is [t-30sec..t+30sec]
     JulDays_UT t1{2020_y/November/4, 2h + 30min - timezone_offset - 30s};

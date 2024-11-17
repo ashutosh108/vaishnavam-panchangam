@@ -682,7 +682,7 @@ EqualsRoundedToMinuteMatcher EqualsRoundedToMinute(date::year_month_day date, st
 }
 
 TEST_CASE("find_nakshatra_start() works for simple cases from 2020-11 Palimaru panchangam") {
-    Location udupi{28'39'00_N,  77'13'00_E};
+    Location udupi{28.6500_N,  77.2167_E};
     const auto timezone_offset = 5h + 30min;
     auto calc = Calc{udupi};
 
