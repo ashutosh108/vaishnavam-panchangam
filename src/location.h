@@ -239,6 +239,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location fredericton_coord{             45.9500_N,  66.6333_W, "Fredericton", "America/Moncton", "Canada"};
 [[maybe_unused]] constexpr Location puno_coord{                    15.8333_S,  70.0167_W, "Puno", "America/Lima", "Peru"};
 [[maybe_unused]] constexpr Location newyork_coord{                 40.7125_N,  74.0061_W, "New York City", "America/New_York", "USA"}; // en Wikipedia
+[[maybe_unused]] constexpr Location philadelphia_coord{            39.9531_N,  75.1633_W, "Philadelphia, PA", "America/New_York", "USA"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location washington_coord{              38.8833_N,  77.0333_W, "Washington, D.C.", "America/New_York", "USA"};
 [[maybe_unused]] constexpr Location toronto_coord{                 42.7167_N,  79.4000_W, "Toronto", "America/New_York", "Canada"};
 [[maybe_unused]] constexpr Location miami_coord{                   25.7833_N,  80.2167_W, "Miami", "America/New_York", "USA"}; // ru Wikipedia

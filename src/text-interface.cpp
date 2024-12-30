@@ -131,6 +131,7 @@ const std::vector<Location> &LocationDb::locations() {
         { fredericton_coord },              // 45.9500_N,  66.6333_W, UTC-04/03 Canada (America/Moncton)
         { toronto_coord },                  // 42.7167_N,  79.4000_W, UTC-05/04 Canada (America/New_York)
         { newyork_coord },                  // 40.7125_N,  74.0061_W, UTC-05/04 USA (America/New_York)
+        { philadelphia_coord },             // 39.9531_N,  75.1633_W, UTC-05/04 USA (America/New_York)
         { miami_coord },                    // 25.7833_N,  80.2167_W, UTC-05/04 USA (America/New_York)
         { cancun_coord },                   // 21.1606_N,  86.8475_W, UTC-05:00 Mexico (America/Cancun)
         { meadowlake_coord },               // 54.1167_N, 108.4333_W, UTC-06:00 Canada (America/Regina)
