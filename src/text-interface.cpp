@@ -120,6 +120,7 @@ const std::vector<Location> &LocationDb::locations() {
         { varshava_coord },                 // 52.2167_N,  21.0333_E, UTC+01/02 Poland (Europe/Warsaw)
         { vena_coord },                     // 48.2000_N,  16.3667_E, UTC+01/02 Austria (Europe/Vienna)
         { hitzacker_coord },                // 53.1333_N,  11.0500_E, UTC+01/02 Germany (Europe/Berlin)
+        { oslo_coord },                     // 59.9111_N,  10.7528_E, UTC+01/02 Norway (Europe/Oslo)
         { dillingen_an_der_donau_coord },   // 48.5667_N,  10.4667_E, UTC+01/02 Germany (Europe/Berlin)
         { eppingen_coord },                 // 49.1333_N,   8.9167_E, UTC+01/02 Germany (Europe/Berlin)
         { biel_bienne_coord },              // 47.1372_N,   7.2472_E, UTC+01/02 Switzerland (Europe/Zurich)
