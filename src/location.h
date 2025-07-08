@@ -173,6 +173,7 @@ inline bool operator<(const Location & one, const Location & two) {
 [[maybe_unused]] constexpr Location stavropol_coord{               45.0333_N,  41.9667_E, "Stavropol", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location tambov_coord{                  52.7167_N,  41.4333_E, "Tambov", "Europe/Moscow", "Russia"}; // ru Wikipedia
 [[maybe_unused]] constexpr Location suhum_coord{                   43.0000_N,  41.0000_E, "Sukhum", "Europe/Moscow", "Abkhazia"};
+[[maybe_unused]] constexpr Location kurdzhinovo_coord{             43.9833_N,  40.9558_E, "Kurdzhinovo", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location semikarakorsk_coord{           47.5167_N,  40.8000_E, "Semikarakorsk", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location arhangelsk_coord{              64.5500_N,  40.5333_E, "Arkhangelsk", "Europe/Moscow", "Russia"};
 [[maybe_unused]] constexpr Location sochi_coord{                   43.6000_N,  39.7333_E, "Sochi", "Europe/Moscow", "Russia"};

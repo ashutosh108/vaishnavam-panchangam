@@ -76,6 +76,7 @@ const std::vector<Location> &LocationDb::locations() {
         { pyatigorsk_coord },               // 44.0333_N,  43.0500_E, UTC+03:00 Russia (Europe/Moscow)
         { stavropol_coord },                // 45.0333_N,  41.9667_E, UTC+03:00 Russia (Europe/Moscow)
         { semikarakorsk_coord },            // 47.5167_N,  40.8000_E, UTC+03:00 Russia (Europe/Moscow)
+        { kurdzhinovo_coord },              // 43.9833_N,  40.9558_E, UTC+03:00 Russia (Europe/Moscow)
         { krasnodar_coord },                // 45.0333_N,  38.9833_E, UTC+03:00 Russia (Europe/Moscow)
         { kerch_coord },                    // 45.3386_N,  36.4681_E, UTC+03:00 Russia (Europe/Simferopol)
         { simferopol_coord },               // 44.9333_N,  34.1000_E, UTC+03:00 Russia (Europe/Simferopol)
