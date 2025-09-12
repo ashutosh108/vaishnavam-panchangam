@@ -93,9 +93,10 @@ TEST_CASE("default table") {
         REQUIRE_THAT(table.at(rows-1, 5).classes, Contains("mainpart"));
     }
 
-    SECTION("generated table has a separator row when switching to timezone 7 or more hours away from the previous one (e.g. between Petropavlovsk-Kamchatskiy and Yerevan") {
-        constexpr auto max_delta = 7h;
-        size_t separator_rows_count = 0;
+    SECTION("generated table has a separators row when switching to timezone 3 or more hours away from the previous one (e.g. between Petropavlovsk-Kamchatskiy and Yerevan") {
+        int num_separators_over_7h = 0;
+        int num_separators_over_3h = 0;
+        int separator_rows_count = 0;
         // skip first two rows (top-header and row without top-neighbor) and last two row (bottom-header and without bottom-neighbor)
         for (std::size_t row=2; row < table.height()-2; ++row) {
             if (table.row(row).has_class("separator")) {
@@ -103,11 +104,17 @@ TEST_CASE("default table") {
                 REQUIRE(table.has_cell(row+1, 0));
                 const auto next_offset = utc_offset_string_to_seconds(table.at(row+1, 0).text);
                 const auto prev_offset = utc_offset_string_to_seconds(table.at(row-1,0).text);
-                REQUIRE(abs(next_offset - prev_offset) > max_delta);
+                if (abs(next_offset - prev_offset) > 7h) {
+                    num_separators_over_7h++;
+                } else if (abs(next_offset - prev_offset) > 3h) {
+                    num_separators_over_3h++;
+                }
                 ++separator_rows_count;
             }
         }
-        REQUIRE(separator_rows_count == 1);
+        REQUIRE(separator_rows_count == 2);
+        REQUIRE(num_separators_over_7h == 1);
+        REQUIRE(num_separators_over_3h == 1);
     }
 
     SECTION("generated table has &nbsp; as date separators") {
