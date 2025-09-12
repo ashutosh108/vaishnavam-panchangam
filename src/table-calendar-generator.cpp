@@ -163,7 +163,7 @@ vp::Table vp::Table_Calendar_Generator::generate(const vp::VratasForDate & vrata
     const vp::MaybeVrata * prev_vrata{};
     std::chrono::seconds prev_vrata_utc_offset;
     using namespace std::chrono_literals;
-    constexpr std::chrono::seconds min_utc_offset_for_separator = 7h;
+    constexpr std::chrono::seconds min_utc_offset_for_separator = 3h;
     for (const auto & vrata : vratas) {
         if (vrata) {
             auto vrata_utc_offset = utc_offset_for_vrata(*vrata);
