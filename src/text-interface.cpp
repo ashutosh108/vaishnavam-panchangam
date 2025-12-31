@@ -111,6 +111,7 @@ const std::vector<Location> &LocationDb::locations() {
         { odessa_coord },                   // 46.4667_N,  30.7333_E, UTC+02/03 Ukraine (Europe/Kiev)
         { rovno_coord },                    // 50.6197_N,  26.2514_E, UTC+02/03 Ukraine (Europe/Kiev)
         { kolomyya_coord },                 // 48.5167_N,  25.0333_E, UTC+02/03 Ukraine (Europe/Kiev)
+        { perechin_coord },                 // 48.7333_N,  22.4667_E, UTC+02/03 Ukraine (Europe/Kiev)
         { ashkelon_coord },                 // 31.6658_N,  34.5664_E, UTC+02/03 Israel (Asia/Jerusalem)
         { kishinev_coord },                 // 47.0000_N,  28.8500_E, UTC+02/03 Moldova (Europe/Chisinau)
         { nicosia_coord },                  // 35.1725_N,  33.3650_E, UTC+02/03 Cyprus (Asia/Nicosia)
